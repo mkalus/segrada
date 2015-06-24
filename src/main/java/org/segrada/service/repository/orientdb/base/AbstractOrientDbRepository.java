@@ -101,7 +101,7 @@ abstract public class AbstractOrientDbRepository<T extends SegradaEntity> {
 	 * @param document source
 	 * @param entity target entity
 	 */
-	protected void populateEntityWithBaseData(ODocument document, T entity) {
+	protected void populateEntityWithBaseData(ODocument document, SegradaEntity entity) {
 		entity.setId(document.getIdentity().toString());
 		entity.setVersion(document.getVersion());
 	}

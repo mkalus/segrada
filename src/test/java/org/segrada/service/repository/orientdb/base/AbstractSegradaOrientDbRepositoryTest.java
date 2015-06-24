@@ -9,6 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.segrada.model.User;
 import org.segrada.model.base.AbstractSegradaEntity;
+import org.segrada.model.prototype.IPictogram;
 import org.segrada.model.prototype.IUser;
 import org.segrada.session.ApplicationSettings;
 import org.segrada.session.Identity;
@@ -245,7 +246,7 @@ public class AbstractSegradaOrientDbRepositoryTest {
 				.field("role", "USER").field("created", 1L).field("modified", 2L)
 				.field("lastLogin", 3L).field("active", true);
 
-		IUser user = MockOrientDbRepository.convertToUser(document);
+		IUser user = mockOrientDbRepository.convertToUser(document);
 
 		assertEquals("login", user.getLogin());
 		assertEquals("password", user.getPassword());
@@ -255,6 +256,23 @@ public class AbstractSegradaOrientDbRepositoryTest {
 		assertEquals(new Long(2L), user.getModified());
 		assertEquals(new Long(3L), user.getLastLogin());
 		assertEquals(true, user.getActive());
+	}
+
+	@Test
+	public void testConvertToPictogram() throws Exception {
+		ODocument document = new ODocument("Pictogram").field("title", "title")
+				.field("fileIdentifier", "test.txt")
+				.field("created", 1L).field("modified", 2L);
+		// persist to database to create id
+		document.save();
+
+		IPictogram pictogram = mockOrientDbRepository.convertToPictogram(document);
+
+		assertEquals("title", pictogram.getTitle());
+		assertEquals("test.txt", pictogram.getFileIdentifier());
+		assertEquals(new Long(1L), pictogram.getCreated());
+		assertEquals(new Long(2L), pictogram.getModified());
+		assertEquals(document.getIdentity().toString(), pictogram.getId());
 	}
 
 	/**

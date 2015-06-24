@@ -45,8 +45,6 @@ create property User.login String
 create property User.password String
 create property User.name String
 create property User.role String
-create property User.created Datetime
-create property User.modified Datetime
 create property User.lastLogin Datetime
 create property User.active Boolean
 create property User.created Datetime
@@ -57,8 +55,6 @@ alter property User.login MANDATORY true
 alter property User.password MANDATORY true
 alter property User.name MANDATORY true
 alter property User.role MANDATORY true
-alter property User.created MANDATORY true
-alter property User.modified MANDATORY true
 alter property User.active MANDATORY true
 alter property User.created MANDATORY true
 alter property User.modified MANDATORY true

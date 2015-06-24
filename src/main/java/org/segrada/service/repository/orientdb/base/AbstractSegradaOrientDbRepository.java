@@ -3,8 +3,9 @@ package org.segrada.service.repository.orientdb.base;
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 import com.orientechnologies.orient.core.id.ORecordId;
 import com.orientechnologies.orient.core.record.impl.ODocument;
+import org.segrada.model.Pictogram;
 import org.segrada.model.User;
-import org.segrada.model.base.AbstractSegradaEntity;
+import org.segrada.model.prototype.IPictogram;
 import org.segrada.model.prototype.IUser;
 import org.segrada.model.prototype.SegradaEntity;
 import org.segrada.service.util.AbstractLazyLoadedObject;
@@ -46,7 +47,7 @@ abstract public class AbstractSegradaOrientDbRepository<T extends SegradaEntity>
 	 * @param document to be converted
 	 * @param entity converted
 	 */
-	protected void populateODocumentWithCreatedModified(ODocument document, AbstractSegradaEntity entity) {
+	protected void populateODocumentWithCreatedModified(ODocument document, SegradaEntity entity) {
 		document.field("created", entity.getCreated())
 				.field("modified", entity.getModified())
 				.field("creator", entity.getCreator()==null?null:new ORecordId(entity.getCreator().getId()))
@@ -58,9 +59,9 @@ abstract public class AbstractSegradaOrientDbRepository<T extends SegradaEntity>
 	 * @param document to be converted
 	 * @param entity converted
 	 */
-	protected void populateEntityWithCreatedModified(ODocument document, AbstractSegradaEntity entity) {
-		entity.setCreated((Long) document.field("created", Long.class));
-		entity.setModified((Long) document.field("modified", Long.class));
+	protected void populateEntityWithCreatedModified(ODocument document, SegradaEntity entity) {
+		entity.setCreated(document.field("created", Long.class));
+		entity.setModified(document.field("modified", Long.class));
 
 		// get creator/modifier
 		ORecordId oCreator = document.field("creator", ORecordId.class);
@@ -99,21 +100,37 @@ abstract public class AbstractSegradaOrientDbRepository<T extends SegradaEntity>
 	 * @param document to be converted to instance
 	 * @return instance
 	 */
-	protected static IUser convertToUser(ODocument document) {
+	protected IUser convertToUser(ODocument document) {
 		IUser user = new User();
 
-		user.setLogin((String) document.field("login", String.class));
-		user.setPassword((String) document.field("password", String.class));
-		user.setName((String) document.field("name", String.class));
-		user.setRole((String) document.field("role", String.class));
-		user.setCreated((Long) document.field("created", Long.class));
-		user.setModified((Long) document.field("modified", Long.class));
-		user.setLastLogin((Long) document.field("lastLogin", Long.class));
-		user.setActive((Boolean) document.field("active", Boolean.class));
-		user.setId(document.getIdentity().toString());
-		user.setVersion(document.getVersion());
+		user.setLogin(document.field("login", String.class));
+		user.setPassword(document.field("password", String.class));
+		user.setName(document.field("name", String.class));
+		user.setRole(document.field("role", String.class));
+		user.setLastLogin(document.field("lastLogin", Long.class));
+		user.setActive(document.field("active", Boolean.class));
+
+		populateEntityWithBaseData(document, user);
+		populateEntityWithCreatedModified(document, user);
 
 		return user;
+	}
+
+
+	/**
+	 * static version of convertToEntity in order to not have to create pictogram repository instance
+	 * @param document to be converted to instance
+	 * @return instance
+	 */
+	protected IPictogram convertToPictogram(ODocument document) {
+		IPictogram pictogram = new Pictogram();
+
+		pictogram.setTitle(document.field("title", String.class));
+		pictogram.setFileIdentifier(document.field("fileIdentifier", String.class));
+		populateEntityWithBaseData(document, pictogram);
+		populateEntityWithCreatedModified(document, pictogram);
+
+		return pictogram;
 	}
 
 	/**
