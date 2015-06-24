@@ -18,11 +18,37 @@
 		<start-class>org.segrada.SegradaApplication</start-class>
 		<java.version>1.8</java.version>
 		<!-- Version settings -->
+		<guice.version>4.0</guice.version>
 		<jetty.version>9.3.0.v20150612</jetty.version>
 		<joda.version>2.8</joda.version>
+		<lucene.version>4.7.0</lucene.version><!-- upgradeable? -->
+		<orientdb.version>2.0.10</orientdb.version>
+		<tika.version>1.8</tika.version>
 	</properties>
 
 	<dependencies>
+		<!-- Guice framework: dependency injection -->
+		<dependency>
+			<groupId>com.google.inject</groupId>
+			<artifactId>guice</artifactId>
+			<version>${guice.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.inject.extensions</groupId>
+			<artifactId>guice-servlet</artifactId>
+			<version>${guice.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.inject.extensions</groupId>
+			<artifactId>guice-assistedinject</artifactId>
+			<version>${guice.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.inject.extensions</groupId>
+			<artifactId>guice-multibindings</artifactId>
+			<version>${guice.version}</version>
+		</dependency>
+
 		<!-- validation -->
 		<!-- Provided <dependency>
 			<groupId>javax.validation</groupId>
@@ -45,6 +71,76 @@
 			<version>5.1.3.Final</version>
 		</dependency>
 
+		<!-- servlet stuff -->
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>3.1.0</version>
+		</dependency>
+
+		<!-- Jetty -->
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-server</artifactId>
+			<version>${jetty.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-webapp</artifactId>
+			<version>${jetty.version}</version>
+		</dependency>
+
+		<!-- OrientDB -->
+		<dependency>
+			<groupId>com.orientechnologies</groupId>
+			<artifactId>orientdb-graphdb</artifactId>
+			<version>${orientdb.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.orientechnologies</groupId>
+			<artifactId>orientdb-lucene</artifactId>
+			<version>${orientdb.version}</version>
+		</dependency>
+
+		<!-- Search -->
+		<dependency>
+			<groupId>org.apache.lucene</groupId>
+			<artifactId>lucene-core</artifactId>
+			<version>${lucene.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.lucene</groupId>
+			<artifactId>lucene-analyzers-common</artifactId>
+			<version>${lucene.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.lucene</groupId>
+			<artifactId>lucene-queryparser</artifactId>
+			<version>${lucene.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.lucene</groupId>
+			<artifactId>lucene-highlighter</artifactId>
+			<version>${lucene.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.lucene</groupId>
+			<artifactId>lucene-misc</artifactId>
+			<version>${lucene.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.lucene</groupId>
+			<artifactId>lucene-spatial</artifactId>
+			<version>${lucene.version}</version>
+		</dependency>
+
+		<!-- Apache Tika: Extract content from documents -->
+		<dependency>
+			<groupId>org.apache.tika</groupId>
+			<artifactId>tika-parsers</artifactId>
+			<version>${tika.version}</version>
+		</dependency>
+
 		<!-- Apache commons -->
 		<dependency>
 			<groupId>org.apache.commons</groupId>
@@ -52,11 +148,25 @@
 			<version>3.4</version>
 		</dependency>
 
+		<!-- jsoup HTML parser library @ http://jsoup.org/ -->
+		<dependency>
+			<groupId>org.jsoup</groupId>
+			<artifactId>jsoup</artifactId>
+			<version>1.8.2</version>
+		</dependency>
+
 		<!-- Date/time library -->
 		<dependency>
 			<groupId>joda-time</groupId>
 			<artifactId>joda-time</artifactId>
 			<version>${joda.version}</version>
+		</dependency>
+
+		<!-- Image manipulation -->
+		<dependency>
+			<groupId>org.imgscalr</groupId>
+			<artifactId>imgscalr-lib</artifactId>
+			<version>4.2</version>
 		</dependency>
 
 		<!-- JSR-305 implementation used for @Nullable annotation -->
