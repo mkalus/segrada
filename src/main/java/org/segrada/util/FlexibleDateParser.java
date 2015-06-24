@@ -10,10 +10,11 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.DateTimeFormatterBuilder;
 import org.joda.time.format.DateTimeParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
 import java.util.Locale;
-import java.util.logging.Logger;
 
 /**
  * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]
@@ -33,7 +34,7 @@ import java.util.logging.Logger;
  * Helper class to parse strings into dates
  */
 public class FlexibleDateParser {
-	private static final Logger logger = Logger.getLogger(FlexibleDateParser.class.getName());
+	private static final Logger logger = LoggerFactory.getLogger(FlexibleDateParser.class);
 
 	/**
 	 * parsers
@@ -72,7 +73,7 @@ public class FlexibleDateParser {
 					.withZoneUTC()
 					.parseDateTime(input);
 		} catch(Exception e) {
-			logger.warning("Could not parse to DateTime: " + input + " (type = " + type + ")");
+			logger.warn("Could not parse to DateTime: " + input + " (type = " + type + ")");
 		}
 		return null;
 	}
@@ -115,7 +116,7 @@ public class FlexibleDateParser {
 
 			return DateTimeUtils.toJulianDayNumber(date.getMillis());
 		} catch(Exception e) {
-			logger.warning("Could not parse to DateTime: " + input + " (type = " + type + ")");
+			logger.warn("Could not parse to DateTime: " + input + " (type = " + type + ")");
 		}
 		return null;
 	}

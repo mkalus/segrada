@@ -5,11 +5,11 @@ import com.google.inject.Singleton;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.segrada.model.prototype.SegradaEntity;
 import org.segrada.session.ApplicationSettings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
 import java.io.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import static org.segrada.util.Preconditions.checkNotNull;
 
@@ -32,7 +32,7 @@ import static org.segrada.util.Preconditions.checkNotNull;
  */
 @Singleton
 public class BinaryDataServiceFile implements BinaryDataService {
-	private static final Logger logger = Logger.getLogger(BinaryDataService.class.getName());
+	private static final Logger logger = LoggerFactory.getLogger(BinaryDataServiceFile.class);
 
 	/**
 	 * path where binary data will be saved
@@ -76,7 +76,7 @@ public class BinaryDataServiceFile implements BinaryDataService {
 	public boolean removeReference(@Nullable String id) {
 		if (!referenceExists(id)) return false;
 
-		if (logger.isLoggable(Level.INFO)) logger.info("Deleting file " + id);
+		if (logger.isInfoEnabled()) logger.info("Deleting file " + id);
 
 		// delete metadata, too
 		(new File(new File(savePath, id) + ".metadata")).delete();
@@ -123,14 +123,14 @@ public class BinaryDataServiceFile implements BinaryDataService {
 
 			// replace old reference, if it has been set
 			if (oldReferenceToReplace != null) {
-				if (logger.isLoggable(Level.INFO))
+				if (logger.isDebugEnabled())
 					logger.info("Replacing old reference " + oldReferenceToReplace + " by " + newFileReference);
 				removeReference(oldReferenceToReplace);
 			}
 
 			return newFileReference;
 		} catch (IOException e) {
-			logger.severe("Error saving new reference file: " + fileName + " for " + entity.toString() + ": " + e.getMessage());
+			logger.error("Error saving new reference file: " + fileName + " for " + entity.toString() + ": " + e.getMessage());
 			return null;
 		}
 	}
@@ -154,10 +154,10 @@ public class BinaryDataServiceFile implements BinaryDataService {
 			fileWriter.write(fileName + "\n" + entity.getClass().getSimpleName() + ":" + entity.getId() + "\n" + mimeType);
 			fileWriter.close();
 
-			if (logger.isLoggable(Level.INFO))
+			if (logger.isInfoEnabled())
 				logger.info("Updated reference id from " + oldReference + " to " + entity.getClass().getSimpleName());
 		} catch (IOException e) {
-			logger.warning("Could not update metadata for " + id + ": " + e.getMessage());
+			logger.warn("Could not update metadata for " + id + ": " + e.getMessage());
 		}
 	}
 
@@ -196,7 +196,7 @@ public class BinaryDataServiceFile implements BinaryDataService {
 
 			return fileName;
 		} catch (IOException e) {
-			logger.warning("Could not retreive file name from fileReference " + id + ": " + e.getMessage());
+			logger.warn("Could not retreive file name from fileReference " + id + ": " + e.getMessage());
 			return id;
 		}
 	}
