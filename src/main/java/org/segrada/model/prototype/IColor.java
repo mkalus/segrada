@@ -34,4 +34,17 @@ public interface IColor extends SegradaEntity {
 	 * @param colorCode string #abcdef or #ABCDEF or something similar - must contain 6 hex characters!
 	 */
 	void setColorCode(String colorCode);
+
+	/**
+	 * @return red part or 0, if color not set
+	 */
+	int getR();
+	/**
+	 * @return green part or 0, if color not set
+	 */
+	int getG();
+	/**
+	 * @return blue part or 0, if color not set
+	 */
+	int getB();
 }

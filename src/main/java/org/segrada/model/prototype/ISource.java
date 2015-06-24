@@ -21,6 +21,9 @@ public interface ISource extends SegradaAnnotatedEntity {
 	String getShortTitle();
 	void setShortTitle(String shortTitle);
 
+	String getLongTitle();
+	void setLongTitle(String shortTitle);
+
 	String getShortRef();
 	void setShortRef(String shortRef);
 
@@ -35,9 +38,6 @@ public interface ISource extends SegradaAnnotatedEntity {
 
 	String getCitation();
 	void setCitation(String citation);
-
-	//String getTitle();
-	void setTitle(String title);
 
 	String getCopyright();
 	void setCopyright(String copyright);
