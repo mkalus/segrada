@@ -1,7 +1,7 @@
 package org.segrada.service.repository;
 
 import org.segrada.model.prototype.ITag;
-import org.segrada.model.prototype.SegradaAnnotatedEntity;
+import org.segrada.model.prototype.SegradaTaggable;
 import org.segrada.model.util.IdModelTuple;
 import org.segrada.service.repository.prototype.CRUDRepository;
 import org.segrada.service.repository.prototype.PaginatingRepository;
@@ -93,7 +93,7 @@ public interface TagRepository extends CRUDRepository<ITag>, SearchTermRepositor
 	 * @param onlyDirect set true if only directly connected tags should be returned, otherwise whole tree of tags
 	 * @return array of tag ids
 	 */
-	String[] findTagIdsConnectedToModel(SegradaAnnotatedEntity entity, boolean onlyDirect);
+	String[] findTagIdsConnectedToModel(SegradaTaggable entity, boolean onlyDirect);
 
 	/**
 	 * get subordinate ids by parent tag (by title)
@@ -123,14 +123,14 @@ public interface TagRepository extends CRUDRepository<ITag>, SearchTermRepositor
 	 * @param parent node
 	 * @param child node
 	 */
-	void connectTag(ITag parent, SegradaAnnotatedEntity child);
+	void connectTag(ITag parent, SegradaTaggable child);
 
 	/**
 	 * Remove existing tag connection
 	 * @param tagId id of tag
 	 * @param child node that the tag is connected to
 	 */
-	void removeTag(String tagId, SegradaAnnotatedEntity child);
+	void removeTag(String tagId, SegradaTaggable child);
 
 	/**
 	 * Checks whether node is a parent of possibleChild
@@ -138,7 +138,7 @@ public interface TagRepository extends CRUDRepository<ITag>, SearchTermRepositor
 	 * @param possibleChild possible child node
 	 * @return true if node is parent of possibleChild
 	 */
-	boolean isParentOf(ITag node, SegradaAnnotatedEntity possibleChild);
+	boolean isParentOf(ITag node, SegradaTaggable possibleChild);
 
 	/**
 	 * Checks whether node is a child of possibleParent
@@ -146,5 +146,5 @@ public interface TagRepository extends CRUDRepository<ITag>, SearchTermRepositor
 	 * @param possibleParent possible parent node
 	 * @return true if node is child of possibleParent
 	 */
-	boolean isChildOf(SegradaAnnotatedEntity node, ITag possibleParent);
+	boolean isChildOf(SegradaTaggable node, ITag possibleParent);
 }

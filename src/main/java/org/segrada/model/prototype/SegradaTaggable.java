@@ -20,4 +20,7 @@ package org.segrada.model.prototype;
 public interface SegradaTaggable {
 	String[] getTags();
 	void setTags(String[] tags);
+
+	String getId();
+	String getModelName();
 }

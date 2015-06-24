@@ -64,7 +64,7 @@ public class OrientDbColorRepository extends AbstractSegradaOrientDbRepository<I
 				.field("color", entity.getColor());
 
 		// populate with data
-		populateODocumentWithCreatedModified(document, (Color) entity);
+		populateODocumentWithCreatedModified(document, entity);
 
 		return document;
 	}

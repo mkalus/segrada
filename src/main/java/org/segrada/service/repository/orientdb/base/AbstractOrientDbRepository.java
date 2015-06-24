@@ -5,6 +5,7 @@ import com.orientechnologies.orient.core.id.ORecordId;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
 import org.segrada.model.prototype.SegradaEntity;
+import org.segrada.service.repository.prototype.SegradaRepository;
 import org.segrada.service.util.PaginationInfo;
 import org.segrada.session.ApplicationSettings;
 import org.slf4j.Logger;
@@ -32,7 +33,7 @@ import java.util.stream.Collectors;
  *
  * Abstract OrientDb Repository
  */
-abstract public class AbstractOrientDbRepository<T extends SegradaEntity> {
+abstract public class AbstractOrientDbRepository<T extends SegradaEntity> implements SegradaRepository {
 	private static final Logger logger = LoggerFactory.getLogger(AbstractOrientDbRepository.class);
 
 	/**
