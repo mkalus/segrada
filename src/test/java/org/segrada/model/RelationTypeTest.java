@@ -10,6 +10,7 @@ import javax.validation.ValidatorFactory;
 import java.util.Set;
 
 import static org.junit.Assert.assertTrue;
+import static org.segrada.test.PropertyAsserter.assertBasicGetterSetterBehavior;
 
 public class RelationTypeTest {
 	private static Validator validator;
@@ -18,6 +19,11 @@ public class RelationTypeTest {
 	public static void setUp() throws Exception {
 		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
 		validator = factory.getValidator();
+	}
+
+	@Test
+	public void testProperties() {
+		assertBasicGetterSetterBehavior(new RelationType());
 	}
 
 	@Test

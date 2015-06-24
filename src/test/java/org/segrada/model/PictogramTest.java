@@ -10,6 +10,7 @@ import javax.validation.ValidatorFactory;
 import java.util.Set;
 
 import static org.junit.Assert.assertTrue;
+import static org.segrada.test.PropertyAsserter.assertBasicGetterSetterBehavior;
 
 public class PictogramTest {
 	private static byte[] pictureData={0xa,0x2,0xf};
@@ -20,6 +21,11 @@ public class PictogramTest {
 	public static void setUp() throws Exception {
 		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
 		validator = factory.getValidator();
+	}
+
+	@Test
+	public void testProperties() {
+		assertBasicGetterSetterBehavior(new Pictogram());
 	}
 
 	@Test

@@ -11,6 +11,7 @@ import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.segrada.test.PropertyAsserter.assertBasicGetterSetterBehavior;
 
 public class PeriodTest {
 	private static Validator validator;
@@ -19,6 +20,11 @@ public class PeriodTest {
 	public static void setUp() throws Exception {
 		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
 		validator = factory.getValidator();
+	}
+
+	@Test
+	public void testProperties() {
+		assertBasicGetterSetterBehavior(new Period());
 	}
 
 	@Test
