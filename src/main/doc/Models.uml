@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement />
+  <nodes>
+    <node x="95.0" y="102.0">org.segrada.model.prototype.IPictogram</node>
+    <node x="0.0" y="102.0">org.segrada.model.prototype.IColor</node>
+    <node x="452.43092105263156" y="0.0">org.segrada.model.prototype.SegradaEntity</node>
+    <node x="876.4309210526316" y="266.0">org.segrada.model.prototype.IFile</node>
+    <node x="977.0" y="102.0">org.segrada.model.prototype.ILocation</node>
+    <node x="340.0" y="184.0">org.segrada.model.prototype.IRelationType</node>
+    <node x="223.0" y="102.0">org.segrada.model.prototype.IPeriod</node>
+    <node x="635.25" y="184.0">org.segrada.model.prototype.SegradaAnnotatedEntity</node>
+    <node x="887.0" y="102.0">org.segrada.model.prototype.IUser</node>
+    <node x="919.25" y="184.0">org.segrada.model.prototype.ITag</node>
+    <node x="578.4309210526316" y="348.0">org.segrada.model.prototype.INode</node>
+    <node x="673.4309210526316" y="348.0">org.segrada.model.prototype.IRelation</node>
+    <node x="585.4309210526316" y="266.0">org.segrada.model.prototype.SegradaCoreEntity</node>
+    <node x="711.0" y="102.0">org.segrada.model.prototype.SegradaTaggable</node>
+    <node x="532.0" y="102.0">org.segrada.model.prototype.ISourceReference</node>
+    <node x="325.0" y="102.0">org.segrada.model.prototype.SegradaColoredEntity</node>
+    <node x="459.43092105263156" y="266.0">org.segrada.model.prototype.IComment</node>
+    <node x="770.4309210526316" y="266.0">org.segrada.model.prototype.ISource</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="org.segrada.model.prototype.IRelation" target="org.segrada.model.prototype.SegradaCoreEntity">
+      <point x="0.0" y="-16.0" />
+      <point x="719.9309210526316" y="323.0" />
+      <point x="709.1809210526316" y="323.0" />
+      <point x="41.25" y="16.0" />
+    </edge>
+    <edge source="org.segrada.model.prototype.IComment" target="org.segrada.model.prototype.SegradaAnnotatedEntity">
+      <point x="0.0" y="-16.0" />
+      <point x="512.4309210526316" y="246.0" />
+      <point x="660.875" y="246.0" />
+      <point x="-76.875" y="16.0" />
+    </edge>
+    <edge source="org.segrada.model.prototype.IRelationType" target="org.segrada.model.prototype.SegradaTaggable">
+      <point x="31.75" y="-16.0" />
+      <point x="435.25" y="164.0" />
+      <point x="737.0" y="164.0" />
+      <point x="-52.0" y="16.0" />
+    </edge>
+    <edge source="org.segrada.model.prototype.IPictogram" target="org.segrada.model.prototype.SegradaEntity">
+      <point x="0.0" y="-16.0" />
+      <point x="149.0" y="62.0" />
+      <point x="476.99342105263156" y="62.0" />
+      <point x="-40.9375" y="16.0" />
+    </edge>
+    <edge source="org.segrada.model.prototype.IUser" target="org.segrada.model.prototype.SegradaEntity">
+      <point x="0.0" y="-16.0" />
+      <point x="921.5" y="72.0" />
+      <point x="542.4934210526316" y="72.0" />
+      <point x="24.5625" y="16.0" />
+    </edge>
+    <edge source="org.segrada.model.prototype.IFile" target="org.segrada.model.prototype.SegradaAnnotatedEntity">
+      <point x="0.0" y="-16.0" />
+      <point x="906.9309210526316" y="236.0" />
+      <point x="814.625" y="236.0" />
+      <point x="76.875" y="16.0" />
+    </edge>
+    <edge source="org.segrada.model.prototype.SegradaAnnotatedEntity" target="org.segrada.model.prototype.SegradaColoredEntity">
+      <point x="-51.25" y="-16.0" />
+      <point x="686.5" y="154.0" />
+      <point x="465.25" y="154.0" />
+      <point x="46.75" y="16.0" />
+    </edge>
+    <edge source="org.segrada.model.prototype.ITag" target="org.segrada.model.prototype.SegradaTaggable">
+      <point x="-15.75" y="-16.0" />
+      <point x="935.0" y="164.0" />
+      <point x="841.0" y="164.0" />
+      <point x="52.0" y="16.0" />
+    </edge>
+    <edge source="org.segrada.model.prototype.ITag" target="org.segrada.model.prototype.SegradaEntity">
+      <point x="15.75" y="-16.0" />
+      <point x="966.5" y="62.0" />
+      <point x="558.8684210526316" y="62.0" />
+      <point x="40.9375" y="16.0" />
+    </edge>
+    <edge source="org.segrada.model.prototype.ISource" target="org.segrada.model.prototype.SegradaAnnotatedEntity">
+      <point x="0.0" y="-16.0" />
+      <point x="813.4309210526316" y="246.0" />
+      <point x="763.375" y="246.0" />
+      <point x="25.625" y="16.0" />
+    </edge>
+    <edge source="org.segrada.model.prototype.IPeriod" target="org.segrada.model.prototype.SegradaEntity">
+      <point x="0.0" y="-16.0" />
+      <point x="264.0" y="72.0" />
+      <point x="493.36842105263156" y="72.0" />
+      <point x="-24.5625" y="16.0" />
+    </edge>
+    <edge source="org.segrada.model.prototype.IRelationType" target="org.segrada.model.prototype.SegradaColoredEntity">
+      <point x="-31.75" y="-16.0" />
+      <point x="-46.75" y="16.0" />
+    </edge>
+    <edge source="org.segrada.model.prototype.ISourceReference" target="org.segrada.model.prototype.SegradaEntity">
+      <point x="0.0" y="-16.0" />
+      <point x="611.5" y="82.0" />
+      <point x="526.1184210526316" y="82.0" />
+      <point x="8.1875" y="16.0" />
+    </edge>
+    <edge source="org.segrada.model.prototype.INode" target="org.segrada.model.prototype.SegradaCoreEntity">
+      <point x="0.0" y="-16.0" />
+      <point x="615.9309210526316" y="323.0" />
+      <point x="626.6809210526316" y="323.0" />
+      <point x="-41.25" y="16.0" />
+    </edge>
+    <edge source="org.segrada.model.prototype.IColor" target="org.segrada.model.prototype.SegradaEntity">
+      <point x="0.0" y="-16.0" />
+      <point x="37.5" y="52.0" />
+      <point x="460.61842105263156" y="52.0" />
+      <point x="-57.3125" y="16.0" />
+    </edge>
+    <edge source="org.segrada.model.prototype.SegradaCoreEntity" target="org.segrada.model.prototype.SegradaAnnotatedEntity">
+      <point x="0.0" y="-16.0" />
+      <point x="667.9309210526316" y="246.0" />
+      <point x="712.125" y="246.0" />
+      <point x="-25.625" y="16.0" />
+    </edge>
+    <edge source="org.segrada.model.prototype.SegradaAnnotatedEntity" target="org.segrada.model.prototype.SegradaTaggable">
+      <point x="51.25" y="-16.0" />
+      <point x="0.0" y="16.0" />
+    </edge>
+    <edge source="org.segrada.model.prototype.ILocation" target="org.segrada.model.prototype.SegradaEntity">
+      <point x="0.0" y="-16.0" />
+      <point x="1025.5" y="52.0" />
+      <point x="575.2434210526316" y="52.0" />
+      <point x="57.3125" y="16.0" />
+    </edge>
+    <edge source="org.segrada.model.prototype.SegradaColoredEntity" target="org.segrada.model.prototype.SegradaEntity">
+      <point x="0.0" y="-16.0" />
+      <point x="418.5" y="82.0" />
+      <point x="509.74342105263156" y="82.0" />
+      <point x="-8.1875" y="16.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="1.0" x="537.0" y="190.0" />
+  <SelectedNodes />
+  <Categories>
+    <Category>Fields</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+
