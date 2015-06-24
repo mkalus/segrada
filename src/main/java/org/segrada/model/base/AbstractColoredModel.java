@@ -4,6 +4,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.segrada.model.prototype.IPictogram;
 import org.segrada.model.prototype.SegradaColoredEntity;
 
+import javax.annotation.Nullable;
+
 /**
  * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]
  *
@@ -33,7 +35,7 @@ abstract public class AbstractColoredModel extends AbstractSegradaEntity impleme
 	private Integer color;
 
 	@Override
-	public IPictogram getPictogram() {
+	public @Nullable IPictogram getPictogram() {
 		return pictogram;
 	}
 
@@ -43,7 +45,7 @@ abstract public class AbstractColoredModel extends AbstractSegradaEntity impleme
 	}
 
 	@Override
-	public Integer getColor() {
+	public @Nullable Integer getColor() {
 		return color;
 	}
 

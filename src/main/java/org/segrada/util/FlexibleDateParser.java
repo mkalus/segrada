@@ -87,7 +87,7 @@ public class FlexibleDateParser {
 	public Long inputToJd(@Nullable String input, String type, boolean high) {
 		// sanity check
 		if (input == null || "".equals(input))
-			return high?Long.MAX_VALUE:0L;
+			return high?Long.MAX_VALUE:Long.MIN_VALUE;
 
 		try {
 			DateTime date = inputFormatter.withChronology(getChronologyFromType(type))

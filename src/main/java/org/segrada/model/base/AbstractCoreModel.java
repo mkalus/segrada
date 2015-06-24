@@ -6,6 +6,7 @@ import org.segrada.model.prototype.ILocation;
 import org.segrada.model.prototype.IPeriod;
 import org.segrada.model.prototype.SegradaCoreEntity;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -59,7 +60,7 @@ abstract public class AbstractCoreModel extends AbstractAnnotatedModel implement
 	/**
 	 * minimum JD date of periods above
 	 */
-	private Long minJD = 0L;
+	private Long minJD = Long.MIN_VALUE;
 
 	/**
 	 * maximum JD date of periods above
@@ -67,7 +68,7 @@ abstract public class AbstractCoreModel extends AbstractAnnotatedModel implement
 	private Long maxJD = Long.MAX_VALUE;
 
 	@Override
-	public List<ILocation> getLocations() {
+	public @Nullable List<ILocation> getLocations() {
 		return locations;
 	}
 
@@ -77,7 +78,7 @@ abstract public class AbstractCoreModel extends AbstractAnnotatedModel implement
 	}
 
 	@Override
-	public List<IPeriod> getPeriods() {
+	public @Nullable List<IPeriod> getPeriods() {
 		return periods;
 	}
 
@@ -87,7 +88,7 @@ abstract public class AbstractCoreModel extends AbstractAnnotatedModel implement
 	}
 
 	@Override
-	public String getMinEntry() {
+	public @Nullable String getMinEntry() {
 		return minEntry;
 	}
 
@@ -97,7 +98,7 @@ abstract public class AbstractCoreModel extends AbstractAnnotatedModel implement
 	}
 
 	@Override
-	public String getMaxEntry() {
+	public @Nullable String getMaxEntry() {
 		return maxEntry;
 	}
 
@@ -107,7 +108,7 @@ abstract public class AbstractCoreModel extends AbstractAnnotatedModel implement
 	}
 
 	@Override
-	public String getMinEntryCalendar() {
+	public @Nullable String getMinEntryCalendar() {
 		return minEntryCalendar;
 	}
 
@@ -117,7 +118,7 @@ abstract public class AbstractCoreModel extends AbstractAnnotatedModel implement
 	}
 
 	@Override
-	public String getMaxEntryCalendar() {
+	public @Nullable String getMaxEntryCalendar() {
 		return maxEntryCalendar;
 	}
 

@@ -6,7 +6,6 @@ import org.segrada.model.User;
 import static org.junit.Assert.*;
 
 public class AbstractSegradaEntityTest {
-
 	@Test
 	public void testEquals() throws Exception {
 		MockEntity entity1 = new MockEntity();
@@ -67,15 +66,30 @@ public class AbstractSegradaEntityTest {
 		assertEquals("MockEntity", entity.getModelName());
 	}
 
+	@Test
+	public void testToString() throws Exception {
+		MockEntity entity = new MockEntity();
+		assertEquals("{MockEntity}*, DUMMY", entity.toString());
+
+		entity.setId("ID");
+		assertEquals("{MockEntity}ID, DUMMY", entity.toString());
+
+		entity.setId(null);
+		assertEquals("{MockEntity}*, DUMMY", entity.toString());
+
+		entity.setDummyLoad("XYZ");
+		assertEquals("{MockEntity}*, XYZ", entity.toString());
+	}
+
 	private class MockEntity extends AbstractSegradaEntity {
 		/**
 		 * load for testing equality
 		 */
-		private String dummyLoad;
+		private String dummyLoad = "DUMMY";
 
 		@Override
 		public String getTitle() {
-			return null;
+			return dummyLoad;
 		}
 
 		public String getDummyLoad() {

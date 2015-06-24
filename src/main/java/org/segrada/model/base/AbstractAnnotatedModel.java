@@ -7,6 +7,7 @@ import org.segrada.model.prototype.IFile;
 import org.segrada.model.prototype.ISourceReference;
 import org.segrada.model.prototype.SegradaAnnotatedEntity;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -49,7 +50,7 @@ abstract public class AbstractAnnotatedModel extends AbstractColoredModel implem
 
 
 	@Override
-	public String[] getTags() {
+	public @Nullable String[] getTags() {
 		return tags;
 	}
 
@@ -59,7 +60,7 @@ abstract public class AbstractAnnotatedModel extends AbstractColoredModel implem
 	}
 
 	@Override
-	public List<IComment> getComments() {
+	public @Nullable List<IComment> getComments() {
 		return comments;
 	}
 
@@ -69,7 +70,7 @@ abstract public class AbstractAnnotatedModel extends AbstractColoredModel implem
 	}
 
 	@Override
-	public List<IFile> getFiles() {
+	public @Nullable List<IFile> getFiles() {
 		return files;
 	}
 
@@ -79,7 +80,7 @@ abstract public class AbstractAnnotatedModel extends AbstractColoredModel implem
 	}
 
 	@Override
-	public List<ISourceReference> getSourceReferences() {
+	public @Nullable List<ISourceReference> getSourceReferences() {
 		return sourceReferences;
 	}
 
