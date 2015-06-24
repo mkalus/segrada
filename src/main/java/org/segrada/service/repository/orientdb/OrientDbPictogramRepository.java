@@ -62,6 +62,7 @@ public class OrientDbPictogramRepository extends AbstractSegradaOrientDbReposito
 		document.field("title", entity.getTitle())
 				.field("fileIdentifier", entity.getFileIdentifier());
 
+		// populate with data
 		populateODocumentWithCreatedModified(document, entity);
 
 		return document;

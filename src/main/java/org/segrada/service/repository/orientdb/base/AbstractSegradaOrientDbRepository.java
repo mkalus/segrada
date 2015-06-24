@@ -127,6 +127,8 @@ abstract public class AbstractSegradaOrientDbRepository<T extends SegradaEntity>
 
 		pictogram.setTitle(document.field("title", String.class));
 		pictogram.setFileIdentifier(document.field("fileIdentifier", String.class));
+
+		// populate with data
 		populateEntityWithBaseData(document, pictogram);
 		populateEntityWithCreatedModified(document, pictogram);
 
