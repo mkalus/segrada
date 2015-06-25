@@ -17,13 +17,13 @@ import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory
 import org.segrada.service.util.AbstractLazyLoadedObject;
 import org.segrada.service.util.PaginationInfo;
 import org.segrada.util.OrientStringEscape;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]
@@ -43,7 +43,7 @@ import java.util.logging.Logger;
  * Tag Repository implementation
  */
 public class OrientDbTagRepository extends AbstractSegradaOrientDbRepository<ITag> implements TagRepository {
-	private static final Logger logger = Logger.getLogger(OrientDbTagRepository.class.getName());
+	private static final Logger logger = LoggerFactory.getLogger(OrientDbTagRepository.class);
 
 	/**
 	 * Constructor
@@ -241,7 +241,7 @@ public class OrientDbTagRepository extends AbstractSegradaOrientDbRepository<ITa
 			} else {
 				if (result.size() != 0)
 					list.add(result.get(0));
-				else logger.log(Level.FINE, "findTagsByTagList: Skipping unknown tag " + tag);
+				else logger.info("findTagsByTagList: Skipping unknown tag " + tag);
 			}
 		}
 

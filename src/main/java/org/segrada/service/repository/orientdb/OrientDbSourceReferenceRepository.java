@@ -12,11 +12,11 @@ import org.segrada.service.repository.SourceRepository;
 import org.segrada.service.repository.orientdb.base.AbstractOrientDbRepository;
 import org.segrada.service.repository.orientdb.base.AbstractSegradaOrientDbRepository;
 import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory;
-import org.segrada.service.util.AbstractLazyLoadedObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.logging.Logger;
 
 /**
  * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]
@@ -36,7 +36,7 @@ import java.util.logging.Logger;
  * OrientDb Source Reference Repository
  */
 public class OrientDbSourceReferenceRepository extends AbstractSegradaOrientDbRepository<ISourceReference> implements SourceReferenceRepository {
-	private static Logger logger = Logger.getLogger(OrientDbSourceReferenceRepository.class.getName());
+	private static final Logger logger = LoggerFactory.getLogger(OrientDbSourceReferenceRepository.class);
 
 	/**
 	 * Constructor
@@ -61,14 +61,14 @@ public class OrientDbSourceReferenceRepository extends AbstractSegradaOrientDbRe
 			SourceRepository sourceRepository = repositoryFactory.produceRepository(OrientDbSourceRepository.class);
 			if (sourceRepository != null)
 				sourceReference.setSource(sourceRepository.find(fromId.getIdentity().toString()));
-			else logger.warning("Could not produce class OrientDbSourceRepository while converting to entity.");
+			else logger.warn("Could not produce class OrientDbSourceRepository while converting to entity.");
 		}
 		ODocument toId = document.field("reference", ODocument.class);
 		if (toId != null) {
 			AbstractOrientDbRepository dynamicRepository = (AbstractOrientDbRepository) repositoryFactory.produceRepository(toId.getClassName());
 			if (dynamicRepository != null)
 				sourceReference.setReference((SegradaAnnotatedEntity) dynamicRepository.convertToEntity(toId));
-			else logger.warning("Could not produce class for model " + toId.getClassName() + " while converting to entity.");
+			else logger.warn("Could not produce class for model " + toId.getClassName() + " while converting to entity.");
 		}
 
 		// rest is easy

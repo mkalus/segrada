@@ -74,7 +74,7 @@ public class BinaryDataServiceFile implements BinaryDataService {
 
 	@Override
 	public boolean removeReference(@Nullable String id) {
-		if (!referenceExists(id)) return false;
+		if (id == null || !referenceExists(id)) return false;
 
 		if (logger.isInfoEnabled()) logger.info("Deleting file " + id);
 
@@ -130,7 +130,7 @@ public class BinaryDataServiceFile implements BinaryDataService {
 
 			return newFileReference;
 		} catch (IOException e) {
-			logger.error("Error saving new reference file: " + fileName + " for " + entity.toString() + ": " + e.getMessage());
+			logger.error("Error saving new reference file: " + fileName + " for " + entity.toString() + ".", e);
 			return null;
 		}
 	}
@@ -157,7 +157,7 @@ public class BinaryDataServiceFile implements BinaryDataService {
 			if (logger.isInfoEnabled())
 				logger.info("Updated reference id from " + oldReference + " to " + entity.getModelName());
 		} catch (IOException e) {
-			logger.warn("Could not update metadata for " + id + ": " + e.getMessage());
+			logger.warn("Could not update metadata for " + id, e);
 		}
 	}
 
@@ -196,7 +196,7 @@ public class BinaryDataServiceFile implements BinaryDataService {
 
 			return fileName;
 		} catch (IOException e) {
-			logger.warn("Could not retreive file name from fileReference " + id + ": " + e.getMessage());
+			logger.warn("Could not retreive file name from fileReference " + id, e);
 			return id;
 		}
 	}

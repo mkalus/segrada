@@ -116,7 +116,7 @@ public class FlexibleDateParser {
 
 			return DateTimeUtils.toJulianDayNumber(date.getMillis());
 		} catch(Exception e) {
-			logger.warn("Could not parse to DateTime: " + input + " (type = " + type + ")");
+			logger.warn("Could not parse to DateTime: " + input + " (type = " + type + ")", e);
 		}
 		return null;
 	}

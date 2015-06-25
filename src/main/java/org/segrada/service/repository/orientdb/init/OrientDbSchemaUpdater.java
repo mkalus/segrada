@@ -7,6 +7,8 @@ import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 import com.tinkerpop.blueprints.impls.orient.OrientGraphFactory;
 import org.segrada.util.PasswordEncoder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
 import java.io.BufferedReader;
@@ -14,8 +16,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]
@@ -35,7 +35,7 @@ import java.util.logging.Logger;
  * Called on application start to update schema
  */
 public class OrientDbSchemaUpdater {
-	private final static Logger logger = Logger.getLogger(OrientDbSchemaUpdater.class.getName());
+	private static final Logger logger = LoggerFactory.getLogger(OrientDbSchemaUpdater.class);
 
 	/**
 	 * current version of db
@@ -90,7 +90,7 @@ public class OrientDbSchemaUpdater {
 					try { // try to parse int
 						version = Integer.parseInt((String) doc.field("value", String.class));
 					} catch (Throwable e) {
-						logger.warning("getConfigVersion could not determine correct version although Config class exists in database");
+						logger.warn("getConfigVersion could not determine correct version although Config class exists in database", e);
 						version = 0;
 					}
 				}
@@ -115,7 +115,7 @@ public class OrientDbSchemaUpdater {
 		}
 
 		if (!orientGraphFactory.exists()) {
-			logger.warning("Database " + dbPath + " did not exist: Creating it now.");
+			logger.info("Database " + dbPath + " did not exist: Creating it now.");
 			try {
 				OrientGraph graph = new OrientGraph(dbPath);
 				graph.shutdown();
@@ -173,15 +173,15 @@ public class OrientDbSchemaUpdater {
 					try {
 						db.command(new OCommandSQL(line)).execute();
 					} catch (Exception e) {
-						logger.log(Level.WARNING, "Exception in schema update while executing \"" + line + "\": " + e.getMessage());
+						logger.warn("Exception in schema update while executing \"" + line + "\"", e);
 					} catch (Error e) {
-						logger.log(Level.SEVERE, "Error in schema update while executing \"" + line + "\": " + e.getMessage());
+						logger.error("Error in schema update while executing \"" + line + "\"", e);
 					}
 			}
 
 			in.close();
 		} catch (IOException e) {
-			logger.log(Level.SEVERE, "IO Exception while reading schema file " + resourceName + ": " + e.getMessage());
+			logger.error("IO Exception while reading schema file " + resourceName, e);
 		}
 	}
 
