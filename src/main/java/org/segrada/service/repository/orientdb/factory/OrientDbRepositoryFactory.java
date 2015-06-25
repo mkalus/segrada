@@ -85,13 +85,24 @@ public class OrientDbRepositoryFactory implements RepositoryFactory {
 	@Override
 	@SuppressWarnings("unchecked")
 	public <T extends SegradaRepository> T produceRepository(Class<T> clazz) {
+		// if we have a base class, e.g. FileRepository -> map it to OrientDbFileRepository
+		if (clazz.isInterface()) {
+			try { // create OrientDb class for this entity
+				clazz = (Class<T>) Class.forName("org.segrada.service.repository.orientdb.OrientDb" + clazz.getSimpleName());
+			} catch (Exception e) {
+				e.printStackTrace();
+				return null;
+			}
+		}
+
+		// already in cache?
 		SegradaRepository repository = repositoryMap.get(clazz);
 		if (repository != null) return (T) repository;
 
 		try {
 			// instantiate new class
 			Constructor<T> constructor = clazz.getConstructor(OrientDbRepositoryFactory.class);
-			// cache in map
+			// cache to map
 			T repositoryInstance = constructor.newInstance(this);
 			repositoryMap.put(clazz, repositoryInstance);
 
