@@ -120,7 +120,8 @@ abstract public class AbstractSegradaOrientDbRepository<T extends SegradaEntity>
 		//TODO: make it work?
 		TagRepository tagRepository = repositoryFactory.produceRepository(OrientDbTagRepository.class);
 
-		return tagRepository.findTagIdsConnectedToModel(entity, true);
+		// TODO: merge both calls to one
+		return tagRepository.findTagTitlesByIds(tagRepository.findTagIdsConnectedToModel(entity, true));
 	}
 
 	/**

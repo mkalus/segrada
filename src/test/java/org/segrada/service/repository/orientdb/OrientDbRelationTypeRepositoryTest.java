@@ -16,6 +16,7 @@ import org.segrada.test.OrientDbTestApplicationSettings;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 public class OrientDbRelationTypeRepositoryTest {
 
@@ -173,5 +174,16 @@ public class OrientDbRelationTypeRepositoryTest {
 		// partial terms
 		hits = repository.findBySearchTerm("fro tot", 1, true);
 		assertEquals(1, hits.size());
+	}
+
+	@Test
+	public void testPaginate() throws Exception {
+		fail("Test not implemented yet.");
+
+	}
+
+	@Test
+	public void testDelete() throws Exception {
+		fail("Implement deletion and check!");
 	}
 }

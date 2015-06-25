@@ -273,4 +273,14 @@ public class OrientDbSourceRepositoryTest {
 		hits = repository.findBySearchTerm("sho tit", 1, true);
 		assertEquals(1, hits.size());
 	}
+
+	@Test
+	public void testDelete() throws Exception {
+		fail("Do deletion and test!");
+	}
+
+	@Test
+	public void testPaginate() throws Exception {
+		fail("Test not implemented yet");
+	}
 }

@@ -134,6 +134,16 @@ public class OrientDbSourceRepository extends AbstractAnnotatedOrientDbRepositor
 	}
 
 	@Override
+	public boolean delete(ISource entity) {
+		if (super.delete(entity)) {
+			//TODO: delete source references pointing to me, too
+
+			return true;
+		}
+		return false;
+	}
+
+	@Override
 	public List<ISource> findBySearchTerm(String term, int maximum, boolean returnWithoutTerm) {
 		List<ISource> hits = new LinkedList<>();
 

@@ -173,4 +173,14 @@ public class OrientDbRelationTypeRepository extends AbstractColoredOrientDbRepos
 
 		return sb.toString();
 	}
+
+	@Override
+	public boolean delete(IRelationType entity) {
+		if (super.delete(entity)) {
+			//TODO: delete relations of this type, too
+
+			return true;
+		}
+		return false;
+	}
 }

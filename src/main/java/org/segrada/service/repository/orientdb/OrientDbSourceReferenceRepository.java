@@ -56,19 +56,29 @@ public class OrientDbSourceReferenceRepository extends AbstractSegradaOrientDbRe
 		SourceReference sourceReference = new SourceReference();
 
 		// set from/to
-		ORecordId fromId = document.field("source", ORecordId.class);
-		if (fromId != null) {
+		ORecordId source = document.field("source", ORecordId.class);
+		if (source != null) {
 			SourceRepository sourceRepository = repositoryFactory.produceRepository(OrientDbSourceRepository.class);
 			if (sourceRepository != null)
-				sourceReference.setSource(sourceRepository.find(fromId.getIdentity().toString()));
+				sourceReference.setSource(sourceRepository.find(source.getIdentity().toString()));
 			else logger.warn("Could not produce class OrientDbSourceRepository while converting to entity.");
 		}
-		ODocument toId = document.field("reference", ODocument.class);
-		if (toId != null) {
-			AbstractOrientDbRepository dynamicRepository = (AbstractOrientDbRepository) repositoryFactory.produceRepository(toId.getClassName());
-			if (dynamicRepository != null)
-				sourceReference.setReference((SegradaAnnotatedEntity) dynamicRepository.convertToEntity(toId));
-			else logger.warn("Could not produce class for model " + toId.getClassName() + " while converting to entity.");
+		Object referenceField = document.field("reference");
+		if (referenceField != null) {
+			ODocument reference = null;
+			if (referenceField instanceof ODocument) reference = (ODocument) referenceField;
+			else if (referenceField instanceof ORecordId) {
+				reference = repositoryFactory.getDb().load((ORecordId) referenceField);
+			} else {
+				logger.error("Invalid class type: " + referenceField.getClass().getName());
+			}
+
+			if (reference != null) {
+				AbstractOrientDbRepository dynamicRepository = (AbstractOrientDbRepository) repositoryFactory.produceRepository(reference.getClassName());
+				if (dynamicRepository != null)
+					sourceReference.setReference((SegradaAnnotatedEntity) dynamicRepository.convertToEntity(reference));
+				else logger.warn("Could not produce class for document " + reference.toString() + " while converting to entity.");
+			}
 		}
 
 		// rest is easy

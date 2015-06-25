@@ -127,8 +127,25 @@ public class OrientDbRepositoryFactory implements RepositoryFactory {
 			Class c = Class.forName("org.segrada.service.repository.orientdb.OrientDb" + modelName + "Repository");
 			return (T) produceRepository(c);
 		} catch (ClassNotFoundException e) {
+			// testing environment
+			if (modelName.startsWith("Mock")) {
+				logger.debug("Working in testing environment: Finding Mock repository.");
+				for (Class repositoryClass : repositoryMap.keySet())
+					if (repositoryClass.getName().contains("Mock"))
+						return (T) repositoryMap.get(repositoryClass);
+			}
+
 			logger.error("Error while producing repository from model name " + modelName, e);
 			return null;
 		}
+	}
+
+	/**
+	 * add repository instance to cache - used for testing
+	 * @param clazz to map repository under
+	 * @param repository to map
+	 */
+	public void addRepository(Class clazz, SegradaRepository repository) {
+		repositoryMap.put(clazz, repository);
 	}
 }

@@ -196,7 +196,8 @@ abstract public class AbstractAnnotatedOrientDbRepository<T extends SegradaAnnot
 			//db.command(new OCommandSQL("delete from Location where parent = " + entity.getId())).execute();
 			//db.command(new OCommandSQL("delete from Period where parent = " + entity.getId())).execute();
 
-			//TODO: do we need to delete edge
+			//TODO: delete source reference pointing to me, too
+			//TODO: delete tag links? comment links? file links?
 
 			return true;
 		}
