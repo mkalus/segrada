@@ -120,7 +120,7 @@ public class OrientDbSchemaUpdater {
 				OrientGraph graph = new OrientGraph(dbPath);
 				graph.shutdown();
 			} catch (Exception e) {
-				throw new RuntimeException("Could not initialize database in " + dbPath + ": " + e.getMessage());
+				throw new RuntimeException("Could not initialize database in " + dbPath, e);
 			}
 		}
 	}

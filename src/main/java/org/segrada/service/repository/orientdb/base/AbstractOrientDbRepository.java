@@ -65,7 +65,7 @@ abstract public class AbstractOrientDbRepository<T extends SegradaEntity> implem
 						repositoryFactory.getApplicationSettings().getSetting("orientDB.password"));
 			}
 		} catch (Exception e) {
-			throw new RuntimeException("Could not open database: " + e.getMessage());
+			throw new RuntimeException("Could not open database.", e);
 		}
 	}
 
@@ -180,7 +180,7 @@ abstract public class AbstractOrientDbRepository<T extends SegradaEntity> implem
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error("Exception thrown while saving entity: " + e.getMessage());
+			logger.error("Exception thrown while saving entity.", e);
 		}
 
 		return false;
@@ -204,7 +204,7 @@ abstract public class AbstractOrientDbRepository<T extends SegradaEntity> implem
 
 			return doc.field("count", Long.class);
 		} catch (Exception e) {
-			logger.error("Exception thrown while counting entities: " + e.getMessage());
+			logger.error("Exception thrown while counting entities.", e);
 		}
 		return 0L;
 	}
@@ -230,7 +230,7 @@ abstract public class AbstractOrientDbRepository<T extends SegradaEntity> implem
 				entities.add(convertToEntity(document));
 			}
 		} catch (Exception e) {
-			logger.error("Exception thrown while fetching all entities: " + e.getMessage());
+			logger.error("Exception thrown while fetching all entities.", e);
 		}
 
 		return entities;
@@ -259,7 +259,7 @@ abstract public class AbstractOrientDbRepository<T extends SegradaEntity> implem
 			// correct class => convert to correct entity
 			return convertToEntity(document);
 		} catch (Exception e) {
-			logger.error("Exception thrown while fetching one entity: " + e.getMessage());
+			logger.error("Exception thrown while fetching one entity.", e);
 		}
 		return null;
 	}
@@ -387,7 +387,7 @@ abstract public class AbstractOrientDbRepository<T extends SegradaEntity> implem
 					entities // list of entities
 			);
 		} catch (Exception e) {
-			logger.error("Exception thrown while fetching paginated entities: " + e.getMessage());
+			logger.error("Exception thrown while fetching paginated entities.", e);
 
 			return null;
 		}
