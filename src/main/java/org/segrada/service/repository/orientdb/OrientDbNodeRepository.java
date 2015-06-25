@@ -157,18 +157,6 @@ public class OrientDbNodeRepository extends AbstractCoreOrientDbRepository<INode
 		return super.paginate(page, entriesPerPage, constraints);
 	}
 
-	@Override
-	public boolean delete(INode entity) {
-		if (super.delete(entity)) {
-			// delete connected locations and periods
-			db.command(new OCommandSQL("delete from Location where parent = " + entity.getId())).execute();
-			db.command(new OCommandSQL("delete from Period where parent = " + entity.getId())).execute();
-
-			return true;
-		}
-		return false;
-	}
-
 	/**
 	 * create search term for full text search
 	 * @param term term(s) to search for

@@ -1,7 +1,9 @@
 package org.segrada.service.repository.orientdb.base;
 
 import com.orientechnologies.orient.core.record.impl.ODocument;
+import com.orientechnologies.orient.core.sql.OCommandSQL;
 import org.segrada.model.base.AbstractCoreModel;
+import org.segrada.model.prototype.INode;
 import org.segrada.model.prototype.SegradaCoreEntity;
 import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory;
 
@@ -46,5 +48,18 @@ abstract public class AbstractCoreOrientDbRepository<T extends SegradaCoreEntity
 	 */
 	protected void populateEntityWithCore(ODocument document, AbstractCoreModel entity) {
 		//TODO
+	}
+
+
+	@Override
+	public boolean delete(T entity) {
+		if (super.delete(entity)) {
+			// delete connected locations and periods
+			db.command(new OCommandSQL("delete from Location where parent = " + entity.getId())).execute();
+			db.command(new OCommandSQL("delete from Period where parent = " + entity.getId())).execute();
+
+			return true;
+		}
+		return false;
 	}
 }
