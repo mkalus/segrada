@@ -179,7 +179,6 @@ abstract public class AbstractOrientDbRepository<T extends SegradaEntity> implem
 
 			return true;
 		} catch (Exception e) {
-			e.printStackTrace();
 			logger.error("Exception thrown while saving entity.", e);
 		}
 

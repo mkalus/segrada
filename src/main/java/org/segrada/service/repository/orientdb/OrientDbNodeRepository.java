@@ -20,7 +20,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 
 /**
  * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]
@@ -40,8 +39,6 @@ import java.util.logging.Logger;
  * OrientDb Node Repository
  */
 public class OrientDbNodeRepository extends AbstractCoreOrientDbRepository<INode> implements NodeRepository {
-	private static final Logger logger = Logger.getLogger(OrientDbNodeRepository.class.getName());
-
 	/**
 	 * Constructor
 	 */

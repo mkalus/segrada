@@ -10,6 +10,8 @@ import org.segrada.service.repository.LocationRepository;
 import org.segrada.service.repository.orientdb.base.AbstractSegradaOrientDbRepository;
 import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory;
 import org.segrada.service.util.AbstractLazyLoadedObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -32,6 +34,8 @@ import java.util.List;
  * OrientDb Location Repository
  */
 public class OrientDbLocationRepository extends AbstractSegradaOrientDbRepository<ILocation> implements LocationRepository {
+	private static final Logger logger = LoggerFactory.getLogger(OrientDbLocationRepository.class);
+
 	/**
 	 * Constructor
 	 */
@@ -124,7 +128,7 @@ public class OrientDbLocationRepository extends AbstractSegradaOrientDbRepositor
 					}
 			);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Could not lazy load ILocation " + id, e);
 		}
 		return null;
 	}

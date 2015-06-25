@@ -12,6 +12,8 @@ import org.segrada.service.repository.PeriodRepository;
 import org.segrada.service.repository.orientdb.base.AbstractSegradaOrientDbRepository;
 import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory;
 import org.segrada.service.util.AbstractLazyLoadedObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -34,6 +36,8 @@ import java.util.List;
  * OrientDb Period Repository
  */
 public class OrientDbPeriodRepository extends AbstractSegradaOrientDbRepository<IPeriod> implements PeriodRepository {
+	private static final Logger logger = LoggerFactory.getLogger(OrientDbLocationRepository.class);
+
 	/**
 	 * Constructor
 	 */
@@ -131,7 +135,7 @@ public class OrientDbPeriodRepository extends AbstractSegradaOrientDbRepository<
 					}
 			);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Could not lazy load IPeriod " + id, e);
 		}
 		return null;
 	}

@@ -10,6 +10,8 @@ import org.segrada.service.repository.orientdb.OrientDbTagRepository;
 import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory;
 import org.segrada.service.util.AbstractLazyLoadedObject;
 import org.segrada.session.Identity;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]
@@ -29,6 +31,8 @@ import org.segrada.session.Identity;
  * Abstract OrientDb Repository for created/modified entities
  */
 abstract public class AbstractSegradaOrientDbRepository<T extends SegradaEntity> extends AbstractOrientDbRepository<T> {
+	private static final Logger logger = LoggerFactory.getLogger(AbstractSegradaOrientDbRepository.class);
+
 	/**
 	 * Constructor
 	 */
@@ -84,7 +88,7 @@ abstract public class AbstractSegradaOrientDbRepository<T extends SegradaEntity>
 					}
 			);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Could not lazy load IUser " + id, e);
 		}
 		return null;
 	}
@@ -110,7 +114,7 @@ abstract public class AbstractSegradaOrientDbRepository<T extends SegradaEntity>
 					}
 			);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Could not lazy load tags for " + entity.toString(), e);
 		}
 		return null;*/
 		//TODO: make it work?

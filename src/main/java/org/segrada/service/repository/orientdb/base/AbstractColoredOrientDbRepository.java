@@ -6,6 +6,8 @@ import org.segrada.model.prototype.IPictogram;
 import org.segrada.model.prototype.SegradaColoredEntity;
 import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory;
 import org.segrada.service.util.AbstractLazyLoadedObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]
@@ -25,6 +27,8 @@ import org.segrada.service.util.AbstractLazyLoadedObject;
  * Abstract OrientDb Repository for colored entities
  */
 abstract public class AbstractColoredOrientDbRepository<T extends SegradaColoredEntity> extends AbstractSegradaOrientDbRepository<T> {
+	private static final Logger logger = LoggerFactory.getLogger(AbstractColoredOrientDbRepository.class);
+
 	/**
 	 * Constructor
 	 */
@@ -81,7 +85,7 @@ abstract public class AbstractColoredOrientDbRepository<T extends SegradaColored
 					}
 			);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Could not lazy load IPictogram " + id, e);
 		}
 		return null;
 	}

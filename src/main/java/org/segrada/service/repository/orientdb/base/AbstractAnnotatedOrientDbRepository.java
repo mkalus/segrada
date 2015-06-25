@@ -13,6 +13,8 @@ import org.segrada.service.repository.orientdb.OrientDbSourceReferenceRepository
 import org.segrada.service.repository.orientdb.OrientDbTagRepository;
 import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory;
 import org.segrada.service.util.AbstractLazyLoadedObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashSet;
 import java.util.List;
@@ -36,6 +38,8 @@ import java.util.Set;
  * Abstract OrientDb Repository for annotated entities
  */
 abstract public class AbstractAnnotatedOrientDbRepository<T extends SegradaAnnotatedEntity> extends AbstractColoredOrientDbRepository<T> {
+	private static final Logger logger = LoggerFactory.getLogger(AbstractAnnotatedOrientDbRepository.class);
+
 	/**
 	 * Constructor
 	 */
@@ -82,7 +86,7 @@ abstract public class AbstractAnnotatedOrientDbRepository<T extends SegradaAnnot
 					}
 			);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Could not lazy load ISourceReferences for " + entity.toString(), e);
 		}
 		return null;
 	}
@@ -109,7 +113,7 @@ abstract public class AbstractAnnotatedOrientDbRepository<T extends SegradaAnnot
 					}
 			);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Could not lazy load IComments for " + entity.toString(), e);
 		}
 		return null;
 	}
@@ -136,7 +140,7 @@ abstract public class AbstractAnnotatedOrientDbRepository<T extends SegradaAnnot
 					}
 			);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Could not lazy load IFiles for " + entity.toString(), e);
 		}
 		return null;
 	}
@@ -192,7 +196,7 @@ abstract public class AbstractAnnotatedOrientDbRepository<T extends SegradaAnnot
 			//db.command(new OCommandSQL("delete from Location where parent = " + entity.getId())).execute();
 			//db.command(new OCommandSQL("delete from Period where parent = " + entity.getId())).execute();
 
-			//TODO: do we need to delete edges, too?
+			//TODO: do we need to delete edge
 
 			return true;
 		}

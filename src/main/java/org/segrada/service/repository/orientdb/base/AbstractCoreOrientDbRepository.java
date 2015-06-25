@@ -13,6 +13,8 @@ import org.segrada.service.repository.orientdb.OrientDbLocationRepository;
 import org.segrada.service.repository.orientdb.OrientDbPeriodRepository;
 import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory;
 import org.segrada.service.util.AbstractLazyLoadedObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -34,6 +36,8 @@ import java.util.List;
  * Abstract OrientDb Repository for core entities (locations, periods)
  */
 abstract public class AbstractCoreOrientDbRepository<T extends SegradaCoreEntity> extends AbstractAnnotatedOrientDbRepository<T> {
+	private static final Logger logger = LoggerFactory.getLogger(AbstractCoreOrientDbRepository.class);
+
 	/**
 	 * Constructor
 	 */
@@ -133,7 +137,7 @@ abstract public class AbstractCoreOrientDbRepository<T extends SegradaCoreEntity
 					}
 			);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Could not lazy load ILocations for " + entity.toString(), e);
 		}
 		return null;
 	}
@@ -160,7 +164,7 @@ abstract public class AbstractCoreOrientDbRepository<T extends SegradaCoreEntity
 					}
 			);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Could not lazy load IPeriods for " + entity.toString(), e);
 		}
 		return null;
 	}
