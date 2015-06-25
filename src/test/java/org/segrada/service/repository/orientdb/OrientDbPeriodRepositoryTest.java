@@ -10,6 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.segrada.model.Period;
 import org.segrada.model.prototype.IPeriod;
+import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory;
 import org.segrada.session.Identity;
 import org.segrada.test.OrientDBTestInstance;
 import org.segrada.test.OrientDbTestApplicationSettings;
@@ -39,8 +40,10 @@ public class OrientDbPeriodRepositoryTest {
 		// open database
 		ODatabaseDocumentTx db = orientDBTestInstance.getDatabase();
 
+		OrientDbRepositoryFactory factory = new OrientDbRepositoryFactory(db, new OrientDbTestApplicationSettings(), new Identity());
+
 		// create repository
-		repository = new OrientDbPeriodRepository(db, new OrientDbTestApplicationSettings(), new Identity());
+		repository =  factory.produceRepository(OrientDbPeriodRepository.class);
 	}
 
 	@After

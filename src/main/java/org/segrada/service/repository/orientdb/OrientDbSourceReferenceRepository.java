@@ -10,7 +10,9 @@ import org.segrada.model.prototype.ISourceReference;
 import org.segrada.model.prototype.SegradaAnnotatedEntity;
 import org.segrada.service.repository.SourceReferenceRepository;
 import org.segrada.service.repository.SourceRepository;
+import org.segrada.service.repository.orientdb.base.AbstractOrientDbRepository;
 import org.segrada.service.repository.orientdb.base.AbstractSegradaOrientDbRepository;
+import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory;
 import org.segrada.session.ApplicationSettings;
 import org.segrada.session.Identity;
 
@@ -39,26 +41,11 @@ public class OrientDbSourceReferenceRepository extends AbstractSegradaOrientDbRe
 	private static Logger logger = Logger.getLogger(OrientDbSourceReferenceRepository.class.getName());
 
 	/**
-	 * reference to dynamic repository
-	 */
-	private final OrientDbDynamicRepository dynamicRepository;
-
-	/**
-	 * reference to source repository
-	 */
-	private final SourceRepository sourceRepository;
-
-	/**
 	 * Constructor
 	 */
 	@Inject
-	public OrientDbSourceReferenceRepository(ODatabaseDocumentTx db, ApplicationSettings applicationSettings,
-	                                         Identity identity, OrientDbDynamicRepository dynamicRepository,
-	                                         SourceRepository sourceRepository) {
-		super(db, applicationSettings, identity);
-
-		this.dynamicRepository = dynamicRepository;
-		this.sourceRepository = sourceRepository;
+	public OrientDbSourceReferenceRepository(OrientDbRepositoryFactory repositoryFactory) {
+		super(repositoryFactory);
 	}
 
 	@Override
@@ -72,9 +59,20 @@ public class OrientDbSourceReferenceRepository extends AbstractSegradaOrientDbRe
 
 		// set from/to
 		ORecordId fromId = document.field("source", ORecordId.class);
-		if (fromId != null) sourceReference.setSource(sourceRepository.find(fromId.getIdentity().toString()));
+		if (fromId != null) {
+			SourceRepository sourceRepository = repositoryFactory.produceRepository(OrientDbSourceRepository.class);
+			sourceReference.setSource(sourceRepository.find(fromId.getIdentity().toString()));
+		}
 		ODocument toId = document.field("reference", ODocument.class);
-		if (toId != null) sourceReference.setReference((SegradaAnnotatedEntity) dynamicRepository.convertToEntity(toId));
+		if (toId != null) {
+			try {
+				Class c = Class.forName("org.segrada.service.repository.orientdb.OrientDb" + toId.getClassName() + "Repository");
+				AbstractOrientDbRepository dynamicRepository = (AbstractOrientDbRepository) repositoryFactory.produceRepository(c);
+				sourceReference.setReference((SegradaAnnotatedEntity) dynamicRepository.convertToEntity(toId));
+			} catch (ClassNotFoundException e) {
+				logger.severe("Could not create class org.segrada.service.repository.orientdb.OrientDb" + toId.getClassName() + "Repository");
+			}
+		}
 
 		// rest is easy
 		sourceReference.setReferenceText(document.field("referenceText"));

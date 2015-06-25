@@ -161,11 +161,11 @@ create index File.searchtitle on File (title,filename) FULLTEXT ENGINE LUCENE
 ######################################################################################################################
 create class Source extends V
 create property Source.shortTitle String
+create property Source.longTitle String
 create property Source.shortRef String
 create property Source.url String
 create property Source.productCode String
 create property Source.author String
-create property Source.title String
 create property Source.citation String
 create property Source.copyright String
 create property Source.description String
@@ -182,7 +182,7 @@ alter property Source.created MANDATORY true
 alter property Source.modified MANDATORY true
 create index Source.shortTitle NOTUNIQUE
 create index Source.shortRef UNIQUE_HASH_INDEX
-create index Source.searchtitle on Source (title,shortRef,shortTitle) FULLTEXT ENGINE LUCENE
+create index Source.searchtitle on Source (longTitle,shortRef,shortTitle) FULLTEXT ENGINE LUCENE
 #+ Edges: Files, Tags, Comments
 
 ######################################################################################################################

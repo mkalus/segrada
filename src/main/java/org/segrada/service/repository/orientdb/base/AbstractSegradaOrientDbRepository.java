@@ -1,6 +1,5 @@
 package org.segrada.service.repository.orientdb.base;
 
-import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 import com.orientechnologies.orient.core.id.ORecordId;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 import org.segrada.model.Pictogram;
@@ -8,8 +7,8 @@ import org.segrada.model.User;
 import org.segrada.model.prototype.IPictogram;
 import org.segrada.model.prototype.IUser;
 import org.segrada.model.prototype.SegradaEntity;
+import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory;
 import org.segrada.service.util.AbstractLazyLoadedObject;
-import org.segrada.session.ApplicationSettings;
 import org.segrada.session.Identity;
 
 /**
@@ -31,15 +30,10 @@ import org.segrada.session.Identity;
  */
 abstract public class AbstractSegradaOrientDbRepository<T extends SegradaEntity> extends AbstractOrientDbRepository<T> {
 	/**
-	 * Injected identity that keeps the logged in user
+	 * Constructor
 	 */
-	protected final Identity identity;
-
-	public AbstractSegradaOrientDbRepository(ODatabaseDocumentTx db, ApplicationSettings applicationSettings,
-	                                         Identity identity) {
-		super(db, applicationSettings);
-
-		this.identity = identity;
+	public AbstractSegradaOrientDbRepository(OrientDbRepositoryFactory repositoryFactory) {
+		super(repositoryFactory);
 	}
 
 	/**
@@ -142,6 +136,8 @@ abstract public class AbstractSegradaOrientDbRepository<T extends SegradaEntity>
 	 */
 	@Override
 	protected T processBeforeSaving(T entity) {
+		Identity identity = repositoryFactory.getIdentity();
+
 		// new entry?
 		if (entity.getId() == null) {
 			entity.setCreated(System.currentTimeMillis());

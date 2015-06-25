@@ -8,6 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.segrada.model.Pictogram;
 import org.segrada.model.prototype.IPictogram;
+import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory;
 import org.segrada.session.Identity;
 import org.segrada.test.OrientDBTestInstance;
 import org.segrada.test.OrientDbTestApplicationSettings;
@@ -35,8 +36,10 @@ public class OrientDbPictogramRepositoryTest {
 		// open database
 		ODatabaseDocumentTx db = orientDBTestInstance.getDatabase();
 
+		OrientDbRepositoryFactory factory = new OrientDbRepositoryFactory(db, new OrientDbTestApplicationSettings(), new Identity());
+
 		// create repository
-		repository = new OrientDbPictogramRepository(db, new OrientDbTestApplicationSettings(), new Identity());
+		repository =  factory.produceRepository(OrientDbPictogramRepository.class);
 	}
 
 	@After

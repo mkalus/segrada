@@ -11,6 +11,7 @@ import org.segrada.model.Pictogram;
 import org.segrada.model.prototype.IPictogram;
 import org.segrada.service.repository.PictogramRepository;
 import org.segrada.service.repository.orientdb.base.AbstractSegradaOrientDbRepository;
+import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory;
 import org.segrada.session.ApplicationSettings;
 import org.segrada.session.Identity;
 
@@ -39,9 +40,8 @@ public class OrientDbPictogramRepository extends AbstractSegradaOrientDbReposito
 	 * Constructor
 	 */
 	@Inject
-	public OrientDbPictogramRepository(ODatabaseDocumentTx db, ApplicationSettings applicationSettings,
-	                                   Identity identity) {
-		super(db, applicationSettings, identity);
+	public OrientDbPictogramRepository(OrientDbRepositoryFactory repositoryFactory) {
+		super(repositoryFactory);
 	}
 
 	@Override

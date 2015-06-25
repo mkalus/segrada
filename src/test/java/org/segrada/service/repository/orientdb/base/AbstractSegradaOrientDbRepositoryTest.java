@@ -11,6 +11,7 @@ import org.segrada.model.User;
 import org.segrada.model.base.AbstractSegradaEntity;
 import org.segrada.model.prototype.IPictogram;
 import org.segrada.model.prototype.IUser;
+import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory;
 import org.segrada.session.ApplicationSettings;
 import org.segrada.session.Identity;
 import org.segrada.test.OrientDBTestInstance;
@@ -38,11 +39,10 @@ public class AbstractSegradaOrientDbRepositoryTest {
 		db.command(new OCommandSQL("create class Mock")).execute();
 		db.command(new OCommandSQL("create class MockUser")).execute();
 
-		// close db
-		db.close();
+		OrientDbRepositoryFactory factory = new OrientDbRepositoryFactory(db, new OrientDbTestApplicationSettings(), new Identity());
 
 		// create repo
-		mockOrientDbRepository = new MockOrientDbRepository(orientDBTestInstance.getDatabase(), new OrientDbTestApplicationSettings(), new Identity());
+		mockOrientDbRepository = new MockOrientDbRepository(factory);
 	}
 
 	@After
@@ -192,7 +192,7 @@ public class AbstractSegradaOrientDbRepositoryTest {
 		modifier.setId("#99:1");
 
 		// set identity to creator
-		mockOrientDbRepository.identity.setUser(creator);
+		mockOrientDbRepository.repositoryFactory.getIdentity().setUser(creator);
 
 		// create new entity
 		MockEntity mockEntity2 = new MockEntity();
@@ -220,7 +220,7 @@ public class AbstractSegradaOrientDbRepositoryTest {
 		mockEntity2.setId("#99:99"); // simulate save
 		created = mockEntity2.getCreated();
 		modified = mockEntity2.getModified();
-		mockOrientDbRepository.identity.setUser(modifier); // new user
+		mockOrientDbRepository.repositoryFactory.getIdentity().setUser(modifier); // new user
 
 		// wait to force change of modification time
 		Thread.sleep(5L);
@@ -301,8 +301,8 @@ public class AbstractSegradaOrientDbRepositoryTest {
 	 * Partial/mock repository to test methods
 	 */
 	private class MockOrientDbRepository extends AbstractSegradaOrientDbRepository<MockEntity> {
-		public MockOrientDbRepository(ODatabaseDocumentTx db, ApplicationSettings applicationSettings, Identity identity) {
-			super(db, applicationSettings, identity);
+		public MockOrientDbRepository(OrientDbRepositoryFactory repositoryFactory) {
+			super(repositoryFactory);
 		}
 
 		@Override

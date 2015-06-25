@@ -6,6 +6,7 @@ import com.orientechnologies.orient.core.record.impl.ODocument;
 import org.segrada.model.base.AbstractColoredModel;
 import org.segrada.model.prototype.IPictogram;
 import org.segrada.model.prototype.SegradaColoredEntity;
+import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory;
 import org.segrada.service.util.AbstractLazyLoadedObject;
 import org.segrada.session.ApplicationSettings;
 import org.segrada.session.Identity;
@@ -31,9 +32,8 @@ abstract public class AbstractColoredOrientDbRepository<T extends SegradaColored
 	/**
 	 * Constructor
 	 */
-	public AbstractColoredOrientDbRepository(ODatabaseDocumentTx db, ApplicationSettings applicationSettings,
-	                                         Identity identity) {
-		super(db, applicationSettings, identity);
+	public AbstractColoredOrientDbRepository(OrientDbRepositoryFactory repositoryFactory) {
+		super(repositoryFactory);
 	}
 
 	/**
@@ -41,7 +41,7 @@ abstract public class AbstractColoredOrientDbRepository<T extends SegradaColored
 	 * @param document to be converted
 	 * @param entity converted
 	 */
-	protected void populateODocumentWithColored(ODocument document, AbstractColoredModel entity) {
+	protected void populateODocumentWithColored(ODocument document, SegradaColoredEntity entity) {
 		// set color
 		document.field("color", entity.getColor());
 
@@ -56,7 +56,7 @@ abstract public class AbstractColoredOrientDbRepository<T extends SegradaColored
 	 * @param document to be converted
 	 * @param entity converted
 	 */
-	protected void populateEntityWithColored(ODocument document, AbstractColoredModel entity) {
+	protected void populateEntityWithColored(ODocument document, SegradaColoredEntity entity) {
 		// set color
 		entity.setColor(document.field("color", Integer.class));
 

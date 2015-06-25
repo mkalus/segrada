@@ -11,6 +11,7 @@ import org.segrada.model.Period;
 import org.segrada.model.prototype.IPeriod;
 import org.segrada.service.repository.PeriodRepository;
 import org.segrada.service.repository.orientdb.base.AbstractSegradaOrientDbRepository;
+import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory;
 import org.segrada.service.util.AbstractLazyLoadedObject;
 import org.segrada.session.ApplicationSettings;
 import org.segrada.session.Identity;
@@ -40,8 +41,8 @@ public class OrientDbPeriodRepository extends AbstractSegradaOrientDbRepository<
 	 * Constructor
 	 */
 	@Inject
-	public OrientDbPeriodRepository(ODatabaseDocumentTx db, ApplicationSettings applicationSettings, Identity identity) {
-		super(db, applicationSettings, identity);
+	public OrientDbPeriodRepository(OrientDbRepositoryFactory repositoryFactory) {
+		super(repositoryFactory);
 	}
 
 	@Override

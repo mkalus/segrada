@@ -1,15 +1,12 @@
 package org.segrada.service.repository.orientdb;
 
 import com.google.inject.Inject;
-import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 import org.segrada.model.Color;
 import org.segrada.model.prototype.IColor;
 import org.segrada.service.repository.ColorRepository;
 import org.segrada.service.repository.orientdb.base.AbstractSegradaOrientDbRepository;
-import org.segrada.session.ApplicationSettings;
-import org.segrada.session.Identity;
-
+import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory;
 /**
  * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]
  *
@@ -32,8 +29,8 @@ public class OrientDbColorRepository extends AbstractSegradaOrientDbRepository<I
 	 * Constructor
 	 */
 	@Inject
-	public OrientDbColorRepository(ODatabaseDocumentTx db, ApplicationSettings applicationSettings, Identity identity) {
-		super(db, applicationSettings, identity);
+	public OrientDbColorRepository(OrientDbRepositoryFactory repositoryFactory) {
+		super(repositoryFactory);
 	}
 
 	@Override

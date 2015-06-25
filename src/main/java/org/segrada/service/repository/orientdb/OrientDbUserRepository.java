@@ -7,6 +7,7 @@ import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
 import org.segrada.model.prototype.IUser;
 import org.segrada.service.repository.UserRepository;
 import org.segrada.service.repository.orientdb.base.AbstractSegradaOrientDbRepository;
+import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory;
 import org.segrada.service.util.PaginationInfo;
 import org.segrada.session.ApplicationSettings;
 import org.segrada.session.Identity;
@@ -36,8 +37,8 @@ public class OrientDbUserRepository extends AbstractSegradaOrientDbRepository<IU
 	 * Constructor
 	 */
 	@Inject
-	public OrientDbUserRepository(ODatabaseDocumentTx db, ApplicationSettings applicationSettings, Identity identity) {
-		super(db, applicationSettings, identity);
+	public OrientDbUserRepository(OrientDbRepositoryFactory repositoryFactory) {
+		super(repositoryFactory);
 	}
 
 	@Override

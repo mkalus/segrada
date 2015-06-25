@@ -12,6 +12,7 @@ import org.segrada.model.base.AbstractColoredModel;
 import org.segrada.model.prototype.IPictogram;
 import org.segrada.model.prototype.SegradaColoredEntity;
 import org.segrada.service.repository.PictogramRepository;
+import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory;
 import org.segrada.session.ApplicationSettings;
 import org.segrada.session.Identity;
 import org.segrada.test.OrientDBTestInstance;
@@ -41,15 +42,10 @@ public class AbstractColoredOrientDbRepositoryTest {
 		// create schema
 		db.command(new OCommandSQL("create class Mock extends V")).execute();
 
-		// close db
-		db.close();
+		OrientDbRepositoryFactory factory = new OrientDbRepositoryFactory(db, new OrientDbTestApplicationSettings(), new Identity());
 
-		ApplicationSettings applicationSettings = new OrientDbTestApplicationSettings();
-		Identity identity = new Identity();
-
-		// create repos
-		mockOrientDbRepository = new MockOrientDbRepository(orientDBTestInstance.getDatabase(), applicationSettings,
-				identity);
+		// create repo
+		mockOrientDbRepository = new MockOrientDbRepository(factory);
 	}
 
 	@After
@@ -164,9 +160,8 @@ public class AbstractColoredOrientDbRepositoryTest {
 	 * Partial/mock repository to test methods
 	 */
 	private class MockOrientDbRepository extends AbstractColoredOrientDbRepository<MockEntity> {
-		public MockOrientDbRepository(ODatabaseDocumentTx db, ApplicationSettings applicationSettings,
-		                              Identity identity) {
-			super(db, applicationSettings, identity);
+		public MockOrientDbRepository(OrientDbRepositoryFactory repositoryFactory) {
+			super(repositoryFactory);
 		}
 
 		@Override

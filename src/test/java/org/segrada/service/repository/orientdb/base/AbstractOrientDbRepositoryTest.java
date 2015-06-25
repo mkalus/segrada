@@ -10,7 +10,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.segrada.model.base.AbstractSegradaEntity;
 import org.segrada.model.prototype.SegradaEntity;
+import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory;
 import org.segrada.session.ApplicationSettings;
+import org.segrada.session.Identity;
 import org.segrada.test.OrientDBTestInstance;
 import org.segrada.test.OrientDbTestApplicationSettings;
 
@@ -37,11 +39,10 @@ public class AbstractOrientDbRepositoryTest {
 		// create schema
 		db.command(new OCommandSQL("create class Mock")).execute();
 
-		// close db
-		db.close();
+		OrientDbRepositoryFactory factory = new OrientDbRepositoryFactory(db, new OrientDbTestApplicationSettings(), new Identity());
 
 		// create repo
-		mockOrientDbRepository = new MockOrientDbRepository(orientDBTestInstance.getDatabase(), new OrientDbTestApplicationSettings());
+		mockOrientDbRepository = new MockOrientDbRepository(factory);
 	}
 
 	@After
@@ -308,12 +309,8 @@ public class AbstractOrientDbRepositoryTest {
 	 * Partial/mock repository to test methods
 	 */
 	private class MockOrientDbRepository extends AbstractOrientDbRepository<MockEntity> {
-		/**
-		 * @param db                  database instance
-		 * @param applicationSettings application settings instance
-		 */
-		public MockOrientDbRepository(ODatabaseDocumentTx db, ApplicationSettings applicationSettings) {
-			super(db, applicationSettings);
+		public MockOrientDbRepository(OrientDbRepositoryFactory repositoryFactory) {
+			super(repositoryFactory);
 		}
 
 		@Override

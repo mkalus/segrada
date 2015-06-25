@@ -8,6 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.segrada.model.RelationType;
 import org.segrada.model.prototype.IRelationType;
+import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory;
 import org.segrada.session.Identity;
 import org.segrada.test.OrientDBTestInstance;
 import org.segrada.test.OrientDbTestApplicationSettings;
@@ -36,8 +37,10 @@ public class OrientDbRelationTypeRepositoryTest {
 		// open database
 		ODatabaseDocumentTx db = orientDBTestInstance.getDatabase();
 
+		OrientDbRepositoryFactory factory = new OrientDbRepositoryFactory(db, new OrientDbTestApplicationSettings(), new Identity());
+
 		// create repository
-		repository = new OrientDbRelationTypeRepository(db, new OrientDbTestApplicationSettings(), new Identity());
+		repository =  factory.produceRepository(OrientDbRelationTypeRepository.class);
 	}
 
 	@After

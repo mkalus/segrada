@@ -5,9 +5,9 @@ import com.orientechnologies.orient.core.id.ORecordId;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
 import org.segrada.model.prototype.SegradaEntity;
+import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory;
 import org.segrada.service.repository.prototype.SegradaRepository;
 import org.segrada.service.util.PaginationInfo;
-import org.segrada.session.ApplicationSettings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,23 +37,22 @@ abstract public class AbstractOrientDbRepository<T extends SegradaEntity> implem
 	private static final Logger logger = LoggerFactory.getLogger(AbstractOrientDbRepository.class);
 
 	/**
+	 * Injected repository factory
+	 */
+	protected final OrientDbRepositoryFactory repositoryFactory;
+
+	/**
 	 * database instance
 	 */
 	protected final ODatabaseDocumentTx db;
 
 	/**
-	 * application settings instance
+	 * Constructor
+	 * @param repositoryFactory injected
 	 */
-	protected final ApplicationSettings applicationSettings;
-
-	/**
-	 *
-	 * @param db database instance
-	 * @param applicationSettings application settings instance
-	 */
-	public AbstractOrientDbRepository(ODatabaseDocumentTx db, ApplicationSettings applicationSettings) {
-		this.db = db;
-		this.applicationSettings = applicationSettings;
+	public AbstractOrientDbRepository(OrientDbRepositoryFactory repositoryFactory) {
+		this.repositoryFactory = repositoryFactory;
+		this.db = repositoryFactory.getDb();
 	}
 
 	/**
@@ -70,7 +69,8 @@ abstract public class AbstractOrientDbRepository<T extends SegradaEntity> implem
 	protected void initDb() {
 		try {
 			if (db.isClosed()) {
-				db.open(applicationSettings.getSetting("orientDB.login"), applicationSettings.getSetting("orientDB.password"));
+				db.open(repositoryFactory.getApplicationSettings().getSetting("orientDB.login"),
+						repositoryFactory.getApplicationSettings().getSetting("orientDB.password"));
 			}
 		} catch (Exception e) {
 			throw new RuntimeException("Could not open database: " + e.getMessage());

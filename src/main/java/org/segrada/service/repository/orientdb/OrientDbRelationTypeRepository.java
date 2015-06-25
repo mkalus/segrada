@@ -11,6 +11,7 @@ import org.segrada.model.RelationType;
 import org.segrada.model.prototype.IRelationType;
 import org.segrada.service.repository.RelationTypeRepository;
 import org.segrada.service.repository.orientdb.base.AbstractColoredOrientDbRepository;
+import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory;
 import org.segrada.service.util.PaginationInfo;
 import org.segrada.session.ApplicationSettings;
 import org.segrada.session.Identity;
@@ -43,9 +44,8 @@ public class OrientDbRelationTypeRepository extends AbstractColoredOrientDbRepos
 	 * Constructor
 	 */
 	@Inject
-	public OrientDbRelationTypeRepository(ODatabaseDocumentTx db, ApplicationSettings applicationSettings,
-	                                      Identity identity) {
-		super(db, applicationSettings, identity);
+	public OrientDbRelationTypeRepository(OrientDbRepositoryFactory repositoryFactory) {
+		super(repositoryFactory);
 	}
 
 	@Override

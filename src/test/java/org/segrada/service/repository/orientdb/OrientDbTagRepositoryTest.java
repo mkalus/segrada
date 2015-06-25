@@ -12,6 +12,7 @@ import org.segrada.model.Tag;
 import org.segrada.model.prototype.INode;
 import org.segrada.model.prototype.ITag;
 import org.segrada.model.util.IdModelTuple;
+import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory;
 import org.segrada.session.Identity;
 import org.segrada.test.OrientDBTestInstance;
 import org.segrada.test.OrientDbTestApplicationSettings;
@@ -44,8 +45,10 @@ public class OrientDbTagRepositoryTest {
 		// open database
 		ODatabaseDocumentTx db = orientDBTestInstance.getDatabase();
 
+		OrientDbRepositoryFactory factory = new OrientDbRepositoryFactory(db, new OrientDbTestApplicationSettings(), new Identity());
+
 		// create repository
-		repository = new OrientDbTagRepository(db, new OrientDbTestApplicationSettings(), new Identity());
+		repository =  factory.produceRepository(OrientDbTagRepository.class);
 	}
 
 	@After

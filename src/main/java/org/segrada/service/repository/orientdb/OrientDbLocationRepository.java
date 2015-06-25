@@ -9,6 +9,7 @@ import org.segrada.model.Location;
 import org.segrada.model.prototype.ILocation;
 import org.segrada.service.repository.LocationRepository;
 import org.segrada.service.repository.orientdb.base.AbstractSegradaOrientDbRepository;
+import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory;
 import org.segrada.service.util.AbstractLazyLoadedObject;
 import org.segrada.session.ApplicationSettings;
 import org.segrada.session.Identity;
@@ -38,8 +39,8 @@ public class OrientDbLocationRepository extends AbstractSegradaOrientDbRepositor
 	 * Constructor
 	 */
 	@Inject
-	public OrientDbLocationRepository(ODatabaseDocumentTx db, ApplicationSettings applicationSettings, Identity identity) {
-		super(db, applicationSettings, identity);
+	public OrientDbLocationRepository(OrientDbRepositoryFactory repositoryFactory) {
+		super(repositoryFactory);
 	}
 
 	@Override

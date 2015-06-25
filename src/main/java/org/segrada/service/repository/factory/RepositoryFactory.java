@@ -1,6 +1,5 @@
-package org.segrada.service.repository;
+package org.segrada.service.repository.factory;
 
-import org.segrada.model.prototype.SegradaEntity;
 import org.segrada.service.repository.prototype.SegradaRepository;
 
 /**
@@ -18,21 +17,8 @@ import org.segrada.service.repository.prototype.SegradaRepository;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Dynamic Repository
+ * Repository to dynamically create repositories during runtime
  */
-public interface DynamicRepository {
-	/**
-	 * find entity by id and class name
-	 * @param id of document
-	 * @param className of document
-	 * @return entity or null
-	 */
-	SegradaEntity find(String id, String className);
-
-	/**
-	 * get repository
-	 * @param className of repository, e.g. "Tag" or "Node"
-	 * @return repository or null
-	 */
-	SegradaRepository getRepository(String className);
+public interface RepositoryFactory {
+	<T extends SegradaRepository> T produceRepository(Class<T> clazz);
 }

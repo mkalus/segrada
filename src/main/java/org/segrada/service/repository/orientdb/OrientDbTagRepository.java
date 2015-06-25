@@ -15,6 +15,7 @@ import org.segrada.model.prototype.SegradaTaggable;
 import org.segrada.model.util.IdModelTuple;
 import org.segrada.service.repository.TagRepository;
 import org.segrada.service.repository.orientdb.base.AbstractSegradaOrientDbRepository;
+import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory;
 import org.segrada.service.util.PaginationInfo;
 import org.segrada.session.ApplicationSettings;
 import org.segrada.session.Identity;
@@ -48,12 +49,11 @@ public class OrientDbTagRepository extends AbstractSegradaOrientDbRepository<ITa
 	private static final Logger logger = Logger.getLogger(OrientDbTagRepository.class.getName());
 
 	/**
-	 * @param db                  database instance
-	 * @param applicationSettings application settings instance
+	 * Constructor
 	 */
 	@Inject
-	public OrientDbTagRepository(ODatabaseDocumentTx db, ApplicationSettings applicationSettings, Identity identity) {
-		super(db, applicationSettings, identity);
+	public OrientDbTagRepository(OrientDbRepositoryFactory repositoryFactory) {
+		super(repositoryFactory);
 	}
 
 	@Override
