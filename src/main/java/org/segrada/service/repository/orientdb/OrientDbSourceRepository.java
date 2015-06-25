@@ -147,7 +147,7 @@ public class OrientDbSourceRepository extends AbstractAnnotatedOrientDbRepositor
 		if (term != null && term.length() > 0) {
 			// execute query
 			OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>("select * from Source where " + createSearchTermFullText(term) + " LIMIT " + maximum);
-			System.out.println(query);
+			//System.out.println(query);
 			result = db.command(query).execute();
 		} else { // no term, just find top X entries
 			// execute query
