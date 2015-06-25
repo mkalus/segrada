@@ -365,7 +365,7 @@ public class OrientDbTagRepository extends AbstractSegradaOrientDbRepository<ITa
 		ODocument sp = spath.iterator().next();
 		List path = sp.field("shortestPath");
 
-		if (path.size() > 0) return;
+		if (!path.isEmpty()) return;
 
 		// add edge
 		db.command(new OCommandSQL("create edge IsTagOf from " + parent.getId() + " to " + child.getId())).execute();
@@ -396,9 +396,6 @@ public class OrientDbTagRepository extends AbstractSegradaOrientDbRepository<ITa
 		if (node == null || possibleParent == null) return false;
 		if (node.equals(possibleParent)) return false;
 
-		// return value
-		boolean isChildOf = false;
-
 		initDb();
 
 		// check shortest path
@@ -406,10 +403,8 @@ public class OrientDbTagRepository extends AbstractSegradaOrientDbRepository<ITa
 				"select shortestPath(" + possibleParent.getId() + "," + node.getId() + ",'OUT')")).execute();
 		ODocument sp = spath.iterator().next();
 		List path = sp.field("shortestPath");
-		if (path.size() > 0)
-			isChildOf = true;
 
-		return isChildOf;
+		return !path.isEmpty();
 	}
 
 	@Override

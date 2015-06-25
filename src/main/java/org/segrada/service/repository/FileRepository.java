@@ -1,6 +1,8 @@
 package org.segrada.service.repository;
 
 import org.segrada.model.prototype.IFile;
+import org.segrada.model.prototype.SegradaAnnotatedEntity;
+import org.segrada.model.prototype.SegradaEntity;
 import org.segrada.service.repository.prototype.CRUDRepository;
 import org.segrada.service.repository.prototype.PaginatingRepository;
 import org.segrada.service.repository.prototype.SearchTermRepository;
@@ -31,4 +33,39 @@ public interface FileRepository extends CRUDRepository<IFile>, SearchTermReposit
 	 * @return entity or null
 	 */
 	List<IFile> findByTitleOrFilename(String titleOrFilename);
+
+	/**
+	 * find files referencing entity with id
+	 * @param id of entity referenced
+	 * @return list of files
+	 */
+	List<IFile> findByReference(String id);
+
+	/**
+	 * find entities referencing file with id
+	 * @param id of file referencing
+	 * @return list of entities referenced by file
+	 */
+	List<SegradaEntity> findByFile(String id);
+
+	/**
+	 * Create new file connection (only once)
+	 * @param file referencing
+	 * @param entity referenced
+	 */
+	void connectFileToEntity(IFile file, SegradaAnnotatedEntity entity);
+
+	/**
+	 * Remove existing file connection
+	 * @param file referencing
+	 * @param entity referenced
+	 */
+	void removeFileFromEntity(IFile file, SegradaAnnotatedEntity entity);
+
+	/**
+	 * Checks for file connection
+	 * @param file referencing
+	 * @param entity referenced
+	 */
+	boolean isFileOf(IFile file, SegradaAnnotatedEntity entity);
 }

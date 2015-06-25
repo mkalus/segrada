@@ -3,11 +3,15 @@ package org.segrada.service.repository.orientdb;
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.orientechnologies.orient.core.sql.OCommandSQL;
+import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.segrada.model.Comment;
 import org.segrada.model.File;
+import org.segrada.model.prototype.IComment;
 import org.segrada.model.prototype.IFile;
+import org.segrada.model.prototype.SegradaEntity;
 import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory;
 import org.segrada.session.Identity;
 import org.segrada.test.OrientDBTestInstance;
@@ -15,8 +19,7 @@ import org.segrada.test.OrientDbTestApplicationSettings;
 
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class OrientDbFileRepositoryTest {
 	/**
@@ -71,7 +74,7 @@ public class OrientDbFileRepositoryTest {
 	public void testConvertToEntity() throws Exception {
 		//TODO: test pictogram, tags
 
-		// now create an entity
+		// create an entity
 		ODocument document = new ODocument("File")
 				.field("title", "title")
 				.field("filename", "filename.txt")
@@ -277,5 +280,229 @@ public class OrientDbFileRepositoryTest {
 		repository.save(file);
 
 		assertEquals("This is the title", file.getTitle());
+	}
+
+	@Test
+	public void testFindByReference() throws Exception {
+		// create an entity
+		ODocument document = new ODocument("File")
+				.field("title", "title")
+				.field("filename", "filename.txt")
+				.field("copyright", "copyright")
+				.field("mimeType", "mimeType")
+				.field("location", "location")
+				.field("fullText", "fullText")
+				.field("fileSize", 99L)
+				.field("indexFullText", true)
+				.field("containFile", false)
+				.field("fileIdentifier", "fileIdentifier.txt")
+				.field("description", "Description")
+				.field("descriptionMarkup", "default")
+				.field("color", 0x123456)
+				.field("created", 1L)
+				.field("modified", 2L);
+		// persist to database to create id
+		document.save();
+
+		ODocument comment = new ODocument("Comment").field("text", "text")
+				.field("markup", "markup").field("created", 1L)
+				.field("modified", 2L);
+		// persist to database to create id
+		comment.save();
+
+		// no files yet
+		List<IFile> files = repository.findByReference(comment.getIdentity().toString());
+		assertTrue(files.isEmpty());
+
+		// create edge
+		factory.getDb().command(new OCommandSQL("create edge IsFileOf from " + document.getIdentity().toString() + " to " + comment.getIdentity().toString())).execute();
+
+		files = repository.findByReference(comment.getIdentity().toString());
+		assertFalse(files.isEmpty());
+		assertEquals(document.getIdentity().toString(), files.get(0).getId());
+	}
+
+	@Test
+	public void testFindByFile() throws Exception {
+		// create an entity
+		ODocument document = new ODocument("File")
+				.field("title", "title")
+				.field("filename", "filename.txt")
+				.field("copyright", "copyright")
+				.field("mimeType", "mimeType")
+				.field("location", "location")
+				.field("fullText", "fullText")
+				.field("fileSize", 99L)
+				.field("indexFullText", true)
+				.field("containFile", false)
+				.field("fileIdentifier", "fileIdentifier.txt")
+				.field("description", "Description")
+				.field("descriptionMarkup", "default")
+				.field("color", 0x123456)
+				.field("created", 1L)
+				.field("modified", 2L);
+		// persist to database to create id
+		document.save();
+
+		ODocument comment = new ODocument("Comment").field("text", "text")
+				.field("markup", "markup").field("created", 1L)
+				.field("modified", 2L);
+		// persist to database to create id
+		comment.save();
+
+		// no files yet
+		List<SegradaEntity> entities = repository.findByFile(document.getIdentity().toString());
+		assertTrue(entities.isEmpty());
+
+		// create edge
+		factory.getDb().command(new OCommandSQL("create edge IsFileOf from " + document.getIdentity().toString() + " to " + comment.getIdentity().toString())).execute();
+
+		entities = repository.findByFile(document.getIdentity().toString());
+		assertFalse(entities.isEmpty());
+		assertEquals(comment.getIdentity().toString(), entities.get(0).getId());
+		assertEquals("Comment", entities.get(0).getModelName());
+	}
+
+	@Test
+	public void testConnectFileToEntity() throws Exception {
+		IFile file = new File();
+		file.setTitle("This is the title");
+		file.setFilename("filename.txt");
+		file.setCopyright("copyright");
+		file.setMimeType("mimeType");
+		file.setLocation("location");
+		file.setFullText("fullText");
+		file.setFileSize(99L);
+		file.setIndexFullText(true);
+		file.setContainFile(false);
+		file.setFileIdentifier("fileIdentifier.txt");
+		file.setDescription("Description");
+		file.setDescriptionMarkup("default");
+		file.setColor(0x123456);
+		file.setCreated(1L);
+		file.setModified(2L);
+
+		repository.save(file);
+
+		IComment comment = new Comment();
+		factory.produceRepository(OrientDbCommentRepository.class).save(comment);
+
+		// no connections, yet
+		OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>("select in from IsFileOf where out = " + file.getId() + " and in = " + comment.getId());
+		List<ODocument> result = factory.getDb().command(query).execute();
+
+		assertTrue(result.isEmpty());
+
+		// connect
+		repository.connectFileToEntity(file, comment);
+
+		query = new OSQLSynchQuery<>("select in from IsFileOf where out = " + file.getId() + " and in = " + comment.getId());
+		result = factory.getDb().command(query).execute();
+
+		assertEquals(1, result.size());
+
+		// connect again and check, if there are two connections now
+		repository.connectFileToEntity(file, comment);
+
+		query = new OSQLSynchQuery<>("select in from IsFileOf where out = " + file.getId() + " and in = " + comment.getId());
+		result = factory.getDb().command(query).execute();
+
+		assertEquals(1, result.size());
+	}
+
+	@Test
+	public void testRemoveFileFromEntity() throws Exception {
+		IFile file = new File();
+		file.setTitle("This is the title");
+		file.setFilename("filename.txt");
+		file.setCopyright("copyright");
+		file.setMimeType("mimeType");
+		file.setLocation("location");
+		file.setFullText("fullText");
+		file.setFileSize(99L);
+		file.setIndexFullText(true);
+		file.setContainFile(false);
+		file.setFileIdentifier("fileIdentifier.txt");
+		file.setDescription("Description");
+		file.setDescriptionMarkup("default");
+		file.setColor(0x123456);
+		file.setCreated(1L);
+		file.setModified(2L);
+
+		repository.save(file);
+
+		IComment comment = new Comment();
+		factory.produceRepository(OrientDbCommentRepository.class).save(comment);
+
+		// no connections, yet
+		OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>("select in from IsFileOf where out = " + file.getId() + " and in = " + comment.getId());
+		List<ODocument> result = factory.getDb().command(query).execute();
+
+		assertTrue(result.isEmpty());
+
+		// create edge
+		factory.getDb().command(new OCommandSQL("create edge IsFileOf from " + file.getId() + " to " + comment.getId())).execute();
+
+		// connection exists
+		query = new OSQLSynchQuery<>("select in from IsFileOf where out = " + file.getId() + " and in = " + comment.getId());
+		result = factory.getDb().command(query).execute();
+
+		assertFalse(result.isEmpty());
+
+		// now delete and check if there is still a connection
+		repository.removeFileFromEntity(file, comment);
+
+		// no connections anymore
+		query = new OSQLSynchQuery<>("select in from IsFileOf where out = " + file.getId() + " and in = " + comment.getId());
+		result = factory.getDb().command(query).execute();
+
+		assertTrue(result.isEmpty());
+
+		// delete again, should not throw an error or so
+		repository.removeFileFromEntity(file, comment);
+
+		// no connections anymore
+		query = new OSQLSynchQuery<>("select in from IsFileOf where out = " + file.getId() + " and in = " + comment.getId());
+		result = factory.getDb().command(query).execute();
+
+		assertTrue(result.isEmpty());
+	}
+
+	@Test
+	public void testIsFileOf() throws Exception {
+		IFile file = new File();
+		file.setTitle("This is the title");
+		file.setFilename("filename.txt");
+		file.setCopyright("copyright");
+		file.setMimeType("mimeType");
+		file.setLocation("location");
+		file.setFullText("fullText");
+		file.setFileSize(99L);
+		file.setIndexFullText(true);
+		file.setContainFile(false);
+		file.setFileIdentifier("fileIdentifier.txt");
+		file.setDescription("Description");
+		file.setDescriptionMarkup("default");
+		file.setColor(0x123456);
+		file.setCreated(1L);
+		file.setModified(2L);
+
+		repository.save(file);
+
+		IComment comment = new Comment();
+		factory.produceRepository(OrientDbCommentRepository.class).save(comment);
+
+		// no files yet
+		assertFalse(repository.isFileOf(file, comment));
+
+		// create edge
+		factory.getDb().command(new OCommandSQL("create edge IsFileOf from " + file.getId() + " to " + comment.getId())).execute();
+
+		assertTrue(repository.isFileOf(file, comment));
+	}
+
+	@Test
+	public void testPaginate() throws Exception {
+		fail("Test not implemented yet.");
 	}
 }

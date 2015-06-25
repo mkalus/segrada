@@ -4,9 +4,9 @@ import com.orientechnologies.orient.core.id.ORecordId;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 import org.segrada.model.Pictogram;
 import org.segrada.model.User;
-import org.segrada.model.prototype.IPictogram;
-import org.segrada.model.prototype.IUser;
-import org.segrada.model.prototype.SegradaEntity;
+import org.segrada.model.prototype.*;
+import org.segrada.service.repository.TagRepository;
+import org.segrada.service.repository.orientdb.OrientDbTagRepository;
 import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory;
 import org.segrada.service.util.AbstractLazyLoadedObject;
 import org.segrada.session.Identity;
@@ -45,7 +45,7 @@ abstract public class AbstractSegradaOrientDbRepository<T extends SegradaEntity>
 		document.field("created", entity.getCreated())
 				.field("modified", entity.getModified())
 				.field("creator", entity.getCreator()==null?null:new ORecordId(entity.getCreator().getId()))
-				.field("modifier", entity.getModifier() == null?null:new ORecordId(entity.getModifier().getId()));
+				.field("modifier", entity.getModifier() == null ? null : new ORecordId(entity.getModifier().getId()));
 	}
 
 	/**
@@ -87,6 +87,36 @@ abstract public class AbstractSegradaOrientDbRepository<T extends SegradaEntity>
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+
+	/**
+	 * lazily load tag list
+	 * @param entity connected to tags
+	 * @return array containing tag ids
+	 */
+	public String[] lazyLoadTags(final SegradaTaggable entity) {
+		/*try {
+			return (String[]) java.lang.reflect.Proxy.newProxyInstance(
+					String[].class.getClassLoader(),
+					new Class[]{String[].class},
+					new AbstractLazyLoadedObject() {
+						@Override
+						protected Object loadObject() {
+							TagRepository tagRepository = repositoryFactory.produceRepository(OrientDbTagRepository.class);
+
+							return tagRepository.findTagIdsConnectedToModel(entity.getId(), entity.getModelName(), true);
+						}
+					}
+			);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;*/
+		//TODO: make it work?
+		TagRepository tagRepository = repositoryFactory.produceRepository(OrientDbTagRepository.class);
+
+		return tagRepository.findTagIdsConnectedToModel(entity.getId(), entity.getModelName(), true);
 	}
 
 	/**

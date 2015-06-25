@@ -2,17 +2,23 @@ package org.segrada.service.repository.orientdb;
 
 import com.google.inject.Inject;
 import com.orientechnologies.orient.core.record.impl.ODocument;
+import com.orientechnologies.orient.core.sql.OCommandSQL;
 import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.queryparser.flexible.standard.QueryParserUtil;
 import org.apache.lucene.search.TermQuery;
 import org.segrada.model.File;
 import org.segrada.model.prototype.IFile;
+import org.segrada.model.prototype.SegradaAnnotatedEntity;
+import org.segrada.model.prototype.SegradaEntity;
 import org.segrada.service.repository.FileRepository;
 import org.segrada.service.repository.orientdb.base.AbstractAnnotatedOrientDbRepository;
+import org.segrada.service.repository.orientdb.base.AbstractOrientDbRepository;
 import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory;
 import org.segrada.service.util.PaginationInfo;
 import org.segrada.util.OrientStringEscape;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -37,6 +43,8 @@ import java.util.Map;
  * OrientDb File Repository
  */
 public class OrientDbFileRepository extends AbstractAnnotatedOrientDbRepository<IFile> implements FileRepository {
+	private static final Logger logger = LoggerFactory.getLogger(OrientDbFileRepository.class);
+
 	/**
 	 * Constructor
 	 */
@@ -117,6 +125,84 @@ public class OrientDbFileRepository extends AbstractAnnotatedOrientDbRepository<
 			list.add(convertToEntity(document));
 
 		return list;
+	}
+
+	@Override
+	public List<IFile> findByReference(String id) {
+		List<IFile> list = new LinkedList<>();
+
+		// avoid NPEs
+		if (id == null) return list;
+
+		initDb();
+
+		OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>("select out from IsFileOf where in = " + id);
+		List<ODocument> result = db.command(query).execute();
+
+		for (ODocument document : result) {
+			list.add(convertToEntity(document.field("out")));
+		}
+
+		return list;
+	}
+
+	@Override
+	public List<SegradaEntity> findByFile(String id) {
+		List<SegradaEntity> list = new LinkedList<>();
+
+		// avoid NPEs
+		if (id == null) return list;
+
+		initDb();
+
+		OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>("select in from IsFileOf where out = " + id);
+		List<ODocument> result = db.command(query).execute();
+
+		for (ODocument document : result) {
+			// get dynamic repository
+			ODocument doc = document.field("in");
+			AbstractOrientDbRepository repository = repositoryFactory.produceRepository(doc.getClassName());
+			if (repository != null)
+				list.add(repository.convertToEntity(doc));
+			else logger.error("Could not convert document of class " + doc.getClassName() + " to entity.");
+		}
+
+		return list;
+	}
+
+	@Override
+	public void connectFileToEntity(IFile file, SegradaAnnotatedEntity entity) {
+		initDb();
+
+		// no double connections
+		if (isFileOf(file, entity)) return;
+
+		// add edge
+		db.command(new OCommandSQL("create edge IsFileOf from " + file.getId() + " to " + entity.getId())).execute();
+	}
+
+	@Override
+	public void removeFileFromEntity(IFile file, SegradaAnnotatedEntity entity) {
+		initDb();
+
+		// execute query
+		OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>("select @RID as id from IsFileOf where out = " + file.getId() + " and in = " + entity.getId());
+		List<ODocument> result = db.command(query).execute();
+
+		if (result.size() > 0) {
+			// remove edge
+			db.command(new OCommandSQL("delete edge " + result.get(0).field("id", String.class))).execute();
+		}
+	}
+
+	@Override
+	public boolean isFileOf(IFile file, SegradaAnnotatedEntity entity) {
+		initDb();
+
+		OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>("select in from IsFileOf where out = " + file.getId() + " and in = " + entity.getId());
+		List<ODocument> result = db.command(query).execute();
+
+		return !result.isEmpty();
 	}
 
 	@Override
