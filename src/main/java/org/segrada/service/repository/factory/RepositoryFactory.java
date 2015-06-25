@@ -2,6 +2,8 @@ package org.segrada.service.repository.factory;
 
 import org.segrada.service.repository.prototype.SegradaRepository;
 
+import javax.annotation.Nullable;
+
 /**
  * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]
  *
@@ -20,5 +22,19 @@ import org.segrada.service.repository.prototype.SegradaRepository;
  * Repository to dynamically create repositories during runtime
  */
 public interface RepositoryFactory {
-	<T extends SegradaRepository> T produceRepository(Class<T> clazz);
+	/**
+	 * produce repository by class name, can be base interface class
+	 * @param clazz class or interface class
+	 * @param <T> class of type SegradaRepository
+	 * @return repository or null
+	 */
+	@Nullable <T extends SegradaRepository> T produceRepository(Class<T> clazz);
+
+	/**
+	 * produce repository by model nyme
+	 * @param modelName model name
+	 * @param <T> class of type SegradaRepository
+	 * @return repository or null
+	 */
+	@Nullable <T extends SegradaRepository> T produceRepository(String modelName);
 }

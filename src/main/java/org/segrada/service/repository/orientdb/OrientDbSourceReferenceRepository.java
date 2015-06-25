@@ -59,17 +59,16 @@ public class OrientDbSourceReferenceRepository extends AbstractSegradaOrientDbRe
 		ORecordId fromId = document.field("source", ORecordId.class);
 		if (fromId != null) {
 			SourceRepository sourceRepository = repositoryFactory.produceRepository(OrientDbSourceRepository.class);
-			sourceReference.setSource(sourceRepository.find(fromId.getIdentity().toString()));
+			if (sourceRepository != null)
+				sourceReference.setSource(sourceRepository.find(fromId.getIdentity().toString()));
+			else logger.warning("Could not produce class OrientDbSourceRepository while converting to entity.");
 		}
 		ODocument toId = document.field("reference", ODocument.class);
 		if (toId != null) {
-			try {
-				Class c = Class.forName("org.segrada.service.repository.orientdb.OrientDb" + toId.getClassName() + "Repository");
-				AbstractOrientDbRepository dynamicRepository = (AbstractOrientDbRepository) repositoryFactory.produceRepository(c);
+			AbstractOrientDbRepository dynamicRepository = (AbstractOrientDbRepository) repositoryFactory.produceRepository(toId.getClassName());
+			if (dynamicRepository != null)
 				sourceReference.setReference((SegradaAnnotatedEntity) dynamicRepository.convertToEntity(toId));
-			} catch (ClassNotFoundException e) {
-				logger.severe("Could not create class org.segrada.service.repository.orientdb.OrientDb" + toId.getClassName() + "Repository");
-			}
+			else logger.warning("Could not produce class for model " + toId.getClassName() + " while converting to entity.");
 		}
 
 		// rest is easy

@@ -8,6 +8,7 @@ import org.segrada.service.repository.prototype.SegradaRepository;
 import org.segrada.session.ApplicationSettings;
 import org.segrada.session.Identity;
 
+import javax.annotation.Nullable;
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Map;
@@ -84,7 +85,8 @@ public class OrientDbRepositoryFactory implements RepositoryFactory {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public <T extends SegradaRepository> T produceRepository(Class<T> clazz) {
+	public @Nullable <T extends SegradaRepository> T produceRepository(Class<T> clazz) {
+		if (clazz == null) return null;
 		// if we have a base class, e.g. FileRepository -> map it to OrientDbFileRepository
 		if (clazz.isInterface()) {
 			try { // create OrientDb class for this entity
@@ -107,6 +109,19 @@ public class OrientDbRepositoryFactory implements RepositoryFactory {
 			repositoryMap.put(clazz, repositoryInstance);
 
 			return repositoryInstance;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public @Nullable <T extends SegradaRepository> T produceRepository(String modelName) {
+		if (modelName == null) return null;
+		try {
+			Class c = Class.forName("org.segrada.service.repository.orientdb.OrientDb" + modelName + "Repository");
+			return (T) produceRepository(c);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;

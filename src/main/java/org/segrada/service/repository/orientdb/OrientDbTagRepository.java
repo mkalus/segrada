@@ -14,6 +14,7 @@ import org.segrada.model.util.IdModelTuple;
 import org.segrada.service.repository.TagRepository;
 import org.segrada.service.repository.orientdb.base.AbstractSegradaOrientDbRepository;
 import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory;
+import org.segrada.service.util.AbstractLazyLoadedObject;
 import org.segrada.service.util.PaginationInfo;
 import org.segrada.util.OrientStringEscape;
 
@@ -62,6 +63,11 @@ public class OrientDbTagRepository extends AbstractSegradaOrientDbRepository<ITa
 		ITag tag = new Tag();
 
 		tag.setTitle(document.field("title", String.class));
+
+		if (tag.getId() != null) {
+			// set tags
+			tag.setTags(lazyLoadTags(tag));
+		}
 
 		// populate with data
 		populateEntityWithBaseData(document, tag);
