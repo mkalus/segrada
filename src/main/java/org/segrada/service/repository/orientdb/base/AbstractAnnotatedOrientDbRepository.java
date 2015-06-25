@@ -1,6 +1,7 @@
 package org.segrada.service.repository.orientdb.base;
 
 import com.orientechnologies.orient.core.record.impl.ODocument;
+import com.orientechnologies.orient.core.sql.OCommandSQL;
 import org.segrada.model.prototype.*;
 import org.segrada.service.repository.CommentRepository;
 import org.segrada.service.repository.FileRepository;
@@ -182,5 +183,19 @@ abstract public class AbstractAnnotatedOrientDbRepository<T extends SegradaAnnot
 			if (!addedIds.contains(id)) // not in set connected - delete
 				tagRepository.removeTag(id, entity);
 		}
+	}
+
+	@Override
+	public boolean delete(T entity) {
+		if (super.delete(entity)) {
+			// delete connected locations and periods
+			//db.command(new OCommandSQL("delete from Location where parent = " + entity.getId())).execute();
+			//db.command(new OCommandSQL("delete from Period where parent = " + entity.getId())).execute();
+
+			//TODO: do we need to delete edges, too?
+
+			return true;
+		}
+		return false;
 	}
 }
