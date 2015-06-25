@@ -1,15 +1,11 @@
 package org.segrada.service.repository.orientdb.base;
 
-import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 import com.orientechnologies.orient.core.id.ORecordId;
 import com.orientechnologies.orient.core.record.impl.ODocument;
-import org.segrada.model.base.AbstractColoredModel;
 import org.segrada.model.prototype.IPictogram;
 import org.segrada.model.prototype.SegradaColoredEntity;
 import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory;
 import org.segrada.service.util.AbstractLazyLoadedObject;
-import org.segrada.session.ApplicationSettings;
-import org.segrada.session.Identity;
 
 /**
  * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]

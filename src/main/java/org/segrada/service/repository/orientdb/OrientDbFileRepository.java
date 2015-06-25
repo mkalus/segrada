@@ -1,7 +1,6 @@
 package org.segrada.service.repository.orientdb;
 
 import com.google.inject.Inject;
-import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
 import org.apache.lucene.index.Term;
@@ -9,15 +8,10 @@ import org.apache.lucene.queryparser.flexible.standard.QueryParserUtil;
 import org.apache.lucene.search.TermQuery;
 import org.segrada.model.File;
 import org.segrada.model.prototype.IFile;
-import org.segrada.service.repository.CommentRepository;
 import org.segrada.service.repository.FileRepository;
-import org.segrada.service.repository.SourceReferenceRepository;
-import org.segrada.service.repository.TagRepository;
 import org.segrada.service.repository.orientdb.base.AbstractAnnotatedOrientDbRepository;
 import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory;
 import org.segrada.service.util.PaginationInfo;
-import org.segrada.session.ApplicationSettings;
-import org.segrada.session.Identity;
 import org.segrada.util.OrientStringEscape;
 
 import java.util.HashMap;

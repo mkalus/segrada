@@ -1,7 +1,6 @@
 package org.segrada.service.repository.orientdb;
 
 import com.google.inject.Inject;
-import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 import com.orientechnologies.orient.core.id.ORecordId;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
@@ -11,8 +10,6 @@ import org.segrada.service.repository.LocationRepository;
 import org.segrada.service.repository.orientdb.base.AbstractSegradaOrientDbRepository;
 import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory;
 import org.segrada.service.util.AbstractLazyLoadedObject;
-import org.segrada.session.ApplicationSettings;
-import org.segrada.session.Identity;
 
 import java.util.LinkedList;
 import java.util.List;

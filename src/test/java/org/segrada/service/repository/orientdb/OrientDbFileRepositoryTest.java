@@ -8,8 +8,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.segrada.model.File;
 import org.segrada.model.prototype.IFile;
-import org.segrada.service.repository.PictogramRepository;
-import org.segrada.service.repository.TagRepository;
 import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory;
 import org.segrada.session.Identity;
 import org.segrada.test.OrientDBTestInstance;

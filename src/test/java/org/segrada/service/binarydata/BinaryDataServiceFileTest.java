@@ -1,7 +1,10 @@
 package org.segrada.service.binarydata;
 
 import com.google.common.io.Files;
-import org.junit.*;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 import org.segrada.model.Node;
 import org.segrada.model.base.AbstractSegradaEntity;
 import org.segrada.model.prototype.SegradaEntity;

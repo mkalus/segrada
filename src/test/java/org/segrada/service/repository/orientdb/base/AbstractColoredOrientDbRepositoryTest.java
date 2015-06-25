@@ -7,18 +7,16 @@ import com.orientechnologies.orient.core.sql.OCommandSQL;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.segrada.model.Pictogram;
 import org.segrada.model.base.AbstractColoredModel;
 import org.segrada.model.prototype.IPictogram;
 import org.segrada.model.prototype.SegradaColoredEntity;
-import org.segrada.service.repository.PictogramRepository;
 import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory;
-import org.segrada.session.ApplicationSettings;
 import org.segrada.session.Identity;
 import org.segrada.test.OrientDBTestInstance;
 import org.segrada.test.OrientDbTestApplicationSettings;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class AbstractColoredOrientDbRepositoryTest {
 	/**

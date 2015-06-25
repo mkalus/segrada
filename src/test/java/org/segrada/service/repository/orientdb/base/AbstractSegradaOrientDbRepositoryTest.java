@@ -12,7 +12,6 @@ import org.segrada.model.base.AbstractSegradaEntity;
 import org.segrada.model.prototype.IPictogram;
 import org.segrada.model.prototype.IUser;
 import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory;
-import org.segrada.session.ApplicationSettings;
 import org.segrada.session.Identity;
 import org.segrada.test.OrientDBTestInstance;
 import org.segrada.test.OrientDbTestApplicationSettings;

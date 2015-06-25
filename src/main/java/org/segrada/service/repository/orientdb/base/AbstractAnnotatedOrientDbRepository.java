@@ -1,18 +1,11 @@
 package org.segrada.service.repository.orientdb.base;
 
-import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 import com.orientechnologies.orient.core.record.impl.ODocument;
-import org.segrada.model.base.AbstractAnnotatedModel;
 import org.segrada.model.prototype.ITag;
 import org.segrada.model.prototype.SegradaAnnotatedEntity;
-import org.segrada.service.repository.CommentRepository;
-import org.segrada.service.repository.FileRepository;
-import org.segrada.service.repository.SourceReferenceRepository;
 import org.segrada.service.repository.TagRepository;
 import org.segrada.service.repository.orientdb.OrientDbTagRepository;
 import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory;
-import org.segrada.session.ApplicationSettings;
-import org.segrada.session.Identity;
 
 import java.util.HashSet;
 import java.util.List;
