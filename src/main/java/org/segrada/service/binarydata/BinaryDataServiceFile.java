@@ -116,7 +116,7 @@ public class BinaryDataServiceFile implements BinaryDataService {
 			// write metadata to file
 			File metadata = new File(myFile.getAbsolutePath() + ".metadata");
 			FileWriter fileWriter = new FileWriter(metadata);
-			fileWriter.write(fileName + "\n" + entity.getClass().getSimpleName() + ":" + entity.getId() + "\n" + mimeType);
+			fileWriter.write(fileName + "\n" + entity.getModelName() + ":" + entity.getId() + "\n" + mimeType);
 			fileWriter.close();
 
 			String newFileReference = myFile.getName();
@@ -151,11 +151,11 @@ public class BinaryDataServiceFile implements BinaryDataService {
 
 			// read first line from metadata
 			FileWriter fileWriter = new FileWriter(metadata);
-			fileWriter.write(fileName + "\n" + entity.getClass().getSimpleName() + ":" + entity.getId() + "\n" + mimeType);
+			fileWriter.write(fileName + "\n" + entity.getModelName() + ":" + entity.getId() + "\n" + mimeType);
 			fileWriter.close();
 
 			if (logger.isInfoEnabled())
-				logger.info("Updated reference id from " + oldReference + " to " + entity.getClass().getSimpleName());
+				logger.info("Updated reference id from " + oldReference + " to " + entity.getModelName());
 		} catch (IOException e) {
 			logger.warn("Could not update metadata for " + id + ": " + e.getMessage());
 		}

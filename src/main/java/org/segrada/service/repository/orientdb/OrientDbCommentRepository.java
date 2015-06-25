@@ -99,7 +99,7 @@ public class OrientDbCommentRepository extends AbstractAnnotatedOrientDbReposito
 	@Override
 	public boolean connectCommentWith(IComment comment, SegradaAnnotatedEntity entity) {
 		return !(entity == null || entity.getId() == null)
-				&& connectCommentWith(comment, new IdModelTuple(entity.getId(), entity.getClass().getSimpleName()));
+				&& connectCommentWith(comment, new IdModelTuple(entity.getId(), entity.getModelName()));
 	}
 
 	@Override
@@ -122,7 +122,7 @@ public class OrientDbCommentRepository extends AbstractAnnotatedOrientDbReposito
 	@Override
 	public boolean deleteCommentConnection(IComment comment, SegradaAnnotatedEntity entity) {
 		return !(entity == null || entity.getId() == null)
-				&& deleteCommentConnection(comment, new IdModelTuple(entity.getId(), entity.getClass().getSimpleName()));
+				&& deleteCommentConnection(comment, new IdModelTuple(entity.getId(), entity.getModelName()));
 	}
 
 	@Override

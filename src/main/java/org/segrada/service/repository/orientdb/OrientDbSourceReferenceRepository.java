@@ -12,6 +12,7 @@ import org.segrada.service.repository.SourceRepository;
 import org.segrada.service.repository.orientdb.base.AbstractOrientDbRepository;
 import org.segrada.service.repository.orientdb.base.AbstractSegradaOrientDbRepository;
 import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory;
+import org.segrada.service.util.AbstractLazyLoadedObject;
 
 import java.util.LinkedList;
 import java.util.List;
