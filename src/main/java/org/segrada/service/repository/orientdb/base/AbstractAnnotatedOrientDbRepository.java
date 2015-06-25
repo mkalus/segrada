@@ -1,11 +1,17 @@
 package org.segrada.service.repository.orientdb.base;
 
 import com.orientechnologies.orient.core.record.impl.ODocument;
-import org.segrada.model.prototype.ITag;
-import org.segrada.model.prototype.SegradaAnnotatedEntity;
+import org.segrada.model.prototype.*;
+import org.segrada.service.repository.CommentRepository;
+import org.segrada.service.repository.FileRepository;
+import org.segrada.service.repository.SourceReferenceRepository;
 import org.segrada.service.repository.TagRepository;
+import org.segrada.service.repository.orientdb.OrientDbCommentRepository;
+import org.segrada.service.repository.orientdb.OrientDbFileRepository;
+import org.segrada.service.repository.orientdb.OrientDbSourceReferenceRepository;
 import org.segrada.service.repository.orientdb.OrientDbTagRepository;
 import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory;
+import org.segrada.service.util.AbstractLazyLoadedObject;
 
 import java.util.HashSet;
 import java.util.List;
@@ -41,13 +47,97 @@ abstract public class AbstractAnnotatedOrientDbRepository<T extends SegradaAnnot
 	}
 
 	protected void populateEntityWithAnnotated(ODocument document, SegradaAnnotatedEntity entity) {
-		TagRepository tagRepository = repositoryFactory.produceRepository(OrientDbTagRepository.class);
-
-		// get connected tags
-		if (entity.getId() != null & tagRepository != null) {
-			String[] tagIds = tagRepository.findTagIdsConnectedToModel(entity.getId(), entity.getClass().getSimpleName(), true);
-			entity.setTags(tagRepository.findTagTitlesByIds(tagIds));
+		if (entity.getId() != null) {
+			// set tags
+			entity.setTags(lazyLoadTags(entity));
+			// set source references
+			entity.setSourceReferences(lazyLoadSourceReferences(entity));
+			// set source references
+			entity.setComments(lazyLoadComments(entity));
+			// set source references
+			entity.setFiles(lazyLoadFiles(entity));
 		}
+	}
+
+	/**
+	 * lazily load source references for an entity
+	 * @param entity connected as reference
+	 * @return list of source references (proxy)
+	 */
+	@SuppressWarnings("unchecked")
+	public List<ISourceReference> lazyLoadSourceReferences(final SegradaAnnotatedEntity entity) {
+		try {
+			return (List<ISourceReference>) java.lang.reflect.Proxy.newProxyInstance(
+					List.class.getClassLoader(),
+					new Class[]{List.class},
+					new AbstractLazyLoadedObject() {
+						@Override
+						protected Object loadObject() {
+							SourceReferenceRepository sourceReferenceRepository =
+									repositoryFactory.produceRepository(OrientDbSourceReferenceRepository.class);
+
+							return sourceReferenceRepository.findByReference(entity.getId());
+						}
+					}
+			);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	/**
+	 * lazily load source references for an entity
+	 * @param entity connected as reference
+	 * @return list of source references (proxy)
+	 */
+	@SuppressWarnings("unchecked")
+	public List<IComment> lazyLoadComments(final SegradaAnnotatedEntity entity) {
+		try {
+			return (List<IComment>) java.lang.reflect.Proxy.newProxyInstance(
+					List.class.getClassLoader(),
+					new Class[]{List.class},
+					new AbstractLazyLoadedObject() {
+						@Override
+						protected Object loadObject() {
+							CommentRepository commentRepository =
+									repositoryFactory.produceRepository(OrientDbCommentRepository.class);
+
+							return commentRepository.findByReference(entity.getId());
+						}
+					}
+			);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	/**
+	 * lazily load source references for an entity
+	 * @param entity connected as reference
+	 * @return list of source references (proxy)
+	 */
+	@SuppressWarnings("unchecked")
+	public List<IFile> lazyLoadFiles(final SegradaAnnotatedEntity entity) {
+		try {
+			return (List<IFile>) java.lang.reflect.Proxy.newProxyInstance(
+					List.class.getClassLoader(),
+					new Class[]{List.class},
+					new AbstractLazyLoadedObject() {
+						@Override
+						protected Object loadObject() {
+							FileRepository fileRepository =
+									repositoryFactory.produceRepository(OrientDbFileRepository.class);
+
+							return fileRepository.findByReference(entity.getId());
+						}
+					}
+			);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	@Override
@@ -87,12 +177,10 @@ abstract public class AbstractAnnotatedOrientDbRepository<T extends SegradaAnnot
 		}
 
 		// now find all tag ids and see if there are some that have been deleted
-		String[] tagIds = tagRepository.findTagIdsConnectedToModel(entity.getId(), entity.getClass().getSimpleName(), true);
+		String[] tagIds = tagRepository.findTagIdsConnectedToModel(entity.getId(), entity.getModelName(), true);
 		for (String id : tagIds) {
 			if (!addedIds.contains(id)) // not in set connected - delete
 				tagRepository.removeTag(id, entity);
 		}
 	}
-
-	//TODO: more stuff
 }
