@@ -2,7 +2,6 @@ package org.segrada.service.repository;
 
 import org.segrada.model.prototype.ITag;
 import org.segrada.model.prototype.SegradaTaggable;
-import org.segrada.model.util.IdModelTuple;
 import org.segrada.service.repository.prototype.CRUDRepository;
 import org.segrada.service.repository.prototype.PaginatingRepository;
 import org.segrada.service.repository.prototype.SearchTermRepository;
@@ -71,21 +70,13 @@ public interface TagRepository extends CRUDRepository<ITag>, SearchTermRepositor
 	String[] findTagIdsByParent(String id);
 
 	/**
-	 * find tag ids connected to a certain entity
-	 * @param id of entity
-	 * @param model of entity
-	 * @param onlyDirect set true if only directly connected tags should be returned, otherwise whole tree of tags
-	 * @return array of tag ids
+	 * find entities connected to tag
+	 * @param tag as parent
+	 * @param traverse traverse subtree?
+	 * @param classes classes to include (null = all classes)
+	 * @return list of taggable entities
 	 */
-	String[] findTagIdsConnectedToModel(String id, String model, boolean onlyDirect);
-
-	/**
-	 * find tag ids connected to a certain entity
-	 * @param idModelTuple entity represented s
-	 * @param onlyDirect set true if only directly connected tags should be returned, otherwise whole tree of tags
-	 * @return array of tag ids
-	 */
-	String[] findTagIdsConnectedToModel(IdModelTuple idModelTuple, boolean onlyDirect);
+	List<SegradaTaggable> findByTag(String id, boolean traverse, @Nullable String[] classes);
 
 	/**
 	 * find tag ids connected to a certain entity
@@ -101,22 +92,6 @@ public interface TagRepository extends CRUDRepository<ITag>, SearchTermRepositor
 	 * @return array of ids including parent
 	 */
 	String[] findTagIdsByParentTitle(String title);
-
-	/**
-	 * get tuples for tag
-	 * @param id of tag
-	 * @param classes to return - if null or empty, all classes including subtags will be returned
-	 * @return list of ids and classes connected to this tag
-	 */
-	List<IdModelTuple> getConnectedIdModelTuplesOf(String id, @Nullable String[] classes);
-
-	/**
-	 * get tuples for tag
-	 * @param tag root tag
-	 * @param classes to return - if null or empty, all classes including subtags will be returned
-	 * @return list of ids and classes connected to this tag
-	 */
-	List<IdModelTuple> getConnectedIdModelTuplesOf(ITag tag, @Nullable String[] classes);
 
 	/**
 	 * Connect two tags

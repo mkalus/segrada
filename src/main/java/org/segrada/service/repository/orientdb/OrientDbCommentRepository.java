@@ -7,10 +7,13 @@ import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
 import org.segrada.model.Comment;
 import org.segrada.model.prototype.IComment;
 import org.segrada.model.prototype.SegradaAnnotatedEntity;
-import org.segrada.model.util.IdModelTuple;
+import org.segrada.model.prototype.SegradaEntity;
 import org.segrada.service.repository.CommentRepository;
 import org.segrada.service.repository.orientdb.base.AbstractAnnotatedOrientDbRepository;
+import org.segrada.service.repository.orientdb.base.AbstractOrientDbRepository;
 import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -33,6 +36,8 @@ import java.util.List;
  * OrientDb Comment Repository
  */
 public class OrientDbCommentRepository extends AbstractAnnotatedOrientDbRepository<IComment> implements CommentRepository {
+	private static final Logger logger = LoggerFactory.getLogger(OrientDbCommentRepository.class);
+
 	/**
 	 * Constructor
 	 */
@@ -97,70 +102,62 @@ public class OrientDbCommentRepository extends AbstractAnnotatedOrientDbReposito
 	}
 
 	@Override
-	public boolean connectCommentWith(IComment comment, SegradaAnnotatedEntity entity) {
-		return !(entity == null || entity.getId() == null)
-				&& connectCommentWith(comment, new IdModelTuple(entity.getId(), entity.getModelName()));
-	}
+	public List<SegradaEntity> findByComment(String id) {
+		List<SegradaEntity> list = new LinkedList<>();
 
-	@Override
-	public boolean connectCommentWith(IComment comment, IdModelTuple idModelTuple) {
-		// only saved elements
-		if (comment.getId() == null || idModelTuple == null || idModelTuple.id == null) return false;
+		// avoid NPEs
+		if (id == null) return list;
 
 		initDb();
 
-		// connection already set?
-		OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>("select @rid from IsCommentOf where out = " + comment.getId() + " AND in = " + idModelTuple.id);
-		List<ODocument> result = db.command(query).execute();
-		if (result.size() > 0) return false;
-
-		// add edge
-		db.command(new OCommandSQL("create edge IsCommentOf from " + comment.getId() + " to " + idModelTuple.id)).execute();
-		return true;
-	}
-
-	@Override
-	public boolean deleteCommentConnection(IComment comment, SegradaAnnotatedEntity entity) {
-		return !(entity == null || entity.getId() == null)
-				&& deleteCommentConnection(comment, new IdModelTuple(entity.getId(), entity.getModelName()));
-	}
-
-	@Override
-	public boolean deleteCommentConnection(IComment comment, IdModelTuple idModelTuple) {
-		// only saved elements
-		if (comment.getId() == null || idModelTuple == null || idModelTuple.id == null) return false;
-
-		initDb();
-
-		// connection already set?
-		OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>("select @rid as id from IsCommentOf where out = " + comment.getId() + " AND in = " + idModelTuple.id);
-		List<ODocument> result = db.command(query).execute();
-		if (result.size() == 0) return false;
-
-		String id = result.get(0).field("id", String.class);
-
-		// delete edge
-		db.command(new OCommandSQL("delete edge " + id)).execute();
-		return true;
-	}
-
-	@Override
-	public List<IdModelTuple> getConnectedIdModelTuplesOf(IComment comment) {
-		List<IdModelTuple> list = new LinkedList<>();
-
-		// only saved elements
-		if (comment == null || comment.getId() == null) return list;
-
-		initDb();
-
-		OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>("select in.@rid as id, in.@class as class from IsCommentOf where out = " + comment.getId());
+		OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>("select in from IsCommentOf where out = " + id);
 		List<ODocument> result = db.command(query).execute();
 
 		for (ODocument document : result) {
-			list.add(new IdModelTuple(document.field("id", String.class), document.field("class", String.class)));
+			// get dynamic repository
+			ODocument doc = document.field("in");
+			AbstractOrientDbRepository repository = repositoryFactory.produceRepository(doc.getClassName());
+			if (repository != null)
+				list.add(repository.convertToEntity(doc));
+			else logger.error("Could not convert document of class " + doc.getClassName() + " to entity.");
 		}
 
 		return list;
+	}
+
+	@Override
+	public void connectCommentToEntity(IComment comment, SegradaAnnotatedEntity entity) {
+		initDb();
+
+		// no double connections
+		if (isCommentOf(comment, entity)) return;
+
+		// add edge
+		db.command(new OCommandSQL("create edge IsCommentOf from " + comment.getId() + " to " + entity.getId())).execute();
+	}
+
+	@Override
+	public void removeCommentFromEntity(IComment comment, SegradaAnnotatedEntity entity) {
+		initDb();
+
+		// execute query
+		OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>("select @RID as id from IsCommentOf where out = " + comment.getId() + " and in = " + entity.getId());
+		List<ODocument> result = db.command(query).execute();
+
+		if (result.size() > 0) {
+			// remove edge
+			db.command(new OCommandSQL("delete edge " + result.get(0).field("id", String.class))).execute();
+		}
+	}
+
+	@Override
+	public boolean isCommentOf(IComment comment, SegradaAnnotatedEntity entity) {
+		initDb();
+
+		OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>("select in from IsCommentOf where out = " + comment.getId() + " and in = " + entity.getId());
+		List<ODocument> result = db.command(query).execute();
+
+		return !result.isEmpty();
 	}
 
 	@Override
@@ -172,6 +169,7 @@ public class OrientDbCommentRepository extends AbstractAnnotatedOrientDbReposito
 
 		OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>("select @rid from IsCommentOf where out = " + comment.getId() + " LIMIT 1");
 		List<ODocument> result = db.command(query).execute();
-		return result.size() != 0;
+
+		return !result.isEmpty();
 	}
 }

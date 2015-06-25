@@ -10,11 +10,10 @@ import org.apache.lucene.search.TermQuery;
 import org.segrada.model.Tag;
 import org.segrada.model.prototype.ITag;
 import org.segrada.model.prototype.SegradaTaggable;
-import org.segrada.model.util.IdModelTuple;
 import org.segrada.service.repository.TagRepository;
+import org.segrada.service.repository.orientdb.base.AbstractOrientDbRepository;
 import org.segrada.service.repository.orientdb.base.AbstractSegradaOrientDbRepository;
 import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory;
-import org.segrada.service.util.AbstractLazyLoadedObject;
 import org.segrada.service.util.PaginationInfo;
 import org.segrada.util.OrientStringEscape;
 import org.slf4j.Logger;
@@ -248,17 +247,73 @@ public class OrientDbTagRepository extends AbstractSegradaOrientDbRepository<ITa
 		return list;
 	}
 
+	@Override
 	public String[] findTagIdsByParent(String id) {
-		List<IdModelTuple> list = getConnectedIdModelTuplesOf(id, new String[]{"Tag"});
+		List<SegradaTaggable> list = findByTag(id, true, new String[]{"Tag"});
 
 		// aggregate ids
 		String[] tagIds = new String[list.size()];
 		int i = 0;
 
-		for (IdModelTuple tuple : list)
-			tagIds[i++] = tuple.id;
+		for (SegradaTaggable entity : list)
+			tagIds[i++] = entity.getId();
 
 		return tagIds;
+	}
+
+	@Override
+	public List<SegradaTaggable> findByTag(String id, boolean traverse, @Nullable String[] classes) {
+		List<SegradaTaggable> list = new LinkedList<>();
+
+		// avoid NPEs
+		if (id == null) return list;
+
+		initDb();
+
+		// execute query
+		List<ODocument> result;
+		if (traverse) {
+			// create where statement
+			String where;
+			if (classes != null && classes.length > 0) {
+				StringBuilder sb = new StringBuilder(" where");
+				for (int i = 0; i < classes.length; i++) {
+					if (i > 0) sb.append(" OR ");
+					sb.append(" @class = '").append(OrientStringEscape.escapeOrientSql(classes[i])).append('\'');
+				}
+				where = sb.toString();
+			} else where = "";
+
+			OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>("select * from ( traverse out('IsTagOf') from " + id + " )" + where);
+			result = db.command(query).execute();
+		} else {
+			// create where statement
+			String where;
+			if (classes != null && classes.length > 0) {
+				StringBuilder sb = new StringBuilder("(");
+				for (int i = 0; i < classes.length; i++) {
+					if (i > 0) sb.append(" OR ");
+					sb.append(" in.@class = '").append(OrientStringEscape.escapeOrientSql(classes[i])).append('\'');
+				}
+				where = sb.append(") AND ").toString();
+			} else where = "";
+
+			OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>("select in from IsTagOf where " + where + " out = " + id);
+			result = db.command(query).execute();
+		}
+
+ 		for (ODocument document : result) {
+			// get dynamic repository
+			ODocument doc;
+		    if (traverse) doc = document;
+		    else doc = document.field("in");
+			AbstractOrientDbRepository repository = repositoryFactory.produceRepository(doc.getClassName());
+			if (repository != null)
+				list.add((SegradaTaggable) repository.convertToEntity(doc));
+			else logger.error("Could not convert document of class " + doc.getClassName() + " to entity.");
+		}
+
+		return list;
 	}
 
 	@Override
@@ -275,55 +330,20 @@ public class OrientDbTagRepository extends AbstractSegradaOrientDbRepository<ITa
 	}
 
 	@Override
-	public List<IdModelTuple> getConnectedIdModelTuplesOf(String id, @Nullable String[] classes) {
-		List<IdModelTuple> list = new LinkedList<>();
-
+	public String[] findTagIdsConnectedToModel(SegradaTaggable entity, boolean onlyDirect) {
 		// avoid NPEs
-		if (id == null) return list;
-
-		initDb();
-
-		// create where statement
-		String where;
-		if (classes != null && classes.length > 0) {
-			StringBuilder sb = new StringBuilder(" where");
-			for (int i = 0; i < classes.length; i++) {
-				if (i > 0) sb.append(" OR ");
-				sb.append(" @class = '").append(OrientStringEscape.escapeOrientSql(classes[i])).append('\'');
-			}
-			where = sb.toString();
-		} else where = "";
-
-		// execute query
-		OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>("select @RID as id, @class as class from ( traverse out('IsTagOf') from " + id + " )" + where);
-		List<ODocument> result = db.command(query).execute();
-
-		for (ODocument document : result)
-			list.add(new IdModelTuple(document.field("id", String.class), document.field("class", String.class)));
-
-		return list;
-	}
-
-	@Override
-	public List<IdModelTuple> getConnectedIdModelTuplesOf(ITag tag, @Nullable String[] classes) {
-		return getConnectedIdModelTuplesOf(tag.getId(), classes);
-	}
-
-	@Override
-	public String[] findTagIdsConnectedToModel(String id, String model, boolean onlyDirect) {
-		// avoid NPEs
-		if (id == null) return new String[0];
+		if (entity == null) return new String[0];
 
 		initDb();
 
 		// only directly connected tags?
 		List<ODocument> result;
 		if (onlyDirect) {
-			OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>("select out.@rid as id from IsTagOf where out.@class = 'Tag' AND in = " + id);
+			OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>("select out.@rid as id from IsTagOf where out.@class = 'Tag' AND in = " + entity.getId());
 			result = db.command(query).execute();
 		} else {
 			// execute query
-			OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>("select @RID as id from ( traverse in('IsTagOf') from " + id + ") where @class = 'Tag'");
+			OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>("select @RID as id from ( traverse in('IsTagOf') from " + entity.getId() + ") where @class = 'Tag'");
 			result = db.command(query).execute();
 		}
 
@@ -335,16 +355,6 @@ public class OrientDbTagRepository extends AbstractSegradaOrientDbRepository<ITa
 		}
 
 		return results;
-	}
-
-	@Override
-	public String[] findTagIdsConnectedToModel(IdModelTuple idModelTuple, boolean onlyDirect) {
-		return findTagIdsConnectedToModel(idModelTuple.id, idModelTuple.model, onlyDirect);
-	}
-
-	@Override
-	public String[] findTagIdsConnectedToModel(SegradaTaggable entity, boolean onlyDirect) {
-		return findTagIdsConnectedToModel(entity.getId(), entity.getModelName(), onlyDirect);
 	}
 
 	@Override

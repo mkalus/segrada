@@ -7,6 +7,8 @@ import org.segrada.service.repository.factory.RepositoryFactory;
 import org.segrada.service.repository.prototype.SegradaRepository;
 import org.segrada.session.ApplicationSettings;
 import org.segrada.session.Identity;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
 import java.lang.reflect.Constructor;
@@ -32,6 +34,8 @@ import java.util.Map;
  */
 @RequestScoped
 public class OrientDbRepositoryFactory implements RepositoryFactory {
+	private static final Logger logger = LoggerFactory.getLogger(OrientDbRepositoryFactory.class);
+
 	/**
 	 * database instance
 	 */
@@ -92,7 +96,7 @@ public class OrientDbRepositoryFactory implements RepositoryFactory {
 			try { // create OrientDb class for this entity
 				clazz = (Class<T>) Class.forName("org.segrada.service.repository.orientdb.OrientDb" + clazz.getSimpleName());
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error("Error while producing repository from interface " + clazz.getName(), e);
 				return null;
 			}
 		}
@@ -110,7 +114,7 @@ public class OrientDbRepositoryFactory implements RepositoryFactory {
 
 			return repositoryInstance;
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Error while producing repository from class " + clazz.getName(), e);
 			return null;
 		}
 	}
@@ -122,8 +126,8 @@ public class OrientDbRepositoryFactory implements RepositoryFactory {
 		try {
 			Class c = Class.forName("org.segrada.service.repository.orientdb.OrientDb" + modelName + "Repository");
 			return (T) produceRepository(c);
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			logger.error("Error while producing repository from model name " + modelName, e);
 			return null;
 		}
 	}

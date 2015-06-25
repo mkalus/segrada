@@ -2,7 +2,7 @@ package org.segrada.service.repository;
 
 import org.segrada.model.prototype.IComment;
 import org.segrada.model.prototype.SegradaAnnotatedEntity;
-import org.segrada.model.util.IdModelTuple;
+import org.segrada.model.prototype.SegradaEntity;
 import org.segrada.service.repository.prototype.CRUDRepository;
 
 import java.util.List;
@@ -33,43 +33,33 @@ public interface CommentRepository extends CRUDRepository<IComment> {
 	List<IComment> findByReference(String id);
 
 	/**
-	 * connect a comment with an entity
-	 * @param comment to connect to
-	 * @param entity to connect with
-	 * @return true if connection did not fail
+	 * gets connected entities of a single comment
+	 * @param id of comment
+	 * @return list of entities that reference comment
 	 */
-	boolean connectCommentWith(IComment comment, SegradaAnnotatedEntity entity);
+	List<SegradaEntity> findByComment(String id);
+
 
 	/**
-	 * connect a comment with an entity
-	 * @param comment to connect to
-	 * @param idModelTuple to connect with
-	 * @return true if connection did not fail
+	 * Create new comment connection (only once)
+	 * @param comment referencing
+	 * @param entity referenced
 	 */
-	boolean connectCommentWith(IComment comment, IdModelTuple idModelTuple);
+	void connectCommentToEntity(IComment comment, SegradaAnnotatedEntity entity);
 
 	/**
-	 * delete a comment connection
-	 * @param comment connected comment
-	 * @param entity which is connected to comment
-	 * @return true if deletion did not fail
+	 * Remove existing comment connection
+	 * @param comment referencing
+	 * @param entity referenced
 	 */
-	boolean deleteCommentConnection(IComment comment, SegradaAnnotatedEntity entity);
+	void removeCommentFromEntity(IComment comment, SegradaAnnotatedEntity entity);
 
 	/**
-	 * delete a comment connection
-	 * @param comment connected comment
-	 * @param idModelTuple which is connected to comment
-	 * @return true if deletion did not fail
+	 * Checks for comment connection
+	 * @param comment referencing
+	 * @param entity referenced
 	 */
-	boolean deleteCommentConnection(IComment comment, IdModelTuple idModelTuple);
-
-	/**
-	 * gets connected ids/models of a single comment
-	 * @param comment to check
-	 * @return list of entity ids/models that reference comment
-	 */
-	List<IdModelTuple> getConnectedIdModelTuplesOf(IComment comment);
+	boolean isCommentOf(IComment comment, SegradaAnnotatedEntity entity);
 
 	/**
 	 * @param comment to check

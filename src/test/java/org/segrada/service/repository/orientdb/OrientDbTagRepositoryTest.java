@@ -11,7 +11,7 @@ import org.segrada.model.Node;
 import org.segrada.model.Tag;
 import org.segrada.model.prototype.INode;
 import org.segrada.model.prototype.ITag;
-import org.segrada.model.util.IdModelTuple;
+import org.segrada.model.prototype.SegradaTaggable;
 import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory;
 import org.segrada.session.Identity;
 import org.segrada.test.OrientDBTestInstance;
@@ -388,9 +388,8 @@ public class OrientDbTagRepositoryTest {
 		assertEquals(5, tagIds.length);
 	}
 
-
 	@Test
-	public void testGetConnectedIdModelTuplesOf() throws Exception {
+	public void testFindByTag() throws Exception {
 		ITag parent = new Tag();
 		parent.setTitle("Root");
 		repository.save(parent);
@@ -430,38 +429,69 @@ public class OrientDbTagRepositoryTest {
 		repository.connectTag(child, node2);
 
 		// get all nodes of root
-		List<IdModelTuple> list = repository.getConnectedIdModelTuplesOf(parent, null);
-		assertTrue(list.size() == 4);
-		list = repository.getConnectedIdModelTuplesOf(parent, new String[0]);
-		assertTrue(list.size() == 4);
+		List<SegradaTaggable> list = repository.findByTag(parent.getId(), true, null);
+		assertEquals(4, list.size());
+		list = repository.findByTag(parent.getId(), true, new String[0]);
+		assertEquals(4, list.size());
+
+		// no traversal
+		list = repository.findByTag(parent.getId(), false, null);
+		assertEquals(2, list.size());
+		list = repository.findByTag(parent.getId(), false, new String[0]);
+		assertEquals(2, list.size());
 
 		//... of child
-		list = repository.getConnectedIdModelTuplesOf(child, null);
-		assertTrue(list.size() == 2);
-		list = repository.getConnectedIdModelTuplesOf(child, new String[0]);
-		assertTrue(list.size() == 2);
+		list = repository.findByTag(child.getId(), true, null);
+		assertEquals(2, list.size());
+		list = repository.findByTag(child.getId(), true, new String[0]);
+		assertEquals(2, list.size());
+
+		// no traversal
+		list = repository.findByTag(child.getId(), false, null);
+		assertEquals(1, list.size());
+		list = repository.findByTag(child.getId(), false, new String[0]);
+		assertEquals(1, list.size());
 
 		// filter parent
-		list = repository.getConnectedIdModelTuplesOf(parent, new String[]{"Node", "Tag", "Unknown"});
-		assertTrue(list.size() == 4);
-		list = repository.getConnectedIdModelTuplesOf(parent, new String[]{"Node", "Tag"});
-		assertTrue(list.size() == 4);
-		list = repository.getConnectedIdModelTuplesOf(parent, new String[]{"Node"});
-		assertTrue(list.size() == 2);
-		list = repository.getConnectedIdModelTuplesOf(parent, new String[]{"Tag"});
-		assertTrue(list.size() == 2);
-		list = repository.getConnectedIdModelTuplesOf(parent, new String[]{"Unknown"});
-		assertTrue(list.size() == 0);
+		list = repository.findByTag(parent.getId(), true, new String[]{"Node", "Tag", "Unknown"});
+		assertEquals(4, list.size());
+		list = repository.findByTag(parent.getId(), true, new String[]{"Node", "Tag"});
+		assertEquals(4, list.size());
+		list = repository.findByTag(parent.getId(), true, new String[]{"Node"});
+		assertEquals(2, list.size());
+		list = repository.findByTag(parent.getId(), true, new String[]{"Tag"});
+		assertEquals(2, list.size());
+		list = repository.findByTag(parent.getId(), true, new String[]{"Unknown"});
+		assertEquals(0, list.size());
+
+		// filter parent - no traversal
+		list = repository.findByTag(parent.getId(), false, new String[]{"Node", "Tag", "Unknown"});
+		assertEquals(2, list.size());
+		list = repository.findByTag(parent.getId(), false, new String[]{"Node", "Tag"});
+		assertEquals(2, list.size());
+		list = repository.findByTag(parent.getId(), false, new String[]{"Node"});
+		assertEquals(1, list.size());
+		list = repository.findByTag(parent.getId(), false, new String[]{"Tag"});
+		assertEquals(1, list.size());
+		list = repository.findByTag(parent.getId(), false, new String[]{"Unknown"});
+		assertEquals(0, list.size());
 
 		// filter child
-		list = repository.getConnectedIdModelTuplesOf(child, new String[]{"Node"});
-		assertTrue(list.size() == 1);
-		list = repository.getConnectedIdModelTuplesOf(child, new String[]{"Tag"});
-		assertTrue(list.size() == 1);
-		list = repository.getConnectedIdModelTuplesOf(child, new String[]{"Unknown"});
-		assertTrue(list.size() == 0);
-	}
+		list = repository.findByTag(child.getId(), true, new String[]{"Node"});
+		assertEquals(1, list.size());
+		list = repository.findByTag(child.getId(), true, new String[]{"Tag"});
+		assertEquals(1, list.size());
+		list = repository.findByTag(child.getId(), true, new String[]{"Unknown"});
+		assertEquals(0, list.size());
 
+		// filter child - no traversal
+		list = repository.findByTag(child.getId(), false, new String[]{"Node"});
+		assertEquals(1, list.size());
+		list = repository.findByTag(child.getId(), false, new String[]{"Tag"});
+		assertEquals(0, list.size());
+		list = repository.findByTag(child.getId(), false, new String[]{"Unknown"});
+		assertEquals(0, list.size());
+	}
 
 	@Test
 	public void testFindTagIdsConnectedToModel() throws Exception {
@@ -639,5 +669,10 @@ public class OrientDbTagRepositoryTest {
 
 		// check if connection was removed
 		assertFalse(repository.isChildOf(subTag1, root));
+	}
+
+	@Test
+	public void testPaginate() throws Exception {
+		fail("Test not implemented yet.");
 	}
 }

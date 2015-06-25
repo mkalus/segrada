@@ -177,7 +177,7 @@ abstract public class AbstractAnnotatedOrientDbRepository<T extends SegradaAnnot
 		}
 
 		// now find all tag ids and see if there are some that have been deleted
-		String[] tagIds = tagRepository.findTagIdsConnectedToModel(entity.getId(), entity.getModelName(), true);
+		String[] tagIds = tagRepository.findTagIdsConnectedToModel(entity, true);
 		for (String id : tagIds) {
 			if (!addedIds.contains(id)) // not in set connected - delete
 				tagRepository.removeTag(id, entity);

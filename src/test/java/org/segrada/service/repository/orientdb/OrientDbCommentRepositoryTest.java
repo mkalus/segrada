@@ -9,7 +9,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.segrada.model.Comment;
 import org.segrada.model.prototype.IComment;
-import org.segrada.model.util.IdModelTuple;
 import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory;
 import org.segrada.session.Identity;
 import org.segrada.test.OrientDBTestInstance;
@@ -133,8 +132,8 @@ public class OrientDbCommentRepositoryTest {
 		List<IComment> list = repository.findByReference(comment1.getId());
 		assertTrue(list.size() == 0);
 
-		assertTrue(repository.connectCommentWith(comment2, comment1));
-		assertTrue(repository.connectCommentWith(comment3, comment1));
+		repository.connectCommentToEntity(comment2, comment1);
+		repository.connectCommentToEntity(comment3, comment1);
 
 		list = repository.findByReference(comment1.getId());
 		assertTrue(list.size() == 2);
@@ -155,47 +154,28 @@ public class OrientDbCommentRepositoryTest {
 		comment2.setMarkup("markup");
 		repository.save(comment2);
 
-		assertTrue(repository.connectCommentWith(comment1, comment2));
-		// twice should return false
-		assertFalse(repository.connectCommentWith(comment1, comment2));
-
-		// now check of edge was created
+		// there should be no connection to begin with
 		OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>("select @rid from IsCommentOf where out = " + comment1.getId() + " AND in = " + comment2.getId());
 		List<ODocument> result = factory.getDb().command(query).execute();
 
-		assertTrue(result.size() == 1);
+		assertTrue(result.isEmpty());
 
-		// also check empty sets (no ids null values, etc.)
-		//TODO
-	}
+		repository.connectCommentToEntity(comment1, comment2);
 
-	@Test
-	public void testConnectCommentWithTuple() throws Exception {
-		IComment comment1 = new Comment();
-		comment1.setText("Comment 1");
-		comment1.setMarkup("markup");
-		repository.save(comment1);
+		// there should be one connection
+		query = new OSQLSynchQuery<>("select @rid from IsCommentOf where out = " + comment1.getId() + " AND in = " + comment2.getId());
+		result = factory.getDb().command(query).execute();
 
-		IComment comment2 = new Comment();
-		comment2.setText("Comment 2");
-		comment2.setMarkup("markup");
-		repository.save(comment2);
+		assertFalse(result.isEmpty());
 
-		// create tuple
-		IdModelTuple idModelTuple = new IdModelTuple(comment2.getId(), "Comment");
+		// connect again
+		repository.connectCommentToEntity(comment1, comment2);
 
-		assertTrue(repository.connectCommentWith(comment1, idModelTuple));
-		// twice should return false
-		assertFalse(repository.connectCommentWith(comment1, idModelTuple));
+		// there should be one connection only
+		query = new OSQLSynchQuery<>("select @rid from IsCommentOf where out = " + comment1.getId() + " AND in = " + comment2.getId());
+		result = factory.getDb().command(query).execute();
 
-		// now check of edge was created
-		OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>("select @rid from IsCommentOf where out = " + comment1.getId() + " AND in = " + comment2.getId());
-		List<ODocument> result = factory.getDb().command(query).execute();
-
-		assertTrue(result.size() == 1);
-
-		// also check empty sets (no ids null values, etc.)
-		//TODO
+		assertEquals(1, result.size());
 	}
 
 	@Test
@@ -210,50 +190,40 @@ public class OrientDbCommentRepositoryTest {
 		comment2.setMarkup("markup");
 		repository.save(comment2);
 
-		assertTrue(repository.connectCommentWith(comment1, comment2));
-
-		// ok, now delete edge again
-		assertTrue(repository.deleteCommentConnection(comment1, comment2));
-		// twice should return false
-		assertFalse(repository.deleteCommentConnection(comment1, comment2));
-
-		// now check of edge was deleted
+		// there should be no connection to begin with
 		OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>("select @rid from IsCommentOf where out = " + comment1.getId() + " AND in = " + comment2.getId());
 		List<ODocument> result = factory.getDb().command(query).execute();
 
-		assertTrue(result.size() == 0);
-	}
+		assertTrue(result.isEmpty());
 
-	@Test
-	public void testDeleteCommentConnectionTuple() throws Exception {
-		IComment comment1 = new Comment();
-		comment1.setText("Comment 1");
-		comment1.setMarkup("markup");
-		repository.save(comment1);
+		repository.connectCommentToEntity(comment1, comment2);
 
-		IComment comment2 = new Comment();
-		comment2.setText("Comment 2");
-		comment2.setMarkup("markup");
-		repository.save(comment2);
+		// there should be one connection
+		query = new OSQLSynchQuery<>("select @rid from IsCommentOf where out = " + comment1.getId() + " AND in = " + comment2.getId());
+		result = factory.getDb().command(query).execute();
 
-		assertTrue(repository.connectCommentWith(comment1, comment2));
+		assertFalse(result.isEmpty());
 
-		// create tuple
-		IdModelTuple idModelTuple = new IdModelTuple(comment2.getId(), "Comment");
-
-		// ok, now delete edge again
-		assertTrue(repository.deleteCommentConnection(comment1, idModelTuple));
-		// twice should return false
-		assertFalse(repository.deleteCommentConnection(comment1, idModelTuple));
+		// ok, now delete edge
+		repository.removeCommentFromEntity(comment1, comment2);
 
 		// now check of edge was deleted
-		OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>("select @rid from IsCommentOf where out = " + comment1.getId() + " AND in = " + comment2.getId());
-		List<ODocument> result = factory.getDb().command(query).execute();
+		query = new OSQLSynchQuery<>("select @rid from IsCommentOf where out = " + comment1.getId() + " AND in = " + comment2.getId());
+		result = factory.getDb().command(query).execute();
 
-		assertTrue(result.size() == 0);
+		assertTrue(result.isEmpty());
+
+		// ok, now delete edge again - should work
+		repository.removeCommentFromEntity(comment1, comment2);
+
+		// now check of edge was deleted
+		query = new OSQLSynchQuery<>("select @rid from IsCommentOf where out = " + comment1.getId() + " AND in = " + comment2.getId());
+		result = factory.getDb().command(query).execute();
+
+		assertTrue(result.isEmpty());
 	}
 
-	@Test
+	/*@Test
 	public void testGetConnectedIdModelTuplesOf() throws Exception {
 		IComment comment1 = new Comment();
 		comment1.setText("Comment 1");
@@ -284,7 +254,7 @@ public class OrientDbCommentRepositoryTest {
 		assertTrue(list.get(1).model.equals("Comment"));
 		assertTrue(list.get(0).id.equals(comment2.getId()));
 		assertTrue(list.get(1).id.equals(comment3.getId()));
-	}
+	}*/
 
 	@Test
 	public void testHasConnections() throws Exception {
@@ -301,7 +271,7 @@ public class OrientDbCommentRepositoryTest {
 		// no connections to begin with
 		assertFalse(repository.hasConnections(comment1));
 
-		assertTrue(repository.connectCommentWith(comment1, comment2));
+		repository.connectCommentToEntity(comment1, comment2);
 
 		// is connected
 		assertTrue(repository.hasConnections(comment1));
