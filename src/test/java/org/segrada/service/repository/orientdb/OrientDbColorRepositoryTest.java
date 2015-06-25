@@ -22,6 +22,11 @@ public class OrientDbColorRepositoryTest {
 	private OrientDBTestInstance orientDBTestInstance = new OrientDBTestInstance();
 
 	/**
+	 * reference to factory
+	 */
+	private OrientDbRepositoryFactory factory;
+
+	/**
 	 * repository to test
 	 */
 	private OrientDbColorRepository repository;
@@ -34,7 +39,7 @@ public class OrientDbColorRepositoryTest {
 		// open database
 		ODatabaseDocumentTx db = orientDBTestInstance.getDatabase();
 
-		OrientDbRepositoryFactory factory = new OrientDbRepositoryFactory(db, new OrientDbTestApplicationSettings(), new Identity());
+		factory = new OrientDbRepositoryFactory(db, new OrientDbTestApplicationSettings(), new Identity());
 
 		// create repository
 		repository =  factory.produceRepository(OrientDbColorRepository.class);
@@ -43,11 +48,11 @@ public class OrientDbColorRepositoryTest {
 	@After
 	public void tearDown() throws Exception {
 		// truncate db
-		repository.getDb().command(new OCommandSQL("truncate class Color")).execute();
+		factory.getDb().command(new OCommandSQL("truncate class Color")).execute();
 
 		// close db
 		try {
-			repository.getDb().close();
+			factory.getDb().close();
 		} catch (Exception e) {
 			// do nothing
 		}

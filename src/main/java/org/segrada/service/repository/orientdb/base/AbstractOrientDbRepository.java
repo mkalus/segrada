@@ -56,14 +56,6 @@ abstract public class AbstractOrientDbRepository<T extends SegradaEntity> implem
 	}
 
 	/**
-	 * getter for database instance - used for testing
-	 * @return database instance
-	 */
-	public ODatabaseDocumentTx getDb() {
-		return db;
-	}
-
-	/**
 	 * open database
 	 */
 	protected void initDb() {

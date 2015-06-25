@@ -23,6 +23,11 @@ public class OrientDbUserRepositoryTest {
 	private OrientDBTestInstance orientDBTestInstance = new OrientDBTestInstance();
 
 	/**
+	 * reference to factory
+	 */
+	private OrientDbRepositoryFactory factory;
+
+	/**
 	 * repository to test
 	 */
 	private OrientDbUserRepository repository;
@@ -35,7 +40,7 @@ public class OrientDbUserRepositoryTest {
 		// open database
 		ODatabaseDocumentTx db = orientDBTestInstance.getDatabase();
 
-		OrientDbRepositoryFactory factory = new OrientDbRepositoryFactory(db, new OrientDbTestApplicationSettings(), new Identity());
+		factory = new OrientDbRepositoryFactory(db, new OrientDbTestApplicationSettings(), new Identity());
 
 		// create repository
 		repository =  factory.produceRepository(OrientDbUserRepository.class);
@@ -44,11 +49,11 @@ public class OrientDbUserRepositoryTest {
 	@After
 	public void tearDown() throws Exception {
 		// truncate db
-		repository.getDb().command(new OCommandSQL("truncate class User")).execute();
+		factory.getDb().command(new OCommandSQL("truncate class User")).execute();
 
 		// close db
 		try {
-			repository.getDb().close();
+			factory.getDb().close();
 		} catch (Exception e) {
 			// do nothing
 		}

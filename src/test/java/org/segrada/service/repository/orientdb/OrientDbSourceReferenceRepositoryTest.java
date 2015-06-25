@@ -35,6 +35,9 @@ public class OrientDbSourceReferenceRepositoryTest {
 	 */
 	private OrientDbSourceReferenceRepository repository;
 
+	/**
+	 * reference to factory
+	 */
 	private OrientDbRepositoryFactory factory;
 
 	@Before
@@ -54,15 +57,15 @@ public class OrientDbSourceReferenceRepositoryTest {
 	@After
 	public void tearDown() throws Exception {
 		// truncate db
-		repository.getDb().command(new OCommandSQL("delete edge E")).execute();
-		repository.getDb().command(new OCommandSQL("delete vertex V")).execute();
-		repository.getDb().command(new OCommandSQL("truncate class SourceReference")).execute();
-		repository.getDb().command(new OCommandSQL("truncate class Source")).execute();
-		repository.getDb().command(new OCommandSQL("truncate class Comment")).execute();
+		factory.getDb().command(new OCommandSQL("delete edge E")).execute();
+		factory.getDb().command(new OCommandSQL("delete vertex V")).execute();
+		factory.getDb().command(new OCommandSQL("truncate class SourceReference")).execute();
+		factory.getDb().command(new OCommandSQL("truncate class Source")).execute();
+		factory.getDb().command(new OCommandSQL("truncate class Comment")).execute();
 
 		// close db
 		try {
-			repository.getDb().close();
+			factory.getDb().close();
 		} catch (Exception e) {
 			// do nothing
 		}
@@ -98,7 +101,7 @@ public class OrientDbSourceReferenceRepositoryTest {
 		repository.save(sourceReference);
 
 		// now get ODocument from db
-		ODocument document = repository.getDb().load(new ORecordId(sourceReference.getId()));
+		ODocument document = factory.getDb().load(new ORecordId(sourceReference.getId()));
 
 		ISourceReference referenceToCheck = repository.convertToEntity(document);
 		assertEquals(sourceReference.getSource().getId(), referenceToCheck.getSource().getId());

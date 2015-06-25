@@ -30,6 +30,11 @@ public class OrientDbCommentRepositoryTest {
 	private OrientDBTestInstance orientDBTestInstance = new OrientDBTestInstance();
 
 	/**
+	 * reference to factory
+	 */
+	private OrientDbRepositoryFactory factory;
+
+	/**
 	 * repository to test
 	 */
 	private OrientDbCommentRepository repository;
@@ -42,7 +47,7 @@ public class OrientDbCommentRepositoryTest {
 		// open database
 		ODatabaseDocumentTx db = orientDBTestInstance.getDatabase();
 
-		OrientDbRepositoryFactory factory = new OrientDbRepositoryFactory(db, new OrientDbTestApplicationSettings(), new Identity());
+		factory = new OrientDbRepositoryFactory(db, new OrientDbTestApplicationSettings(), new Identity());
 
 		// create repository
 		repository =  factory.produceRepository(OrientDbCommentRepository.class);
@@ -51,12 +56,12 @@ public class OrientDbCommentRepositoryTest {
 	@After
 	public void tearDown() throws Exception {
 		// truncate db
-		repository.getDb().command(new OCommandSQL("delete edge IsCommentOf")).execute();
-		repository.getDb().command(new OCommandSQL("delete vertex Comment")).execute();
+		factory.getDb().command(new OCommandSQL("delete edge IsCommentOf")).execute();
+		factory.getDb().command(new OCommandSQL("delete vertex Comment")).execute();
 
 		// close db
 		try {
-			repository.getDb().close();
+			factory.getDb().close();
 		} catch (Exception e) {
 			// do nothing
 		}
@@ -160,7 +165,7 @@ public class OrientDbCommentRepositoryTest {
 
 		// now check of edge was created
 		OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>("select @rid from IsCommentOf where out = " + comment1.getId() + " AND in = " + comment2.getId());
-		List<ODocument> result = repository.getDb().command(query).execute();
+		List<ODocument> result = factory.getDb().command(query).execute();
 
 		assertTrue(result.size() == 1);
 
@@ -189,7 +194,7 @@ public class OrientDbCommentRepositoryTest {
 
 		// now check of edge was created
 		OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>("select @rid from IsCommentOf where out = " + comment1.getId() + " AND in = " + comment2.getId());
-		List<ODocument> result = repository.getDb().command(query).execute();
+		List<ODocument> result = factory.getDb().command(query).execute();
 
 		assertTrue(result.size() == 1);
 
@@ -218,7 +223,7 @@ public class OrientDbCommentRepositoryTest {
 
 		// now check of edge was deleted
 		OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>("select @rid from IsCommentOf where out = " + comment1.getId() + " AND in = " + comment2.getId());
-		List<ODocument> result = repository.getDb().command(query).execute();
+		List<ODocument> result = factory.getDb().command(query).execute();
 
 		assertTrue(result.size() == 0);
 	}
@@ -247,7 +252,7 @@ public class OrientDbCommentRepositoryTest {
 
 		// now check of edge was deleted
 		OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>("select @rid from IsCommentOf where out = " + comment1.getId() + " AND in = " + comment2.getId());
-		List<ODocument> result = repository.getDb().command(query).execute();
+		List<ODocument> result = factory.getDb().command(query).execute();
 
 		assertTrue(result.size() == 0);
 	}

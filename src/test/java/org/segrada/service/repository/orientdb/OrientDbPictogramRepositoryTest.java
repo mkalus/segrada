@@ -24,6 +24,11 @@ public class OrientDbPictogramRepositoryTest {
 	private OrientDBTestInstance orientDBTestInstance = new OrientDBTestInstance();
 
 	/**
+	 * reference to factory
+	 */
+	private OrientDbRepositoryFactory factory;
+
+	/**
 	 * repository to test
 	 */
 	private OrientDbPictogramRepository repository;
@@ -36,7 +41,7 @@ public class OrientDbPictogramRepositoryTest {
 		// open database
 		ODatabaseDocumentTx db = orientDBTestInstance.getDatabase();
 
-		OrientDbRepositoryFactory factory = new OrientDbRepositoryFactory(db, new OrientDbTestApplicationSettings(), new Identity());
+		factory = new OrientDbRepositoryFactory(db, new OrientDbTestApplicationSettings(), new Identity());
 
 		// create repository
 		repository =  factory.produceRepository(OrientDbPictogramRepository.class);
@@ -45,11 +50,11 @@ public class OrientDbPictogramRepositoryTest {
 	@After
 	public void tearDown() throws Exception {
 		// truncate db
-		repository.getDb().command(new OCommandSQL("truncate class Pictogram")).execute();
+		factory.getDb().command(new OCommandSQL("truncate class Pictogram")).execute();
 
 		// close db
 		try {
-			repository.getDb().close();
+			factory.getDb().close();
 		} catch (Exception e) {
 			// do nothing
 		}

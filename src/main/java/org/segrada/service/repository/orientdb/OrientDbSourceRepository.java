@@ -217,7 +217,7 @@ public class OrientDbSourceRepository extends AbstractAnnotatedOrientDbRepositor
 					.append(termQuery2.toString()).append(" OR ")
 					.append(termQuery3.toString()).append("))");
 		}
-		System.out.println(sb.toString());
+		//System.out.println(sb.toString());
 		return sb.toString();
 	}
 }

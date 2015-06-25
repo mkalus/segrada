@@ -28,6 +28,11 @@ public class OrientDbTagRepositoryTest {
 	private OrientDBTestInstance orientDBTestInstance = new OrientDBTestInstance();
 
 	/**
+	 * reference to factory
+	 */
+	private OrientDbRepositoryFactory factory;
+
+	/**
 	 * repository to test
 	 */
 	private OrientDbTagRepository repository;
@@ -45,7 +50,7 @@ public class OrientDbTagRepositoryTest {
 		// open database
 		ODatabaseDocumentTx db = orientDBTestInstance.getDatabase();
 
-		OrientDbRepositoryFactory factory = new OrientDbRepositoryFactory(db, new OrientDbTestApplicationSettings(), new Identity());
+		factory = new OrientDbRepositoryFactory(db, new OrientDbTestApplicationSettings(), new Identity());
 
 		// create repository
 		repository =  factory.produceRepository(OrientDbTagRepository.class);
@@ -54,12 +59,12 @@ public class OrientDbTagRepositoryTest {
 	@After
 	public void tearDown() throws Exception {
 		// truncate db
-		repository.getDb().command(new OCommandSQL("delete vertex V")).execute();
-		repository.getDb().command(new OCommandSQL("delete edge E")).execute();
+		factory.getDb().command(new OCommandSQL("delete vertex V")).execute();
+		factory.getDb().command(new OCommandSQL("delete edge E")).execute();
 
 		// close db
 		try {
-			repository.getDb().close();
+			factory.getDb().close();
 		} catch (Exception e) {
 			// do nothing
 		}
@@ -517,7 +522,7 @@ public class OrientDbTagRepositoryTest {
 
 	@Test
 	public void testConnectTags() throws Exception {
-		ODatabaseDocumentTx db = repository.getDb();
+		ODatabaseDocumentTx db = factory.getDb();
 
 		ITag parent = new Tag();
 		parent.setTitle("Root");

@@ -27,6 +27,11 @@ public class OrientDbFileRepositoryTest {
 	private OrientDBTestInstance orientDBTestInstance = new OrientDBTestInstance();
 
 	/**
+	 * reference to factory
+	 */
+	private OrientDbRepositoryFactory factory;
+
+	/**
 	 * repository to test
 	 */
 	private OrientDbFileRepository repository;
@@ -39,7 +44,7 @@ public class OrientDbFileRepositoryTest {
 		// open database
 		ODatabaseDocumentTx db = orientDBTestInstance.getDatabase();
 
-		OrientDbRepositoryFactory factory = new OrientDbRepositoryFactory(db, new OrientDbTestApplicationSettings(), new Identity());
+		factory = new OrientDbRepositoryFactory(db, new OrientDbTestApplicationSettings(), new Identity());
 
 		// create repository
 		repository =  factory.produceRepository(OrientDbFileRepository.class);
@@ -48,12 +53,12 @@ public class OrientDbFileRepositoryTest {
 	@After
 	public void tearDown() throws Exception {
 		// truncate db
-		repository.getDb().command(new OCommandSQL("delete vertex V")).execute();
-		repository.getDb().command(new OCommandSQL("delete edge E")).execute();
+		factory.getDb().command(new OCommandSQL("delete vertex V")).execute();
+		factory.getDb().command(new OCommandSQL("delete edge E")).execute();
 
 		// close db
 		try {
-			repository.getDb().close();
+			factory.getDb().close();
 		} catch (Exception e) {
 			// do nothing
 		}
