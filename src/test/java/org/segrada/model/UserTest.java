@@ -9,6 +9,8 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import java.util.Set;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.segrada.test.PropertyAsserter.assertBasicGetterSetterBehavior;
 
@@ -107,5 +109,33 @@ public class UserTest {
 	public void testWrongRole() throws Exception {
 		Set<ConstraintViolation<User>> constraintViolations = validator.validateValue(User.class, "role", "COOLUSER");
 		assertTrue("Role not USER or ADMIN", constraintViolations.size() == 1);
+	}
+
+	@Test
+	public void testGetTitle() throws Exception {
+		final User user = new User();
+		user.setLogin("login");
+		user.setName("John Doe");
+		user.setPassword("supersecretpassword");
+		user.setRole("USER");
+
+		assertEquals("John Doe", user.getTitle());
+	}
+
+	@Test
+	public void testPasswordsMatch() throws Exception {
+		final User user = new User();
+
+		// nothing set
+		assertTrue(user.passwordsMatch());
+
+		user.setPassword("pass1");
+		assertFalse(user.passwordsMatch());
+
+		user.setConfirmPassword("pass1");
+		assertTrue(user.passwordsMatch());
+
+		user.setPassword(null);
+		assertFalse(user.passwordsMatch());
 	}
 }

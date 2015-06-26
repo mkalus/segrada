@@ -9,6 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.segrada.model.Comment;
 import org.segrada.model.prototype.IComment;
+import org.segrada.model.prototype.SegradaEntity;
 import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory;
 import org.segrada.session.Identity;
 import org.segrada.test.OrientDBTestInstance;
@@ -142,6 +143,38 @@ public class OrientDbCommentRepositoryTest {
 		assertEquals(comment3.getId(), list.get(1).getId());
 	}
 
+
+	@Test
+	public void testFindByComment() throws Exception {
+		IComment comment1 = new Comment();
+		comment1.setText("Comment 1");
+		comment1.setMarkup("markup");
+		repository.save(comment1);
+
+		IComment comment2 = new Comment();
+		comment2.setText("Comment 2");
+		comment2.setMarkup("markup");
+		repository.save(comment2);
+
+		IComment comment3 = new Comment();
+		comment3.setText("Comment 3");
+		comment3.setMarkup("markup");
+		repository.save(comment3);
+
+		// empty to start with
+		List<SegradaEntity> list = repository.findByComment(comment1.getId());
+		assertTrue(list.size() == 0);
+
+		repository.connectCommentToEntity(comment1, comment2);
+		repository.connectCommentToEntity(comment1, comment3);
+
+		list = repository.findByComment(comment1.getId());
+		assertTrue(list.size() == 2);
+
+		assertEquals(comment2.getId(), list.get(0).getId());
+		assertEquals(comment3.getId(), list.get(1).getId());
+	}
+
 	@Test
 	public void testConnectCommentWith() throws Exception {
 		IComment comment1 = new Comment();
@@ -222,39 +255,6 @@ public class OrientDbCommentRepositoryTest {
 
 		assertTrue(result.isEmpty());
 	}
-
-	/*@Test
-	public void testGetConnectedIdModelTuplesOf() throws Exception {
-		IComment comment1 = new Comment();
-		comment1.setText("Comment 1");
-		comment1.setMarkup("markup");
-		repository.save(comment1);
-
-		IComment comment2 = new Comment();
-		comment2.setText("Comment 2");
-		comment2.setMarkup("markup");
-		repository.save(comment2);
-
-		IComment comment3 = new Comment();
-		comment3.setText("Comment 3");
-		comment3.setMarkup("markup");
-		repository.save(comment3);
-
-		// empty to start with
-		List<IdModelTuple> list = repository.getConnectedIdModelTuplesOf(comment1);
-		assertTrue(list.size() == 0);
-
-		assertTrue(repository.connectCommentWith(comment1, comment2));
-		assertTrue(repository.connectCommentWith(comment1, comment3));
-
-		list = repository.getConnectedIdModelTuplesOf(comment1);
-		assertTrue(list.size() == 2);
-
-		assertTrue(list.get(0).model.equals("Comment"));
-		assertTrue(list.get(1).model.equals("Comment"));
-		assertTrue(list.get(0).id.equals(comment2.getId()));
-		assertTrue(list.get(1).id.equals(comment3.getId()));
-	}*/
 
 	@Test
 	public void testHasConnections() throws Exception {
