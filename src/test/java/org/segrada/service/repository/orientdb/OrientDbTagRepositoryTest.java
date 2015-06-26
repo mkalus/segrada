@@ -39,11 +39,6 @@ public class OrientDbTagRepositoryTest {
 
 	@Before
 	public void setUp() throws Exception {
-		//TODO: rework tag repository to work better
-
-		// set up schema if needed
-		//orientDBTestInstance.dropDatabase();
-		//TODO: make dropDatabase work nicer - this might be a bug in OrientDB
 		orientDBTestInstance.setUpSchemaIfNeeded();
 
 		// truncate db
@@ -77,7 +72,7 @@ public class OrientDbTagRepositoryTest {
 
 	@Test
 	public void testConvertToEntity() throws Exception {
-		ODocument document = new ODocument("Tag").field("title", "title").field("created", 1L).field("modified", 2L);;
+		ODocument document = new ODocument("Tag").field("title", "title").field("created", 1L).field("modified", 2L);
 		document.save();
 
 		ITag tag = repository.convertToEntity(document);

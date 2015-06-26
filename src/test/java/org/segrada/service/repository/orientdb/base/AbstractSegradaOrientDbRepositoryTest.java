@@ -7,10 +7,13 @@ import com.orientechnologies.orient.core.sql.OCommandSQL;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.segrada.model.Node;
 import org.segrada.model.User;
 import org.segrada.model.base.AbstractSegradaEntity;
+import org.segrada.model.prototype.INode;
 import org.segrada.model.prototype.IPictogram;
 import org.segrada.model.prototype.IUser;
+import org.segrada.model.prototype.SegradaTaggable;
 import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory;
 import org.segrada.session.Identity;
 import org.segrada.test.OrientDBTestInstance;
@@ -31,6 +34,8 @@ public class AbstractSegradaOrientDbRepositoryTest {
 
 	@Before
 	public void setUp() throws Exception {
+		orientDBTestInstance.setUpSchemaIfNeeded();
+
 		// open database
 		ODatabaseDocumentTx db = orientDBTestInstance.getDatabase();
 
@@ -59,6 +64,9 @@ public class AbstractSegradaOrientDbRepositoryTest {
 		// remove schema
 		db.command(new OCommandSQL("drop class Mock")).execute();
 		db.command(new OCommandSQL("drop class MockUser")).execute();
+		db.command(new OCommandSQL("truncate class User")).execute();
+		db.command(new OCommandSQL("delete vertex V")).execute();
+		db.command(new OCommandSQL("delete edge E")).execute();
 
 		// close db
 		db.close();
@@ -276,16 +284,42 @@ public class AbstractSegradaOrientDbRepositoryTest {
 
 	@Test
 	public void testLazyLoadUser() throws Exception {
-		fail("Implement test.");
+		ODocument document = new ODocument("User").field("login", "login")
+				.field("password", "password").field("name", "name")
+				.field("role", "USER").field("created", 1L).field("modified", 2L)
+				.field("lastLogin", 3L).field("active", true);
+		document.save();
+
+		IUser user = mockOrientDbRepository.lazyLoadUser(new ORecordId(document.getIdentity()));
+		assertNotNull(user);
+		assertEquals(document.getIdentity().toString(), user.getId());
+
+		orientDBTestInstance.getDatabase().command(new OCommandSQL("truncate class User")).execute();
 	}
 
 	@Test
 	public void testLazyLoadTags() throws Exception {
-		fail("Implement test.");
-		/*
-		OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>("select out as field from IsTagOf where out.@class = 'Tag' AND in = " + mockEntity.getId());
-		List<ODocument> result = factory.getDb().command(query).execute();
-		 */
+		// create a node
+		ODocument node = new ODocument("Node").field("title", "title 1")
+				.field("alternativeTitles", "alternativeTitles")
+				.field("description", "Description")
+				.field("descriptionMarkup", "default")
+				.field("color", 0x123456)
+				.field("created", 1L)
+				.field("modified", 2L)
+				.save();
+		// create tag
+		ODocument tag = new ODocument("Tag").field("title", "title").field("created", 1L).field("modified", 2L).save();
+		// connect
+		orientDBTestInstance.getDatabase().command(new OCommandSQL("create edge IsTagOf from " + tag.getIdentity().toString() + " to " + node.getIdentity().toString())).execute();
+
+		INode nodeTaggable = new Node();
+		nodeTaggable.setId(node.getIdentity().toString());
+
+		String[] tags = mockOrientDbRepository.lazyLoadTags(nodeTaggable);
+		assertNotNull(tags);
+		assertTrue(tags.length == 1);
+		assertEquals("title", tags[0]);
 	}
 
 	/**
