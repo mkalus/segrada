@@ -74,6 +74,7 @@ public class AbstractAnnotatedOrientDbRepositoryTest {
 		db.command(new OCommandSQL("delete vertex V")).execute();
 		db.command(new OCommandSQL("delete edge E")).execute();
 		db.command(new OCommandSQL("drop class Mock")).execute();
+		db.command(new OCommandSQL("truncate class SourceReference")).execute();
 
 		// close db
 		db.close();
