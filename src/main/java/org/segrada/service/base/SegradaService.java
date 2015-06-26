@@ -21,26 +21,26 @@ import java.util.List;
  *
  * Abstract service
  */
-abstract public class AbstractService<BEAN extends SegradaEntity> {
+public interface SegradaService<BEAN extends SegradaEntity> {
 	/**
 	 * Create a new instance of BEAN
 	 * @return new instance
 	 */
-	abstract public BEAN createNewInstance();
+	BEAN createNewInstance();
 
 	/**
 	 * get class reference of model class
 	 * @return class
 	 */
-	abstract public Class<BEAN> getModelClass();
+	Class<BEAN> getModelClass();
 
-	abstract public BEAN findById(String id);
+	BEAN findById(String id);
 
-	abstract public boolean save(BEAN entity);
+	boolean save(BEAN entity);
 
-	abstract public boolean delete(BEAN entity);
+	boolean delete(BEAN entity);
 
-	abstract public List<BEAN> findAll();
+	List<BEAN> findAll();
 
-	abstract public long count();
+	long count();
 }

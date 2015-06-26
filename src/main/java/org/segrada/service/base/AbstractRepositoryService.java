@@ -1,7 +1,9 @@
 package org.segrada.service.base;
 
 import org.segrada.model.prototype.SegradaEntity;
+import org.segrada.service.repository.factory.RepositoryFactory;
 import org.segrada.service.repository.prototype.CRUDRepository;
+import org.segrada.service.repository.prototype.SegradaRepository;
 
 import java.util.List;
 
@@ -22,17 +24,24 @@ import java.util.List;
  *
  * Abstract CRUD service
  */
-abstract public class AbstractRepositoryService<BEAN extends SegradaEntity> extends AbstractService<BEAN> {
+abstract public class AbstractRepositoryService<BEAN extends SegradaEntity, REPOSITORY extends CRUDRepository<BEAN>> implements SegradaService<BEAN> {
+	/**
+	 * reference to factory
+	 */
+	protected final RepositoryFactory repositoryFactory;
+
 	/**
 	 * reference to repository
 	 */
-	protected final CRUDRepository<BEAN> repository;
+	protected final REPOSITORY repository;
 
 	/**
 	 * Constructor
 	 */
-	public AbstractRepositoryService(CRUDRepository<BEAN> repository) {
-		this.repository = repository;
+	@SuppressWarnings("unchecked")
+	public AbstractRepositoryService(RepositoryFactory repositoryFactory, Class clazz) {
+		this.repositoryFactory = repositoryFactory;
+		this.repository = (REPOSITORY) repositoryFactory.produceRepository(clazz);
 	}
 
 	@Override

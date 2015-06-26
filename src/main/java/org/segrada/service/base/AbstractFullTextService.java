@@ -4,12 +4,12 @@ import org.segrada.model.prototype.SegradaEntity;
 import org.segrada.rendering.markup.MarkupFilter;
 import org.segrada.rendering.markup.MarkupFilterFactory;
 import org.segrada.search.SearchEngine;
+import org.segrada.service.repository.factory.RepositoryFactory;
 import org.segrada.service.repository.prototype.CRUDRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
-import java.util.logging.Level;
 
 /**
  * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]
@@ -28,7 +28,7 @@ import java.util.logging.Level;
  *
  * Abstract service supporting full text search
  */
-abstract public class AbstractFullTextService<BEAN extends SegradaEntity> extends AbstractRepositoryService<BEAN> {
+abstract public class AbstractFullTextService<BEAN extends SegradaEntity, REPOSITORY extends CRUDRepository<BEAN>> extends AbstractRepositoryService<BEAN, REPOSITORY> {
 	private static final Logger logger = LoggerFactory.getLogger(AbstractFullTextService.class);
 
 	/**
@@ -39,8 +39,8 @@ abstract public class AbstractFullTextService<BEAN extends SegradaEntity> extend
 	/**
 	 * Constructor
 	 */
-	public AbstractFullTextService(CRUDRepository<BEAN> repository, SearchEngine searchEngine) {
-		super(repository);
+	public AbstractFullTextService(RepositoryFactory repositoryFactory, Class clazz, SearchEngine searchEngine) {
+		super(repositoryFactory, clazz);
 		this.searchEngine = searchEngine;
 	}
 
