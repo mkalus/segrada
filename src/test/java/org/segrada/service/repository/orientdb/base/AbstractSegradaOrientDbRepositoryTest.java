@@ -274,6 +274,20 @@ public class AbstractSegradaOrientDbRepositoryTest {
 		assertEquals(document.getIdentity().toString(), pictogram.getId());
 	}
 
+	@Test
+	public void testLazyLoadUser() throws Exception {
+		fail("Implement test.");
+	}
+
+	@Test
+	public void testLazyLoadTags() throws Exception {
+		fail("Implement test.");
+		/*
+		OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>("select out as field from IsTagOf where out.@class = 'Tag' AND in = " + mockEntity.getId());
+		List<ODocument> result = factory.getDb().command(query).execute();
+		 */
+	}
+
 	/**
 	 * Mock entity
 	 */

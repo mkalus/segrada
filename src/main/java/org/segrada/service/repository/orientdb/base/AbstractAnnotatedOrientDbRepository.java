@@ -193,7 +193,8 @@ abstract public class AbstractAnnotatedOrientDbRepository<T extends SegradaAnnot
 	public boolean delete(T entity) {
 		if (super.delete(entity)) {
 			// delete connected edges
-			repositoryFactory.getDb().command(new OCommandSQL("delete edge where in = " + entity.getId() + " OR out = " + entity.getId())).execute();
+			//repositoryFactory.getDb().command(new OCommandSQL("delete edge where in = " + entity.getId() + " OR out = " + entity.getId())).execute();
+			// this is already done in AbstractOrientDbRepository
 
 			// delete source reference pointing to me, too
 			repositoryFactory.getDb().command(new OCommandSQL("delete from SourceReference where reference = " + entity.getId())).execute();

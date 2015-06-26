@@ -3,6 +3,7 @@ package org.segrada.service.repository.orientdb.base;
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 import com.orientechnologies.orient.core.id.ORecordId;
 import com.orientechnologies.orient.core.record.impl.ODocument;
+import com.orientechnologies.orient.core.sql.OCommandSQL;
 import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
 import org.segrada.model.prototype.SegradaEntity;
 import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory;
@@ -275,7 +276,13 @@ abstract public class AbstractOrientDbRepository<T extends SegradaEntity> implem
 			if (logger.isInfoEnabled())
 				logger.info("Deleting entity : " + entity.toString());
 
-			return db.delete(new ORecordId(entity.getId())) != null;
+			if (db.delete(new ORecordId(entity.getId())) != null) {
+				// delete connected edges, if there are any
+				repositoryFactory.getDb().command(new OCommandSQL("delete edge where in = " + entity.getId() + " OR out = " + entity.getId())).execute();
+
+				return true;
+			}
+			return false;
 		} catch (Exception e) {
 			logger.warn("Could not delete entry (search engine entry deleted if applicable): " + entity.getId());
 		}
