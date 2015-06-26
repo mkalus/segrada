@@ -4,6 +4,7 @@ import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 import com.orientechnologies.orient.core.id.ORecordId;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.orientechnologies.orient.core.sql.OCommandSQL;
+import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -306,7 +307,67 @@ public class AbstractAnnotatedOrientDbRepositoryTest {
 
 	@Test
 	public void testDelete() throws Exception {
-		fail("Implement method and test deletion");
+		// create mock entity
+		ODocument document = new ODocument("Mock").field("created", 1L).field("modified", 2L);
+		document.save();
+
+		// create tag
+		ODocument tag = new ODocument("Tag").field("title", "title").field("created", 1L).field("modified", 2L);
+		tag.save();
+		// ... and connect
+		factory.getDb().command(new OCommandSQL("create edge IsTagOf from " + tag.getIdentity().toString() + " to " + document.getIdentity().toString())).execute();
+
+		// create source
+		ODocument source = new ODocument("Source").field("shortTitle", "shortTitle").field("shortRef", "shortRef")
+				.field("created", 1L).field("modified", 2L);
+		source.save();
+
+		// create source reference
+		ODocument sourceReference = new ODocument("SourceReference").field("source", source).field("reference", document)
+				.field("created", 1L).field("modified", 2L);
+		sourceReference.save();
+
+		// create comment
+		ODocument comment = new ODocument("Comment").field("text", "text").field("markup", "markup")
+				.field("created", 1L).field("modified", 2L);
+		comment.save();
+		// ... and connect
+		factory.getDb().command(new OCommandSQL("create edge IsCommentOf from " + comment.getIdentity().toString() + " to " + document.getIdentity().toString())).execute();
+
+		// create a file
+		ODocument file = new ODocument("File").field("filename", "filename.txt").field("mimeType", "mimeType")
+				.field("indexFullText", true).field("containFile", false).field("fileIdentifier", "fileIdentifier.txt")
+				.field("descriptionMarkup", "default").field("created", 1L).field("modified", 2L);
+		file.save();
+		// ... and connect
+		factory.getDb().command(new OCommandSQL("create edge IsFileOf from " + file.getIdentity().toString() + " to " + document.getIdentity().toString())).execute();
+
+		// get entity
+		MockEntity mockEntity = mockOrientDbRepository.find(document.getIdentity().toString());
+		assertNotNull(mockEntity);
+
+		// now delete it
+		assertTrue(mockOrientDbRepository.delete(mockEntity));
+
+		// tags pointing to document still exist?
+		OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>("select out from IsTagOf where out.@class = 'Tag' AND in = " + mockEntity.getId());
+		List<ODocument> result = factory.getDb().command(query).execute();
+		assertTrue(result.isEmpty());
+
+		// comments pointing to document still exist?
+		query = new OSQLSynchQuery<>("select out from IsCommentOf where in = " + mockEntity.getId());
+		result = factory.getDb().command(query).execute();
+		assertTrue(result.isEmpty());
+
+		// files pointing to document still exist?
+		query = new OSQLSynchQuery<>("select out from IsFileOf where in = " + mockEntity.getId());
+		result = factory.getDb().command(query).execute();
+		assertTrue(result.isEmpty());
+
+		// sources pointing to document still exist?
+		query = new OSQLSynchQuery<>("select * from SourceReference where reference = " + mockEntity.getId());
+		result = factory.getDb().command(query).execute();
+		assertTrue(result.isEmpty());
 	}
 
 	/**

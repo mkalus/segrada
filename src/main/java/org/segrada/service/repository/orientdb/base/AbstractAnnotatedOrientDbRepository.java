@@ -192,12 +192,11 @@ abstract public class AbstractAnnotatedOrientDbRepository<T extends SegradaAnnot
 	@Override
 	public boolean delete(T entity) {
 		if (super.delete(entity)) {
-			// delete connected locations and periods
-			//db.command(new OCommandSQL("delete from Location where parent = " + entity.getId())).execute();
-			//db.command(new OCommandSQL("delete from Period where parent = " + entity.getId())).execute();
+			// delete connected edges
+			repositoryFactory.getDb().command(new OCommandSQL("delete edge where in = " + entity.getId() + " OR out = " + entity.getId())).execute();
 
-			//TODO: delete source reference pointing to me, too
-			//TODO: delete tag links? comment links? file links?
+			// delete source reference pointing to me, too
+			repositoryFactory.getDb().command(new OCommandSQL("delete from SourceReference where reference = " + entity.getId())).execute();
 
 			return true;
 		}
