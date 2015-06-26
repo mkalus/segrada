@@ -29,7 +29,7 @@ public class SearchResult {
 	/**
 	 * start with this index (starting at 1)
 	 */
-	protected int startIndex;
+	protected int startIndex = 1;
 
 	/**
 	 * hits themselves
