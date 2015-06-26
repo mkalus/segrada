@@ -12,6 +12,8 @@ import org.segrada.model.prototype.IComment;
 import org.segrada.model.prototype.IFile;
 import org.segrada.model.prototype.ISourceReference;
 import org.segrada.model.prototype.SegradaAnnotatedEntity;
+import org.segrada.service.repository.TagRepository;
+import org.segrada.service.repository.orientdb.OrientDbTagRepository;
 import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory;
 import org.segrada.session.Identity;
 import org.segrada.test.OrientDBTestInstance;
@@ -222,14 +224,83 @@ public class AbstractAnnotatedOrientDbRepositoryTest {
 
 	@Test
 	public void testProcessAfterSaving() throws Exception {
-		fail("Implement test");
+		TagRepository tagRepository = factory.produceRepository(OrientDbTagRepository.class);
+		assertNotNull(tagRepository);
 
+		String[] tagTitles = new String[] {"Tag 1", "Tag 2", "Tag 3"};
+
+		// make sure list is empty
+		assertArrayEquals(new String[0], tagRepository.findTagIdsByTitles(tagTitles));
+
+		MockEntity mockEntity = new MockEntity();
+		// save without tags
+		mockOrientDbRepository.save(mockEntity);
+
+		// get Document to avoid NPE
+		ODocument updated = mockOrientDbRepository.convertToDocument(mockEntity);
+
+		// add tags
+		mockEntity.setTags(tagTitles);
+
+		// run after saving routine
+		mockOrientDbRepository.processAfterSaving(updated, mockEntity);
+
+		// check existence of tags
+		assertEquals(3, tagRepository.findTagIdsByTitles(tagTitles).length);
+
+		// check connections to entity
+		assertEquals(3, tagRepository.findTagIdsConnectedToModel(mockEntity, true).length);
 	}
 
 	@Test
 	public void testUpdateEntityTags() throws Exception {
-		fail("Implement test");
+		TagRepository tagRepository = factory.produceRepository(OrientDbTagRepository.class);
+		assertNotNull(tagRepository);
 
+		String[] tagTitles = new String[] {"Tag 1", "Tag 2", "Tag 3"};
+
+		// make sure list is empty
+		assertArrayEquals(new String[0], tagRepository.findTagIdsByTitles(tagTitles));
+
+		MockEntity mockEntity = new MockEntity();
+		mockEntity.setTags(tagTitles);
+
+		// save
+		mockOrientDbRepository.save(mockEntity);
+
+		// check existence of tags
+		assertEquals(3, tagRepository.findTagIdsByTitles(tagTitles).length);
+
+		// check connections to entity
+		assertEquals(3, tagRepository.findTagIdsConnectedToModel(mockEntity, true).length);
+
+
+		// now we add another tag
+		tagTitles = new String[] {"Tag 1", "Tag 2", "Tag 3", "Tag 4"};
+
+		// save again
+		mockEntity.setTags(tagTitles);
+		mockOrientDbRepository.save(mockEntity);
+
+		// check existence of tags
+		assertEquals(4, tagRepository.findTagIdsByTitles(tagTitles).length);
+
+		// check connections to entity
+		assertEquals(4, tagRepository.findTagIdsConnectedToModel(mockEntity, true).length);
+
+
+		// remove a tag
+		tagTitles = new String[] {"Tag 2", "Tag 3", "Tag 4"};
+
+		// save again
+		mockEntity.setTags(tagTitles);
+		mockOrientDbRepository.save(mockEntity);
+
+		// check existence of tags
+		assertEquals(4, tagRepository.findTagIdsByTitles(new String[] {"Tag 1", "Tag 2", "Tag 3", "Tag 4"}).length);
+
+		// check connections to entity
+		assertEquals(3, tagRepository.findTagIdsConnectedToModel(mockEntity, true).length);
 	}
 
 	@Test
