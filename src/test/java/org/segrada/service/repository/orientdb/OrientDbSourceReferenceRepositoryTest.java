@@ -13,6 +13,8 @@ import org.segrada.model.SourceReference;
 import org.segrada.model.prototype.IComment;
 import org.segrada.model.prototype.ISource;
 import org.segrada.model.prototype.ISourceReference;
+import org.segrada.service.repository.CommentRepository;
+import org.segrada.service.repository.SourceRepository;
 import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory;
 import org.segrada.session.Identity;
 import org.segrada.test.OrientDBTestInstance;
@@ -78,8 +80,8 @@ public class OrientDbSourceReferenceRepositoryTest {
 
 	@Test
 	public void testConvertToEntity() throws Exception {
-		OrientDbCommentRepository commentRepository = factory.produceRepository(OrientDbCommentRepository.class);
-		OrientDbSourceRepository sourceRepository = factory.produceRepository(OrientDbSourceRepository.class);
+		CommentRepository commentRepository = factory.produceRepository(OrientDbCommentRepository.class);
+		SourceRepository sourceRepository = factory.produceRepository(OrientDbSourceRepository.class);
 
 		// create comment to connect to
 		IComment comment = new Comment();
@@ -115,8 +117,8 @@ public class OrientDbSourceReferenceRepositoryTest {
 
 	@Test
 	public void testConvertToDocument() throws Exception {
-		OrientDbCommentRepository commentRepository = factory.produceRepository(OrientDbCommentRepository.class);
-		OrientDbSourceRepository sourceRepository = factory.produceRepository(OrientDbSourceRepository.class);
+		CommentRepository commentRepository = factory.produceRepository(OrientDbCommentRepository.class);
+		SourceRepository sourceRepository = factory.produceRepository(OrientDbSourceRepository.class);
 
 		// create comment to connect to
 		IComment comment = new Comment();
@@ -160,8 +162,8 @@ public class OrientDbSourceReferenceRepositoryTest {
 
 	@Test
 	public void testFindBySource() throws Exception {
-		OrientDbCommentRepository commentRepository = factory.produceRepository(OrientDbCommentRepository.class);
-		OrientDbSourceRepository sourceRepository = factory.produceRepository(OrientDbSourceRepository.class);
+		CommentRepository commentRepository = factory.produceRepository(OrientDbCommentRepository.class);
+		SourceRepository sourceRepository = factory.produceRepository(OrientDbSourceRepository.class);
 
 		// create comment to connect to
 		IComment comment = new Comment();
@@ -194,8 +196,8 @@ public class OrientDbSourceReferenceRepositoryTest {
 
 	@Test
 	public void testFindByReference() throws Exception {
-		OrientDbCommentRepository commentRepository = factory.produceRepository(OrientDbCommentRepository.class);
-		OrientDbSourceRepository sourceRepository = factory.produceRepository(OrientDbSourceRepository.class);
+		CommentRepository commentRepository = factory.produceRepository(OrientDbCommentRepository.class);
+		SourceRepository sourceRepository = factory.produceRepository(OrientDbSourceRepository.class);
 
 		// create comment to connect to
 		IComment comment = new Comment();

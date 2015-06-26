@@ -3,11 +3,18 @@ package org.segrada.service.repository.orientdb;
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.orientechnologies.orient.core.sql.OCommandSQL;
+import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.segrada.model.Comment;
 import org.segrada.model.Source;
+import org.segrada.model.SourceReference;
+import org.segrada.model.prototype.IComment;
 import org.segrada.model.prototype.ISource;
+import org.segrada.model.prototype.ISourceReference;
+import org.segrada.service.repository.CommentRepository;
+import org.segrada.service.repository.SourceReferenceRepository;
 import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory;
 import org.segrada.session.Identity;
 import org.segrada.test.OrientDBTestInstance;
@@ -276,7 +283,35 @@ public class OrientDbSourceRepositoryTest {
 
 	@Test
 	public void testDelete() throws Exception {
-		fail("Do deletion and test!");
+		CommentRepository commentRepository = factory.produceRepository(OrientDbCommentRepository.class);
+		SourceReferenceRepository sourceReferenceRepository = factory.produceRepository(OrientDbSourceReferenceRepository.class);
+
+		ISource source = new Source();
+		repository.save(source);
+
+		IComment comment = new Comment();
+		comment.setText("Comment Text");
+		commentRepository.save(comment);
+
+		// create reference
+		ISourceReference sourceReference = new SourceReference();
+		sourceReference.setReferenceText("pp. 11f");
+		sourceReference.setSource(source);
+		sourceReference.setReference(comment);
+		sourceReferenceRepository.save(sourceReference);
+
+		// now delete source
+		repository.delete(source);
+
+		// check, if source reference has been deleted, too
+		OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>("select * from " + sourceReference.getId());
+		List<ODocument> result = factory.getDb().command(query).execute();
+		assertTrue(result.isEmpty());
+
+		// comment should not have been deleted
+		query = new OSQLSynchQuery<>("select * from " + comment.getId());
+		result = factory.getDb().command(query).execute();
+		assertFalse(result.isEmpty());
 	}
 
 	@Test

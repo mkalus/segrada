@@ -2,6 +2,7 @@ package org.segrada.service.repository.orientdb;
 
 import com.google.inject.Inject;
 import com.orientechnologies.orient.core.record.impl.ODocument;
+import com.orientechnologies.orient.core.sql.OCommandSQL;
 import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.queryparser.flexible.standard.QueryParserUtil;
@@ -136,7 +137,8 @@ public class OrientDbSourceRepository extends AbstractAnnotatedOrientDbRepositor
 	@Override
 	public boolean delete(ISource entity) {
 		if (super.delete(entity)) {
-			//TODO: delete source references pointing to me, too
+			// delete source references pointing to me, too
+			repositoryFactory.getDb().command(new OCommandSQL("delete from SourceReference where source = " + entity.getId())).execute();
 
 			return true;
 		}
