@@ -1,6 +1,7 @@
 package org.segrada.service.repository.orientdb;
 
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
+import com.orientechnologies.orient.core.id.ORecordId;
 import com.orientechnologies.orient.core.record.ORecord;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.orientechnologies.orient.core.sql.OCommandSQL;
@@ -14,6 +15,8 @@ import org.segrada.model.RelationType;
 import org.segrada.model.prototype.INode;
 import org.segrada.model.prototype.IRelation;
 import org.segrada.model.prototype.IRelationType;
+import org.segrada.service.repository.NodeRepository;
+import org.segrada.service.repository.RelationTypeRepository;
 import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory;
 import org.segrada.session.Identity;
 import org.segrada.test.OrientDBTestInstance;
@@ -469,5 +472,74 @@ public class OrientDbRelationRepositoryTest {
 	@Test
 	public void testPaginate() throws Exception {
 		fail("Test not implemented yet.");
+	}
+
+	@Test
+	public void testSave() throws Exception {
+		NodeRepository nodeRepository = factory.produceRepository(OrientDbNodeRepository.class);
+		RelationTypeRepository relationTypeRepository = factory.produceRepository(OrientDbRelationTypeRepository.class);
+		assertNotNull(nodeRepository);
+		assertNotNull(relationTypeRepository);
+
+		// create nodes and relation type
+		INode node1 = new Node();
+		node1.setTitle("Node 1");
+		assertTrue(nodeRepository.save(node1));
+		INode node2 = new Node();
+		node2.setTitle("Node 2");
+		assertTrue(nodeRepository.save(node2));
+		IRelationType relationType = new RelationType();
+		relationType.setFromTitle("from");
+		relationType.setToTitle("to");
+		assertTrue(relationTypeRepository.save(relationType));
+
+		// create relation
+		IRelation relation = new Relation();
+		relation.setFromEntity(node1);
+		relation.setToEntity(node2);
+		relation.setRelationType(relationType);
+
+		// do save
+		assertTrue(repository.save(relation));
+		assertNotNull(relation.getId());
+
+		// check for the edge
+		OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>("select * from IsRelation where out = ? AND in = ?");
+		List<ODocument> result = factory.getDb().command(query).execute(new ORecordId(node1.getId()), new ORecordId(node2.getId()));
+		assertFalse(result.isEmpty());
+		ODocument relationLink = result.get(0);
+		String id = relation.getId();
+
+		// update the same relation again
+		assertTrue(repository.save(relation));
+		assertEquals(id, relation.getId());
+
+		// check for the edge again, should be the same id
+		query = new OSQLSynchQuery<>("select * from IsRelation where out = ? AND in = ?");
+		result = factory.getDb().command(query).execute(new ORecordId(node1.getId()), new ORecordId(node2.getId()));
+		assertEquals(1, result.size());
+		ODocument relationLinkTest = result.get(0);
+
+		assertEquals(relationLink.getIdentity().toString(), relationLinkTest.getIdentity().toString());
+
+		// change to/from and save again
+		relation.setFromEntity(node2);
+		relation.setToEntity(node1);
+
+		// do save
+		assertTrue(repository.save(relation));
+
+		// check for the edge again, should be the same id
+		query = new OSQLSynchQuery<>("select * from IsRelation where in = ? AND out = ?");
+		result = factory.getDb().command(query).execute(new ORecordId(node1.getId()), new ORecordId(node2.getId()));
+		assertEquals(1, result.size());
+		relationLinkTest = result.get(0);
+
+		assertNotEquals(relationLink.getIdentity().toString(), relationLinkTest.getIdentity().toString());
+
+		// old relation should not exist any more
+		query = new OSQLSynchQuery<>("select * from " + relationLink.getIdentity().toString());
+		result = factory.getDb().command(query).execute();
+		assertEquals(0, result.size());
 	}
 }

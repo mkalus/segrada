@@ -271,10 +271,6 @@ create index Relation.relationLink UNIQUE_HASH_INDEX
 #+ Edges: Files, Tags, Comments
 #+ Transient links: Locations, Periods, SourceReferences
 
-create property IsRelation.relation Link<Relation>
-#alter property IsRelation.relation MANDATORY true #not applicable
-create index IsRelation.relation UNIQUE_HASH_INDEX
-
 ######################################################################################################################
 create class SourceReference
 create property SourceReference.source Link<Source>

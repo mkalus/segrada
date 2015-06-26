@@ -6,6 +6,7 @@ import com.orientechnologies.orient.core.metadata.schema.OType;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.orientechnologies.orient.core.sql.OCommandSQL;
 import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
+import com.tinkerpop.blueprints.impls.orient.OrientEdge;
 import org.segrada.model.Relation;
 import org.segrada.model.prototype.*;
 import org.segrada.service.repository.NodeRepository;
@@ -61,7 +62,7 @@ public class OrientDbRelationRepository extends AbstractCoreOrientDbRepository<I
 		Relation relation = new Relation();
 
 		// load relation link
-		ODocument relationLink = getRelationLink(document);
+		ODocument relationLink = getRelationLink(document, true);
 		if (relationLink == null) return null; // exact error was logged below
 
 		// load node repository
@@ -101,12 +102,14 @@ public class OrientDbRelationRepository extends AbstractCoreOrientDbRepository<I
 	/**
 	 * helper to load relation link document
 	 * @param document of relation
+	 * @param logError log null error?
 	 * @return relation link or null
 	 */
-	private @Nullable ODocument getRelationLink(ODocument document) {
+	private @Nullable ODocument getRelationLink(ODocument document, boolean logError) {
 		Object relationLinkO = document.field("relationLink");
 		if (relationLinkO == null) {
-			logger.error("Could not create relationLink entity while converting relation.");
+			if (logError)
+				logger.error("Could not create relationLink entity while converting relation.");
 			return null;
 		}
 		if (relationLinkO instanceof ODocument) return (ODocument) relationLinkO;
@@ -214,6 +217,71 @@ public class OrientDbRelationRepository extends AbstractCoreOrientDbRepository<I
 	}
 
 	@Override
+	public boolean save(IRelation entity) {
+		try {
+			// sanity: we need from and to entity to do this!
+			if (entity.getFromEntity() == null || entity.getToEntity() == null) {
+				logger.error("From and/or to-entity not set in relation: Not saving!");
+				return false;
+			}
+
+			initDb();
+
+			// process before saving
+			entity = processBeforeSaving(entity);
+
+			// create document - call special method
+			ODocument document = reallyConvertToDocument(entity);
+
+			ODocument relationLink = getRelationLink(document, false);
+			if (relationLink == null) { // no relation yet => create new one
+				// create edge and set it to document
+				List<OrientEdge> edgeList =
+						repositoryFactory.getDb().command(new OCommandSQL("create edge IsRelation from " + entity.getFromEntity().getId() + " to " + entity.getToEntity().getId())).execute();
+				document.field("relationLink", (ORecordId) edgeList.get(0).getId());
+
+				if (logger.isTraceEnabled())
+					logger.trace("Created brank new IsRelation edge: " + edgeList.get(0).toString());
+			} else {
+				// check whether relation has changed
+				String oldFromId = relationLink.field("out", ORecordId.class).toString();
+				String oldToId = relationLink.field("in", ORecordId.class).toString();
+
+				String newFromId = entity.getFromEntity().getId();
+				String newToId = entity.getToEntity().getId();
+
+				// check equality
+				if (!oldFromId.equals(newFromId) || !oldToId.equals(newToId)) {
+					// delete old edge and create new one
+					relationLink.delete();
+
+					List<OrientEdge> edgeList =
+							repositoryFactory.getDb().command(new OCommandSQL("create edge IsRelation from " + entity.getFromEntity().getId() + " to " + entity.getToEntity().getId())).execute();
+					document.field("relationLink", (ORecordId) edgeList.get(0).getId());
+
+					if (logger.isTraceEnabled())
+						logger.trace("Replace IsRelation edge: " + edgeList.get(0).toString() + " (was: " + relationLink.toString() + ")");
+				}
+			}
+
+			// save
+			ODocument updated = db.save(document);
+
+			// process after saving
+			processAfterSaving(updated, entity);
+
+			if (logger.isInfoEnabled())
+				logger.info("Saved entity: " + entity.toString());
+
+			return true;
+		} catch (Exception e) {
+			logger.error("Exception thrown while saving entity.", e);
+		}
+
+		return false;
+	}
+
+	@Override
 	public void deleteByRelation(INode node) {
 		// delete source reference pointing to relation node
 		OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>("select * from Relation where relationLink.in = " + node.getId() + " OR relationLink.out = " + node.getId());
@@ -221,7 +289,7 @@ public class OrientDbRelationRepository extends AbstractCoreOrientDbRepository<I
 
 		// remove relation and link
 		for (ODocument document : result) {
-			ODocument relationLink = getRelationLink(document);
+			ODocument relationLink = getRelationLink(document, true);
 			if (relationLink != null && db.load(relationLink.getIdentity()) != null) relationLink.delete();
 
 			document.delete();
@@ -236,7 +304,7 @@ public class OrientDbRelationRepository extends AbstractCoreOrientDbRepository<I
 
 		// remove relation and link
 		for (ODocument document : result) {
-			ODocument relationLink = getRelationLink(document);
+			ODocument relationLink = getRelationLink(document, true);
 			if (relationLink != null && db.load(relationLink.getIdentity()) != null) relationLink.delete();
 
 			document.delete();
