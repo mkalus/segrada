@@ -2,12 +2,15 @@ package org.segrada.service.repository.orientdb;
 
 import com.google.inject.Inject;
 import com.orientechnologies.orient.core.record.impl.ODocument;
+import org.segrada.model.prototype.INode;
 import org.segrada.model.prototype.IRelation;
+import org.segrada.model.prototype.IRelationType;
 import org.segrada.service.repository.RelationRepository;
 import org.segrada.service.repository.orientdb.base.AbstractCoreOrientDbRepository;
 import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory;
 import org.segrada.service.util.PaginationInfo;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -51,6 +54,28 @@ public class OrientDbRelationRepository extends AbstractCoreOrientDbRepository<I
 	public ODocument convertToDocument(IRelation entity) {
 		//TODO
 		return null;
+	}
+
+	@Override
+	public List<IRelation> findByRelation(INode node) {
+		//TODO
+		return null;
+	}
+
+	@Override
+	public List<IRelation> findByRelationType(IRelationType relationType) {
+		//TODO
+		return null;
+	}
+
+	@Override
+	public void deleteByRelation(INode node) {
+		//TODO
+	}
+
+	@Override
+	public void deleteByRelationType(IRelationType relationType) {
+		//TODO
 	}
 
 	@Override

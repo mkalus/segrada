@@ -8,11 +8,14 @@ import org.apache.lucene.queryparser.flexible.standard.QueryParserUtil;
 import org.apache.lucene.search.TermQuery;
 import org.segrada.model.RelationType;
 import org.segrada.model.prototype.IRelationType;
+import org.segrada.service.repository.RelationRepository;
 import org.segrada.service.repository.RelationTypeRepository;
 import org.segrada.service.repository.orientdb.base.AbstractColoredOrientDbRepository;
 import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory;
 import org.segrada.service.util.PaginationInfo;
 import org.segrada.util.OrientStringEscape;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -37,6 +40,8 @@ import java.util.Map;
  * OrientDb Relation type Repository
  */
 public class OrientDbRelationTypeRepository extends AbstractColoredOrientDbRepository<IRelationType> implements RelationTypeRepository {
+	private static final Logger logger = LoggerFactory.getLogger(OrientDbRelationTypeRepository.class);
+
 	/**
 	 * Constructor
 	 */
@@ -177,7 +182,13 @@ public class OrientDbRelationTypeRepository extends AbstractColoredOrientDbRepos
 	@Override
 	public boolean delete(IRelationType entity) {
 		if (super.delete(entity)) {
-			//TODO: delete relations of this type, too
+			// delete connected relations
+			RelationRepository relationRepository = repositoryFactory.produceRepository(OrientDbRelationRepository.class);
+			if (relationRepository == null) {
+				logger.error("Could not produce RelationRepository while deleting relation type.");
+				return false;
+			}
+			relationRepository.deleteByRelationType(entity);
 
 			return true;
 		}

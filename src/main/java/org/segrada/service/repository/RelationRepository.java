@@ -1,8 +1,12 @@
 package org.segrada.service.repository;
 
+import org.segrada.model.prototype.INode;
 import org.segrada.model.prototype.IRelation;
+import org.segrada.model.prototype.IRelationType;
 import org.segrada.service.repository.prototype.CRUDRepository;
 import org.segrada.service.repository.prototype.PaginatingRepository;
+
+import java.util.List;
 
 /**
  * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]
@@ -22,4 +26,29 @@ import org.segrada.service.repository.prototype.PaginatingRepository;
  * Relation Repository
  */
 public interface RelationRepository extends CRUDRepository<IRelation>, PaginatingRepository<IRelation> {
+	/**
+	 * find by related entity
+	 * @param node connected entity
+	 * @return list of relations connected to node (in or out)
+	 */
+	List<IRelation> findByRelation(INode node);
+
+	/**
+	 * find by relation type
+	 * @param relationType of relation
+	 * @return list of relations of a certain type
+	 */
+	List<IRelation> findByRelationType(IRelationType relationType);
+
+	/**
+	 * delete relations by node connection
+	 * @param node connected entity
+	 */
+	void deleteByRelation(INode node);
+
+	/**
+	 * delete relations by type
+	 * @param relationType of relation
+	 */
+	void deleteByRelationType(IRelationType relationType);
 }

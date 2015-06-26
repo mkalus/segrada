@@ -10,10 +10,13 @@ import org.apache.lucene.search.TermQuery;
 import org.segrada.model.Node;
 import org.segrada.model.prototype.INode;
 import org.segrada.service.repository.NodeRepository;
+import org.segrada.service.repository.RelationRepository;
 import org.segrada.service.repository.orientdb.base.AbstractCoreOrientDbRepository;
 import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory;
 import org.segrada.service.util.PaginationInfo;
 import org.segrada.util.OrientStringEscape;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
@@ -39,6 +42,8 @@ import java.util.Map;
  * OrientDb Node Repository
  */
 public class OrientDbNodeRepository extends AbstractCoreOrientDbRepository<INode> implements NodeRepository {
+	private static final Logger logger = LoggerFactory.getLogger(OrientDbNodeRepository.class);
+
 	/**
 	 * Constructor
 	 */
@@ -92,7 +97,12 @@ public class OrientDbNodeRepository extends AbstractCoreOrientDbRepository<INode
 	public boolean delete(INode entity) {
 		if (super.delete(entity)) {
 			// delete connected relations
-			//TODO
+			RelationRepository relationRepository = repositoryFactory.produceRepository(OrientDbRelationRepository.class);
+			if (relationRepository == null) {
+				logger.error("Could not produce RelationRepository while deleting node.");
+				return false;
+			}
+			relationRepository.deleteByRelation(entity);
 
 			return true;
 		}
