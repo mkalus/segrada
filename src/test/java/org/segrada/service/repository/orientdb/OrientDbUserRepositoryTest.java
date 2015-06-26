@@ -15,6 +15,7 @@ import org.segrada.test.OrientDbTestApplicationSettings;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
 
 public class OrientDbUserRepositoryTest {
 	/**
@@ -151,5 +152,10 @@ public class OrientDbUserRepositoryTest {
 	public void testGetDefaultOrder() throws Exception {
 		assertEquals(" ORDER BY name", repository.getDefaultOrder(true));
 		assertEquals(" name", repository.getDefaultOrder(false));
+	}
+
+	@Test
+	public void testPaginate() throws Exception {
+		//fail("Test not implemented yet");
 	}
 }

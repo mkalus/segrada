@@ -89,6 +89,17 @@ public class OrientDbNodeRepository extends AbstractCoreOrientDbRepository<INode
 	}
 
 	@Override
+	public boolean delete(INode entity) {
+		if (super.delete(entity)) {
+			// delete connected relations
+			//TODO
+
+			return true;
+		}
+		return false;
+	}
+
+	@Override
 	protected String getDefaultOrder(boolean addOrderBy) {
 		return (addOrderBy?" ORDER BY":"").concat(" title");
 	}

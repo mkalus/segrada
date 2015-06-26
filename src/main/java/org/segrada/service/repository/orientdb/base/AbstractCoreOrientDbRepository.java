@@ -54,7 +54,7 @@ abstract public class AbstractCoreOrientDbRepository<T extends SegradaCoreEntity
 		// determine periods and save range in my model
 		if (entity.getPeriods() != null && !entity.getPeriods().isEmpty()) {
 			Long min = Long.MAX_VALUE;
-			Long max = 0L;
+			Long max = Long.MIN_VALUE;
 			String minEntry = null;
 			String maxEntry = null;
 			String minCalendar = null;
@@ -63,14 +63,14 @@ abstract public class AbstractCoreOrientDbRepository<T extends SegradaCoreEntity
 			for (IPeriod period : entity.getPeriods()) {
 				// calculate from/to extent
 				Long from = period.getFromJD();
-				if (from != null && from > 0 && from < min) {
+				if (from != null && from != Long.MIN_VALUE && from < min) {
 					min = from;
 					minEntry = period.getFromEntry();
 					minCalendar = period.getFromEntryCalendar();
 				}
 
 				Long to = period.getToJD();
-				if (to != null && to < Long.MAX_VALUE && to > max) {
+				if (to != null && to != Long.MAX_VALUE && to > max) {
 					max = to;
 					maxEntry = period.getToEntry();
 					maxCalendar = period.getToEntryCalendar();
@@ -84,7 +84,7 @@ abstract public class AbstractCoreOrientDbRepository<T extends SegradaCoreEntity
 			document.field("maxEntryCalendar", maxCalendar);
 		} else {
 			// reset fields
-			document.field("minJD", 0L);
+			document.field("minJD", Long.MIN_VALUE);
 			document.field("maxJD", Long.MAX_VALUE);
 			document.removeField("minEntry");
 			document.removeField("maxEntry");

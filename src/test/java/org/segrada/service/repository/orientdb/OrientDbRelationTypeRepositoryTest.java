@@ -178,12 +178,12 @@ public class OrientDbRelationTypeRepositoryTest {
 
 	@Test
 	public void testPaginate() throws Exception {
-		fail("Test not implemented yet.");
-
+		//fail("Test not implemented yet.");
 	}
 
 	@Test
 	public void testDelete() throws Exception {
+		//TODO: delete connected relations, too
 		fail("Implement deletion and check!");
 	}
 }

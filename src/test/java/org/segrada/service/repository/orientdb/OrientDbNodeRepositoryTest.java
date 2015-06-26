@@ -302,49 +302,6 @@ public class OrientDbNodeRepositoryTest {
 
 	@Test
 	public void testDelete() throws Exception {
-		//TODO: move to Core repository test
-
-		LocationRepository locationRepository = factory.produceRepository(OrientDbLocationRepository.class);
-		PeriodRepository periodRepository = factory.produceRepository(OrientDbPeriodRepository.class);
-
-		if (locationRepository == null || periodRepository == null) fail();
-
-		factory.getDb().command(new OCommandSQL("truncate class Location")).execute();
-		factory.getDb().command(new OCommandSQL("truncate class Period")).execute();
-
-		INode node = new Node();
-		node.setAlternativeTitles("Title");
-		repository.save(node);
-
-		// create locations and periods
-		ILocation location = new Location();
-		location.setParentModel("Node");
-		location.setParentId(node.getId());
-		location.setLatitude(10.0);
-		location.setLongitude(5.0);
-		assertTrue(locationRepository.save(location));
-
-		IPeriod period1 = new Period();
-		period1.setParentModel("Node");
-		period1.setParentId(node.getId());
-		period1.setFromEntry("1502");
-		period1.setToEntry("1516");
-		assertTrue(periodRepository.save(period1));
-
-		IPeriod period2 = new Period();
-		period2.setParentModel("Node");
-		period2.setParentId(node.getId());
-		period2.setToEntry("1576");
-		assertTrue(periodRepository.save(period2));
-
-		assertEquals(1, locationRepository.count());
-		assertEquals(2, periodRepository.count());
-
-		// test cascaded deletion of connected locations and periods
-		repository.delete(node);
-
-		assertEquals(0, repository.count());
-		assertEquals(0, locationRepository.count());
-		assertEquals(0, periodRepository.count());
+		fail("Implement test: delete connected relations");
 	}
 }
