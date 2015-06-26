@@ -494,6 +494,64 @@ public class OrientDbTagRepositoryTest {
 	}
 
 	@Test
+	public void testFindTagTitlesConnectedToModel() throws Exception {
+		ITag parent = new Tag();
+		parent.setTitle("Root");
+		repository.save(parent);
+		ITag child = new Tag();
+		child.setTitle("Sub 1");
+		repository.save(child);
+		ITag child2 = new Tag();
+		child2.setTitle("Sub 2");
+		repository.save(child2);
+
+		// now create an entity
+		ODocument document1 = new ODocument("Node").field("title", "title 1")
+				.field("alternativeTitles", "alternativeTitles")
+				.field("description", "Description")
+				.field("descriptionMarkup", "default")
+				.field("color", 0x123456)
+				.field("created", 1L)
+				.field("modified", 2L)
+				.save();
+
+		INode node1 = new Node();
+		node1.setId(document1.getIdentity().toString());
+
+		// now create an entity
+		ODocument document2 = new ODocument("Node").field("title", "title 2")
+				.field("alternativeTitles", "alternativeTitles")
+				.field("description", "Description")
+				.field("descriptionMarkup", "default")
+				.field("color", 0x123456)
+				.field("created", 1L)
+				.field("modified", 2L)
+				.save();
+
+		INode node2 = new Node();
+		node2.setId(document2.getIdentity().toString());
+
+		// connect nodes and tags
+		repository.connectTag(parent, child);
+		repository.connectTag(child, node1);
+		repository.connectTag(child2, node1);
+		repository.connectTag(child, node2);
+
+		// get tags connected to node1
+		String[] ids = repository.findTagTitlesConnectedToModel(node1, true);
+		assertTrue(ids.length == 2);
+		ids = repository.findTagTitlesConnectedToModel(node1, false);
+		assertTrue(ids.length == 3);
+
+		// get tags connected to node2
+		ids = repository.findTagTitlesConnectedToModel(node2, true);
+		assertTrue(ids.length == 1);
+		assertEquals(child.getTitle(), ids[0]);
+		ids = repository.findTagTitlesConnectedToModel(node2, false);
+		assertTrue(ids.length == 2);
+	}
+
+	@Test
 	public void testFindTagIdsConnectedToModel() throws Exception {
 		ITag parent = new Tag();
 		parent.setTitle("Root");
@@ -546,6 +604,7 @@ public class OrientDbTagRepositoryTest {
 		// get tags connected to node2
 		ids = repository.findTagIdsConnectedToModel(node2, true);
 		assertTrue(ids.length == 1);
+		assertEquals(child.getId(), ids[0]);
 		ids = repository.findTagIdsConnectedToModel(node2, false);
 		assertTrue(ids.length == 2);
 	}

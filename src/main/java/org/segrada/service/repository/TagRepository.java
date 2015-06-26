@@ -71,12 +71,20 @@ public interface TagRepository extends CRUDRepository<ITag>, SearchTermRepositor
 
 	/**
 	 * find entities connected to tag
-	 * @param tag as parent
+	 * @param id of parent
 	 * @param traverse traverse subtree?
 	 * @param classes classes to include (null = all classes)
 	 * @return list of taggable entities
 	 */
 	List<SegradaTaggable> findByTag(String id, boolean traverse, @Nullable String[] classes);
+
+	/**
+	 * find tag titles connected to a certain entity
+	 * @param entity instance
+	 * @param onlyDirect set true if only directly connected tags should be returned, otherwise whole tree of tags
+	 * @return array of tag titles
+	 */
+	String[] findTagTitlesConnectedToModel(SegradaTaggable entity, boolean onlyDirect);
 
 	/**
 	 * find tag ids connected to a certain entity

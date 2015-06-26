@@ -330,7 +330,23 @@ public class OrientDbTagRepository extends AbstractSegradaOrientDbRepository<ITa
 	}
 
 	@Override
+	public String[] findTagTitlesConnectedToModel(SegradaTaggable entity, boolean onlyDirect) {
+		return findTagXConnectedToModel(entity, onlyDirect, "title");
+	}
+
+	@Override
 	public String[] findTagIdsConnectedToModel(SegradaTaggable entity, boolean onlyDirect) {
+		return findTagXConnectedToModel(entity, onlyDirect, "@RID");
+	}
+
+	/**
+	 * worker class for boh methods above
+	 * @param entity instance
+	 * @param onlyDirect set true if only directly connected tags should be returned, otherwise whole tree of tags
+	 * @param field to retrieve
+	 * @return array of tag field entries
+	 */
+	private String[] findTagXConnectedToModel(@Nullable SegradaTaggable entity, boolean onlyDirect, String field) {
 		// avoid NPEs
 		if (entity == null) return new String[0];
 
@@ -339,11 +355,11 @@ public class OrientDbTagRepository extends AbstractSegradaOrientDbRepository<ITa
 		// only directly connected tags?
 		List<ODocument> result;
 		if (onlyDirect) {
-			OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>("select out.@rid as id from IsTagOf where out.@class = 'Tag' AND in = " + entity.getId());
+			OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>("select out." + field + " as field from IsTagOf where out.@class = 'Tag' AND in = " + entity.getId());
 			result = db.command(query).execute();
 		} else {
 			// execute query
-			OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>("select @RID as id from ( traverse in('IsTagOf') from " + entity.getId() + ") where @class = 'Tag'");
+			OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>("select " + field + " as field from ( traverse in('IsTagOf') from " + entity.getId() + ") where @class = 'Tag'");
 			result = db.command(query).execute();
 		}
 
@@ -351,7 +367,7 @@ public class OrientDbTagRepository extends AbstractSegradaOrientDbRepository<ITa
 		int i = 0;
 
 		for (ODocument document : result) {
-			results[i++] = document.field("id", String.class);
+			results[i++] = document.field("field", String.class);
 		}
 
 		return results;
