@@ -141,6 +141,13 @@
 			<version>${tika.version}</version>
 		</dependency>
 
+		<!-- Caching -->
+		<dependency>
+			<groupId>net.sf.ehcache</groupId>
+			<artifactId>ehcache-core</artifactId>
+			<version>2.6.11</version>
+		</dependency>
+
 		<!-- Apache commons -->
 		<dependency>
 			<groupId>org.apache.commons</groupId>
