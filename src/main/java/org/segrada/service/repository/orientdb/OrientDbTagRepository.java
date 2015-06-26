@@ -20,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -435,7 +436,29 @@ public class OrientDbTagRepository extends AbstractSegradaOrientDbRepository<ITa
 
 	@Override
 	public PaginationInfo<ITag> paginate(int page, int entriesPerPage, Map<String, Object> filters) {
-		//TODO
-		return null;
+		// avoid NPEs
+		if (filters == null) filters = new HashMap<>();
+
+		// aggregate filters
+		List<String> constraints = new LinkedList<>();
+		// search term
+		if (filters.get("search") != null) {
+			constraints.add("title LIKE '" + OrientStringEscape.escapeOrientSql((String)filters.get("search")) + "'");
+		}
+		// tags
+		if (filters.get("tags") != null) {
+			StringBuilder sb = new StringBuilder(" in('IsTagOf').title IN [ ");
+			boolean first = true;
+			for (String tag : (String[]) filters.get("tags")) {
+				if (first) first = false;
+				else sb.append(",");
+				sb.append("'").append(OrientStringEscape.escapeOrientSql(tag)).append("'");
+			}
+
+			constraints.add(sb.append("]").toString());
+		}
+
+		// let helper do most of the work
+		return super.paginate(page, entriesPerPage, constraints);
 	}
 }

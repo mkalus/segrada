@@ -8,7 +8,10 @@ import org.segrada.service.repository.UserRepository;
 import org.segrada.service.repository.orientdb.base.AbstractSegradaOrientDbRepository;
 import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory;
 import org.segrada.service.util.PaginationInfo;
+import org.segrada.util.OrientStringEscape;
 
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -82,8 +85,19 @@ public class OrientDbUserRepository extends AbstractSegradaOrientDbRepository<IU
 
 	@Override
 	public PaginationInfo<IUser> paginate(int page, int entriesPerPage, Map<String, Object> filters) {
-		//TODO
-		return null;
+		// avoid NPEs
+		if (filters == null) filters = new HashMap<>();
+
+		// aggregate filters
+		List<String> constraints = new LinkedList<>();
+		// search term
+		if (filters.get("search") != null) {
+			String term = "'" + OrientStringEscape.escapeOrientSql((String) filters.get("search")) + "'";
+			constraints.add("(login LIKE " + term + " OR name LIKE " + term + ")");
+		}
+
+		// let helper do most of the work
+		return super.paginate(page, entriesPerPage, constraints);
 	}
 
 	@Override

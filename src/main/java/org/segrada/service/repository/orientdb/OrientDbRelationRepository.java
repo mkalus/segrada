@@ -15,11 +15,13 @@ import org.segrada.service.repository.RelationTypeRepository;
 import org.segrada.service.repository.orientdb.base.AbstractCoreOrientDbRepository;
 import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory;
 import org.segrada.service.util.PaginationInfo;
+import org.segrada.util.OrientStringEscape;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.annotation.Nullable;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -313,7 +315,34 @@ public class OrientDbRelationRepository extends AbstractCoreOrientDbRepository<I
 
 	@Override
 	public PaginationInfo<IRelation> paginate(int page, int entriesPerPage, Map<String, Object> filters) {
-		//TODO
-		return null;
+		// avoid NPEs
+		if (filters == null) filters = new HashMap<>();
+
+		// aggregate filters
+		List<String> constraints = new LinkedList<>();
+		// search term
+		if (filters.get("search") != null) {
+			//constraints.add(createSearchTermFullText((String) filters.get("search")));
+			//TODO: implement this one day
+		}
+		// location
+		// TODO search locations and contain
+		// period
+		//TODO minJD/maxJD
+		// tags
+		if (filters.get("tags") != null) {
+			StringBuilder sb = new StringBuilder(" in('IsTagOf').title IN [ ");
+			boolean first = true;
+			for (String tag : (String[]) filters.get("tags")) {
+				if (first) first = false;
+				else sb.append(",");
+				sb.append("'").append(OrientStringEscape.escapeOrientSql(tag)).append("'");
+			}
+
+			constraints.add(sb.append("]").toString());
+		}
+
+		// let helper do most of the work
+		return super.paginate(page, entriesPerPage, constraints);
 	}
 }
