@@ -241,11 +241,11 @@ create index RelationType.toTags NOTUNIQUE_HASH_INDEX
 #+ Edges: Tags
 
 ######################################################################################################################
-create class RelationLink extends E
+create class IsRelation extends E
 
 create class Relation extends V
 create property Relation.relationType Link<RelationType>
-create property Relation.relationLink Link<RelationLink>
+create property Relation.relationLink Link<IsRelation>
 create property Relation.description String
 create property Relation.descriptionMarkup String
 create property Relation.pictogram Link<Pictogram>
@@ -271,9 +271,9 @@ create index Relation.relationLink UNIQUE_HASH_INDEX
 #+ Edges: Files, Tags, Comments
 #+ Transient links: Locations, Periods, SourceReferences
 
-create property RelationLink.relation Link<Relation>
-alter property RelationLink.relation MANDATORY true
-create index RelationLink.relation UNIQUE_HASH_INDEX
+create property IsRelation.relation Link<Relation>
+#alter property IsRelation.relation MANDATORY true #not applicable
+create index IsRelation.relation UNIQUE_HASH_INDEX
 
 ######################################################################################################################
 create class SourceReference

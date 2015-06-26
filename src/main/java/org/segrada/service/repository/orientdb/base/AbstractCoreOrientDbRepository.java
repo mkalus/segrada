@@ -50,7 +50,7 @@ abstract public class AbstractCoreOrientDbRepository<T extends SegradaCoreEntity
 	 * @param document to be converted
 	 * @param entity converted
 	 */
-	protected void populateODocumentWithCore(ODocument document, AbstractCoreModel entity) {
+	protected void populateODocumentWithCore(ODocument document, T entity) {
 		// determine periods and save range in my model
 		if (entity.getPeriods() != null && !entity.getPeriods().isEmpty()) {
 			Long min = Long.MAX_VALUE;

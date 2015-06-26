@@ -1,8 +1,10 @@
 package org.segrada.service.repository.orientdb;
 
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
+import com.orientechnologies.orient.core.id.ORecordId;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.orientechnologies.orient.core.sql.OCommandSQL;
+import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -64,6 +66,7 @@ public class OrientDbNodeRepositoryTest {
 		// truncate db
 		factory.getDb().command(new OCommandSQL("delete vertex V")).execute();
 		factory.getDb().command(new OCommandSQL("delete edge E")).execute();
+		factory.getDb().command(new OCommandSQL("truncate class RelationType")).execute();
 
 		// close db
 		try {
@@ -302,6 +305,62 @@ public class OrientDbNodeRepositoryTest {
 
 	@Test
 	public void testDelete() throws Exception {
-		fail("Implement test: delete connected relations");
+		INode node = new Node();
+		node.setTitle("This is the title");
+		node.setAlternativeTitles("and this is its alternatives");
+		node.setDescription("Description");
+		node.setDescriptionMarkup("default");
+		node.setColor(0x123456);
+		node.setCreated(1L);
+		node.setModified(2L);
+
+		repository.save(node);
+
+		// connect nodes
+		ODocument node2 = new ODocument("Node").field("title", "title 2")
+				.field("alternativeTitles", "alternativeTitles")
+				.field("description", "Description")
+				.field("descriptionMarkup", "default")
+				.field("color", 0x123456)
+				.field("created", 1L)
+				.field("modified", 2L).save();
+
+		// now create an entity
+		ODocument relationType = new ODocument("RelationType")
+				.field("fromTitle", "fromTitle").field("toTitle", "toTitle")
+				.field("description", "Description")
+				.field("descriptionMarkup", "default")
+				.field("color", 0x123456)
+				.field("created", 1L)
+				.field("modified", 2L).save();
+
+		// create link
+		factory.getDb().command(new OCommandSQL("create edge IsRelation from " + node.getId() + " to " + node2.getIdentity().toString())).execute();
+		// find link
+		OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>("select * from IsRelation where out = ? AND in = ?");
+		List<ODocument> result = factory.getDb().command(query).execute(new ORecordId(node.getId()), node2.getIdentity());
+		assertFalse(result.isEmpty());
+		ODocument relationLink = result.get(0);
+
+		ODocument relationO = new ODocument("Relation")
+				.field("relationType", relationType)
+				.field("relationLink", relationLink)
+				.field("description", "rel_description")
+				.field("descriptionMarkup", "default")
+				.field("color", 0x123456)
+				.field("created", 1L)
+				.field("modified", 2L).save();
+
+		repository.delete(node);
+
+		// try to find relation
+		query = new OSQLSynchQuery<>("select * from " + relationO.getIdentity().toString());
+		result = factory.getDb().command(query).execute();
+		assertTrue(result.isEmpty());
+
+		// try to find relation link
+		query = new OSQLSynchQuery<>("select * from " + relationLink.getIdentity().toString());
+		result = factory.getDb().command(query).execute();
+		assertTrue(result.isEmpty());
 	}
 }

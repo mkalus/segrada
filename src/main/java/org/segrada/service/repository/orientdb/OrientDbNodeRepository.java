@@ -70,6 +70,7 @@ public class OrientDbNodeRepository extends AbstractCoreOrientDbRepository<INode
 		// populate with data
 		populateEntityWithCreatedModified(document, node);
 		populateEntityWithColored(document, node);
+		populateEntityWithAnnotated(document, node);
 		populateEntityWithCore(document, node);
 
 		return node;
@@ -86,9 +87,10 @@ public class OrientDbNodeRepository extends AbstractCoreOrientDbRepository<INode
 				.field("descriptionMarkup", entity.getDescriptionMarkup());
 
 		// populate with data
-		populateODocumentWithCreatedModified(document, (Node) entity);
-		populateODocumentWithColored(document, (Node) entity);
-		populateODocumentWithCore(document, (Node) entity);
+		populateODocumentWithCreatedModified(document, entity);
+		populateODocumentWithColored(document, entity);
+		populateODocumentWithAnnotated(document, entity);
+		populateODocumentWithCore(document, entity);
 
 		return document;
 	}
