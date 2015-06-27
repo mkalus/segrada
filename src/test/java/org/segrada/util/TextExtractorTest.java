@@ -14,7 +14,7 @@ public class TextExtractorTest {
 		TextExtractor textExtractor = new TextExtractor();
 
 		// try to load odt document
-		InputStream odtTestIs = ImageManipulatorTest.class.getResourceAsStream("/documents/test.odt");
+		InputStream odtTestIs = TextExtractorTest.class.getResourceAsStream("/documents/test.odt");
 
 		// parse text
 		String text = textExtractor.parseToString(odtTestIs);
@@ -23,7 +23,7 @@ public class TextExtractorTest {
 		assertTrue(text.startsWith("Test document"));
 
 		// try to load pdf document
-		InputStream pdfTestIs = ImageManipulatorTest.class.getResourceAsStream("/documents/test.pdf");
+		InputStream pdfTestIs = TextExtractorTest.class.getResourceAsStream("/documents/test.pdf");
 
 		// parse text
 		text = textExtractor.parseToString(pdfTestIs);
@@ -32,7 +32,7 @@ public class TextExtractorTest {
 		assertTrue(text.startsWith("Test document"));
 
 		// load non text document
-		InputStream jpgTestIs = ImageManipulatorTest.class.getResourceAsStream("/img/test_frieda.jpg");
+		InputStream jpgTestIs = TextExtractorTest.class.getResourceAsStream("/img/test_frieda.jpg");
 
 		// parse text
 		text = textExtractor.parseToString(jpgTestIs);
