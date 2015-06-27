@@ -14,6 +14,9 @@ import java.util.Map;
 import static org.junit.Assert.*;
 
 public class LuceneSearchEngineTest {
+	/**
+	 * Reference to search engine
+	 */
 	private LuceneSearchEngine searchEngine;
 
 	@Before
