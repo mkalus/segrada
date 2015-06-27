@@ -8,7 +8,9 @@ import org.segrada.model.prototype.SegradaEntity;
 import org.segrada.rendering.markup.MarkupFilterFactory;
 import org.segrada.search.SearchEngine;
 import org.segrada.service.base.AbstractFullTextService;
+import org.segrada.service.base.BinaryDataHandler;
 import org.segrada.service.base.SearchTermService;
+import org.segrada.service.binarydata.BinaryDataService;
 import org.segrada.service.repository.FileRepository;
 import org.segrada.service.repository.TagRepository;
 import org.segrada.service.repository.factory.RepositoryFactory;
@@ -33,13 +35,20 @@ import java.util.List;
  *
  * File service
  */
-public class FileService extends AbstractFullTextService<IFile, FileRepository> implements SearchTermService<IFile> {
+public class FileService extends AbstractFullTextService<IFile, FileRepository> implements SearchTermService<IFile>, BinaryDataHandler<IFile> {
+	/**
+	 * reference to binary data service
+	 */
+	private final BinaryDataService binaryDataService;
+
 	/**
 	 * Constructor
 	 */
 	@Inject
-	public FileService(RepositoryFactory repositoryFactory, SearchEngine searchEngine) {
+	public FileService(RepositoryFactory repositoryFactory, SearchEngine searchEngine, BinaryDataService binaryDataService) {
 		super(repositoryFactory, FileRepository.class, searchEngine);
+
+		this.binaryDataService = binaryDataService;
 	}
 
 	@Override
@@ -139,5 +148,58 @@ public class FileService extends AbstractFullTextService<IFile, FileRepository> 
 	 */
 	public void removeFileFromEntity(IFile file, SegradaAnnotatedEntity entity) {
 		repository.removeFileFromEntity(file, entity);
+	}
+
+	@Override
+	public void saveBinaryDataToService(IFile entity) {
+		// cast to file?
+		if (!(entity instanceof  File)) return; // sanity check
+		File file = (File) entity;
+
+		// nothing to save
+		if (file.getData() == null) {
+			return;
+		}
+
+		// save and/or replace data
+		String identifier = binaryDataService.saveNewReference(entity, entity.getFilename(), entity.getMimeType(),
+				file.getData(), entity.getFileIdentifier());
+
+		// issue identifier, remove data
+		if (identifier != null) {
+			entity.setFileIdentifier(identifier);
+			file.setData(null); // reset data
+		}
+	}
+
+	@Override
+	public void removeBinaryDataFromService(IFile entity) {
+		binaryDataService.removeReference(entity.getFileIdentifier());
+	}
+
+	@Override
+	public boolean save(IFile entity) {
+		// new entity?
+		boolean newEntity = entity.getId()==null;
+
+		// map data to binary service
+		saveBinaryDataToService(entity);
+
+		// save to db
+		if (super.save(entity)) {
+			// update back reference
+			if (newEntity) binaryDataService.updateReferenceId(entity.getFileIdentifier(), entity);
+			return true;
+		}
+
+		// error while saving: delete file reference
+		binaryDataService.removeReference(entity.getFileIdentifier());
+		return false;
+	}
+
+	@Override
+	public boolean delete(IFile entity) {
+		removeBinaryDataFromService(entity);
+		return super.delete(entity);
 	}
 }

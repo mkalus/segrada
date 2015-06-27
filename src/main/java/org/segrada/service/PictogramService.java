@@ -4,6 +4,8 @@ import com.google.inject.Inject;
 import org.segrada.model.Pictogram;
 import org.segrada.model.prototype.IPictogram;
 import org.segrada.service.base.AbstractRepositoryService;
+import org.segrada.service.base.BinaryDataHandler;
+import org.segrada.service.binarydata.BinaryDataService;
 import org.segrada.service.repository.PictogramRepository;
 import org.segrada.service.repository.factory.RepositoryFactory;
 
@@ -24,13 +26,20 @@ import org.segrada.service.repository.factory.RepositoryFactory;
  *
  * Pictogram service
  */
-public class PictogramService extends AbstractRepositoryService<IPictogram, PictogramRepository> {
+public class PictogramService extends AbstractRepositoryService<IPictogram, PictogramRepository> implements BinaryDataHandler<IPictogram> {
+	/**
+	 * reference to binary data service
+	 */
+	private final BinaryDataService binaryDataService;
+
 	/**
 	 * Constructor
 	 */
 	@Inject
-	public PictogramService(RepositoryFactory repositoryFactory) {
+	public PictogramService(RepositoryFactory repositoryFactory, BinaryDataService binaryDataService) {
 		super(repositoryFactory, PictogramRepository.class);
+
+		this.binaryDataService = binaryDataService;
 	}
 
 	@Override
@@ -50,5 +59,57 @@ public class PictogramService extends AbstractRepositoryService<IPictogram, Pict
 	 */
 	public IPictogram findByTitle(String title) {
 		return repository.findByTitle(title);
+	}
+
+	@Override
+	public void saveBinaryDataToService(IPictogram entity) {
+		// cast to pictogram?
+		if (!(entity instanceof  Pictogram)) return; // sanity check
+		Pictogram pictogram = (Pictogram) entity;
+
+		// save and/or replace data
+		String identifier = binaryDataService.saveNewReference(entity, pictogram.getFileName(), pictogram.getMimeType(),
+				pictogram.getData(), entity.getFileIdentifier());
+
+		// issue identifier, remove data
+		if (identifier != null) {
+			entity.setFileIdentifier(identifier);
+			pictogram.setData(null);
+			pictogram.setMimeType(null);
+			pictogram.setFileName(null);
+		}
+	}
+
+	@Override
+	public void removeBinaryDataFromService(IPictogram entity) {
+		binaryDataService.removeReference(entity.getFileIdentifier());
+	}
+
+	@Override
+	public boolean save(IPictogram entity) {
+		// new entity?
+		boolean newEntity = entity.getId()==null;
+
+		//TODO shrink image, if needed
+
+		// map data to binary service
+		saveBinaryDataToService(entity);
+
+		// save to db
+		if (super.save(entity)) {
+			// update back reference
+			if (newEntity) binaryDataService.updateReferenceId(entity.getFileIdentifier(), entity);
+			return true;
+		}
+
+		// error while saving: delete file reference
+		binaryDataService.removeReference(entity.getFileIdentifier());
+		return false;
+	}
+
+	@Override
+	public boolean delete(IPictogram entity) {
+		removeBinaryDataFromService(entity);
+		return super.delete(entity);
 	}
 }

@@ -2,8 +2,6 @@ package org.segrada.service.base;
 
 import org.segrada.model.prototype.SegradaEntity;
 
-import java.util.List;
-
 /**
  * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]
  *
@@ -19,28 +17,22 @@ import java.util.List;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Base service class
+ * Service handling filess
  */
-public interface SegradaService<BEAN extends SegradaEntity> {
+public interface BinaryDataHandler<BEAN extends SegradaEntity> {
 	/**
-	 * Create a new instance of BEAN
-	 * @return new instance
+	 * move/map/save binary data of entity to binary data service
+	 *
+	 * will remove old data from service if needed
+	 *
+	 * @param entity containing binary data
 	 */
-	BEAN createNewInstance();
+	void saveBinaryDataToService(BEAN entity);
 
 	/**
-	 * get class reference of model class
-	 * @return class
+	 * delete binary data from service
+	 *
+	 * @param entity containing binary data
 	 */
-	Class<BEAN> getModelClass();
-
-	BEAN findById(String id);
-
-	boolean save(BEAN entity);
-
-	boolean delete(BEAN entity);
-
-	List<BEAN> findAll();
-
-	long count();
+	void removeBinaryDataFromService(BEAN entity);
 }
