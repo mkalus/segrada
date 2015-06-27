@@ -42,4 +42,13 @@ public class PictogramService extends AbstractRepositoryService<IPictogram, Pict
 	public Class<IPictogram> getModelClass() {
 		return IPictogram.class;
 	}
+
+	/**
+	 * Find entity by title
+	 * @param title login name
+	 * @return entity or null
+	 */
+	public IPictogram findByTitle(String title) {
+		return repository.findByTitle(title);
+	}
 }

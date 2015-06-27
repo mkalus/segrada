@@ -23,6 +23,4 @@ import org.segrada.service.repository.prototype.SearchTermRepository;
  * Relation type Repository
  */
 public interface RelationTypeRepository extends CRUDRepository<IRelationType>, SearchTermRepository<IRelationType>, PaginatingRepository<IRelationType> {
-	// get relationtype by tags
-	//TODO
 }

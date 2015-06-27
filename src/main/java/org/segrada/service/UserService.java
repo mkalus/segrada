@@ -42,4 +42,13 @@ public class UserService extends AbstractRepositoryService<IUser, UserRepository
 	public Class<IUser> getModelClass() {
 		return IUser.class;
 	}
+
+	/**
+	 * Find user by login name
+	 * @param login login name
+	 * @return user or null
+	 */
+	public  IUser findByLogin(String login) {
+		return repository.findByLogin(login);
+	}
 }

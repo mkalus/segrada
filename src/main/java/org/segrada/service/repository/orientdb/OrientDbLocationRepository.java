@@ -66,6 +66,8 @@ public class OrientDbLocationRepository extends AbstractSegradaOrientDbRepositor
 
 			location.setParentId(parent.getIdentity().toString());
 			location.setParentModel(db.getMetadata().getSchema().getClassByClusterId(parent.getClusterId()).getName());
+
+			//TODO: lazy load parent
 		}
 
 		// add distance, if set in document (added by some query results)

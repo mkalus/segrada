@@ -31,7 +31,7 @@ public interface LocationRepository extends CRUDRepository<ILocation> {
 	List<ILocation> findByParent(String id);
 
 	/**
-	 * find closest location to a given coordinate
+	 * find closest location(s) to a given coordinate
 	 * @param latitude coordinate
 	 * @param longitude coordinate
 	 * @return closest location(s) - might be more than one

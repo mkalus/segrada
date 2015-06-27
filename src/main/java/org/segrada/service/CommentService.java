@@ -3,6 +3,8 @@ package org.segrada.service;
 import com.google.inject.Inject;
 import org.segrada.model.Comment;
 import org.segrada.model.prototype.IComment;
+import org.segrada.model.prototype.SegradaAnnotatedEntity;
+import org.segrada.model.prototype.SegradaEntity;
 import org.segrada.search.SearchEngine;
 import org.segrada.service.base.AbstractFullTextService;
 import org.segrada.service.repository.CommentRepository;
@@ -10,6 +12,7 @@ import org.segrada.service.repository.TagRepository;
 import org.segrada.service.repository.factory.RepositoryFactory;
 
 import javax.annotation.Nullable;
+import java.util.List;
 
 /**
  * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]
@@ -63,5 +66,42 @@ public class CommentService extends AbstractFullTextService<IComment, CommentRep
 			idxEntity.tagIds = tagRepository.findTagIdsConnectedToModel(entity, false);
 
 		return idxEntity;
+	}
+
+	/**
+	 * find comments by reference id
+	 * @param id of entity referencing comments
+	 * @return list of comments
+	 */
+	public List<IComment> findByReference(String id) {
+		return repository.findByReference(id);
+	}
+
+	/**
+	 * gets connected entities of a single comment
+	 * @param id of comment
+	 * @return list of entities that reference comment
+	 */
+	public List<SegradaEntity> findByComment(String id) {
+		return repository.findByComment(id);
+	}
+
+
+	/**
+	 * Create new comment connection (only once)
+	 * @param comment referencing
+	 * @param entity referenced
+	 */
+	public void connectCommentToEntity(IComment comment, SegradaAnnotatedEntity entity) {
+		repository.connectCommentToEntity(comment, entity);
+	}
+
+	/**
+	 * Remove existing comment connection
+	 * @param comment referencing
+	 * @param entity referenced
+	 */
+	public void removeCommentFromEntity(IComment comment, SegradaAnnotatedEntity entity) {
+		repository.removeCommentFromEntity(comment, entity);
 	}
 }

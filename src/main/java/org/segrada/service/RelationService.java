@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import org.segrada.model.Relation;
 import org.segrada.model.prototype.INode;
 import org.segrada.model.prototype.IRelation;
+import org.segrada.model.prototype.IRelationType;
 import org.segrada.search.SearchEngine;
 import org.segrada.service.base.AbstractFullTextService;
 import org.segrada.service.repository.RelationRepository;
@@ -11,6 +12,7 @@ import org.segrada.service.repository.TagRepository;
 import org.segrada.service.repository.factory.RepositoryFactory;
 
 import javax.annotation.Nullable;
+import java.util.List;
 
 /**
  * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]
@@ -67,5 +69,23 @@ public class RelationService extends AbstractFullTextService<IRelation, Relation
 			idxEntity.tagIds = tagRepository.findTagIdsConnectedToModel(entity, false);
 
 		return idxEntity;
+	}
+
+	/**
+	 * find by related entity
+	 * @param node connected entity
+	 * @return list of relations connected to node (in or out)
+	 */
+	public List<IRelation> findByRelation(INode node) {
+		return repository.findByRelation(node);
+	}
+
+	/**
+	 * find by relation type
+	 * @param relationType of relation
+	 * @return list of relations of a certain type
+	 */
+	public List<IRelation> findByRelationType(IRelationType relationType) {
+		return repository.findByRelationType(relationType);
 	}
 }

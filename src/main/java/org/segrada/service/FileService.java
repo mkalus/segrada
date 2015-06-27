@@ -3,6 +3,8 @@ package org.segrada.service;
 import com.google.inject.Inject;
 import org.segrada.model.File;
 import org.segrada.model.prototype.IFile;
+import org.segrada.model.prototype.SegradaAnnotatedEntity;
+import org.segrada.model.prototype.SegradaEntity;
 import org.segrada.rendering.markup.MarkupFilterFactory;
 import org.segrada.search.SearchEngine;
 import org.segrada.service.base.AbstractFullTextService;
@@ -92,5 +94,50 @@ public class FileService extends AbstractFullTextService<IFile, FileRepository> 
 			idxEntity.tagIds = tagRepository.findTagIdsConnectedToModel(entity, false);
 
 		return idxEntity;
+	}
+
+	/**
+	 * Find entities by title or file name
+	 * @param titleOrFilename title or file name
+	 * @return entity or null
+	 */
+	public List<IFile> findByTitleOrFilename(String titleOrFilename) {
+		return repository.findByTitleOrFilename(titleOrFilename);
+	}
+
+	/**
+	 * find files referencing entity with id
+	 * @param id of entity referenced
+	 * @return list of files
+	 */
+	public List<IFile> findByReference(String id) {
+		return repository.findByReference(id);
+	}
+
+	/**
+	 * find entities referencing file with id
+	 * @param id of file referencing
+	 * @return list of entities referenced by file
+	 */
+	public List<SegradaEntity> findByFile(String id) {
+		return repository.findByFile(id);
+	}
+
+	/**
+	 * Create new file connection (only once)
+	 * @param file referencing
+	 * @param entity referenced
+	 */
+	public void connectFileToEntity(IFile file, SegradaAnnotatedEntity entity) {
+		repository.connectFileToEntity(file, entity);
+	}
+
+	/**
+	 * Remove existing file connection
+	 * @param file referencing
+	 * @param entity referenced
+	 */
+	public void removeFileFromEntity(IFile file, SegradaAnnotatedEntity entity) {
+		repository.removeFileFromEntity(file, entity);
 	}
 }

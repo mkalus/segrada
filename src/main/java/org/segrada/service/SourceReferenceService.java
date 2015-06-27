@@ -7,6 +7,8 @@ import org.segrada.service.base.AbstractRepositoryService;
 import org.segrada.service.repository.SourceReferenceRepository;
 import org.segrada.service.repository.factory.RepositoryFactory;
 
+import java.util.List;
+
 /**
  * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]
  *
@@ -41,5 +43,23 @@ public class SourceReferenceService extends AbstractRepositoryService<ISourceRef
 	@Override
 	public Class<ISourceReference> getModelClass() {
 		return ISourceReference.class;
+	}
+
+	/**
+	 * Find entities by source id
+	 * @param id source id
+	 * @return list of entities or null
+	 */
+	public List<ISourceReference> findBySource(String id) {
+		return repository.findBySource(id);
+	}
+
+	/**
+	 * Find entities by reference id
+	 * @param id reference id
+	 * @return list of entities or null
+	 */
+	public List<ISourceReference> findByReference(String id) {
+		return repository.findByReference(id);
 	}
 }

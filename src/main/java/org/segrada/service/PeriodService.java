@@ -1,11 +1,14 @@
 package org.segrada.service;
 
 import com.google.inject.Inject;
+import org.joda.time.DateTime;
 import org.segrada.model.Period;
 import org.segrada.model.prototype.IPeriod;
 import org.segrada.service.base.AbstractRepositoryService;
 import org.segrada.service.repository.PeriodRepository;
 import org.segrada.service.repository.factory.RepositoryFactory;
+
+import java.util.List;
 
 /**
  * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]
@@ -41,5 +44,34 @@ public class PeriodService extends AbstractRepositoryService<IPeriod, PeriodRepo
 	@Override
 	public Class<IPeriod> getModelClass() {
 		return IPeriod.class;
+	}
+
+	/**
+	 * find set by parent id
+	 * @param id parent id
+	 * @return list of locations associated with parent
+	 */
+	public List<IPeriod> findByParent(String id) {
+		return repository.findByParent(id);
+	}
+
+	/**
+	 * find entities within a certain time frame
+	 * @param jdStart start time (can be null to set it to 0)
+	 * @param jdEnd end time (can be null to set it to maximum time)
+	 * @return list of hits sorted by starttime/endtime
+	 */
+	public List<IPeriod> findWithin(Long jdStart, Long jdEnd) {
+		return repository.findWithin(jdStart, jdEnd);
+	}
+
+	/**
+	 * find entities within a certain time frame
+	 * @param start start time (can be null to set it to 0)
+	 * @param end end time (can be null to set it to maximum time)
+	 * @return list of hits sorted by starttime/endtime
+	 */
+	public List<IPeriod> findWithin(DateTime start, DateTime end) {
+		return repository.findWithin(start, end);
 	}
 }

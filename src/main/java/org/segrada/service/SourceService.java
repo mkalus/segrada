@@ -85,4 +85,22 @@ public class SourceService extends AbstractFullTextService<ISource, SourceReposi
 
 		return idxEntity;
 	}
+
+	/**
+	 * Find entities by title
+	 * @param ref reference title
+	 * @return entity or null
+	 */
+	public ISource findByRef(String ref) {
+		return repository.findByRef(ref);
+	}
+
+	/**
+	 * Find entities by title
+	 * @param title short title
+	 * @return entity or null
+	 */
+	public List<ISource> findByTitle(String title) {
+		return repository.findByTitle(title);
+	}
 }

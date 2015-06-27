@@ -42,4 +42,6 @@ public class ColorService extends AbstractRepositoryService<IColor, ColorReposit
 	public Class<IColor> getModelClass() {
 		return IColor.class;
 	}
+
+	//TODO: create color block when saving entity?
 }

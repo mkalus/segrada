@@ -7,6 +7,8 @@ import org.segrada.service.base.AbstractRepositoryService;
 import org.segrada.service.repository.LocationRepository;
 import org.segrada.service.repository.factory.RepositoryFactory;
 
+import java.util.List;
+
 /**
  * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]
  *
@@ -41,5 +43,47 @@ public class LocationService extends AbstractRepositoryService<ILocation, Locati
 	@Override
 	public Class<ILocation> getModelClass() {
 		return ILocation.class;
+	}
+
+	/**
+	 * find set by parent id
+	 * @param id parent id
+	 * @return list of locations associated with parent
+	 */
+	public List<ILocation> findByParent(String id) {
+		return repository.findByParent(id);
+	}
+
+	/**
+	 * find closest location(s) to a given coordinate
+	 * @param latitude coordinate
+	 * @param longitude coordinate
+	 * @return closest location(s) - might be more than one
+	 */
+	public List<ILocation> findClosest(double latitude, double longitude, double radius) {
+		return repository.findClosest(latitude, longitude, radius);
+	}
+
+	/**
+	 * find nearest locations in an area
+	 * @param latitude coordinate
+	 * @param longitude coordinate
+	 * @param radius in km
+	 * @return list of locations within area (sorted by distance from point)
+	 */
+	public List<ILocation> findNear(double latitude, double longitude, double radius) {
+		return repository.findNear(latitude, longitude, radius);
+	}
+
+	/**
+	 * find nearest locations within a bounding box
+	 * @param latitude1 coordinate 1
+	 * @param longitude1 coordinate 1
+	 * @param latitude2 coordinate 2
+	 * @param longitude2 coordinate 2
+	 * @return set of locations within box
+	 */
+	public List<ILocation> findWithin(double latitude1, double longitude1, double latitude2, double longitude2) {
+		return repository.findWithin(latitude1, longitude1, latitude2, longitude2);
 	}
 }

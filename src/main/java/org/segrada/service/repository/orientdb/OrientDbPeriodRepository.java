@@ -67,6 +67,8 @@ public class OrientDbPeriodRepository extends AbstractSegradaOrientDbRepository<
 
 			period.setParentId(parent.getIdentity().toString());
 			period.setParentModel(db.getMetadata().getSchema().getClassByClusterId(parent.getClusterId()).getName());
+
+			//TODO: lazy load parent
 		}
 
 		return period;
