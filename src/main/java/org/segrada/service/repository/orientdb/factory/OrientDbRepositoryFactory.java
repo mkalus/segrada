@@ -32,7 +32,6 @@ import java.util.Map;
  *
  * Repository to dynamically create OrientDb repositories during runtime
  */
-@RequestScoped
 public class OrientDbRepositoryFactory implements RepositoryFactory {
 	private static final Logger logger = LoggerFactory.getLogger(OrientDbRepositoryFactory.class);
 

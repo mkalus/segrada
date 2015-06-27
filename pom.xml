@@ -90,6 +90,13 @@
 			<version>${jetty.version}</version>
 		</dependency>
 
+		<!-- Jersey -->
+		<dependency>
+			<groupId>com.sun.jersey.contribs</groupId>
+			<artifactId>jersey-guice</artifactId>
+			<version>1.19</version>
+		</dependency>
+
 		<!-- OrientDB -->
 		<dependency>
 			<groupId>com.orientechnologies</groupId>
