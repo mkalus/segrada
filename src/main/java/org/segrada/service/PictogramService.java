@@ -103,7 +103,7 @@ public class PictogramService extends AbstractRepositoryService<IPictogram, Pict
 		}
 
 		// error while saving: delete file reference
-		binaryDataService.removeReference(entity.getFileIdentifier());
+		removeBinaryDataFromService(entity);
 		return false;
 	}
 

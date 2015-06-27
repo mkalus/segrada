@@ -14,8 +14,11 @@ import org.segrada.service.binarydata.BinaryDataService;
 import org.segrada.service.repository.FileRepository;
 import org.segrada.service.repository.TagRepository;
 import org.segrada.service.repository.factory.RepositoryFactory;
+import org.segrada.util.TextExtractor;
 
 import javax.annotation.Nullable;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -182,8 +185,23 @@ public class FileService extends AbstractFullTextService<IFile, FileRepository> 
 		// new entity?
 		boolean newEntity = entity.getId()==null;
 
-		// map data to binary service
-		saveBinaryDataToService(entity);
+		// enrich with full text, if applicable
+		enrichWithFullText(entity);
+
+		// file should be saved in database?
+		if (entity.getContainFile()) {
+			// map data to binary service
+			saveBinaryDataToService(entity);
+		} else {
+			// remove old identifier, if it exists
+			removeBinaryDataFromService(entity);
+
+			// reset file identifier
+			entity.setFileIdentifier(null);
+
+			// do not replace metadata in any case
+			newEntity = false;
+		}
 
 		// save to db
 		if (super.save(entity)) {
@@ -193,7 +211,7 @@ public class FileService extends AbstractFullTextService<IFile, FileRepository> 
 		}
 
 		// error while saving: delete file reference
-		binaryDataService.removeReference(entity.getFileIdentifier());
+		removeBinaryDataFromService(entity);
 		return false;
 	}
 
@@ -201,5 +219,36 @@ public class FileService extends AbstractFullTextService<IFile, FileRepository> 
 	public boolean delete(IFile entity) {
 		removeBinaryDataFromService(entity);
 		return super.delete(entity);
+	}
+
+	/**
+	 * extract and enrich file entity with full text, if needed
+	 * @param entity to be enriched: must be File entity with data set
+	 */
+	private void enrichWithFullText(IFile entity) {
+		// cast to file?
+		if (!(entity instanceof  File)) return; // sanity check
+		File file = (File) entity;
+
+		// full text extraction of uploaded file?
+		if (entity.getIndexFullText()) {
+			byte[] data = file.getData();
+			if (data != null && data.length > 0) { // uploaded?
+				// extract text
+				TextExtractor textExtractor = new TextExtractor();
+				entity.setFullText(textExtractor.parseToString(new ByteArrayInputStream(data)));
+			} else if (entity.getFullText() == null || entity.getFullText().isEmpty()) {
+				// nothing uploaded, but file is present in system and has not been extracted yet
+				String fileIdentifier = entity.getFileIdentifier();
+				if (fileIdentifier != null && !fileIdentifier.isEmpty()) {
+					TextExtractor textExtractor = new TextExtractor();
+					try {
+						entity.setFullText(textExtractor.parseToString(binaryDataService.getBinaryDataAsStream(fileIdentifier)));
+					} catch (IOException e) {
+						// fail silently
+					}
+				}
+			}
+		} else entity.setFullText(null); // remove full text
 	}
 }
