@@ -8,6 +8,7 @@ import org.segrada.service.base.BinaryDataHandler;
 import org.segrada.service.binarydata.BinaryDataService;
 import org.segrada.service.repository.PictogramRepository;
 import org.segrada.service.repository.factory.RepositoryFactory;
+import org.segrada.util.ImageManipulator;
 
 /**
  * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]
@@ -67,9 +68,17 @@ public class PictogramService extends AbstractRepositoryService<IPictogram, Pict
 		if (!(entity instanceof  Pictogram)) return; // sanity check
 		Pictogram pictogram = (Pictogram) entity;
 
+		// let image manipulator handle the image
+		ImageManipulator manipulator = new ImageManipulator(pictogram.getData(), pictogram.getMimeType());
+
+		// crop image to square
+		manipulator.cropImageToSquare();
+		// create thumbnail
+		manipulator.createThumbnail(24, true);
+
 		// save and/or replace data
-		String identifier = binaryDataService.saveNewReference(entity, pictogram.getFileName(), pictogram.getMimeType(),
-				pictogram.getData(), entity.getFileIdentifier());
+		String identifier = binaryDataService.saveNewReference(entity, pictogram.getFileName(), manipulator.getContentType(),
+				manipulator.getImageBytes(), entity.getFileIdentifier());
 
 		// issue identifier, remove data
 		if (identifier != null) {
@@ -89,8 +98,6 @@ public class PictogramService extends AbstractRepositoryService<IPictogram, Pict
 	public boolean save(IPictogram entity) {
 		// new entity?
 		boolean newEntity = entity.getId()==null;
-
-		//TODO shrink image, if needed
 
 		// map data to binary service
 		saveBinaryDataToService(entity);
