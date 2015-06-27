@@ -48,6 +48,8 @@ abstract public class AbstractFullTextService<BEAN extends SegradaEntity, REPOSI
 	public boolean save(BEAN entity) {
 		if (super.save(entity)) {
 			indexEntity(entity);
+
+			return true;
 		}
 		return false;
 	}

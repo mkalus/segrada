@@ -349,7 +349,7 @@ public class OrientDbTagRepository extends AbstractSegradaOrientDbRepository<ITa
 	 */
 	private String[] findTagXConnectedToModel(@Nullable SegradaTaggable entity, boolean onlyDirect, String field) {
 		// avoid NPEs
-		if (entity == null) return new String[0];
+		if (entity == null || entity.getId() == null) return new String[0];
 
 		initDb();
 
