@@ -2,11 +2,8 @@ package org.segrada;
 
 import com.google.inject.servlet.GuiceFilter;
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.session.HashSessionIdManager;
-import org.eclipse.jetty.server.session.HashSessionManager;
-import org.eclipse.jetty.server.session.SessionHandler;
+import org.eclipse.jetty.servlet.DefaultServlet;
 import org.eclipse.jetty.servlet.ServletContextHandler;
-import org.segrada.servlet.EmptyServlet;
 import org.segrada.servlet.SegradaGuiceServletContextListener;
 
 import javax.servlet.DispatcherType;
@@ -51,8 +48,7 @@ public class SegradaApplication {
 		// Must add DefaultServlet for embedded Jetty.
 		// Failing to do this will cause 404 errors.
 		// This is not needed if web.xml is used instead.
-		//sch.addServlet(EmptyServlet.class, "/*");
-		// TODO: needed?
+		sch.addServlet(DefaultServlet.class, "/*");
 
 		// stop when JVM shuts down
 		server.setStopAtShutdown(true);

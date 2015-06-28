@@ -30,7 +30,7 @@ public class MainController {
 	}
 
 	@GET
-	@Path("/{n}")
+	@Path("/name{n}")
 	@Produces(MediaType.TEXT_HTML)
 	public Viewable sayHello(@PathParam("n") String name) {
 		return new Viewable("sample", "Hello " + name + "!");

@@ -1,0 +1,18 @@
+# humanstxt.org/
+# The humans responsible & technology colophon
+
+# TEAM
+
+    Dr. Maximilian Kalus -- Creator, programmer -- @auxweb
+
+# THANKS
+
+    Humanity
+
+# TECHNOLOGY COLOPHON
+
+    HTML5, CSS3
+    jQuery, Modernizr
+    Java, Spring, Spring Boot
+    Thymeleaf
+    OrientDb

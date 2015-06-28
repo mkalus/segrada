@@ -10,6 +10,8 @@ import org.segrada.config.TemplateModule;
 import org.segrada.controller.MainController;
 
 import javax.servlet.annotation.WebListener;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]
@@ -41,7 +43,12 @@ public class SegradaGuiceServletContextListener extends GuiceServletContextListe
 					@Override
 					protected void configureServlets() {
 						bind(MainController.class);
-						serve("/*").with(GuiceContainer.class);
+						//serve("/*").with(GuiceContainer.class);
+						Map<String, String> initParams = new TreeMap<String, String>();
+
+						initParams.put("com.sun.jersey.config.property.WebPageContentRegex", "/.*\\.(jpg|ico|png|gif|html|id|txt|css|js|xml)");
+
+						filter("/*").through(GuiceContainer.class, initParams);
 						filter("/*").through(orientDBFilter);
 					}
 				}
