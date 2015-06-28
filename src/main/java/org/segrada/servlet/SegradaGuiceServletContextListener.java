@@ -7,7 +7,7 @@ import com.google.inject.servlet.ServletModule;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
 import org.segrada.config.ServiceModule;
 import org.segrada.config.TemplateModule;
-import org.segrada.controller.MainController;
+import org.segrada.controller.*;
 
 import javax.servlet.annotation.WebListener;
 import java.util.Map;
@@ -43,7 +43,20 @@ public class SegradaGuiceServletContextListener extends GuiceServletContextListe
 					@Override
 					protected void configureServlets() {
 						bind(MainController.class);
-						//serve("/*").with(GuiceContainer.class);
+						bind(ColorController.class);
+						bind(CommentController.class);
+						bind(FileController.class);
+						bind(LocationController.class);
+						bind(NodeController.class);
+						bind(PeriodController.class);
+						bind(PictogramController.class);
+						bind(RelationController.class);
+						bind(RelationTypeController.class);
+						bind(SourceController.class);
+						bind(SourceReferenceController.class);
+						bind(TagController.class);
+						bind(UserController.class);
+
 						Map<String, String> initParams = new TreeMap<String, String>();
 
 						initParams.put("com.sun.jersey.config.property.WebPageContentRegex", "/.*\\.(jpg|ico|png|gif|html|txt|css|js|xml)");

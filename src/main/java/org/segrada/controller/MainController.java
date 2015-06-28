@@ -16,17 +16,12 @@ import javax.ws.rs.core.MediaType;
  * Created by mkalus on 27.06.15.
  */
 @Path("/")
-@RequestScoped
+@Singleton
 public class MainController {
-	@Inject
-	private ColorService colorService;
-
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
 	public String index() {
-
-
-		return "Got it!" + colorService.count();
+		return "Got it!";
 	}
 
 	@GET
