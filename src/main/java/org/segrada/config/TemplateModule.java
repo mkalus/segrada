@@ -1,6 +1,7 @@
 package org.segrada.config;
 
 import com.google.inject.AbstractModule;
+import org.segrada.rendering.thymeleaf.SegradaFormatter;
 import org.segrada.servlet.ThymeleafViewProcessor;
 
 /**

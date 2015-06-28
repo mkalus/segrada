@@ -1,23 +1,23 @@
 package org.segrada.servlet;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.HashMap;
-import java.util.Map;
+import com.sun.jersey.api.view.Viewable;
+import com.sun.jersey.spi.template.ViewProcessor;
+import org.segrada.rendering.thymeleaf.SegradaFormatter;
+import org.segrada.util.NumberFormatter;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.WebContext;
+import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
+import org.thymeleaf.templateresolver.TemplateResolver;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.ext.Provider;
-
-import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.context.WebContext;
-import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
-import org.thymeleaf.templateresolver.TemplateResolver;
-
-import com.sun.jersey.api.view.Viewable;
-import com.sun.jersey.spi.template.ViewProcessor;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 @Provider
 public class ThymeleafViewProcessor implements ViewProcessor<String> {
@@ -59,6 +59,12 @@ public class ThymeleafViewProcessor implements ViewProcessor<String> {
 		Map<String, Object> variables = new HashMap<>();
 		variables.put("it", viewable.getModel());
 		context.setVariables(variables);
+
+		// set fixed variables?
+		//context.setVariable("numberFormatter", new NumberFormatter());
+		//context.setVariable("format", new SegradaFormatter());
+		//<p th:text="${@format.nl2br('Hallo Welt!')}"></p>
+
 		templateEngine.process(viewable.getTemplateName(), context, responseInvoker
 				.get().getWriter());
 	}
