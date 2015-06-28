@@ -46,7 +46,7 @@ public class SegradaGuiceServletContextListener extends GuiceServletContextListe
 						//serve("/*").with(GuiceContainer.class);
 						Map<String, String> initParams = new TreeMap<String, String>();
 
-						initParams.put("com.sun.jersey.config.property.WebPageContentRegex", "/.*\\.(jpg|ico|png|gif|html|id|txt|css|js|xml)");
+						initParams.put("com.sun.jersey.config.property.WebPageContentRegex", "/.*\\.(jpg|ico|png|gif|html|txt|css|js|xml)");
 
 						filter("/*").through(GuiceContainer.class, initParams);
 						filter("/*").through(orientDBFilter);
