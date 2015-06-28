@@ -14,7 +14,7 @@ import org.apache.lucene.store.SimpleFSDirectory;
 import org.apache.lucene.util.Version;
 import org.segrada.search.SearchEngine;
 import org.segrada.search.lucene.LuceneSearchEngine;
-import org.segrada.service.ColorService;
+import org.segrada.service.*;
 import org.segrada.service.binarydata.BinaryDataService;
 import org.segrada.service.binarydata.BinaryDataServiceFile;
 import org.segrada.service.repository.factory.RepositoryFactory;
@@ -62,6 +62,18 @@ public class ServiceModule extends AbstractModule {
 
 		// bind all services
 		bind(ColorService.class);
+		bind(CommentService.class);
+		bind(FileService.class);
+		bind(LocationService.class);
+		bind(NodeService.class);
+		bind(PeriodService.class);
+		bind(PictogramService.class);
+		bind(RelationService.class);
+		bind(RelationTypeService.class);
+		bind(SourceReferenceService.class);
+		bind(SourceService.class);
+		bind(TagService.class);
+		bind(UserService.class);
 	}
 
 	@Provides
