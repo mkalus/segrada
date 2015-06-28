@@ -1,0 +1,53 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" th:lang="${#locale.language}">
+<head th:fragment="head">
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<link rel="apple-touch-icon" href="../../../apple-touch-icon.png" th:href="@{/apple-touch-icon.png}" />
+
+	<link rel="stylesheet" href="../../../css/bootstrap.css" th:href="@{/css/bootstrap.css}" />
+	<link rel="stylesheet" href="../../../css/theme.css" th:href="@{/css/theme.css}" />
+	<link rel="stylesheet" href="../../../css/font-awesome.css" th:href="@{/css/font-awesome.css}" />
+	<link rel="stylesheet" href="../../../css/fileinput.min.css" th:href="@{/css/fileinput.min.css}" />
+	<link rel="stylesheet" href="../../../css/bootstrap-tagsinput.css" th:href="@{/css/bootstrap-tagsinput.css}" />
+	<link rel="stylesheet" href="../../../css/jquery.simplepicker.css" th:href="@{/css/jquery.simplepicker.css}" />
+	<link rel="stylesheet" href="../../../css/segrada.css" th:href="@{/css/segrada.css}" />
+
+	<!--/* HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries */-->
+	<!--[if lt IE 9]>
+	<script src="../../../js/vendor/html5shiv.min.js" th:src="@{/vendor/html5shiv.min.js}" ></script>
+	<script src="../../../js/vendor/respond.min.js" th:src="@{/vendor/respond.min.js}"></script>
+	<![endif]-->
+</head>
+
+<body>
+<div th:fragment="browser">
+	<!--[if lt IE 8]>
+	<p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+	<![endif]-->
+</div>
+
+Common fragments.
+
+<div th:fragment="footer">
+	<script th:inline="javascript">
+		/*<![CDATA[*/
+		// some default values
+		var urlSegradaPictogramSearch = [[@{/pictogram/search?s=}]];
+		var urlSegradaPictogramFile = [[@{/pictogram/file/}]];
+
+		var urlSegradaTagSearch = [[@{/tag/search?s=}]];
+		/*]]>*/
+	</script>
+	<script src="../../../js/vendor/jquery-1.11.2.min.js" th:src="@{/js/vendor/jquery-1.11.2.min.js}"></script>
+	<script src="../../../js/vendor/bootstrap.min.js" th:src="@{/js/vendor/bootstrap.min.js}"></script>
+	<script src="../../../js/vendor/ie10-viewport-bug-workaround.min.js" th:src="@{/js/vendor/ie10-viewport-bug-workaround.min.js}"></script>
+	<script src="../../../js/vendor/fileinput.min.js" th:src="@{/js/vendor/fileinput.min.js}"></script>
+	<script src="../../../js/vendor/fileinput_locale_en.min.js" th:src="@{'/js/vendor/fileinput_locale_' + ${#locale.language} + '.min.js'}"></script>
+	<script src="../../../js/vendor/jquery.form.min.js" th:src="@{/js/vendor/jquery.form.min.js}"></script>
+	<script src="../../../js/vendor/typeahead.bundle.min.js" th:src="@{/js/vendor/typeahead.bundle.min.js}"></script>
+	<script src="../../../js/vendor/bootstrap-tagsinput.min.js" th:src="@{/js/vendor/bootstrap-tagsinput.min.js}"></script>
+	<script src="../../../js/jquery.simplepicker.min.js" th:src="@{/js/jquery.simplepicker.min.js}"></script>
+	<script src="../../../js/segrada.min.js" th:src="@{/js/segrada.min.js}"></script>
+</div>
+</body>
+</html>

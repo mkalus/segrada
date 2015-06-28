@@ -19,15 +19,8 @@ import javax.ws.rs.core.MediaType;
 @Singleton
 public class MainController {
 	@GET
-	@Produces(MediaType.TEXT_PLAIN)
-	public String index() {
-		return "Got it!";
-	}
-
-	@GET
-	@Path("/name{n}")
 	@Produces(MediaType.TEXT_HTML)
-	public Viewable sayHello(@PathParam("n") String name) {
-		return new Viewable("sample", "Hello " + name + "!");
+	public Viewable sayHello() {
+		return new Viewable("home");
 	}
 }

@@ -1,0 +1,36 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" th:lang="${#locale.language}">
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<title>Segrada</title>
+	<div th:include="partials/common :: head" th:remove="tag"></div>
+</head>
+
+<body>
+<div th:replace="partials/common :: browser"></div>
+
+<div id="sg-page" class="container-fluid">
+	<div class="row">
+		<div class="col-sm-6 col-sm-push-6">
+			<div id="sg-nav" th:replace="partials/navigation :: navigation">
+				<!--/*###segrada-nav###*/-->
+			</div>
+			<div id="sg-control">
+				<!--/*###segrada-control###*/-->
+			</div>
+		</div>
+		<div class="col-sm-6 col-sm-pull-6" th:fragment="content">
+			<div id="sg-data">
+				<!--/*###segrada-data###*/-->
+			</div>
+		</div>
+	</div>
+</div>
+<div class="hidden">
+	<div id="sg-base" th:text="@{/}">/</div>
+</div>
+
+<div th:replace="partials/common :: footer"></div>
+</body>
+</html>

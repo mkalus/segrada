@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+	<meta charset="UTF-8" />
+	<title>Form fragments</title>
+</head>
+<body>
+
+<h1>Form elements partials to make life easier</h1>
+
+
+
+<h2>Submit button: create</h2>
+
+<div th:fragment="formCreate" class="form-group">
+	<div class="col-sm-offset-2 col-sm-10">
+		<button type="submit" class="btn btn-default" th:text="#{Create}">Create</button>
+	</div>
+</div>
+
+
+
+<h2>Submit button: change</h2>
+
+<div th:fragment="formChange" class="form-group">
+	<div class="col-sm-offset-2 col-sm-10">
+		<button type="submit" class="btn btn-default" th:text="#{Change}">Change</button>
+	</div>
+</div>
+
+
+
+<h2>Simple text element</h2>
+
+<div th:fragment="formTextfield (name, field, label, id)" class="form-group" th:classappend="${#fields.hasErrors(name)}?'has-error has-feedback':''">
+	<label class="col-sm-2 control-label" th:text="${label}" th:for="${name + '-' + id}">Label</label>
+	<div class="col-sm-10">
+		<input type="text" th:id="${name + '-' + id}" th:name="${name}" th:value="${field}" class="form-control" th:placeholder="${label}" />
+		<span class="help-block" th:each="error : ${#fields.errors(name)}" th:text="#{${error}(${label})}">Error</span>
+	</div>
+</div>
+
+
+
+<h2>Text area</h2>
+
+<div th:fragment="formTextarea (name, field, label, id, rows)" class="form-group" th:classappend="${#fields.hasErrors(name)}?'has-error has-feedback':''">
+	<label class="col-sm-2 control-label" th:text="${label}" th:for="${name + '-' + id}">Label</label>
+	<div class="col-sm-10">
+		<textarea th:id="${name + '-' + id}" th:name="${name}" th:text="${field}" class="form-control" th:rows="${rows}" th:placeholder="${label}"></textarea>
+		<span class="help-block" th:each="error : ${#fields.errors(name)}" th:text="#{${error}(${label})}">Error</span>
+	</div>
+</div>
+
+
+<h2>Text area with markup</h2>
+
+<div th:fragment="formMarkupTextarea (name, field, markupName, markupField, label, id, rows)" class="form-group" th:classappend="${#fields.hasErrors(name)}?'has-error has-feedback':''">
+	<label class="col-sm-2 control-label" th:text="${label}" th:for="${name + '-' + id}">Label</label>
+	<div class="col-sm-10">
+		<textarea th:id="${name + '-' + id}" th:name="${name}" th:text="${field}" class="form-control" th:rows="${rows}" th:placeholder="${label}"></textarea>
+		<span class="help-block" th:each="error : ${#fields.errors(name)}" th:text="#{${error}(${label})}">Error</span>
+	</div>
+
+	<input type="hidden" th:id="${markupName + '-' + id}" th:name="${markupName}" th:value="${markupField}" />
+</div>
+
+
+
+<h2>Pictogram chooser</h2>
+
+<h3>Form part</h3>
+
+<div th:fragment="formPictogram (name, field, label, id)" class="form-group" th:classappend="${#fields.hasErrors(name)}?'has-error has-feedback':''">
+	<label class="col-sm-2 control-label" th:text="${label}" th:for="${name + '-' + id}">Label</label>
+	<div class="col-sm-10">
+		<div class="row">
+			<div class="col-sm-3">
+				<a href="#" class="btn btn-primary btn-sm sg-pictogram-chooser" th:attr="data-id=${name + '-' + id}" th:text="#{Select_Pictogram}">Select Pictogram</a>
+			</div>
+			<div class="col-sm-6">
+				<div th:id="${'preview-' + name + '-' + id}">
+								<span th:if="${field}" th:inline="text">
+									<img src="#" th:src="@{/pictogram/file/{id}(id=${field.id})}" alt="" th:alt-title="${field.title}" width="24" height="24" />
+									[[${field.title}]]
+								</span>
+				</div>
+			</div>
+			<div class="col-sm-3">
+				<a href="#" class="btn btn-default btn-sm sg-pictogram-clearer" th:classappend="${field}?'':'sg-dynamic-hide'" th:id="${'clear-' + name + '-' + id}" th:attr="data-id=${name + '-' + id}" th:text="#{Clear_Pictogram}">Clear Pictogram</a>
+			</div>
+		</div>
+		<input type="hidden" th:id="${'value-' + name + '-' + id}" th:name="${name}" th:value="${field?.id}" />
+		<span class="help-block" th:each="error : ${#fields.errors(name)}" th:text="#{${error}(${label})}">Error</span>
+	</div>
+</div>
+
+<h3>Add this below form</h3>
+
+<!--// Modal for choosing the pictogram //-->
+<div th:fragment="formPictogramModal (name, id)" class="modal fade sg-pictogram-modal" id="pictogram-xxx" th:id="${name + '-' + id}" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" th:text="#{modal.Pictogram}">Choose Pictogram</h4>
+			</div>
+			<div class="modal-body">
+				<form action="#">
+					<label th:text="#{Filter}">Filter:</label> <input type="text" class="form-control" th:id="${'filter-' + name + '-' + id}"/>
+				</form>
+				<div class="pictogram-container" th:id="${'container-' + name + '-' + id}">
+					<!--// js will add stuff here //-->
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+<h2>Color selector (using JS)</h2>
+
+<div th:fragment="formColorSelect (name, field, label, id)" class="form-group" th:classappend="${#fields.hasErrors(name)}?'has-error has-feedback':''">
+	<label class="col-sm-2 control-label" th:text="${label}" th:for="${name + '-' + id}">Label</label>
+	<div class="col-sm-10">
+		<select th:id="${name + '-' + id}" th:name="${name}" class="form-control sg-colorpicker">
+			<option value="#ffffffff">----</option>
+			<option th:each="color : ${@segradaViewDataProvider.getColors()}" th:text="${color.getTitle()}" th:value="${color.getColorCode()}" th:selected="${color.getColor()==field}">Color</option>
+		</select>
+		<span class="help-block" th:each="error : ${#fields.errors(name)}" th:text="#{${error}(${label})}">Error</span>
+	</div>
+</div>
+
+
+
+<h2>Tags field</h2>
+
+<div th:fragment="formTagsfield (name, field, label, id)" class="form-group" th:classappend="${#fields.hasErrors(name)}?'has-error has-feedback':''">
+	<label class="col-sm-2 control-label" th:text="${label}" th:for="${name + '-' + id}">Label</label>
+	<div class="col-sm-10">
+		<select multiple="multiple" type="text" th:id="${name + '-' + id}" th:name="${name}" th:value="${field}" class="sg-tags">
+			<option th:each="tag : ${field}" selected="selected" th:value="${tag}" th:text="${tag}">Tag</option>
+		</select>
+		<span class="help-block" th:text="#{form.tags.hint}">Help text</span>
+		<span class="help-block" th:each="error : ${#fields.errors(name)}" th:text="#{${error}(${label})}">Error</span>
+	</div>
+</div>
+
+
+</body>
+</html>
