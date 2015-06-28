@@ -45,7 +45,8 @@ public class SegradaApplication {
 		// Must add DefaultServlet for embedded Jetty.
 		// Failing to do this will cause 404 errors.
 		// This is not needed if web.xml is used instead.
-		sch.addServlet(EmptyServlet.class, "/*");
+		//sch.addServlet(EmptyServlet.class, "/*");
+		// TODO: needed?
 
 		// stop when JVM shuts down
 		server.setStopAtShutdown(true);
