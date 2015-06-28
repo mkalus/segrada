@@ -2,6 +2,9 @@ package org.segrada;
 
 import com.google.inject.servlet.GuiceFilter;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.session.HashSessionIdManager;
+import org.eclipse.jetty.server.session.HashSessionManager;
+import org.eclipse.jetty.server.session.SessionHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.segrada.servlet.EmptyServlet;
 import org.segrada.servlet.SegradaGuiceServletContextListener;
@@ -33,6 +36,9 @@ public class SegradaApplication {
 
 		// Create a servlet context
 		ServletContextHandler sch = new ServletContextHandler(server, "/", ServletContextHandler.SESSIONS);
+
+		// set source main path
+		sch.setResourceBase("src/main/webapp");
 
 		// Create the SessionHandler (wrapper) to handle the sessions
 		// Add our Guice listener that includes our bindings

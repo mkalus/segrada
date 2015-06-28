@@ -6,6 +6,7 @@ import com.google.inject.servlet.GuiceServletContextListener;
 import com.google.inject.servlet.ServletModule;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
 import org.segrada.config.ServiceModule;
+import org.segrada.config.TemplateModule;
 import org.segrada.controller.MainController;
 
 import javax.servlet.annotation.WebListener;
@@ -34,6 +35,7 @@ public class SegradaGuiceServletContextListener extends GuiceServletContextListe
 		OrientDBFilter orientDBFilter = new OrientDBFilter();
 
 		Injector injector = Guice.createInjector(
+				new TemplateModule(),
 				new ServiceModule(),
 				new ServletModule() {
 					@Override

@@ -41,7 +41,7 @@ import static org.segrada.util.Preconditions.checkNotNull;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Implement services
+ * Bind services
  */
 public class ServiceModule extends AbstractModule {
 	@Override
@@ -60,6 +60,7 @@ public class ServiceModule extends AbstractModule {
 		// bind repository factory
 		bind(RepositoryFactory.class).to(OrientDbRepositoryFactory.class);
 
+		// bind all services
 		bind(ColorService.class);
 	}
 
