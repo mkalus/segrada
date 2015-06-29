@@ -1,9 +1,9 @@
-(function($) {
+(function ($) {
 	/**
 	 * tags tokenizer
 	 */
 	var tagsTokenizer = new Bloodhound({
-		datumTokenizer: function(d) {
+		datumTokenizer: function (d) {
 			return Bloodhound.tokenizers.whitespace(d.title);
 		},
 		queryTokenizer: Bloodhound.tokenizers.whitespace,
@@ -15,8 +15,8 @@
 	 * @param func
 	 * @returns {jQuery}
 	 */
-	$.fn.onEnter = function(func) {
-		this.bind('keypress', function(e) {
+	$.fn.onEnter = function (func) {
+		this.bind('keypress', function (e) {
 			if (e.keyCode == 13) func.apply(this, [e]);
 		});
 		return this;
@@ -35,14 +35,14 @@
 	 */
 	function segradaPictogramChooser(modal, modalContent, myId, part, term) {
 		var search = urlSegradaPictogramSearch + encodeURIComponent(term);
-		$.getJSON(search, function(data) {
+		$.getJSON(search, function (data) {
 			var items = [];
-			$.each(data, function(idx, element) {
+			$.each(data, function (idx, element) {
 				var encodedTitle = $('<div/>').text(element.title).html();
 				items.push('<div class="col-xs-1 sg-no-padding-right"><a class="sg-pictogram-modal-link" href="#" data-id="' + element.id + '" title="' + encodedTitle + '"><img src="' + urlSegradaPictogramFile + element.id + '" width="24" height="24" alt="' + encodedTitle + '" /></a></div>');
 			});
 			modalContent.html("<div class='row'>" + items.join("") + "</div>");
-			$('a', modalContent).click(function(e2) {
+			$('a', modalContent).click(function (e2) {
 				var picId = $(this).attr('data-id');
 				var picEncodedTitle = $('<div/>').text($(this).attr('title')).html();
 				$("#value-" + myId, part).val(picId);
@@ -79,8 +79,8 @@
 		// *******************************************************
 		// add data element closer (the one to close all
 		// is in the common element area below
-		$(".sg-data-close").click(function(e) {
-			$(this).parent().parent().fadeOut('fast', function() {
+		$(".sg-data-close").click(function (e) {
+			$(this).parent().parent().fadeOut('fast', function () {
 				$(this).remove();
 			});
 		});
@@ -88,11 +88,11 @@
 		// *******************************************************
 		// init file uploads
 		$("input.sg-fileupload", part).fileinput({
-			'showUpload':false
+			'showUpload': false
 		});
 		// small
 		$("input.sg-fileupload-small", part).fileinput({
-			'showUpload':false,
+			'showUpload': false,
 			'previewSettings': {
 				image: {width: "auto", height: "24px"}
 			}
@@ -100,14 +100,14 @@
 
 		// *******************************************************
 		// pictogram chooser
-		$(".sg-pictogram-modal").on('shown.bs.modal', function() {
+		$(".sg-pictogram-modal").on('shown.bs.modal', function () {
 			var modal = $(this);
 			var myId = modal.attr('id');
 			var modalContent = $("#container-" + myId, modal);
 			var inputField = $("#filter-" + myId, modal);
 
 			// listener for chooser
-			inputField.on('input propertychange paste', function() {
+			inputField.on('input propertychange paste', function () {
 				segradaPictogramChooser(modal, modalContent, myId, part, $(this).val());
 			}).onEnter(function () { // pressed enter
 				// get first image
@@ -127,11 +127,11 @@
 			if (inputField.val() === "")
 				segradaPictogramChooser(modal, modalContent, myId, part, "");
 		});
-		$(".sg-pictogram-chooser", part).click(function(e) {
+		$(".sg-pictogram-chooser", part).click(function (e) {
 			$('#' + $(this).attr('data-id')).modal('show');
 			e.preventDefault();
 		});
-		$(".sg-pictogram-clearer", part).click(function(e) {
+		$(".sg-pictogram-clearer", part).click(function (e) {
 			var myId = $(this).attr('data-id');
 			$("#value-" + myId, part).val('');
 			$("#preview-" + myId, part).html('');
@@ -149,7 +149,7 @@
 		// Tags fields
 		$("select.sg-tags").tagsinput({
 			trimValue: true,
-			confirmKeys: [ 13 ], //enter only
+			confirmKeys: [13], //enter only
 			typeaheadjs: {
 				name: 'tags',
 				displayKey: 'title',
@@ -161,13 +161,13 @@
 		// *******************************************************
 		// bind data forms (left side)
 		$("form.sg-data-form", part).ajaxForm({
-			beforeSubmit: function(arr, $form, options) {
+			beforeSubmit: function (arr, $form, options) {
 				// disable form elements
 				$(":input", $form).attr("disabled", true);
 
 				return true;
 			},
-			success: function(responseText, statusText, xhr, $form) {
+			success: function (responseText, statusText, xhr, $form) {
 				// determine target to replace
 				var target = $form.attr('data-id');
 				if (typeof target !== 'undefined') target = $('#' + target);
@@ -185,11 +185,11 @@
 	}
 
 	// called after document is ready
-	$(document).ready(function() {
+	$(document).ready(function () {
 		// data add links - add data at top of data container
-		$('.sg-data-add').click(function(e) {
+		$('.sg-data-add').click(function (e) {
 			// AJAX call
-			$.get($(this).attr('href'), function(data) {
+			$.get($(this).attr('href'), function (data) {
 				var container = $('#sg-data');
 				container.prepend(data);
 				// call after AJAX event
@@ -199,9 +199,9 @@
 		});
 
 		// add content to control area
-		$('.sg-control-set').click(function(e) {
+		$('.sg-control-set').click(function (e) {
 			// AJAX call
-			$.get($(this).attr('href'), function(data) {
+			$.get($(this).attr('href'), function (data) {
 				var container = $('#sg-control');
 				container.html(data); // replace html in container
 				// call after AJAX event
@@ -213,7 +213,7 @@
 		// *******************************************************
 		// "close all" link
 		$('#sg-close-all').click(function (e) {
-			$('.sg-data').fadeOut('fast', function() {
+			$('.sg-data').fadeOut('fast', function () {
 				$(this).remove(); // remove after finishing fading out
 			});
 			e.preventDefault();
@@ -222,7 +222,7 @@
 		// *******************************************************
 		// bind control form
 		$('.sg-control-form').ajaxForm({
-			success: function(responseText, statusText, xhr, $form) {
+			success: function (responseText, statusText, xhr, $form) {
 				var container = $('#sg-control');
 				container.html(responseText);
 				afterAjax(container);
