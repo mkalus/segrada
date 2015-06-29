@@ -10,6 +10,8 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]
@@ -37,6 +39,10 @@ public class NodeController {
 	@GET
 	@Produces(MediaType.TEXT_HTML)
 	public Viewable index() {
-		return new Viewable("node/index");
+		Map<String, Object> model = new HashMap<>();
+
+		model.put("nodes", service.count());
+
+		return new Viewable("node/index", model);
 	}
 }
