@@ -24,7 +24,7 @@ public class NumberFormatter {
 	 * @param si use SI units instead of binary base units
 	 * @return string represenation
 	 */
-	protected String humanReadableByteCount(long bytes, boolean si) {
+	public String humanReadableByteCount(long bytes, boolean si) {
 		int unit = si ? 1000 : 1024;
 		if (bytes < unit) return bytes + " B";
 		int exp = (int) (Math.log(bytes) / Math.log(unit));

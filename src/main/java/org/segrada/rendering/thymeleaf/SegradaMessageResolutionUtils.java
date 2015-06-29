@@ -39,12 +39,12 @@ public class SegradaMessageResolutionUtils {
 
 	private static final Object[] EMPTY_MESSAGE_PARAMETERS = new Object[0];
 
-	private static final String THYMELEAF_MARKUP_SUFFIX = ".thtml";
+	/*private static final String THYMELEAF_MARKUP_SUFFIX = ".thtml";
 	private static final String XML_SUFFIX = ".xml";
 	private static final String XHTML_SUFFIX = ".xhtml";
 	private static final String HTML_SUFFIX = ".html";
 	private static final String HTM_SUFFIX = ".htm";
-	private static final String JSP_SUFFIX = ".jsp";
+	private static final String JSP_SUFFIX = ".jsp";*/
 
 	private static final String TEMPLATE_CACHE_PREFIX = "{template_msg}";
 

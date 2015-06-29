@@ -2,6 +2,7 @@ package org.segrada.servlet;
 
 import com.sun.jersey.api.view.Viewable;
 import com.sun.jersey.spi.template.ViewProcessor;
+import org.segrada.rendering.thymeleaf.SegradaDialect;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.thymeleaf.TemplateEngine;
@@ -67,6 +68,7 @@ public class ThymeleafViewProcessor implements ViewProcessor<String> {
 		templateEngine = new TemplateEngine();
 		templateEngine.setTemplateResolver(templateResolver);
 		templateEngine.setMessageResolver(new SegradaMessageResolver());
+		templateEngine.addDialect(new SegradaDialect());
 	}
 
 	@Override
