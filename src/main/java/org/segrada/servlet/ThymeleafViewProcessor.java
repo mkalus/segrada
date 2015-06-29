@@ -2,8 +2,13 @@ package org.segrada.servlet;
 
 import com.sun.jersey.api.view.Viewable;
 import com.sun.jersey.spi.template.ViewProcessor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
+import org.thymeleaf.fragment.ElementAndAttributeNameFragmentSpec;
+import org.thymeleaf.fragment.IFragmentSpec;
+import org.thymeleaf.standard.StandardMessageResolutionUtils;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 import org.thymeleaf.templateresolver.TemplateResolver;
 
@@ -36,6 +41,8 @@ import java.util.Map;
  */
 @Provider
 public class ThymeleafViewProcessor implements ViewProcessor<String> {
+	private static final Logger logger = LoggerFactory.getLogger(ThymeleafViewProcessor.class);
+
 	@Context
 	ServletContext servletContext;
 
@@ -47,6 +54,9 @@ public class ThymeleafViewProcessor implements ViewProcessor<String> {
 
 	TemplateEngine templateEngine;
 
+	/**
+	 * Constructor
+	 */
 	public ThymeleafViewProcessor() {
 		TemplateResolver templateResolver = new ServletContextTemplateResolver();
 		templateResolver.setPrefix("/WEB-INF/templates/");
@@ -72,16 +82,43 @@ public class ThymeleafViewProcessor implements ViewProcessor<String> {
 
 		WebContext context = new WebContext(requestInvoker.get(),
 				responseInvoker.get(), servletContext, requestInvoker.get().getLocale());
-		Map<String, Object> variables = new HashMap<>();
-		variables.put("it", viewable.getModel());
-		context.setVariables(variables);
+		if (viewable.getModel() != null) {
+			// map model
+			if (viewable.getModel() instanceof Map)
+				context.setVariables((Map) viewable.getModel());
+			else {
+				// generic model data
+				Map<String, Object> variables = new HashMap<>();
+				variables.put("data", viewable.getModel());
+				context.setVariables(variables);
+			}
+		}
 
 		// set fixed variables?
 		//context.setVariable("numberFormatter", new NumberFormatter());
 		//context.setVariable("format", new SegradaFormatter());
 		//<p th:text="${@format.nl2br('Hallo Welt!')}"></p>
 
-		templateEngine.process(viewable.getTemplateName(), context, responseInvoker
+		// resolve template name by ::
+		String templateName;
+		IFragmentSpec fragmentSpec = null;
+		String[] subtemplate = viewable.getTemplateName().split("::");
+
+		if (subtemplate.length != 2) templateName = viewable.getTemplateName();
+		else {
+			templateName = subtemplate[0].trim();
+			fragmentSpec = new ElementAndAttributeNameFragmentSpec(null, "class", subtemplate[1].trim(), true);
+		}
+
+		// resolve AJAX calls
+		// only render content fragment in AJAX calls
+		if (fragmentSpec == null && "XMLHttpRequest".equals(context.getHttpServletRequest().getHeader("X-Requested-With")) && !templateName.startsWith("redirect:")) {
+			fragmentSpec = new ElementAndAttributeNameFragmentSpec(null, "class", "container", true);
+		}
+
+		///TODO: handle redirects?
+
+		templateEngine.process(templateName, context, fragmentSpec, responseInvoker
 				.get().getWriter());
 	}
 }
