@@ -2,6 +2,7 @@ package org.segrada.controller;
 
 import com.google.inject.Inject;
 import com.google.inject.servlet.RequestScoped;
+import com.sun.jersey.api.view.Viewable;
 import org.segrada.service.ColorService;
 import org.segrada.service.NodeService;
 
@@ -34,8 +35,8 @@ public class NodeController {
 	private NodeService service;
 
 	@GET
-	@Produces(MediaType.TEXT_PLAIN)
-	public String index() {
-		return "Not implemented yet.";
+	@Produces(MediaType.TEXT_HTML)
+	public Viewable index() {
+		return new Viewable("node/index");
 	}
 }
