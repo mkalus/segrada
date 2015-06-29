@@ -42,7 +42,10 @@ public class SegradaMessageBodyReader implements MessageBodyReader<SegradaEntity
 		// create instance
 		SegradaEntity entity;
 		try {
-			entity = aClass.newInstance();
+			Object o = aClass.newInstance();
+			if (!(o instanceof SegradaEntity))
+				return null; //TODO: make strings work and the like
+			entity = (SegradaEntity) o;
 		} catch (Exception e) {
 			logger.error("Could not convert to entity: " + aClass, e);
 			return null;

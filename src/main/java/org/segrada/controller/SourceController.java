@@ -59,8 +59,9 @@ public class SourceController {
 	@Path("/update")
 	@Produces(MediaType.TEXT_HTML)
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public String update(Source source) {
+	public String update(Source source, String backUrl) {
 		System.out.println("source:" + source);
+		System.out.println("backUrl:" + backUrl); //TODO
 
 		return "redirect:/source/add";
 	}
