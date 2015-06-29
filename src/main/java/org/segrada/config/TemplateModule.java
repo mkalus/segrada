@@ -1,7 +1,7 @@
 package org.segrada.config;
 
 import com.google.inject.AbstractModule;
-import org.segrada.rendering.thymeleaf.SegradaFormatter;
+import org.segrada.servlet.SegradaMessageBodyReader;
 import org.segrada.servlet.ThymeleafViewProcessor;
 
 /**
@@ -26,5 +26,8 @@ public class TemplateModule extends AbstractModule {
 	protected void configure() {
 		// bind thymeleaf processor as eager singleton
 		bind(ThymeleafViewProcessor.class).asEagerSingleton();
+
+		// automatically convert forms to segrada entities
+		bind(SegradaMessageBodyReader.class).asEagerSingleton();
 	}
 }

@@ -1,0 +1,29 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" th:lang="${#locale.language}">
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<title th:text="#{add.source}">Create New Node</title>
+	<div th:include="partials/common :: head" th:remove="tag"></div>
+</head>
+
+<body>
+<div th:replace="partials/common :: browser"></div>
+
+<div class="container">
+	<div class="sg-data sg-closeable sg-source" th:with="tempId=${#strings.randomAlphanumeric(10)}" th:id="${'form-' + tempId}">
+		<h2 class="sg-data-header" th:text="#{add.source}">Create New</h2>
+
+		<form method="post" action="#" th:action="@{/source/update}" th:object="${source}" class="form-horizontal sg-data-form sg-data-content" th:attr="data-id=${'form-' + tempId}">
+
+			<input type="hidden" name="shortTitle" value="xxyyaa" />
+			<input type="hidden" name="longTitle" value="Läppland" />
+
+			<div th:replace="partials/form :: formCreate"></div>
+		</form>
+	</div>
+</div>
+
+<div th:replace="partials/common :: footer"></div>
+</body>
+</html>

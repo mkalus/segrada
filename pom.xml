@@ -98,6 +98,12 @@
 			<version>1.19</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.glassfish.jersey.ext</groupId>
+			<artifactId>jersey-bean-validation</artifactId>
+			<version>2.18</version>
+		</dependency>
+
 		<!-- Thymeleaf and templating -->
 		<dependency>
 			<groupId>org.thymeleaf</groupId>
