@@ -31,11 +31,13 @@
 					<div class="btn-group btn-group-sm" role="group" aria-label="Actions">
 						<a class="btn btn-primary sg-data-add" href="#" th:title="#{Show}" th:href="@{/source/show/{uid}(uid=${entity.uid})}"><i class="fa fa-eye"></i></a>
 						<a class="btn btn-default sg-data-add" href="#" th:title="#{Edit}" th:href="@{/source/edit/{uid}(uid=${entity.uid})}"><i class="fa fa-pencil"></i></a>
-						<a class="btn btn-default" href="#" th:title="#{Delete}" th:href="@{/source/delete/{uid}/0(uid=${entity.uid})}" th:attr="data-confirm=#{ReallyDelete}"><i class="fa fa-times-circle-o"></i></a>
+						<a class="btn btn-default" href="#" th:title="#{Delete}" th:href="@{/source/delete/{uid}/0(uid=${entity.uid})}" th:attr="data-confirm=${#messages.msg('ReallyDelete', entity.shortTitle)}"><i class="fa fa-times-circle-o"></i></a>
 					</div>
 				</td>
 			</tr>
 		</table>
+
+		<div th:replace="partials/pagination :: pagination (paginationInfo=${paginationInfo},base='source')"></div>
 	</div>
 </div>
 

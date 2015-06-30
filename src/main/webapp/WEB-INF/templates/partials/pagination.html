@@ -1,0 +1,52 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" lang="${#locale.language}">
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<title>Segrada</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<link rel="apple-touch-icon" href="../static/apple-touch-icon.png" />
+
+	<link rel="stylesheet" href="../static/css/bootstrap.css" th:href="@{/css/bootstrap.css}" />
+	<link rel="stylesheet" href="../static/css/theme.css" th:href="@{/css/theme.css}" />
+	<link rel="stylesheet" href="../static/css/segrada.css" th:href="@{/css/segrada.css}" />
+
+	<!--/* HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries */-->
+	<!--[if lt IE 9]>
+	<script src="../static/js/vendor/html5shiv.min.js" th:src="@{/vendor/html5shiv.min.js}" ></script>
+	<script src="../static/js/vendor/respond.min.js" th:src="@{/vendor/respond.min.js}"></script>
+	<![endif]-->
+</head>
+
+<body>
+
+<div id="sg-pagination" th:fragment="pagination (paginationInfo, base)">
+	<nav>
+		<ul class="pagination">
+			<li th:classappend="${paginationInfo.page == 1}?'disabled'">
+				<a href="#" th:href="@{${base}(page=1)}" aria-label="First" class="sg-control-set">
+					<span aria-hidden="true"><i class="fa fa-fast-backward"></i></span>
+				</a>
+			</li>
+			<li th:classappend="${paginationInfo.page == 1}?'disabled'">
+				<a href="#" th:href="@{${base}(page=${paginationInfo.page-1})}" aria-label="Previous" class="sg-control-set">
+					<span aria-hidden="true"><i class="fa fa-backward"></i></span>
+				</a>
+			</li>
+			<li th:each="i : ${#numbers.sequence(paginationInfo.minPage, paginationInfo.maxPage)}" th:classappend="${paginationInfo.page == i}?'active'"><a href="#" th:text="${i}" th:href="@{${base}(page=${i})}" class="sg-control-set">1</a></li>
+			<li th:classappend="${paginationInfo.page == paginationInfo.maxPage}?'disabled'">
+				<a href="#" th:href="@{${base}(page=${paginationInfo.page+1})}" aria-label="Next" class="sg-control-set">
+					<span aria-hidden="true"><i class="fa fa-forward"></i></span>
+				</a>
+			</li>
+			<li th:classappend="${paginationInfo.page == paginationInfo.maxPage}?'disabled'">
+				<a href="#" th:href="@{${base}(page=${paginationInfo.maxPage})}" aria-label="Last" class="sg-control-set">
+					<span aria-hidden="true"><i class="fa fa-fast-forward"></i></span>
+				</a>
+			</li>
+		</ul>
+	</nav>
+</div>
+
+</body>
+</html>

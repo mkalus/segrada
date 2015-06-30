@@ -44,6 +44,10 @@ abstract public class AbstractBaseController {
 	 * @return view with paginationInfo set
 	 */
 	protected <T extends SegradaEntity> Viewable handlePaginatedIndex(PaginatingRepositoryOrService<T> service, int page, int entriesPerPage, Map<String, Object> filters) {
+		// define default values
+		if (page < 1) page = 1;
+		if (entriesPerPage < 1) entriesPerPage = 5;
+
 		// create model map
 		Map<String, Object> model = new HashMap<>();
 

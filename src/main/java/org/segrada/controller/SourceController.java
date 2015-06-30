@@ -43,9 +43,9 @@ public class SourceController extends AbstractBaseController {
 
 	@GET
 	@Produces(MediaType.TEXT_HTML)
-	public Viewable index() {
-		// TODO: do pagination
-		return handlePaginatedIndex(service, 1, 5, null);
+	public Viewable index(@QueryParam("page") int page, @QueryParam("entriesPerPage") int entriesPerPage) {
+		// TODO: do filters
+		return handlePaginatedIndex(service, page, entriesPerPage, null);
 	}
 
 	@GET
