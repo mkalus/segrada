@@ -77,9 +77,22 @@
 		$(".sg-dynamic-hide").hide();
 
 		// *******************************************************
+		// data add links - add data at top of data container
+		$('.sg-data-add', part).click(function (e) {
+			// AJAX call
+			$.get($(this).attr('href'), function (data) {
+				var container = $('#sg-data');
+				container.prepend(data);
+				// call after AJAX event
+				afterAjax(container.children(":first"));
+			});
+			e.preventDefault();
+		});
+
+		// *******************************************************
 		// add data element closer (the one to close all
 		// is in the common element area below
-		$(".sg-data-close").click(function (e) {
+		$(".sg-data-close", part).click(function (e) {
 			$(this).parent().parent().fadeOut('fast', function () {
 				$(this).remove();
 			});
@@ -186,18 +199,6 @@
 
 	// called after document is ready
 	$(document).ready(function () {
-		// data add links - add data at top of data container
-		$('.sg-data-add').click(function (e) {
-			// AJAX call
-			$.get($(this).attr('href'), function (data) {
-				var container = $('#sg-data');
-				container.prepend(data);
-				// call after AJAX event
-				afterAjax(container.firstChild);
-			});
-			e.preventDefault();
-		});
-
 		// add content to control area
 		$('.sg-control-set').click(function (e) {
 			// AJAX call

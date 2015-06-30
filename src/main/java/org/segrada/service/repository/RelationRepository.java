@@ -4,7 +4,7 @@ import org.segrada.model.prototype.INode;
 import org.segrada.model.prototype.IRelation;
 import org.segrada.model.prototype.IRelationType;
 import org.segrada.service.repository.prototype.CRUDRepository;
-import org.segrada.service.repository.prototype.PaginatingRepository;
+import org.segrada.service.repository.prototype.PaginatingRepositoryOrService;
 
 import java.util.List;
 
@@ -25,7 +25,7 @@ import java.util.List;
  *
  * Relation Repository
  */
-public interface RelationRepository extends CRUDRepository<IRelation>, PaginatingRepository<IRelation> {
+public interface RelationRepository extends CRUDRepository<IRelation>, PaginatingRepositoryOrService<IRelation> {
 	/**
 	 * find by related entity
 	 * @param node connected entity

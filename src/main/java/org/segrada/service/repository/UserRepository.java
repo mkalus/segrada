@@ -2,7 +2,7 @@ package org.segrada.service.repository;
 
 import org.segrada.model.prototype.IUser;
 import org.segrada.service.repository.prototype.CRUDRepository;
-import org.segrada.service.repository.prototype.PaginatingRepository;
+import org.segrada.service.repository.prototype.PaginatingRepositoryOrService;
 
 /**
  * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]
@@ -21,7 +21,7 @@ import org.segrada.service.repository.prototype.PaginatingRepository;
  *
  * User Repository
  */
-public interface UserRepository extends CRUDRepository<IUser>, PaginatingRepository<IUser> {
+public interface UserRepository extends CRUDRepository<IUser>, PaginatingRepositoryOrService<IUser> {
 	/**
 	 * Find user by login name
 	 * @param login login name

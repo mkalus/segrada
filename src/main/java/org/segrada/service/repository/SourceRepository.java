@@ -2,7 +2,7 @@ package org.segrada.service.repository;
 
 import org.segrada.model.prototype.ISource;
 import org.segrada.service.repository.prototype.CRUDRepository;
-import org.segrada.service.repository.prototype.PaginatingRepository;
+import org.segrada.service.repository.prototype.PaginatingRepositoryOrService;
 import org.segrada.service.repository.prototype.SearchTermRepository;
 
 import java.util.List;
@@ -24,7 +24,7 @@ import java.util.List;
  *
  * Source Repository
  */
-public interface SourceRepository extends CRUDRepository<ISource>, SearchTermRepository<ISource>, PaginatingRepository<ISource> {
+public interface SourceRepository extends CRUDRepository<ISource>, SearchTermRepository<ISource>, PaginatingRepositoryOrService<ISource> {
 	/**
 	 * Find entities by title
 	 * @param ref reference title

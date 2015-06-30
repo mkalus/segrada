@@ -9,9 +9,12 @@ import org.segrada.service.base.SearchTermService;
 import org.segrada.service.repository.SourceRepository;
 import org.segrada.service.repository.TagRepository;
 import org.segrada.service.repository.factory.RepositoryFactory;
+import org.segrada.service.repository.prototype.PaginatingRepositoryOrService;
+import org.segrada.service.util.PaginationInfo;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]
@@ -30,7 +33,7 @@ import java.util.List;
  *
  * Source service
  */
-public class SourceService extends AbstractFullTextService<ISource, SourceRepository> implements SearchTermService<ISource> {
+public class SourceService extends AbstractFullTextService<ISource, SourceRepository> implements SearchTermService<ISource>, PaginatingRepositoryOrService<ISource> {
 	/**
 	 * Constructor
 	 */
@@ -102,5 +105,10 @@ public class SourceService extends AbstractFullTextService<ISource, SourceReposi
 	 */
 	public List<ISource> findByTitle(String title) {
 		return repository.findByTitle(title);
+	}
+
+	@Override
+	public PaginationInfo<ISource> paginate(int page, int entriesPerPage, Map<String, Object> filters) {
+		return repository.paginate(page, entriesPerPage, filters);
 	}
 }

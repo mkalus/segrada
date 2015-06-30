@@ -3,7 +3,7 @@ package org.segrada.service.repository;
 import org.segrada.model.prototype.ITag;
 import org.segrada.model.prototype.SegradaTaggable;
 import org.segrada.service.repository.prototype.CRUDRepository;
-import org.segrada.service.repository.prototype.PaginatingRepository;
+import org.segrada.service.repository.prototype.PaginatingRepositoryOrService;
 import org.segrada.service.repository.prototype.SearchTermRepository;
 
 import javax.annotation.Nullable;
@@ -26,7 +26,7 @@ import java.util.List;
  *
  * Tag Repository
  */
-public interface TagRepository extends CRUDRepository<ITag>, SearchTermRepository<ITag>, PaginatingRepository<ITag> {
+public interface TagRepository extends CRUDRepository<ITag>, SearchTermRepository<ITag>, PaginatingRepositoryOrService<ITag> {
 	/**
 	 * Find entity by title
 	 * @param title login name

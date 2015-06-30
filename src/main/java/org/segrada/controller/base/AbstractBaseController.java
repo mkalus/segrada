@@ -51,7 +51,7 @@ abstract public class AbstractBaseController {
 			if (service.save(entity)) {
 				//OK - redirect to show
 				try {
-					return Response.seeOther(new URI(getBasePath() + entity.getUid())).build();
+					return Response.seeOther(new URI(getBasePath() + "show/" + entity.getUid())).build();
 				} catch (URISyntaxException e) {
 					e.printStackTrace();
 				}

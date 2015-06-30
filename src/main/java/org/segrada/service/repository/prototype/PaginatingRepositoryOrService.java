@@ -20,8 +20,8 @@ import java.util.Map;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Repositories enabled to paginate have this
+ * Repositories and services enabled to paginate have this
  */
-public interface PaginatingRepository<T extends SegradaEntity> {
+public interface PaginatingRepositoryOrService<T extends SegradaEntity> {
 	PaginationInfo<T> paginate(int page, int entriesPerPage, Map<String, Object> filters);
 }

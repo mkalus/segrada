@@ -4,7 +4,7 @@ import org.segrada.model.prototype.IFile;
 import org.segrada.model.prototype.SegradaAnnotatedEntity;
 import org.segrada.model.prototype.SegradaEntity;
 import org.segrada.service.repository.prototype.CRUDRepository;
-import org.segrada.service.repository.prototype.PaginatingRepository;
+import org.segrada.service.repository.prototype.PaginatingRepositoryOrService;
 import org.segrada.service.repository.prototype.SearchTermRepository;
 
 import java.util.List;
@@ -26,7 +26,7 @@ import java.util.List;
  *
  * File Repository
  */
-public interface FileRepository extends CRUDRepository<IFile>, SearchTermRepository<IFile>, PaginatingRepository<IFile> {
+public interface FileRepository extends CRUDRepository<IFile>, SearchTermRepository<IFile>, PaginatingRepositoryOrService<IFile> {
 	/**
 	 * Find entities by title or file name
 	 * @param titleOrFilename title or file name

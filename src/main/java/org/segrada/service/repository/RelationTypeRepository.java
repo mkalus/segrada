@@ -2,7 +2,7 @@ package org.segrada.service.repository;
 
 import org.segrada.model.prototype.IRelationType;
 import org.segrada.service.repository.prototype.CRUDRepository;
-import org.segrada.service.repository.prototype.PaginatingRepository;
+import org.segrada.service.repository.prototype.PaginatingRepositoryOrService;
 import org.segrada.service.repository.prototype.SearchTermRepository;
 
 /**
@@ -22,5 +22,5 @@ import org.segrada.service.repository.prototype.SearchTermRepository;
  *
  * Relation type Repository
  */
-public interface RelationTypeRepository extends CRUDRepository<IRelationType>, SearchTermRepository<IRelationType>, PaginatingRepository<IRelationType> {
+public interface RelationTypeRepository extends CRUDRepository<IRelationType>, SearchTermRepository<IRelationType>, PaginatingRepositoryOrService<IRelationType> {
 }

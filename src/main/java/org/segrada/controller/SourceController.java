@@ -43,15 +43,25 @@ public class SourceController extends AbstractBaseController {
 
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
-	public String index() {
-		return "Not implemented yet.";
+	public Viewable index() {
+		// create model map
+		Map<String, Object> model = new HashMap<>();
+
+		model.put("paginationInfo", service.paginate(1, 5, null));
+
+		return new Viewable("source/index", model);
 	}
 
 	@GET
-	@Path("/{uid}")
-	@Produces(MediaType.TEXT_PLAIN)
-	public String show(@PathParam("uid") String uid) {
-		return uid;
+	@Path("/show/{uid}")
+	@Produces(MediaType.TEXT_HTML)
+	public Viewable show(@PathParam("uid") String uid) {
+		// create model map
+		Map<String, Object> model = new HashMap<>();
+
+		model.put("entity", service.findById(service.convertUidToId(uid)));
+
+		return new Viewable("source/show", model);
 	}
 
 	@GET

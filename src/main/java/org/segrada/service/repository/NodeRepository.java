@@ -2,7 +2,7 @@ package org.segrada.service.repository;
 
 import org.segrada.model.prototype.INode;
 import org.segrada.service.repository.prototype.CRUDRepository;
-import org.segrada.service.repository.prototype.PaginatingRepository;
+import org.segrada.service.repository.prototype.PaginatingRepositoryOrService;
 import org.segrada.service.repository.prototype.SearchTermRepository;
 
 /**
@@ -22,5 +22,5 @@ import org.segrada.service.repository.prototype.SearchTermRepository;
  *
  * Node Repository
  */
-public interface NodeRepository extends CRUDRepository<INode>, SearchTermRepository<INode>, PaginatingRepository<INode> {
+public interface NodeRepository extends CRUDRepository<INode>, SearchTermRepository<INode>, PaginatingRepositoryOrService<INode> {
 }
