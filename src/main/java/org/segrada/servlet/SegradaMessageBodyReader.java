@@ -34,7 +34,7 @@ public class SegradaMessageBodyReader implements MessageBodyReader<SegradaEntity
 
 	@Override
 	public boolean isReadable(Class<?> aClass, Type type, Annotation[] annotations, MediaType mediaType) {
-		return true;
+		return SegradaEntity.class.isAssignableFrom(aClass);
 	}
 
 	@Override
@@ -42,10 +42,7 @@ public class SegradaMessageBodyReader implements MessageBodyReader<SegradaEntity
 		// create instance
 		SegradaEntity entity;
 		try {
-			Object o = aClass.newInstance();
-			if (!(o instanceof SegradaEntity))
-				return null; //TODO: make strings work and the like
-			entity = (SegradaEntity) o;
+			entity = aClass.newInstance();
 		} catch (Exception e) {
 			logger.error("Could not convert to entity: " + aClass, e);
 			return null;
