@@ -44,46 +44,29 @@ public class SourceController extends AbstractBaseController {
 	@GET
 	@Produces(MediaType.TEXT_HTML)
 	public Viewable index() {
-		// create model map
-		Map<String, Object> model = new HashMap<>();
-
-		model.put("paginationInfo", service.paginate(1, 5, null));
-
-		return new Viewable("source/index", model);
+		// TODO: do pagination
+		return handlePaginatedIndex(service, 1, 5, null);
 	}
 
 	@GET
 	@Path("/show/{uid}")
 	@Produces(MediaType.TEXT_HTML)
 	public Viewable show(@PathParam("uid") String uid) {
-		// create model map
-		Map<String, Object> model = new HashMap<>();
-
-		model.put("entity", service.findById(service.convertUidToId(uid)));
-
-		return new Viewable("source/show", model);
+		return handleShow(uid, service);
 	}
 
 	@GET
 	@Path("/add")
 	@Produces(MediaType.TEXT_HTML)
 	public Viewable add() {
-		Map<String, Object> model = new HashMap<>();
-
-		model.put("entity", service.createNewInstance());
-
-		return new Viewable("source/form", model);
+		return handleForm(service.createNewInstance());
 	}
 
 	@GET
 	@Path("/edit/{uid}")
 	@Produces(MediaType.TEXT_HTML)
 	public Viewable edit(@PathParam("uid") String uid) {
-		Map<String, Object> model = new HashMap<>();
-
-		model.put("entity", service.findById(service.convertUidToId(uid)));
-
-		return new Viewable("source/form", model);
+		return handleForm(service.findById(service.convertUidToId(uid)));
 	}
 
 	@POST

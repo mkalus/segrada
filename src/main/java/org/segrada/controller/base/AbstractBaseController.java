@@ -4,6 +4,7 @@ import com.sun.jersey.api.view.Viewable;
 import org.segrada.model.prototype.SegradaEntity;
 import org.segrada.service.base.AbstractRepositoryService;
 import org.segrada.service.repository.prototype.CRUDRepository;
+import org.segrada.service.repository.prototype.PaginatingRepositoryOrService;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
@@ -34,6 +35,55 @@ import java.util.Map;
  */
 abstract public class AbstractBaseController {
 	/**
+	 * Handle paginated index
+	 * @param service showing pages
+	 * @param page page to show starting with 1
+	 * @param entriesPerPage entries per page
+	 * @param filters filter options
+	 * @param <T> type of entity
+	 * @return view with paginationInfo set
+	 */
+	protected <T extends SegradaEntity> Viewable handlePaginatedIndex(PaginatingRepositoryOrService<T> service, int page, int entriesPerPage, Map<String, Object> filters) {
+		// create model map
+		Map<String, Object> model = new HashMap<>();
+
+		model.put("paginationInfo", service.paginate(page, entriesPerPage, filters));
+
+		return new Viewable(getBasePath() + "index", model);
+	}
+
+	/**
+	 * Handle detail view
+	 * @param uid of entity to show
+	 * @param service showing entities
+	 * @param <T> type of entity
+	 * @param <E> type of repository
+	 * @return view with detail of entity
+	 */
+	protected <T extends SegradaEntity, E extends CRUDRepository<T>> Viewable handleShow(String uid, AbstractRepositoryService<T, E> service) {
+		// create model map
+		Map<String, Object> model = new HashMap<>();
+
+		model.put("entity", service.findById(service.convertUidToId(uid)));
+
+		return new Viewable(getBasePath() + "show", model);
+	}
+
+	/**
+	 * Handle add or edit form
+	 * @param entity to be created or edited (controller has to create form)
+	 * @return view containing form
+	 */
+	protected Viewable handleForm(SegradaEntity entity) {
+		Map<String, Object> model = new HashMap<>();
+
+		model.put("isNewEntity", entity.getId()==null);
+		model.put("entity", entity);
+
+		return new Viewable("source/form", model);
+	}
+
+	/**
 	 * handle whole update method of an entity
 	 * @param entity to save
 	 * @param service saving entity
@@ -44,9 +94,6 @@ abstract public class AbstractBaseController {
 	protected <T extends SegradaEntity, E extends CRUDRepository<T>> Response handleUpdate(T entity, AbstractRepositoryService<T, E> service) {
 		// validate source
 		Map<String, String> errors = validate(entity);
-
-		// is this a new entity?
-		boolean newEntity = entity.getId()==null;
 
 		// no validation errors: save entity
 		if (errors.isEmpty()) {
