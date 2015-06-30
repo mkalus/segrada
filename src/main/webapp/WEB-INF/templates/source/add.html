@@ -16,7 +16,8 @@
 
 		<form method="post" action="#" th:action="@{/source/update}" th:object="${source}" class="form-horizontal sg-data-form sg-data-content" th:attr="data-id=${'form-' + tempId}">
 
-			<input type="hidden" name="shortTitle" value="xxyyaa" />
+			<div th:replace="partials/form :: formTextfield (name='shortTitle',field=${source.shortTitle},label=#{field.shortTitle},id=${tempId},errors=${errors})"></div>
+
 			<input type="hidden" name="longTitle" value="Läppland" />
 
 			<input type="hidden" name="backUrl" value="/source/add" />

@@ -2,6 +2,7 @@ package org.segrada.controller;
 
 import com.google.inject.Inject;
 import com.google.inject.servlet.RequestScoped;
+import org.segrada.controller.base.AbstractBaseController;
 import org.segrada.service.ColorService;
 
 import javax.ws.rs.GET;
@@ -28,7 +29,7 @@ import javax.ws.rs.core.MediaType;
  */
 @Path("/color")
 @RequestScoped
-public class ColorController {
+public class ColorController extends AbstractBaseController {
 	@Inject
 	private ColorService service;
 

@@ -2,6 +2,7 @@ package org.segrada.controller;
 
 import com.google.inject.Inject;
 import com.google.inject.servlet.RequestScoped;
+import org.segrada.controller.base.AbstractBaseController;
 import org.segrada.service.ColorService;
 import org.segrada.service.RelationService;
 
@@ -29,7 +30,7 @@ import javax.ws.rs.core.MediaType;
  */
 @Path("/relation")
 @RequestScoped
-public class RelationController {
+public class RelationController extends AbstractBaseController {
 	@Inject
 	private RelationService service;
 

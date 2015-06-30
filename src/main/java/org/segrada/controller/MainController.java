@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.servlet.RequestScoped;
 import com.sun.jersey.api.view.Viewable;
+import org.segrada.controller.base.AbstractBaseController;
 import org.segrada.service.ColorService;
 
 import javax.ws.rs.GET;
@@ -17,7 +18,7 @@ import javax.ws.rs.core.MediaType;
  */
 @Path("/")
 @Singleton
-public class MainController {
+public class MainController extends AbstractBaseController {
 	@GET
 	@Produces(MediaType.TEXT_HTML)
 	public Viewable sayHello() {
