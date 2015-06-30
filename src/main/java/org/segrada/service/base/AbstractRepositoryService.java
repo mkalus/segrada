@@ -6,6 +6,8 @@ import org.segrada.service.repository.prototype.CRUDRepository;
 import org.segrada.service.repository.prototype.SegradaRepository;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]
@@ -67,5 +69,14 @@ abstract public class AbstractRepositoryService<BEAN extends SegradaEntity, REPO
 	@Override
 	public long count() {
 		return repository.count();
+	}
+
+	/**
+	 * convert generic uid to specific repository id
+	 * @param uid
+	 * @return
+	 */
+	public String convertUidToId(String uid) {
+		return repository.convertUidToId(uid);
 	}
 }

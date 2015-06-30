@@ -28,6 +28,11 @@ public interface SegradaEntity extends Serializable {
 	String getId();
 
 	/**
+	 * @return id of entity in web secure format
+	 */
+	String getUid();
+
+	/**
 	 * set entity version
 	 * @param version of entity
 	 */

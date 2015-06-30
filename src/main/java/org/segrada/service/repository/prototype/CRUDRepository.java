@@ -54,4 +54,11 @@ public interface CRUDRepository<T extends SegradaEntity> extends SegradaReposito
 	 * @return true if deleted
 	 */
 	boolean delete(T entity);
+
+	/**
+	 * convert generic uid to specific repository id
+	 * @param uid generic uid e.g. 13-9
+	 * @return id specific to db, e.g. #13:9
+	 */
+	String convertUidToId(String uid);
 }

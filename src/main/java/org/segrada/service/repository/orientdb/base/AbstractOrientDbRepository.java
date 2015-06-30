@@ -7,6 +7,7 @@ import com.orientechnologies.orient.core.sql.OCommandSQL;
 import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
 import org.segrada.model.prototype.SegradaEntity;
 import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory;
+import org.segrada.service.repository.prototype.CRUDRepository;
 import org.segrada.service.repository.prototype.SegradaRepository;
 import org.segrada.service.util.PaginationInfo;
 import org.slf4j.Logger;
@@ -15,6 +16,8 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.Nullable;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -34,7 +37,7 @@ import java.util.stream.Collectors;
  *
  * Abstract OrientDb Repository
  */
-abstract public class AbstractOrientDbRepository<T extends SegradaEntity> implements SegradaRepository {
+abstract public class AbstractOrientDbRepository<T extends SegradaEntity> implements CRUDRepository<T> {
 	private static final Logger logger = LoggerFactory.getLogger(AbstractOrientDbRepository.class);
 
 	/**
@@ -397,5 +400,13 @@ abstract public class AbstractOrientDbRepository<T extends SegradaEntity> implem
 
 			return null;
 		}
+	}
+
+	private static Pattern fromUid = Pattern.compile("(\\d+)-(\\d+)");
+	@Override
+	public String convertUidToId(String uid) {
+		if (uid == null || uid.isEmpty()) return null;
+		Matcher matcher = fromUid.matcher(uid);
+		return matcher.replaceAll("#$1:$2");
 	}
 }

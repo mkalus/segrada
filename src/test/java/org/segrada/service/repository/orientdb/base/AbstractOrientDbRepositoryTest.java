@@ -289,6 +289,13 @@ public class AbstractOrientDbRepositoryTest {
 		assertEquals("", mockOrientDbRepository.getDefaultOrder(false));
 	}
 
+	@Test
+	public void testConvertUidToId() throws Exception {
+		assertNull(mockOrientDbRepository.convertUidToId(null));
+		assertNull(mockOrientDbRepository.convertUidToId(""));
+		assertEquals("Id to Uid conversion failed", "#12345:45678", mockOrientDbRepository.convertUidToId("12345-45678"));
+	}
+
 	/**
 	 * Mock entity
 	 */

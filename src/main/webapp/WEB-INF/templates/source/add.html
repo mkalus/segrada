@@ -12,13 +12,24 @@
 
 <div class="container">
 	<div class="sg-data sg-closeable sg-source" th:with="tempId=${#strings.randomAlphanumeric(10)}" th:id="${'form-' + tempId}">
-		<h2 class="sg-data-header" th:text="#{add.source}">Create New</h2>
+		<h4 class="sg-data-header" th:text="#{add.source}">Create New</h4>
 
 		<form method="post" action="#" th:action="@{/source/update}" th:object="${source}" class="form-horizontal sg-data-form sg-data-content" th:attr="data-id=${'form-' + tempId}">
 
-			<div th:replace="partials/form :: formTextfield (name='shortTitle',field=${source.shortTitle},label=#{field.shortTitle},id=${tempId},errors=${errors})"></div>
+			<div th:replace="partials/form :: formTextfield (name='shortRef',field=${source.shortRef},label=#{field.shortRef},id=${tempId},errors=${errors},required=true)"></div>
+			<div th:replace="partials/form :: formTextfield (name='shortTitle',field=${source.shortTitle},label=#{field.shortTitle},id=${tempId},errors=${errors},required=true)"></div>
+			<div th:replace="partials/form :: formTextarea (name='longTitle',field=${source.longTitle},label=#{field.longTitle},id=${tempId},rows=2,errors=${errors},required=false)"></div>
+			<div th:replace="partials/form :: formTextfield (name='url',field=${source.url},label=#{field.url},id=${tempId},errors=${errors},required=false)"></div>
+			<div th:replace="partials/form :: formTextfield (name='productCode',field=${source.productCode},label=#{field.productCode},id=${tempId},errors=${errors},required=false)"></div>
+			<div th:replace="partials/form :: formTextfield (name='author',field=${source.author},label=#{field.author},id=${tempId},errors=${errors},required=false)"></div>
+			<div th:replace="partials/form :: formTextarea (name='citation',field=${source.citation},label=#{field.citation},id=${tempId},rows=2,errors=${errors},required=false)"></div>
+			<div th:replace="partials/form :: formTextarea (name='copyright',field=${source.copyright},label=#{field.copyright},id=${tempId},rows=2,errors=${errors},required=false)"></div>
+			<div th:replace="partials/form :: formMarkupTextarea (name='description',field=${source.description},label=#{field.description},id=${tempId},rows=5,errors=${errors},required=false,markupName='descriptionMarkup',markupField=${source.descriptionMarkup})"></div>
 
-			<input type="hidden" name="longTitle" value="Läppland" />
+			<!--TODO
+			Color
+			Pictogram
+			Tags-->
 
 			<input type="hidden" name="backUrl" value="/source/add" />
 

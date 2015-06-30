@@ -64,14 +64,23 @@ public class SourceController extends AbstractBaseController {
 		// validate source
 		Map<String, String> errors = validate(source);
 
+		// no validation errors: save entity
+		if (errors.isEmpty()) {
+			if (service.save(source)) {
+				//OK
+			} else ;//TODO show error message?
+		}
+
 		// create model map
 		Map<String, Object> model = new HashMap<>();
 
 		model.put("source", source);
-		model.put("backUrl", backUrl);
 		model.put("errors", errors);
 
+		// fallback
+		if (backUrl == null) backUrl = "/source/add";
+
 		// return viewable
-		return new Viewable("source/add", model);
+		return new Viewable(backUrl, model);
 	}
 }

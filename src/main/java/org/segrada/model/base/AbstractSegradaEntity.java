@@ -6,6 +6,8 @@ import org.segrada.model.prototype.IUser;
 import org.segrada.model.prototype.SegradaEntity;
 
 import javax.annotation.Nullable;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]
@@ -61,6 +63,14 @@ abstract public class AbstractSegradaEntity implements SegradaEntity {
 	@Override
 	public void setId(String id) {
 		this.id = id;
+	}
+
+	private static Pattern toUid = Pattern.compile("#(\\d+):(\\d+)");
+	@Override
+	public String getUid() {
+		if (id == null) return "";
+		Matcher matcher = toUid.matcher(id);
+		return matcher.replaceAll("$1-$2");
 	}
 
 	public Long getCreated() {

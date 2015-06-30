@@ -81,6 +81,16 @@ public class AbstractSegradaEntityTest {
 		assertEquals("{MockEntity}*, XYZ", entity.toString());
 	}
 
+	@Test
+	public void testGetUid() throws Exception {
+		MockEntity entity = new MockEntity();
+		assertEquals("", entity.getUid());
+
+		entity.setId("#12345:45678");
+
+		assertEquals("Id to Uid conversion failed", "12345-45678", entity.getUid());
+	}
+
 	private class MockEntity extends AbstractSegradaEntity {
 		/**
 		 * load for testing equality
