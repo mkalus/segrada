@@ -27,10 +27,10 @@ import javax.validation.constraints.NotNull;
 public class SourceReference extends AbstractSegradaEntity implements ISourceReference {
 	static final long serialVersionUID = 1L;
 
-	@NotNull(message = "{error.notNull}")
+	@NotNull(message = "error.notNull")
 	private ISource source;
 
-	@NotNull(message = "{error.notNull}")
+	@NotNull(message = "error.notNull")
 	private SegradaAnnotatedEntity reference;
 
 	private String referenceText = "";

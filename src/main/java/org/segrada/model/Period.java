@@ -28,35 +28,35 @@ import javax.validation.constraints.Pattern;
 public class Period extends AbstractSegradaEntity implements IPeriod {
 	private static final long serialVersionUID = 1L;
 
-	@NotNull(message = "{error.notNull}")
+	@NotNull(message = "error.notNull")
 	private String parentId;
 
-	@NotNull(message = "{error.notNull}")
+	@NotNull(message = "error.notNull")
 	private String parentModel;
 
 	private String fromEntry = "";
 
 	private String toEntry = "";
 
-	@NotNull(message = "{error.notNull}")
+	@NotNull(message = "error.notNull")
 	private Long fromJD = Long.MIN_VALUE;
 
-	@NotNull(message = "{error.notNull}")
+	@NotNull(message = "error.notNull")
 	private Long toJD = Long.MAX_VALUE;
 
-	@NotNull(message = "{error.notNull}")
-	@Pattern(regexp = "[GJ]", message = "{err.calendar}")
+	@NotNull(message = "error.notNull")
+	@Pattern(regexp = "[GJ]", message = "error.calendar")
 	private String fromEntryCalendar = "G";
 
-	@NotNull(message = "{error.notNull}")
-	@Pattern(regexp = "[GJ]", message = "{err.calendar}")
+	@NotNull(message = "error.notNull")
+	@Pattern(regexp = "[GJ]", message = "error.calendar")
 	private String toEntryCalendar = "G";
 
 	/**
 	 * dummy check to make sure that from is lower or equal to to
 	 * @return true of from is lower or equal to
 	 */
-	@AssertTrue(message = "{err.calendar.fromTo}")
+	@AssertTrue(message = "error.calendar.fromTo")
 	public boolean getFromLowerEqualThanTo() {
 		if (this.fromJD == null || this.toJD == null) return true; // no NPEs
 		return this.fromJD < this.toJD;
@@ -66,7 +66,7 @@ public class Period extends AbstractSegradaEntity implements IPeriod {
 	 * dummy check to make sure that from is lower or equal to to
 	 * @return true of from is lower or equal to
 	 */
-	@AssertTrue(message = "{err.calendar.empty}")
+	@AssertTrue(message = "error.calendar.empty")
 	public boolean getNonEmpty() {
 		if (this.fromJD == null || this.toJD == null) return true; // no NPEs
 		// not allowed empty values in both entries

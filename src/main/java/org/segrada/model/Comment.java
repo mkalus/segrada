@@ -29,14 +29,14 @@ public class Comment extends AbstractAnnotatedModel implements IComment {
 	/**
 	 * Text
 	 */
-	@NotNull(message = "{error.notNull}")
-	@Size(min=1, message = "{error.notEmpty}")
+	@NotNull(message = "error.notNull")
+	@Size(min=1, message = "error.notEmpty")
 	private String text = "";
 
 	/**
 	 * Markup type of text - see org.segrada.MarkupFilter
 	 */
-	@NotNull(message = "{error.notNull}")
+	@NotNull(message = "error.notNull")
 	private String markup = "html";
 
 	@Override

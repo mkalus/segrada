@@ -30,14 +30,14 @@ public class Color extends AbstractSegradaEntity implements IColor {
 	/**
 	 * Main title
 	 */
-	@NotNull(message = "{error.notNull}")
-	@Size(min=1, message = "{error.notEmpty}")
+	@NotNull(message = "error.notNull")
+	@Size(min=1, message = "error.notEmpty")
 	private String title;
 
 	/**
 	 * Color code in long format
 	 */
-	@NotNull(message = "{error.notNull}")
+	@NotNull(message = "error.notNull")
 	private Integer color;
 
 	@Override

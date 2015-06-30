@@ -26,14 +26,14 @@ import javax.validation.constraints.Size;
 public class Source extends AbstractAnnotatedModel implements ISource {
 	static final long serialVersionUID = 1L;
 
-	@NotNull(message = "{error.notNull}")
-	@Size(min=1, message = "{error.notEmpty}")
+	@NotNull(message = "error.notNull")
+	@Size(min=1, message = "error.notEmpty")
 	private String shortTitle = "";
 
 	private String longTitle = "";
 
-	@NotNull(message = "{error.notNull}")
-	@Size(min=1, message = "{error.notEmpty}")
+	@NotNull(message = "error.notNull")
+	@Size(min=1, message = "error.notEmpty")
 	private String shortRef = "";
 
 	private String url = "";

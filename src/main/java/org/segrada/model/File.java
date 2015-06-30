@@ -34,8 +34,8 @@ public class File extends AbstractAnnotatedModel implements IFile {
 	/**
 	 * File name
 	 */
-	@NotNull(message = "{error.notNull}")
-	@Size(min=1, message = "{error.notEmpty}")
+	@NotNull(message = "error.notNull")
+	@Size(min=1, message = "error.notEmpty")
 	private String filename = "";
 
 	private String description = "";
@@ -43,13 +43,13 @@ public class File extends AbstractAnnotatedModel implements IFile {
 	/**
 	 * Markup of description field
 	 */
-	@NotNull(message = "{error.notNull}")
+	@NotNull(message = "error.notNull")
 	private String descriptionMarkup = "html";
 
 	private String copyright = "";
 
-	@NotNull(message = "{error.notNull}")
-	@Size(min=1, message = "{error.notEmpty}")
+	@NotNull(message = "error.notNull")
+	@Size(min=1, message = "error.notEmpty")
 	private String mimeType;
 
 	/**
@@ -70,13 +70,13 @@ public class File extends AbstractAnnotatedModel implements IFile {
 	/**
 	 * should full text of file be saved in database for search?
 	 */
-	@NotNull(message = "{error.notNull}")
+	@NotNull(message = "error.notNull")
 	private Boolean indexFullText = true;
 
 	/**
 	 * should the file itself be saved in the database?
 	 */
-	@NotNull(message = "{error.notNull}")
+	@NotNull(message = "error.notNull")
 	private Boolean containFile = true;
 
 	/**

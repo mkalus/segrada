@@ -28,18 +28,18 @@ import javax.validation.constraints.NotNull;
 public class Location extends AbstractSegradaEntity implements ILocation {
 	private static final long serialVersionUID = 1L;
 
-	@NotNull(message = "{error.notNull}")
+	@NotNull(message = "error.notNull")
 	private String parentId;
 
-	@NotNull(message = "{error.notNull}")
+	@NotNull(message = "error.notNull")
 	private String parentModel;
 
-	@NotNull(message = "{error.notNull}")
-	@Range(min = -90, max = 90, message = "{error.rangeLatCoordinate}")
+	@NotNull(message = "error.notNull")
+	@Range(min = -90, max = 90, message = "error.rangeLatCoordinate")
 	private Double latitude;
 
-	@NotNull(message = "{error.notNull}")
-	@Range(min = -180, max = 180, message = "{error.rangeLonCoordinate}")
+	@NotNull(message = "error.notNull")
+	@Range(min = -180, max = 180, message = "error.rangeLonCoordinate")
 	private Double longitude;
 
 	/**

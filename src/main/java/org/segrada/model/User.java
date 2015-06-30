@@ -30,22 +30,22 @@ import javax.validation.constraints.Size;
 public class User extends AbstractSegradaEntity implements IUser {
 	private static final long serialVersionUID = 1L;
 
-	@NotNull(message = "{error.notNull}")
+	@NotNull(message = "error.notNull")
 	@Size(min=4, max=16, message = "{user.login.size}")
 	@Pattern(regexp="(|[^\n\t\r]+)")
 	private String login;
 
-	@NotNull(message = "{error.notNull}")
+	@NotNull(message = "error.notNull")
 	@Size(min=5, max=25, message = "{user.password.size}")
 	private String password;
 
 	transient private String confirmPassword;
 
-	@NotNull(message = "{error.notNull}")
+	@NotNull(message = "error.notNull")
 	@Size(min=2, max=64, message = "{user.name.size}")
 	private String name;
 
-	@NotNull(message = "{error.notNull}")
+	@NotNull(message = "error.notNull")
 	@Pattern(regexp="^(ADMIN|USER)$", message = "{user.role.type}")
 	private String role;
 

@@ -28,12 +28,12 @@ import javax.validation.constraints.Size;
 public class RelationType extends AbstractColoredModel implements IRelationType {
 	private static final long serialVersionUID = 1L;
 
-	@NotNull(message = "{error.notNull}")
-	@Size(min=1, message = "{error.notEmpty}")
+	@NotNull(message = "error.notNull")
+	@Size(min=1, message = "error.notEmpty")
 	private String fromTitle = "";
 
-	@NotNull(message = "{error.notNull}")
-	@Size(min=1, message = "{error.notEmpty}")
+	@NotNull(message = "error.notNull")
+	@Size(min=1, message = "error.notEmpty")
 	private String toTitle = "";
 
 	private String[] fromTags;
@@ -48,13 +48,13 @@ public class RelationType extends AbstractColoredModel implements IRelationType 
 	/**
 	 * Description
 	 */
-	@NotNull(message = "{error.notNull}")
+	@NotNull(message = "error.notNull")
 	private String description = "";
 
 	/**
 	 * Markup of description field
 	 */
-	@NotNull(message = "{error.notNull}")
+	@NotNull(message = "error.notNull")
 	private String descriptionMarkup = "html";
 
 	@Override

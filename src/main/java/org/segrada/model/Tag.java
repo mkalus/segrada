@@ -32,8 +32,8 @@ public class Tag extends AbstractSegradaEntity implements ITag {
 	/**
 	 * Main title
 	 */
-	@NotNull(message = "{error.notNull}")
-	@Size(min=1, message = "{error.notEmpty}")
+	@NotNull(message = "error.notNull")
+	@Size(min=1, message = "error.notEmpty")
 	private String title;
 
 	/**

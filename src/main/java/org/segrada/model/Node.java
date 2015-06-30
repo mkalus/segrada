@@ -29,26 +29,26 @@ public class Node extends AbstractCoreModel implements INode {
 	/**
 	 * Main title
 	 */
-	@NotNull(message = "{error.notNull}")
-	@Size(min=1, message = "{error.notEmpty}")
+	@NotNull(message = "error.notNull")
+	@Size(min=1, message = "error.notEmpty")
 	private String title = "";
 
 	/**
 	 * Alternative titles
 	 */
-	@NotNull(message = "{error.notNull}")
+	@NotNull(message = "error.notNull")
 	private String alternativeTitles = "";
 
 	/**
 	 * Text
 	 */
-	@NotNull(message = "{error.notNull}")
+	@NotNull(message = "error.notNull")
 	private String description = "";
 
 	/**
 	 * Markup type of text - see org.segrada.MarkupFilter
 	 */
-	@NotNull(message = "{error.notNull}")
+	@NotNull(message = "error.notNull")
 	private String descriptionMarkup = "html";
 
 	@Override

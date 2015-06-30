@@ -38,7 +38,7 @@ public class Pictogram extends AbstractSegradaEntity implements IPictogram {
 	};
 
 	@NotNull
-	@Size(min=2, max=64, message = "{err.title.size.2.64}")
+	@Size(min=2, max=64, message = "error.title.size.2.64")
 	private String title = "";
 
 	/**

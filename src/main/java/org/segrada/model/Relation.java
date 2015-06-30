@@ -30,31 +30,31 @@ public class Relation extends AbstractCoreModel implements IRelation {
 	/**
 	 * reference to relation type
 	 */
-	@NotNull(message = "{error.notNull}")
+	@NotNull(message = "error.notNull")
 	private IRelationType relationType;
 
 	/**
 	 * from entity
 	 */
-	@NotNull(message = "{error.notNull}")
+	@NotNull(message = "error.notNull")
 	protected SegradaEntity fromEntity;
 
 	/**
 	 * to entity
 	 */
-	@NotNull(message = "{error.notNull}")
+	@NotNull(message = "error.notNull")
 	protected SegradaEntity toEntity;
 
 	/**
 	 * Text
 	 */
-	@NotNull(message = "{error.notNull}")
+	@NotNull(message = "error.notNull")
 	private String description = "";
 
 	/**
 	 * Markup type of text - see org.segrada.MarkupFilter
 	 */
-	@NotNull(message = "{error.notNull}")
+	@NotNull(message = "error.notNull")
 	private String descriptionMarkup = "html";
 
 	@Override
