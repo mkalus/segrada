@@ -23,7 +23,7 @@
 	};
 
 	// will find first id of string (used in ajax)
-	var idRegex = new RegExp(/^<([^\s]+).*?id="([^"]*?)".*?>/i);
+	var idRegex = new RegExp(/<([^\s]+).*?id="([^"]*?)".*?>/i);
 
 	/**
 	 * helper function to create pictogram chooser elements
@@ -177,7 +177,7 @@
 
 				// find id and rerun bindings
 				var matches = responseText.match(idRegex);
-				if (matches.length >= 2) {
+				if (matches!=null&&matches.length >= 2) {
 					afterAjax($('#' + matches[2]));
 				}
 			}
