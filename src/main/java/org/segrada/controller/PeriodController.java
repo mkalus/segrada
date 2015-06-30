@@ -34,6 +34,11 @@ public class PeriodController extends AbstractBaseController {
 	@Inject
 	private PeriodService service;
 
+	@Override
+	protected String getBasePath() {
+		return "/period/";
+	}
+
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
 	public String index() {

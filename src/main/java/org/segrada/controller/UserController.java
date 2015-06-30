@@ -34,6 +34,11 @@ public class UserController extends AbstractBaseController {
 	@Inject
 	private UserService service;
 
+	@Override
+	protected String getBasePath() {
+		return "/user/";
+	}
+
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
 	public String index() {

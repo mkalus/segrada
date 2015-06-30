@@ -37,6 +37,11 @@ public class NodeController extends AbstractBaseController {
 	@Inject
 	private NodeService service;
 
+	@Override
+	protected String getBasePath() {
+		return "/node/";
+	}
+
 	@GET
 	@Produces(MediaType.TEXT_HTML)
 	public Viewable index() {

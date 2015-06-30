@@ -5,16 +5,13 @@ import com.google.inject.servlet.RequestScoped;
 import com.sun.jersey.api.view.Viewable;
 import org.segrada.controller.base.AbstractBaseController;
 import org.segrada.model.Source;
-import org.segrada.service.ColorService;
 import org.segrada.service.SourceService;
 
-import javax.validation.*;
 import javax.ws.rs.*;
-import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]
@@ -39,10 +36,22 @@ public class SourceController extends AbstractBaseController {
 	@Inject
 	private SourceService service;
 
+	@Override
+	protected String getBasePath() {
+		return "/source/";
+	}
+
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
 	public String index() {
 		return "Not implemented yet.";
+	}
+
+	@GET
+	@Path("/{uid}")
+	@Produces(MediaType.TEXT_PLAIN)
+	public String show(@PathParam("uid") String uid) {
+		return uid;
 	}
 
 	@GET
@@ -51,7 +60,7 @@ public class SourceController extends AbstractBaseController {
 	public Viewable add() {
 		Map<String, Object> model = new HashMap<>();
 
-		model.put("source", service.createNewInstance());
+		model.put("entity", service.createNewInstance());
 
 		return new Viewable("source/add", model);
 	}
@@ -60,27 +69,7 @@ public class SourceController extends AbstractBaseController {
 	@Path("/update")
 	@Produces(MediaType.TEXT_HTML)
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public Viewable update(@FormParam("backUrl") String backUrl, Source source) {
-		// validate source
-		Map<String, String> errors = validate(source);
-
-		// no validation errors: save entity
-		if (errors.isEmpty()) {
-			if (service.save(source)) {
-				//OK
-			} else ;//TODO show error message?
-		}
-
-		// create model map
-		Map<String, Object> model = new HashMap<>();
-
-		model.put("source", source);
-		model.put("errors", errors);
-
-		// fallback
-		if (backUrl == null) backUrl = "/source/add";
-
-		// return viewable
-		return new Viewable(backUrl, model);
+	public Response update(@FormParam("backUrl") String backUrl, Source source) {
+		return handleUpdate(backUrl, source, service);
 	}
 }

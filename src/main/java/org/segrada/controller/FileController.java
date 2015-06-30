@@ -34,6 +34,11 @@ public class FileController extends AbstractBaseController {
 	@Inject
 	private FileService service;
 
+	@Override
+	protected String getBasePath() {
+		return "/file/";
+	}
+
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
 	public String index() {

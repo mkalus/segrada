@@ -34,6 +34,11 @@ public class LocationController extends AbstractBaseController {
 	@Inject
 	private LocationService service;
 
+	@Override
+	protected String getBasePath() {
+		return "/location/";
+	}
+
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
 	public String index() {

@@ -34,6 +34,11 @@ public class TagController extends AbstractBaseController {
 	@Inject
 	private TagService service;
 
+	@Override
+	protected String getBasePath() {
+		return "/tag/";
+	}
+
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
 	public String index() {

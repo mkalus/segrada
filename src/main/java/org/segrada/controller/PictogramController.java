@@ -34,6 +34,11 @@ public class PictogramController extends AbstractBaseController {
 	@Inject
 	private PictogramService service;
 
+	@Override
+	protected String getBasePath() {
+		return "/pictogram/";
+	}
+
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
 	public String index() {

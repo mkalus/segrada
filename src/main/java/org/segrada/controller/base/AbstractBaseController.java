@@ -1,9 +1,17 @@
 package org.segrada.controller.base;
 
+import com.sun.jersey.api.view.Viewable;
+import org.segrada.model.prototype.SegradaEntity;
+import org.segrada.service.base.AbstractRepositoryService;
+import org.segrada.service.repository.prototype.CRUDRepository;
+
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
+import javax.ws.rs.core.Response;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,6 +34,44 @@ import java.util.Map;
  */
 abstract public class AbstractBaseController {
 	/**
+	 * handle whole update method of an entity
+	 * @param backUrl either "add" or "edit"
+	 * @param entity to save
+	 * @param service saving entity
+	 * @param <T> type of entity
+	 * @param <E> type of repository
+	 * @return response, either form view or redirect
+	 */
+	protected <T extends SegradaEntity, E extends CRUDRepository<T>> Response handleUpdate(String backUrl, T entity, AbstractRepositoryService<T, E> service) {
+		// validate source
+		Map<String, String> errors = validate(entity);
+
+		// no validation errors: save entity
+		if (errors.isEmpty()) {
+			if (service.save(entity)) {
+				//OK - redirect to show
+				try {
+					return Response.seeOther(new URI(getBasePath() + entity.getUid())).build();
+				} catch (URISyntaxException e) {
+					e.printStackTrace();
+				}
+			} else ;//TODO show error message?
+		}
+
+		// create model map
+		Map<String, Object> model = new HashMap<>();
+
+		model.put("entity", entity);
+		model.put("errors", errors);
+
+		// fallback
+		if (backUrl == null) backUrl = "add";
+
+		// return viewable
+		return Response.ok(new Viewable(getBasePath() + backUrl, model)).build();
+	}
+
+	/**
 	 * validate bean
 	 * @param entity to validate
 	 * @param <T> type of bean
@@ -42,4 +88,9 @@ abstract public class AbstractBaseController {
 
 		return errors;
 	}
+
+	/**
+	 * @return controller's base path, e.g. "/source/"
+	 */
+	abstract protected String getBasePath();
 }

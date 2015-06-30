@@ -33,6 +33,11 @@ public class ColorController extends AbstractBaseController {
 	@Inject
 	private ColorService service;
 
+	@Override
+	protected String getBasePath() {
+		return "/color/";
+	}
+
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
 	public String index() {

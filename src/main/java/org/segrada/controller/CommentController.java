@@ -34,6 +34,11 @@ public class CommentController extends AbstractBaseController {
 	@Inject
 	private CommentService service;
 
+	@Override
+	protected String getBasePath() {
+		return "/comment/";
+	}
+
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
 	public String index() {

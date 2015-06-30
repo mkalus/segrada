@@ -34,6 +34,11 @@ public class RelationTypeController extends AbstractBaseController {
 	@Inject
 	private RelationTypeService service;
 
+	@Override
+	protected String getBasePath() {
+		return "/relation_type/";
+	}
+
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
 	public String index() {

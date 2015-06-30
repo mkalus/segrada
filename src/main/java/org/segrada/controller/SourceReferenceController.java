@@ -34,6 +34,11 @@ public class SourceReferenceController extends AbstractBaseController {
 	@Inject
 	private SourceReferenceService service;
 
+	@Override
+	protected String getBasePath() {
+		return "/source_reference/";
+	}
+
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
 	public String index() {
