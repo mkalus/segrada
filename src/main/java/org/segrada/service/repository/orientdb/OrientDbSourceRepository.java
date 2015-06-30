@@ -136,6 +136,8 @@ public class OrientDbSourceRepository extends AbstractAnnotatedOrientDbRepositor
 
 	@Override
 	public boolean delete(ISource entity) {
+		if (entity == null) return true;
+
 		if (super.delete(entity)) {
 			// delete source references pointing to me, too
 			repositoryFactory.getDb().command(new OCommandSQL("delete from SourceReference where source = " + entity.getId())).execute();

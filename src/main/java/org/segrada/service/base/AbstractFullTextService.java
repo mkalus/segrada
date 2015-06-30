@@ -120,10 +120,12 @@ abstract public class AbstractFullTextService<BEAN extends SegradaEntity, REPOSI
 	 * remove entity from search index
 	 * @param entity to remove from index
 	 */
-	protected void removeFromSearchIndex(BEAN entity) {
-		searchEngine.remove(entity.getId());
-		if (logger.isInfoEnabled())
-			logger.info("Removed entity from search index: " + entity.toString());
+	protected void removeFromSearchIndex(@Nullable BEAN entity) {
+		if (entity != null) {
+			searchEngine.remove(entity.getId());
+			if (logger.isInfoEnabled())
+				logger.info("Removed entity from search index: " + entity.toString());
+		}
 	}
 
 	/**

@@ -16,6 +16,7 @@ import org.segrada.service.util.AbstractLazyLoadedObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nullable;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -190,7 +191,9 @@ abstract public class AbstractAnnotatedOrientDbRepository<T extends SegradaAnnot
 	}
 
 	@Override
-	public boolean delete(T entity) {
+	public boolean delete(@Nullable T entity) {
+		if (entity == null) return true;
+
 		if (super.delete(entity)) {
 			// delete connected edges
 			//repositoryFactory.getDb().command(new OCommandSQL("delete edge where in = " + entity.getId() + " OR out = " + entity.getId())).execute();

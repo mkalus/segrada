@@ -72,6 +72,35 @@ abstract public class AbstractBaseController {
 	}
 
 	/**
+	 * handle delete of an entity
+	 * @param empty if this is empty, redirect to list view, otherwise return empty response
+	 * @param entity to delete
+	 * @param service deleting entity
+	 * @param <T> type of entity
+	 * @param <E> type of repository
+	 * @return response, either empty response or list
+	 */
+	protected <T extends SegradaEntity, E extends CRUDRepository<T>> Response handleDelete(String empty, T entity, AbstractRepositoryService<T, E> service) {
+		boolean emptyValue = empty == null || empty.isEmpty() || empty.equals("0");
+
+		if (!service.delete(entity)) {
+			//TODO: show error?
+		}
+
+		// empty response
+		if (!emptyValue)
+			return Response.ok().build();
+
+		//OK - redirect to show
+		try {
+			return Response.seeOther(new URI(getBasePath())).build();
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
+		return Response.serverError().build();
+	}
+
+	/**
 	 * validate bean
 	 * @param entity to validate
 	 * @param <T> type of bean

@@ -81,12 +81,60 @@
 		$('.sg-data-add', part).click(function (e) {
 			// AJAX call
 			$.get($(this).attr('href'), function (data) {
+				// find id and hide duplicate elements
+				var matches = data.match(idRegex);
+				if (matches!=null&&matches.length >= 2) {
+					$('#' + matches[2]).remove();
+				}
+
 				var container = $('#sg-data');
 				container.prepend(data);
+
+				var addedChild = container.children(":first");
 				// call after AJAX event
-				afterAjax(container.children(":first"));
+				afterAjax(addedChild);
 			});
 			e.preventDefault();
+		});
+
+		// *******************************************************
+		// add content to control area
+		$('.sg-control-set').click(function (e) {
+			// AJAX call
+			$.get($(this).attr('href'), function (data) {
+				var container = $('#sg-control');
+				container.html(data); // replace html in container
+				// call after AJAX event
+				afterAjax(container);
+			});
+			e.preventDefault();
+		});
+
+		// *******************************************************
+		// double click data handler
+		$('[data-data-dblclick]').dblclick(function () {
+			// AJAX call
+			$.get($(this).attr('data-data-dblclick'), function (data) {
+				// find id and hide duplicate elements
+				var matches = data.match(idRegex);
+				if (matches!=null&&matches.length >= 2) {
+					$('#' + matches[2]).remove();
+				}
+
+				var container = $('#sg-data');
+				container.prepend(data);
+
+				var addedChild = container.children(":first");
+				// call after AJAX event
+				afterAjax(addedChild);
+			});
+		});
+
+		// *******************************************************
+		// delete confirmation
+		$('[data-confirm]').click(function (e) {
+			if (!confirm($(this).attr('data-confirm')))
+				e.preventDefault();
 		});
 
 		// *******************************************************
@@ -199,18 +247,6 @@
 
 	// called after document is ready
 	$(document).ready(function () {
-		// add content to control area
-		$('.sg-control-set').click(function (e) {
-			// AJAX call
-			$.get($(this).attr('href'), function (data) {
-				var container = $('#sg-control');
-				container.html(data); // replace html in container
-				// call after AJAX event
-				afterAjax(container);
-			});
-			e.preventDefault();
-		});
-
 		// *******************************************************
 		// "close all" link
 		$('#sg-close-all').click(function (e) {

@@ -252,6 +252,7 @@ abstract public class AbstractOrientDbRepository<T extends SegradaEntity> implem
 			initDb();
 
 			ODocument document = (ODocument) db.load(new ORecordId(id));
+			if (document == null) return null;
 
 			// not correct class? => return null
 			if (!document.getClassName().equals(getModelClassName())) {
@@ -272,7 +273,9 @@ abstract public class AbstractOrientDbRepository<T extends SegradaEntity> implem
 	 * @param entity to be deleted
 	 * @return true if deletion succeeded
 	 */
-	public boolean delete(T entity) {
+	public boolean delete(@Nullable T entity) {
+		if (entity == null) return true;
+
 		try {
 			initDb();
 

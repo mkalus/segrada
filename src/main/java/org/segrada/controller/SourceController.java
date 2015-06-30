@@ -42,7 +42,7 @@ public class SourceController extends AbstractBaseController {
 	}
 
 	@GET
-	@Produces(MediaType.TEXT_PLAIN)
+	@Produces(MediaType.TEXT_HTML)
 	public Viewable index() {
 		// create model map
 		Map<String, Object> model = new HashMap<>();
@@ -75,11 +75,25 @@ public class SourceController extends AbstractBaseController {
 		return new Viewable("source/add", model);
 	}
 
+	@GET
+	@Path("/edit/{uid}")
+	@Produces(MediaType.TEXT_PLAIN)
+	public String edit(@PathParam("uid") String uid) {
+		return "Not implemented yet.";
+	}
+
 	@POST
 	@Path("/update")
 	@Produces(MediaType.TEXT_HTML)
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response update(@FormParam("backUrl") String backUrl, Source source) {
 		return handleUpdate(backUrl, source, service);
+	}
+
+	@GET
+	@Path("/delete/{uid}/{empty}")
+	@Produces(MediaType.TEXT_HTML)
+	public Response delete(@PathParam("uid") String uid, @PathParam("empty") String empty) {
+		return handleDelete(empty, service.findById(service.convertUidToId(uid)), service);
 	}
 }

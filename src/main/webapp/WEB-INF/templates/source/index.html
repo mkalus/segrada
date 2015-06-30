@@ -23,15 +23,15 @@
 				<th th:text="#{field.shortTitle}">Short Title</th>
 				<th></th>
 			</tr>
-			<tr th:each="entity : ${paginationInfo.entities}" th:attr="data-dblclick=@{/source/{uid}(uid=${entity.uid})}">
-				<th><!-- TODO: color and pictogram --></th>
+			<tr th:each="entity : ${paginationInfo.entities}" th:attr="data-data-dblclick=@{/source/show/{uid}(uid=${entity.uid})}">
+				<th class="text-center"><!-- TODO: color and pictogram --></th>
 				<td th:text="${entity.shortRef}">Reference</td>
 				<td th:text="${entity.shortTitle}">Short Title</td>
 				<td>
 					<div class="btn-group btn-group-sm" role="group" aria-label="Actions">
 						<a class="btn btn-primary sg-data-add" href="#" th:title="#{Show}" th:href="@{/source/show/{uid}(uid=${entity.uid})}"><i class="fa fa-eye"></i></a>
 						<a class="btn btn-default sg-data-add" href="#" th:title="#{Edit}" th:href="@{/source/edit/{uid}(uid=${entity.uid})}"><i class="fa fa-pencil"></i></a>
-						<a class="btn btn-default sg-data-add" href="#" th:title="#{Delete}" th:href="@{/source/delete/{uid}(uid=${entity.uid})}" th-attr="data-confirm=#{ReallyDelete}"><i class="fa fa-times-circle-o"></i></a>
+						<a class="btn btn-default" href="#" th:title="#{Delete}" th:href="@{/source/delete/{uid}/0(uid=${entity.uid})}" th:attr="data-confirm=#{ReallyDelete}"><i class="fa fa-times-circle-o"></i></a>
 					</div>
 				</td>
 			</tr>
