@@ -1,7 +1,9 @@
 package org.segrada.controller.base;
 
+import com.google.inject.Inject;
 import com.sun.jersey.api.view.Viewable;
 import org.segrada.model.prototype.SegradaEntity;
+import org.segrada.service.ColorService;
 import org.segrada.service.base.AbstractRepositoryService;
 import org.segrada.service.repository.prototype.CRUDRepository;
 import org.segrada.service.repository.prototype.PaginatingRepositoryOrService;
@@ -100,6 +102,8 @@ abstract public class AbstractBaseController {
 		model.put("isNewEntity", entity.getId()==null|| entity.getId().isEmpty());
 		model.put("entity", entity);
 
+		enrichModelForEditingAndSaving(model);
+
 		return new Viewable(getBasePath() + "form", model);
 	}
 
@@ -135,6 +139,8 @@ abstract public class AbstractBaseController {
 		// fill model map
 		model.put("entity", entity);
 		model.put("errors", errors);
+
+		enrichModelForEditingAndSaving(model);
 
 		// return viewable
 		return Response.ok(new Viewable(getBasePath() + "form", model)).build();
@@ -191,4 +197,12 @@ abstract public class AbstractBaseController {
 	 * @return controller's base path, e.g. "/source/"
 	 */
 	abstract protected String getBasePath();
+
+	/**
+	 * called to enrich the model for editing and saving - hook
+	 * @param model to be enriched
+	 */
+	protected void enrichModelForEditingAndSaving(Map<String, Object> model) {
+		//Do nothing by default
+	}
 }

@@ -70,14 +70,27 @@ public class SegradaMessageBodyReader implements MessageBodyReader<SegradaEntity
 				// get first parameter of setter (type to cast)
 				Class setterType = setter.getParameterTypes()[0];
 
+				// preprocess values
+				Object value = nameValuePair.getValue();
+				if (value != null && !nameValuePair.getValue().isEmpty()) {
+					if (nameValuePair.getName().equals("color") && nameValuePair.getValue().startsWith("#") && !nameValuePair.getValue().equals("#ffffffff")) {
+						try {
+							value = Integer.decode(nameValuePair.getValue());
+						} catch (NumberFormatException e) {
+							value = 0;
+							// fail silently
+						}
+					}
+				}
+
 				// TODO: handle more complex setters, e.g. objects
 
 				// try to set value
 				try {
 					// invoke setter on entity
-					setter.invoke(entity, setterType.cast(nameValuePair.getValue()));
+					setter.invoke(entity, setterType.cast(value));
 				} catch (Exception e) {
-					logger.error("Could not set entity of type " + aClass.getSimpleName() + ", method " + setter.getName() + " to value " + nameValuePair.getValue() + " (type " + setterType.getName() + ")", e);
+					logger.error("Could not set entity of type " + aClass.getSimpleName() + ", method " + setter.getName() + " to value " + value + " (type " + setterType.getName() + ")", e);
 				}
 			}
 		}

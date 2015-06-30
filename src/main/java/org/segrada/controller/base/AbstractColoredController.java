@@ -1,11 +1,10 @@
-package org.segrada.service;
+package org.segrada.controller.base;
 
 import com.google.inject.Inject;
-import org.segrada.model.Color;
-import org.segrada.model.prototype.IColor;
-import org.segrada.service.base.AbstractRepositoryService;
-import org.segrada.service.repository.ColorRepository;
-import org.segrada.service.repository.factory.RepositoryFactory;
+import org.segrada.service.ColorService;
+import org.segrada.service.PictogramService;
+
+import java.util.Map;
 
 /**
  * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]
@@ -22,24 +21,21 @@ import org.segrada.service.repository.factory.RepositoryFactory;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Color service
+ * Abstract colored base controller - injects services for colors and pictograms in controller
  */
-public class ColorService extends AbstractRepositoryService<IColor, ColorRepository> {
-	/**
-	 * Constructor
-	 */
+abstract public class AbstractColoredController extends AbstractBaseController {
 	@Inject
-	public ColorService(RepositoryFactory repositoryFactory) {
-		super(repositoryFactory, ColorRepository.class);
-	}
+	protected ColorService colorService;
+
+	//@Inject
+	//protected PictogramService pictogramService;
+	////TODO
 
 	@Override
-	public IColor createNewInstance() {
-		return new Color();
-	}
+	protected void enrichModelForEditingAndSaving(Map<String, Object> model) {
+		super.enrichModelForEditingAndSaving(model);
 
-	@Override
-	public Class<IColor> getModelClass() {
-		return IColor.class;
+		// add colors
+		model.put("colors", colorService.findAll());
 	}
 }

@@ -26,9 +26,9 @@
 			<div th:replace="partials/form :: formTextarea (name='citation',field=${entity.citation},label=#{field.citation},id=${tempId},rows=2,errors=${errors},required=false)"></div>
 			<div th:replace="partials/form :: formTextarea (name='copyright',field=${entity.copyright},label=#{field.copyright},id=${tempId},rows=2,errors=${errors},required=false)"></div>
 			<div th:replace="partials/form :: formMarkupTextarea (name='description',field=${entity.description},label=#{field.description},id=${tempId},rows=5,errors=${errors},required=false,markupName='descriptionMarkup',markupField=${entity.descriptionMarkup})"></div>
+			<div th:replace="partials/form :: formColorSelect (colors=${colors},name='color',field=${entity.color},label=#{field.color},id=${tempId},errors=${errors},required=false)"></div>
 
 			<!--TODO
-			Color
 			Pictogram
 			Tags-->
 

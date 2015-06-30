@@ -3,15 +3,13 @@ package org.segrada.controller;
 import com.google.inject.Inject;
 import com.google.inject.servlet.RequestScoped;
 import com.sun.jersey.api.view.Viewable;
-import org.segrada.controller.base.AbstractBaseController;
+import org.segrada.controller.base.AbstractColoredController;
 import org.segrada.model.Source;
 import org.segrada.service.SourceService;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]
@@ -32,7 +30,7 @@ import java.util.Map;
  */
 @Path("/source")
 @RequestScoped
-public class SourceController extends AbstractBaseController {
+public class SourceController extends AbstractColoredController {
 	@Inject
 	private SourceService service;
 
