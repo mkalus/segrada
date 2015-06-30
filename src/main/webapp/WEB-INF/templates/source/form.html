@@ -31,7 +31,7 @@
 			Pictogram
 			Tags-->
 
-			<input type="hidden" name="backUrl" value="add" />
+			<input type="hidden" name="id" th:value="${entity.id}" th:if="${entity.id}" />
 
 			<div th:replace="partials/form :: formCreate"></div>
 		</form>

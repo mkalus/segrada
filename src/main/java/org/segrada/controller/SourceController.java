@@ -72,22 +72,26 @@ public class SourceController extends AbstractBaseController {
 
 		model.put("entity", service.createNewInstance());
 
-		return new Viewable("source/add", model);
+		return new Viewable("source/form", model);
 	}
 
 	@GET
 	@Path("/edit/{uid}")
-	@Produces(MediaType.TEXT_PLAIN)
-	public String edit(@PathParam("uid") String uid) {
-		return "Not implemented yet.";
+	@Produces(MediaType.TEXT_HTML)
+	public Viewable edit(@PathParam("uid") String uid) {
+		Map<String, Object> model = new HashMap<>();
+
+		model.put("entity", service.findById(service.convertUidToId(uid)));
+
+		return new Viewable("source/form", model);
 	}
 
 	@POST
 	@Path("/update")
 	@Produces(MediaType.TEXT_HTML)
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public Response update(@FormParam("backUrl") String backUrl, Source source) {
-		return handleUpdate(backUrl, source, service);
+	public Response update(Source source) {
+		return handleUpdate(source, service);
 	}
 
 	@GET

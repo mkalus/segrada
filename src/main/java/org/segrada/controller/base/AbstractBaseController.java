@@ -35,16 +35,18 @@ import java.util.Map;
 abstract public class AbstractBaseController {
 	/**
 	 * handle whole update method of an entity
-	 * @param backUrl either "add" or "edit"
 	 * @param entity to save
 	 * @param service saving entity
 	 * @param <T> type of entity
 	 * @param <E> type of repository
 	 * @return response, either form view or redirect
 	 */
-	protected <T extends SegradaEntity, E extends CRUDRepository<T>> Response handleUpdate(String backUrl, T entity, AbstractRepositoryService<T, E> service) {
+	protected <T extends SegradaEntity, E extends CRUDRepository<T>> Response handleUpdate(T entity, AbstractRepositoryService<T, E> service) {
 		// validate source
 		Map<String, String> errors = validate(entity);
+
+		// is this a new entity?
+		boolean newEntity = entity.getId()==null;
 
 		// no validation errors: save entity
 		if (errors.isEmpty()) {
@@ -64,11 +66,8 @@ abstract public class AbstractBaseController {
 		model.put("entity", entity);
 		model.put("errors", errors);
 
-		// fallback
-		if (backUrl == null) backUrl = "add";
-
 		// return viewable
-		return Response.ok(new Viewable(getBasePath() + backUrl, model)).build();
+		return Response.ok(new Viewable(getBasePath() + "form", model)).build();
 	}
 
 	/**
