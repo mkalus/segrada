@@ -73,8 +73,8 @@ public class SourceController extends AbstractBaseController {
 	@Path("/update")
 	@Produces(MediaType.TEXT_HTML)
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public Response update(Source source) {
-		return handleUpdate(source, service);
+	public Response update(Source entity) {
+		return handleUpdate(entity, service);
 	}
 
 	@GET

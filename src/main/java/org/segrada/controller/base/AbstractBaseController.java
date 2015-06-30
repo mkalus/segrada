@@ -35,6 +35,22 @@ import java.util.Map;
  */
 abstract public class AbstractBaseController {
 	/**
+	 * Handle non paginated index
+	 * @param service showing pages
+	 * @param <T> type of entity
+	 * @param <E> type of repository
+	 * @return view with list of entities set
+	 */
+	protected <T extends SegradaEntity, E extends CRUDRepository<T>> Viewable handleShowAll(AbstractRepositoryService<T, E> service) {
+		// create model map
+		Map<String, Object> model = new HashMap<>();
+
+		model.put("entities", service.findAll());
+
+		return new Viewable(getBasePath() + "index", model);
+	}
+
+	/**
 	 * Handle paginated index
 	 * @param service showing pages
 	 * @param page page to show starting with 1
@@ -46,7 +62,7 @@ abstract public class AbstractBaseController {
 	protected <T extends SegradaEntity> Viewable handlePaginatedIndex(PaginatingRepositoryOrService<T> service, int page, int entriesPerPage, Map<String, Object> filters) {
 		// define default values
 		if (page < 1) page = 1;
-		if (entriesPerPage < 1) entriesPerPage = 5;
+		if (entriesPerPage < 1) entriesPerPage = 15;
 
 		// create model map
 		Map<String, Object> model = new HashMap<>();
@@ -81,10 +97,10 @@ abstract public class AbstractBaseController {
 	protected Viewable handleForm(SegradaEntity entity) {
 		Map<String, Object> model = new HashMap<>();
 
-		model.put("isNewEntity", entity.getId()==null);
+		model.put("isNewEntity", entity.getId()==null|| entity.getId().isEmpty());
 		model.put("entity", entity);
 
-		return new Viewable("source/form", model);
+		return new Viewable(getBasePath() + "form", model);
 	}
 
 	/**
@@ -96,8 +112,13 @@ abstract public class AbstractBaseController {
 	 * @return response, either form view or redirect
 	 */
 	protected <T extends SegradaEntity, E extends CRUDRepository<T>> Response handleUpdate(T entity, AbstractRepositoryService<T, E> service) {
-		// validate source
+		// validate entity
 		Map<String, String> errors = validate(entity);
+
+		// create model map
+		Map<String, Object> model = new HashMap<>();
+
+		model.put("isNewEntity", entity.getId()==null|| entity.getId().isEmpty());
 
 		// no validation errors: save entity
 		if (errors.isEmpty()) {
@@ -111,9 +132,7 @@ abstract public class AbstractBaseController {
 			} else ;//TODO show error message?
 		}
 
-		// create model map
-		Map<String, Object> model = new HashMap<>();
-
+		// fill model map
 		model.put("entity", entity);
 		model.put("errors", errors);
 

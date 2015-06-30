@@ -24,7 +24,7 @@
 				<th></th>
 			</tr>
 			<tr th:each="entity : ${paginationInfo.entities}" th:attr="data-data-dblclick=@{/source/show/{uid}(uid=${entity.uid})}">
-				<th class="text-center"><!-- TODO: color and pictogram --></th>
+				<td class="text-center"><!-- TODO: color and pictogram --></td>
 				<td th:text="${entity.shortRef}">Reference</td>
 				<td th:text="${entity.shortTitle}">Short Title</td>
 				<td>

@@ -133,8 +133,18 @@
 		// *******************************************************
 		// delete confirmation
 		$('[data-confirm]').click(function (e) {
-			if (!confirm($(this).attr('data-confirm')))
-				e.preventDefault();
+			if (confirm($(this).attr('data-confirm'))) {
+				if ($(this).hasClass('sg-control-confirm')) {
+					// AJAX call
+					$.get($(this).attr('href'), function (data) {
+						var container = $('#sg-control');
+						container.html(data); // replace html in container
+						// call after AJAX event
+						afterAjax(container);
+					});
+				}
+			}
+			e.preventDefault();
 		});
 
 		// *******************************************************
