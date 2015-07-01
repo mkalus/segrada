@@ -1,0 +1,35 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" th:lang="${#locale.language}">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <title th:text="#{Search}">Search</title>
+    <div th:include="partials/common :: head" th:remove="tag"></div>
+</head>
+
+<body>
+<div th:replace="partials/common :: browser"></div>
+
+<div class="container" th:fragment="content">
+    <h1 th:text="#{Search_Results}">Search Results</h1>
+
+    <div th:text="${searchResult.totalHits}"></div>
+
+    <div><span th:text="${searchResult.startIndex}"></span> &ndash; <span th:text="${searchResult.stopIndex}"></span></div>
+
+
+    <table class="table table-striped table-condensed">
+        <tr th:each="hit : ${searchResult.hits}">
+            <td th:text="${hit.title}">Title</td>
+            <td th:text="${hit.subTitles}">subTitles</td>
+            <td>
+                &hellip; <span th:each="highlightText : ${hit.highlightText}" th:utext="${highlightText + ' &hellip; '}"></span>
+            </td>
+            <td><a href="#" th:href="@{'/' + ${#strings.toLowerCase(hit.className)} + '/{id}'(id=${hit.id})}">Show</a></td>
+        </tr>
+    </table>
+</div>
+
+<div th:replace="partials/common :: footer"></div>
+</body>
+</html>
