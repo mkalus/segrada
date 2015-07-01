@@ -3,13 +3,13 @@ package org.segrada.servlet;
 import com.sun.jersey.api.view.Viewable;
 import com.sun.jersey.spi.template.ViewProcessor;
 import org.segrada.rendering.thymeleaf.SegradaDialect;
+import org.segrada.session.CSRFTokenManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 import org.thymeleaf.fragment.ElementAndAttributeNameFragmentSpec;
 import org.thymeleaf.fragment.IFragmentSpec;
-import org.thymeleaf.standard.StandardMessageResolutionUtils;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 import org.thymeleaf.templateresolver.TemplateResolver;
 
@@ -95,6 +95,8 @@ public class ThymeleafViewProcessor implements ViewProcessor<String> {
 				context.setVariables(variables);
 			}
 		}
+
+		context.setVariable("_csrf", CSRFTokenManager.getTokenForSession(context.getHttpSession()));
 
 		// set fixed variables?
 		//context.setVariable("numberFormatter", new NumberFormatter());
