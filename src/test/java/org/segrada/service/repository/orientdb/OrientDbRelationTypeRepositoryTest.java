@@ -21,6 +21,8 @@ import static org.junit.Assert.assertTrue;
 
 public class OrientDbRelationTypeRepositoryTest {
 
+	//TODO: test from/to tags, tags themselves
+
 	/**
 	 * reference to test instance of orientdb in memory
 	 */

@@ -1,6 +1,8 @@
 package org.segrada.service.repository.orientdb;
 
 import com.google.inject.Inject;
+import com.orientechnologies.orient.core.id.ORecordId;
+import com.orientechnologies.orient.core.metadata.schema.OType;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
 import org.apache.lucene.index.Term;
@@ -69,8 +71,33 @@ public class OrientDbRelationTypeRepository extends AbstractColoredOrientDbRepos
 		populateEntityWithCreatedModified(document, relationType);
 		populateEntityWithColored(document, relationType);
 
-		// set tags
+		// set tags //TODO test!
 		relationType.setTags(lazyLoadTags(relationType));
+		// get from and to tags
+		TagRepository tagRepository = repositoryFactory.produceRepository(OrientDbTagRepository.class);
+		if (tagRepository != null) {
+			List<ODocument> list = document.field("fromTags", OType.LINKLIST);
+			if (list != null) {
+				String[] tags = new String[list.size()];
+				int i = 0;
+
+				for (ODocument tag : list)
+					tags[i++] = tag.field("title", OType.STRING);
+
+				relationType.setFromTags(tags);
+			}
+
+			list = document.field("toTags", OType.LINKLIST);
+			if (list != null) {
+				String[] tags = new String[list.size()];
+				int i = 0;
+
+				for (ODocument tag : list)
+					tags[i++] = tag.field("title", OType.STRING);
+
+				relationType.setToTags(tags);
+			}
+		}
 
 		return relationType;
 	}
@@ -88,8 +115,50 @@ public class OrientDbRelationTypeRepository extends AbstractColoredOrientDbRepos
 		// populate with data
 		populateODocumentWithCreatedModified(document, (RelationType) entity);
 		populateODocumentWithColored(document, (RelationType) entity);
+		populateODocumentWithToFromTags(document, entity);
 
 		return document;
+	}
+
+	/**
+	 * populate document with to/from tags
+	 * @param document to be populated
+	 * @param entity source entity
+	 */
+	protected void populateODocumentWithToFromTags(ODocument document, IRelationType entity) {
+		//TODO: test!
+		// empty: do not load anything
+		if ((entity.getFromTags() == null || entity.getFromTags().length == 0) &&
+				(entity.getToTags() == null || entity.getToTags().length == 0))
+			return;
+
+		TagRepository tagRepository = repositoryFactory.produceRepository(OrientDbTagRepository.class);
+		if (tagRepository == null) return;
+
+		// do from and to tags using helper method
+		populateODocumentWithToFromTagsHelper(document, entity.getFromTags(), "fromTags", tagRepository);
+		populateODocumentWithToFromTagsHelper(document, entity.getToTags(), "toTags", tagRepository);
+	}
+
+	/**
+	 * helper for method above
+	 * @param document
+	 * @param tags
+	 * @param fieldName
+	 * @param tagRepository
+	 */
+	private void populateODocumentWithToFromTagsHelper(ODocument document, String[] tags, String fieldName, TagRepository tagRepository) {
+		if (tags != null && tags.length > 0) {
+			// create tags if needed
+			tagRepository.createNewTagsByTitles(tags);
+
+			// get all tag ids and populate list
+			List<ORecordId> list = new LinkedList<>();
+			for (String id : tagRepository.findTagIdsByTitles(tags)) {
+				list.add(new ORecordId(id));
+			}
+			document.field(fieldName, list);
+		} else document.removeField(fieldName);
 	}
 
 	@Override
