@@ -93,6 +93,28 @@ public class SegradaMessageBodyReader implements MessageBodyReader<SegradaEntity
 					PictogramService service = injector.getInstance(PictogramService.class);
 					value = service.findById((String) value);
 				}
+				// handle arrays
+				if (String[].class.isAssignableFrom(setterType)) {
+					// get current property value
+					String getterName = "g" + setter.getName().substring(1);
+					try {
+						Method getter = entity.getClass().getMethod(getterName);
+						String[] currentValues = (String[]) getter.invoke(entity);
+						if (currentValues == null) {
+							value = new String[] { (String) value };
+						} else {
+							// add to string
+							String[] newValues = new String[currentValues.length+1];
+							for (int i = 0; i < currentValues.length; i++)
+								newValues[i] = currentValues[i];
+							newValues[currentValues.length] = (String)value;
+							value = newValues;
+						}
+					} catch (Exception e) {
+						logger.error("Could not get getter for " + aClass.getSimpleName() + ", method " + setter.getName() + " in order to assign array values", e);
+						value = null;
+					}
+				}
 
 				// try to set value
 				try {
