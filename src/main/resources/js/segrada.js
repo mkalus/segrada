@@ -215,7 +215,7 @@
 		// *******************************************************
 		// color picker init
 		$("select.sg-colorpicker").simplepicker({
-			theme: 'glyphicons'
+			theme: 'fontawesome'
 		});
 
 		// *******************************************************
