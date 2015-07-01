@@ -48,10 +48,4 @@ public class PictogramTest {
 		Set<ConstraintViolation<Pictogram>> constraintViolations = validator.validateValue(Pictogram.class, "title", "T");
 		assertTrue("Title too short", constraintViolations.size() == 1);
 	}
-
-	@Test
-	public void testDataEmpty() throws Exception {
-		Set<ConstraintViolation<Pictogram>> constraintViolations = validator.validateValue(Pictogram.class, "data", null);
-		assertTrue("Title empty", constraintViolations.size() == 1);
-	}
 }
