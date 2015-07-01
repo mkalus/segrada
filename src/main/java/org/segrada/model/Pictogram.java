@@ -37,14 +37,13 @@ public class Pictogram extends AbstractSegradaEntity implements IPictogram {
 			"image/png"
 	};
 
-	@NotNull
+	@NotNull(message = "error.notNull")
 	@Size(min=2, max=64, message = "error.title.size.2.64")
 	private String title = "";
 
 	/**
 	 * Reference to data - on upload
 	 */
-	@NotNull
 	private transient byte[] data;
 
 	/**

@@ -99,7 +99,7 @@
 
 		// *******************************************************
 		// add content to control area
-		$('.sg-control-set').click(function (e) {
+		$('.sg-control-set', part).click(function (e) {
 			// AJAX call
 			$.get($(this).attr('href'), function (data) {
 				var container = $('#sg-control');
@@ -112,7 +112,7 @@
 
 		// *******************************************************
 		// double click data handler
-		$('[data-data-dblclick]').dblclick(function () {
+		$('[data-data-dblclick]', part).dblclick(function () {
 			// AJAX call
 			$.get($(this).attr('data-data-dblclick'), function (data) {
 				// find id and hide duplicate elements
@@ -132,7 +132,7 @@
 
 		// *******************************************************
 		// delete confirmation
-		$('[data-confirm]').click(function (e) {
+		$('[data-confirm]', part).click(function (e) {
 			if (confirm($(this).attr('data-confirm'))) {
 				if ($(this).hasClass('sg-control-confirm')) {
 					// AJAX call

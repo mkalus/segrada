@@ -87,7 +87,6 @@ public class File extends AbstractAnnotatedModel implements IFile {
 	/**
 	 * Reference to data - on upload
 	 */
-	@NotNull
 	transient private byte[] data;
 
 	@Override

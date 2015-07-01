@@ -2,14 +2,29 @@ package org.segrada.controller;
 
 import com.google.inject.Inject;
 import com.google.inject.servlet.RequestScoped;
+import com.sun.jersey.api.view.Viewable;
+import com.sun.jersey.core.header.FormDataContentDisposition;
+import com.sun.jersey.multipart.FormDataBodyPart;
+import com.sun.jersey.multipart.FormDataParam;
+import org.apache.tika.io.IOUtils;
 import org.segrada.controller.base.AbstractBaseController;
-import org.segrada.service.ColorService;
+import org.segrada.model.Pictogram;
+import org.segrada.model.prototype.IPictogram;
 import org.segrada.service.PictogramService;
+import org.segrada.service.binarydata.BinaryDataService;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.StreamingOutput;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]
@@ -34,14 +49,133 @@ public class PictogramController extends AbstractBaseController {
 	@Inject
 	private PictogramService service;
 
+	@Inject
+	private BinaryDataService binaryDataService;
+
 	@Override
 	protected String getBasePath() {
 		return "/pictogram/";
 	}
 
 	@GET
+	@Produces(MediaType.TEXT_HTML)
+	public Viewable index() {
+		return handleShowAll(service);
+	}
+
+	@GET
+	@Path("/show/{uid}")
+	@Produces(MediaType.TEXT_HTML)
+	public Viewable show(@PathParam("uid") String uid) {
+		return handleShow(uid, service);
+	}
+
+	@GET
+	@Path("/file/{uid}")
+	public Response download(@PathParam("uid") String uid) {
+		try {
+			IPictogram entity = service.findById(service.convertUidToId(uid));
+			final InputStream in = (entity == null)?
+					getClass().getResourceAsStream("/img/no_image.png"):
+					binaryDataService.getBinaryDataAsStream(entity.getFileIdentifier());
+
+			// set streaming output
+			StreamingOutput output = outputStream -> {
+				byte[] buffer = new byte[4096];
+				int bytesRead = -1;
+
+				// write bytes read from the input stream into the output stream
+				while ((bytesRead = in.read(buffer)) != -1) {
+					outputStream.write(buffer, 0, bytesRead);
+				}
+
+				in.close();
+				outputStream.close();
+			};
+
+			return Response.ok(output, "image/png").build();
+		} catch (Exception e) {
+			return Response.ok(new Viewable("error", e.getMessage())).build();
+		}
+	}
+
+	@GET
+	@Path("/add")
+	@Produces(MediaType.TEXT_HTML)
+	public Viewable add() {
+		return handleForm(service.createNewInstance());
+	}
+
+	@GET
+	@Path("/edit/{uid}")
+	@Produces(MediaType.TEXT_HTML)
+	public Viewable edit(@PathParam("uid") String uid) {
+		return handleForm(service.findById(service.convertUidToId(uid)));
+	}
+
+	@POST
+	@Path("/update")
 	@Produces(MediaType.TEXT_PLAIN)
-	public String index() {
-		return "Not implemented yet.";
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	public Response update(@FormDataParam("id") final String id,
+	                     @FormDataParam("title") final String title,
+	                     @FormDataParam("uploadedImage") final byte[] uploadedImage,
+	                     @FormDataParam("uploadedImage") final FormDataContentDisposition uploadedImageDetail,
+	                     @FormDataParam("uploadedImage") final FormDataBodyPart uploadedImagePart) {
+		// new or existing entity?
+		Pictogram entity;
+		if (id == null || id.isEmpty()) entity = new Pictogram();
+		else entity = (Pictogram) service.findById(id);
+
+		// add data
+		entity.setTitle(title);
+
+		// validate entity
+		Map<String, String> errors = validate(entity);
+
+		// handle file upload
+		if (uploadedImage != null && uploadedImage.length > 0) {
+			if (Arrays.binarySearch(Pictogram.ALLOWED_IMAGE_TYPES, uploadedImagePart.getMediaType().toString()) < 0) {
+				errors.put("uploadedImage", "error.UploadWrongFileTypeOnlyImages");
+			} else {
+				entity.setData(uploadedImage);
+				entity.setMimeType(uploadedImagePart.getMediaType().toString());
+				entity.setFileName(uploadedImageDetail.getFileName());
+			}
+		} else if (entity.getId() == null || entity.getId().isEmpty())
+			errors.put("uploadedImage", "error.UploadEmpty");
+
+		// create model map
+		Map<String, Object> model = new HashMap<>();
+
+		model.put("isNewEntity", entity.getId()==null|| entity.getId().isEmpty());
+
+		// no validation errors: save entity
+		if (errors.isEmpty()) {
+			if (service.save(entity)) {
+				//OK - redirect to show
+				try {
+					return Response.seeOther(new URI(getBasePath() + "show/" + entity.getUid())).build();
+				} catch (URISyntaxException e) {
+					Response.ok(new Viewable("error", e.getMessage())).build();
+				}
+			} else Response.ok(new Viewable("error", "SAVE failed.")).build();
+		}
+
+		// fill model map
+		model.put("entity", entity);
+		model.put("errors", errors);
+
+		enrichModelForEditingAndSaving(model);
+
+		// return viewable
+		return Response.ok(new Viewable(getBasePath() + "form", model)).build();
+	}
+
+	@GET
+	@Path("/delete/{uid}/{empty}")
+	@Produces(MediaType.TEXT_HTML)
+	public Response delete(@PathParam("uid") String uid, @PathParam("empty") String empty) {
+		return handleDelete(empty, service.findById(service.convertUidToId(uid)), service);
 	}
 }

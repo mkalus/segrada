@@ -68,6 +68,9 @@ public class PictogramService extends AbstractRepositoryService<IPictogram, Pict
 		if (!(entity instanceof  Pictogram)) return; // sanity check
 		Pictogram pictogram = (Pictogram) entity;
 
+		// nothing to save
+		if (pictogram.getData() == null) return;
+
 		// let image manipulator handle the image
 		ImageManipulator manipulator = new ImageManipulator(pictogram.getData(), pictogram.getMimeType());
 
@@ -75,6 +78,9 @@ public class PictogramService extends AbstractRepositoryService<IPictogram, Pict
 		manipulator.cropImageToSquare();
 		// create thumbnail
 		manipulator.createThumbnail(24, true);
+		// change file ending, if necessary
+		if (!pictogram.getFileName().endsWith(".png"))
+			pictogram.setFileName(pictogram.getFileName().substring(0, pictogram.getFileName().lastIndexOf(".")) + ".png");
 
 		// save and/or replace data
 		String identifier = binaryDataService.saveNewReference(entity, pictogram.getFileName(), manipulator.getContentType(),

@@ -160,9 +160,7 @@ public class FileService extends AbstractFullTextService<IFile, FileRepository> 
 		File file = (File) entity;
 
 		// nothing to save
-		if (file.getData() == null) {
-			return;
-		}
+		if (file.getData() == null) return;
 
 		// save and/or replace data
 		String identifier = binaryDataService.saveNewReference(entity, entity.getFilename(), entity.getMimeType(),

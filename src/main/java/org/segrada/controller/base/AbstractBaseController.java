@@ -131,9 +131,9 @@ abstract public class AbstractBaseController {
 				try {
 					return Response.seeOther(new URI(getBasePath() + "show/" + entity.getUid())).build();
 				} catch (URISyntaxException e) {
-					e.printStackTrace();
+					Response.ok(new Viewable("error", e.getMessage())).build();
 				}
-			} else ;//TODO show error message?
+			} else Response.ok(new Viewable("error", "SAVE failed.")).build();
 		}
 
 		// fill model map

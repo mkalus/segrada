@@ -1,0 +1,21 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" th:lang="${#locale.language}">
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<title th:text="#{add.pictogram}">Create New Pictogram</title>
+	<div th:include="partials/common :: head" th:remove="tag"></div>
+</head>
+
+<body>
+<div th:replace="partials/common :: browser"></div>
+
+<div class="container">
+	<div class="sg-closeable alert alert-danger" role="alert" th:text="${data}">
+		ERROR
+	</div>
+</div>
+
+<div th:replace="partials/common :: footer"></div>
+</body>
+</html>

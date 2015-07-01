@@ -96,7 +96,8 @@ public class ThymeleafViewProcessor implements ViewProcessor<String> {
 			}
 		}
 
-		context.setVariable("_csrf", CSRFTokenManager.getTokenForSession(context.getHttpSession()));
+		//TODO: start session?
+		//context.setVariable("_csrf", CSRFTokenManager.getTokenForSession(context.getHttpSession()));
 
 		// set fixed variables?
 		//context.setVariable("numberFormatter", new NumberFormatter());
