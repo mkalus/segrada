@@ -73,11 +73,12 @@ public class SegradaMessageBodyReader implements MessageBodyReader<SegradaEntity
 				// preprocess values
 				Object value = nameValuePair.getValue();
 				if (value != null && !nameValuePair.getValue().isEmpty()) {
-					if (nameValuePair.getName().equals("color") && nameValuePair.getValue().startsWith("#") && !nameValuePair.getValue().equals("#ffffffff")) {
+					if (nameValuePair.getName().equals("color") && nameValuePair.getValue().startsWith("#")) {
 						try {
-							value = Integer.decode(nameValuePair.getValue());
+							if (nameValuePair.getValue().equals("#ffffffff")) value = null;
+							else value = Integer.decode(nameValuePair.getValue());
 						} catch (NumberFormatException e) {
-							value = 0;
+							value = null;
 							// fail silently
 						}
 					}

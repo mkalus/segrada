@@ -5,6 +5,7 @@ import com.google.inject.Injector;
 import com.google.inject.servlet.GuiceServletContextListener;
 import com.google.inject.servlet.ServletModule;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
+import org.glassfish.jersey.client.filter.CsrfProtectionFilter;
 import org.segrada.config.ServiceModule;
 import org.segrada.config.TemplateModule;
 import org.segrada.controller.*;
@@ -58,8 +59,9 @@ public class SegradaGuiceServletContextListener extends GuiceServletContextListe
 						bind(UserController.class);
 
 						Map<String, String> initParams = new TreeMap<String, String>();
-
 						initParams.put("com.sun.jersey.config.property.WebPageContentRegex", "/.*\\.(jpg|ico|png|gif|html|txt|css|js|xml|otf|svg|ttf|woff|woff2|eot)");
+						//TODO: implement client side of this, in order to make it work
+						//initParams.put("com.sun.jersey.spi.container.ContainerRequestFilters", "com.sun.jersey.api.container.filter.CsrfProtectionFilter");
 
 						filter("/*").through(GuiceContainer.class, initParams);
 						filter("/*").through(orientDBFilter);
