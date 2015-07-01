@@ -13,6 +13,10 @@ import org.segrada.session.Identity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 /**
  * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]
  *
@@ -93,7 +97,6 @@ abstract public class AbstractSegradaOrientDbRepository<T extends SegradaEntity>
 		return null;
 	}
 
-
 	/**
 	 * lazily load tag list
 	 * @param entity connected to tags
@@ -125,6 +128,41 @@ abstract public class AbstractSegradaOrientDbRepository<T extends SegradaEntity>
 		// log error
 		logger.error("Could not load TagRepository");
 		return null;
+	}
+
+
+	/**
+	 * update tag connections of a given entity
+	 * will delete old tag connections, create new tags and update them
+	 * @param entity to update tags from
+	 */
+	protected void updateEntityTags(SegradaTaggable entity) {
+		TagRepository tagRepository = repositoryFactory.produceRepository(OrientDbTagRepository.class);
+
+		// return, of not tags set
+		if (tagRepository == null || entity.getTags() == null || entity.getTags().length == 0) return;
+
+		// create new tags, if needed
+		tagRepository.createNewTagsByTitles(entity.getTags());
+
+		// find all tags by title
+		List<ITag> tags = tagRepository.findTagsByTitles(entity.getTags());
+
+		// keeps added ids
+		Set<String> addedIds = new HashSet<>();
+
+		// add all tags to entity
+		for (ITag tag : tags) {
+			tagRepository.connectTag(tag, entity);
+			addedIds.add(tag.getId());
+		}
+
+		// now find all tag ids and see if there are some that have been deleted
+		String[] tagIds = tagRepository.findTagIdsConnectedToModel(entity, true);
+		for (String id : tagIds) {
+			if (!addedIds.contains(id)) // not in set connected - delete
+				tagRepository.removeTag(id, entity);
+		}
 	}
 
 	/**

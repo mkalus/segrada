@@ -8,8 +8,11 @@ import org.apache.lucene.queryparser.flexible.standard.QueryParserUtil;
 import org.apache.lucene.search.TermQuery;
 import org.segrada.model.RelationType;
 import org.segrada.model.prototype.IRelationType;
+import org.segrada.model.prototype.ITag;
+import org.segrada.model.prototype.SegradaAnnotatedEntity;
 import org.segrada.service.repository.RelationRepository;
 import org.segrada.service.repository.RelationTypeRepository;
+import org.segrada.service.repository.TagRepository;
 import org.segrada.service.repository.orientdb.base.AbstractColoredOrientDbRepository;
 import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory;
 import org.segrada.service.util.PaginationInfo;
@@ -17,10 +20,7 @@ import org.segrada.util.OrientStringEscape;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]
@@ -68,6 +68,9 @@ public class OrientDbRelationTypeRepository extends AbstractColoredOrientDbRepos
 		populateEntityWithBaseData(document, relationType);
 		populateEntityWithCreatedModified(document, relationType);
 		populateEntityWithColored(document, relationType);
+
+		// set tags
+		relationType.setTags(lazyLoadTags(relationType));
 
 		return relationType;
 	}
@@ -177,6 +180,16 @@ public class OrientDbRelationTypeRepository extends AbstractColoredOrientDbRepos
 		}
 
 		return sb.toString();
+	}
+
+	@Override
+	protected IRelationType processAfterSaving(ODocument updated, IRelationType entity) {
+		super.processAfterSaving(updated, entity);
+
+		// connect tags
+		updateEntityTags(entity);
+
+		return entity;
 	}
 
 	@Override

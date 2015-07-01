@@ -370,4 +370,6 @@ public class AbstractSegradaOrientDbRepositoryTest {
 			return "Mock";
 		}
 	}
+
+	//updateEntityTags tested in AbstractAnnotatedOrientDbRepositoryTest
 }
