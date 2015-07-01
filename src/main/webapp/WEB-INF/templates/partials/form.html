@@ -66,7 +66,7 @@
 	<div class="col-sm-10">
 		<div class="row">
 			<div class="col-sm-3">
-				<a href="#" class="btn btn-primary btn-sm sg-pictogram-chooser" th:attr="data-id=${name + '-' + id}" th:text="#{Select_Pictogram}">Select Pictogram</a>
+				<a href="#" class="btn btn-primary btn-sm sg-pictogram-chooser" th:attr="data-id=${name + '-' + id}" th:text="#{field.select_pictogram}">Select Pictogram</a>
 			</div>
 			<div class="col-sm-6">
 				<div th:id="${'preview-' + name + '-' + id}">
@@ -77,10 +77,10 @@
 				</div>
 			</div>
 			<div class="col-sm-3">
-				<a href="#" class="btn btn-default btn-sm sg-pictogram-clearer" th:classappend="${field}?'':'sg-dynamic-hide'" th:id="${'clear-' + name + '-' + id}" th:attr="data-id=${name + '-' + id}" th:text="#{Clear_Pictogram}">Clear Pictogram</a>
+				<a href="#" class="btn btn-default btn-sm sg-pictogram-clearer" th:classappend="${field}?'':'sg-dynamic-hide'" th:id="${'clear-' + name + '-' + id}" th:attr="data-id=${name + '-' + id}" th:text="#{field.clear_pictogram}">Clear Pictogram</a>
 			</div>
 		</div>
-		<input type="hidden" th:id="${'value-' + name + '-' + id}" th:name="${name}" th:value="${field?.id}" />
+		<input type="hidden" th:id="${'value-' + name + '-' + id}" th:name="${name}" th:value="${field}?${field.id}" />
 		<span class="help-block" th:text="${errors}?(${errors[name]}?${#messages.msg(errors[name])})">Error</span>
 	</div>
 </div>

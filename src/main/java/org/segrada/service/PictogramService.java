@@ -10,6 +10,8 @@ import org.segrada.service.repository.PictogramRepository;
 import org.segrada.service.repository.factory.RepositoryFactory;
 import org.segrada.util.ImageManipulator;
 
+import java.util.List;
+
 /**
  * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]
  *
@@ -124,5 +126,16 @@ public class PictogramService extends AbstractRepositoryService<IPictogram, Pict
 	public boolean delete(IPictogram entity) {
 		removeBinaryDataFromService(entity);
 		return super.delete(entity);
+	}
+
+	/**
+	 * Find entities by search term
+	 * @param term search term
+	 * @param maximum maximum hits to return
+	 * @param returnWithoutTerm true if you want to return list of entries without any search term provided
+	 * @return list of entities
+	 */
+	public List<IPictogram> findBySearchTerm(String term, int maximum, boolean returnWithoutTerm) {
+		return repository.findBySearchTerm(term, maximum, returnWithoutTerm);
 	}
 }

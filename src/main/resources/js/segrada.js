@@ -39,15 +39,16 @@
 			var items = [];
 			$.each(data, function (idx, element) {
 				var encodedTitle = $('<div/>').text(element.title).html();
-				items.push('<div class="col-xs-1 sg-no-padding-right"><a class="sg-pictogram-modal-link" href="#" data-id="' + element.id + '" title="' + encodedTitle + '"><img src="' + urlSegradaPictogramFile + element.id + '" width="24" height="24" alt="' + encodedTitle + '" /></a></div>');
+				items.push('<div class="col-xs-1 sg-no-padding-right"><a class="sg-pictogram-modal-link" href="#" data-id="' + element.id + '" data-uid="' + element.uid + '" title="' + encodedTitle + '"><img src="' + urlSegradaPictogramFile + element.uid + '" width="24" height="24" alt="' + encodedTitle + '" /></a></div>');
 			});
 			modalContent.html("<div class='row'>" + items.join("") + "</div>");
 			$('a', modalContent).click(function (e2) {
 				var picId = $(this).attr('data-id');
+				var picUid = $(this).attr('data-uid');
 				var picEncodedTitle = $('<div/>').text($(this).attr('title')).html();
 				$("#value-" + myId, part).val(picId);
 				// add preview
-				$("#preview-" + myId, part).html('<img src="' + urlSegradaPictogramFile + picId + '" width="24" height="24" alt="' + picEncodedTitle + '" /> ' + picEncodedTitle);
+				$("#preview-" + myId, part).html('<img src="' + urlSegradaPictogramFile + picUid + '" width="24" height="24" alt="' + picEncodedTitle + '" /> ' + picEncodedTitle);
 				// show hide button
 				$("#clear-" + myId, part).show();
 				e2.preventDefault();
@@ -185,10 +186,11 @@
 				var firstImg = $(".sg-pictogram-modal-link", modalContent).first();
 				if (firstImg.length > 0) { // if defined, load first image
 					var picId = firstImg.attr('data-id');
+					var picUid = firstImg.attr('data-id');
 					var picEncodedTitle = $('<div/>').text(firstImg.attr('title')).html();
 					$("#value-" + myId, part).val(picId);
 					// add preview
-					$("#preview-" + myId, part).html('<img src="' + urlSegradaPictogramFile + picId + '" width="24" height="24" alt="' + picEncodedTitle + '" /> ' + picEncodedTitle);
+					$("#preview-" + myId, part).html('<img src="' + urlSegradaPictogramFile + picUid + '" width="24" height="24" alt="' + picEncodedTitle + '" /> ' + picEncodedTitle);
 					// show hide button
 					$("#clear-" + myId, part).show();
 					modal.modal('hide');

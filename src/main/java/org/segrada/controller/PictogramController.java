@@ -6,7 +6,9 @@ import com.sun.jersey.api.view.Viewable;
 import com.sun.jersey.core.header.FormDataContentDisposition;
 import com.sun.jersey.multipart.FormDataBodyPart;
 import com.sun.jersey.multipart.FormDataParam;
-import org.apache.tika.io.IOUtils;
+import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 import org.segrada.controller.base.AbstractBaseController;
 import org.segrada.model.Pictogram;
 import org.segrada.model.prototype.IPictogram;
@@ -17,9 +19,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
-import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Arrays;
@@ -97,6 +97,30 @@ public class PictogramController extends AbstractBaseController {
 		} catch (Exception e) {
 			return Response.ok(new Viewable("error", e.getMessage())).build();
 		}
+	}
+
+	@GET
+	@Path("/search")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String search(@QueryParam("s") String term) {
+		// json array to hold hits
+		JSONArray jsonArray = new JSONArray();
+
+		// search term finding
+		for (IPictogram pictogram : service.findBySearchTerm(term, 36, true)) {
+			try {
+				JSONObject jsonObject = new JSONObject();
+				jsonObject.put("id", pictogram.getId());
+				jsonObject.put("uid", pictogram.getUid());
+				jsonObject.put("title", pictogram.getTitle());
+
+				jsonArray.put(jsonObject);
+			} catch (JSONException e) {
+				//IGNORE
+			}
+		}
+
+		return jsonArray.toString();
 	}
 
 	@GET

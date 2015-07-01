@@ -1,11 +1,12 @@
 package org.segrada.servlet;
 
-import org.apache.commons.lang.WordUtils;
+import com.google.inject.Inject;
+import com.google.inject.Injector;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.tika.io.IOUtils;
-import org.apache.tools.ant.filters.StringInputStream;
 import org.segrada.model.prototype.SegradaEntity;
+import org.segrada.service.PictogramService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,19 +18,23 @@ import javax.ws.rs.ext.MessageBodyReader;
 import javax.ws.rs.ext.Provider;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.StringWriter;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.nio.charset.Charset;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Provider
 @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 public class SegradaMessageBodyReader implements MessageBodyReader<SegradaEntity> {
+	/**
+	 * get injector - not very nice, but works
+	 */
+	@Inject
+	private Injector injector;
+
 	private static final Logger logger = LoggerFactory.getLogger(SegradaMessageBodyReader.class);
 
 	@Override
@@ -83,13 +88,17 @@ public class SegradaMessageBodyReader implements MessageBodyReader<SegradaEntity
 						}
 					}
 				}
-
-				// TODO: handle more complex setters, e.g. objects
+				// handle segrada entities
+				if (SegradaEntity.class.isAssignableFrom(setterType)) {
+					PictogramService service = injector.getInstance(PictogramService.class);
+					value = service.findById((String) value);
+				}
 
 				// try to set value
 				try {
 					// invoke setter on entity
-					setter.invoke(entity, setterType.cast(value));
+					if (value == null) setter.invoke(entity, value);
+					else setter.invoke(entity, setterType.cast(value));
 				} catch (Exception e) {
 					logger.error("Could not set entity of type " + aClass.getSimpleName() + ", method " + setter.getName() + " to value " + value + " (type " + setterType.getName() + ")", e);
 				}
