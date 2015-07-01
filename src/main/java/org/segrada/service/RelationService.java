@@ -10,9 +10,12 @@ import org.segrada.service.base.AbstractFullTextService;
 import org.segrada.service.repository.RelationRepository;
 import org.segrada.service.repository.TagRepository;
 import org.segrada.service.repository.factory.RepositoryFactory;
+import org.segrada.service.repository.prototype.PaginatingRepositoryOrService;
+import org.segrada.service.util.PaginationInfo;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]
@@ -31,7 +34,7 @@ import java.util.List;
  *
  * Relation service
  */
-public class RelationService extends AbstractFullTextService<IRelation, RelationRepository> {
+public class RelationService extends AbstractFullTextService<IRelation, RelationRepository> implements PaginatingRepositoryOrService<IRelation> {
 	/**
 	 * Constructor
 	 */
@@ -87,5 +90,10 @@ public class RelationService extends AbstractFullTextService<IRelation, Relation
 	 */
 	public List<IRelation> findByRelationType(IRelationType relationType) {
 		return repository.findByRelationType(relationType);
+	}
+
+	@Override
+	public PaginationInfo<IRelation> paginate(int page, int entriesPerPage, Map<String, Object> filters) {
+		return repository.paginate(page, entriesPerPage, filters);
 	}
 }
