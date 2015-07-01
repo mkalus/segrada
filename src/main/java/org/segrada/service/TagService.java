@@ -8,9 +8,12 @@ import org.segrada.service.base.AbstractRepositoryService;
 import org.segrada.service.base.SearchTermService;
 import org.segrada.service.repository.TagRepository;
 import org.segrada.service.repository.factory.RepositoryFactory;
+import org.segrada.service.repository.prototype.PaginatingRepositoryOrService;
+import org.segrada.service.util.PaginationInfo;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]
@@ -29,7 +32,7 @@ import java.util.List;
  *
  * Tag service
  */
-public class TagService extends AbstractRepositoryService<ITag, TagRepository> implements SearchTermService<ITag> {
+public class TagService extends AbstractRepositoryService<ITag, TagRepository> implements SearchTermService<ITag>, PaginatingRepositoryOrService<ITag> {
 	/**
 	 * Constructor
 	 */
@@ -119,5 +122,10 @@ public class TagService extends AbstractRepositoryService<ITag, TagRepository> i
 	 */
 	public void removeTag(String tagId, SegradaTaggable child) {
 		repository.removeTag(tagId, child);
+	}
+
+	@Override
+	public PaginationInfo<ITag> paginate(int page, int entriesPerPage, Map<String, Object> filters) {
+		return repository.paginate(page, entriesPerPage, filters);
 	}
 }

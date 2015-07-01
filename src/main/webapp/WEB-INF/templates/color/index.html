@@ -25,7 +25,7 @@
 			<tr th:each="entity : ${entities}" th:attr="data-data-dblclick=@{/color/show/{uid}(uid=${entity.uid})}">
 				<td th:text="${entity.title}">Name</td>
 				<td th:title="${entity.colorCode}" class="text-center"><span class="sg-color-icon" style="background-color: #000;" th:style="'background-color: ' + ${entity.colorCode}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></td>
-				<td>
+				<td class="text-right">
 					<div class="btn-group btn-group-sm" role="group" aria-label="Actions">
 						<a class="btn btn-primary sg-data-add" href="#" th:title="#{Show}" th:href="@{/color/show/{uid}(uid=${entity.uid})}"><i class="fa fa-eye"></i></a>
 						<a class="btn btn-default sg-data-add" href="#" th:title="#{Edit}" th:href="@{/color/edit/{uid}(uid=${entity.uid})}"><i class="fa fa-pencil"></i></a>

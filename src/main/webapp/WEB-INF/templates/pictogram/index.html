@@ -25,7 +25,7 @@
 			<tr th:each="entity : ${entities}" th:attr="data-data-dblclick=@{/pictogram/show/{uid}(uid=${entity.uid})}">
 				<td th:text="${entity.title}">Name</td>
 				<td class="text-center"><img src="#" th:src="@{/pictogram/file/{uid}(uid=${entity.uid})}" th:alt-title="${entity.title}" alt="" width="24" height="24" /></td>
-				<td>
+				<td class="text-right">
 					<div class="btn-group btn-group-sm" role="group" aria-label="Actions">
 						<a class="btn btn-primary sg-data-add" href="#" th:title="#{Show}" th:href="@{/pictogram/show/{uid}(uid=${entity.uid})}"><i class="fa fa-eye"></i></a>
 						<a class="btn btn-default sg-data-add" href="#" th:title="#{Edit}" th:href="@{/pictogram/edit/{uid}(uid=${entity.uid})}"><i class="fa fa-pencil"></i></a>
