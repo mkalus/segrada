@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-	<title th:text="#{list.node}">List nodes</title>
+	<title th:text="#{list.node}">Node</title>
 	<div th:include="partials/common :: head" th:remove="tag"></div>
 </head>
 
@@ -11,7 +11,35 @@
 <div th:replace="partials/common :: browser"></div>
 
 <div class="container">
-	<p th:text="${nodes}"></p>
+	<div class="sg-control-content sg-node">
+		<h4 class="sg-control-header"><i class="fa fa-dot-circle-o"></i> <span th:text="#{list.node}">List</span></h4>
+
+		<p th:text="${#messages.msg('pagination', paginationInfo.page, paginationInfo.pages)}">Pages</p>
+
+		<table class="table table-hover table-bordered table-condensed">
+			<tr>
+				<th class="text-center"><i class="fa a-dot-circle-o"></i></th>
+				<th th:text="#{field.title}">Title</th>
+				<th></th>
+			</tr>
+			<tr th:each="entity : ${paginationInfo.entities}" th:attr="data-data-dblclick=@{/node/show/{uid}(uid=${entity.uid})}">
+				<td class="text-center">
+					<span class="sg-color-icon" th:style="'background-color: ' + ${entity.colorCode}" th:if="${entity.color}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+					<img src="#" th:src="@{/pictogram/file/{uid}(uid=${entity.pictogram.uid})}" th:alt-title="${entity.pictogram.title}" alt="" width="24" height="24" th:if="${entity.pictogram}"/>
+				</td>
+				<td th:text="${entity.title}">Title</td>
+				<td class="text-right">
+					<div class="btn-group btn-group-sm" role="group" aria-label="Actions">
+						<a class="btn btn-primary sg-data-add" href="#" th:title="#{Show}" th:href="@{/node/show/{uid}(uid=${entity.uid})}"><i class="fa fa-eye"></i></a>
+						<a class="btn btn-default sg-data-add" href="#" th:title="#{Edit}" th:href="@{/node/edit/{uid}(uid=${entity.uid})}"><i class="fa fa-pencil"></i></a>
+						<a class="btn btn-default" href="#" th:title="#{Delete}" th:href="@{/node/delete/{uid}/0(uid=${entity.uid})}" th:attr="data-confirm=${#messages.msg('ReallyDelete', entity.title)}"><i class="fa fa-times-circle-o"></i></a>
+					</div>
+				</td>
+			</tr>
+		</table>
+
+		<div th:replace="partials/pagination :: pagination (paginationInfo=${paginationInfo},base='node')"></div>
+	</div>
 </div>
 
 <div th:replace="partials/common :: footer"></div>

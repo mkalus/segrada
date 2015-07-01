@@ -9,9 +9,12 @@ import org.segrada.service.base.SearchTermService;
 import org.segrada.service.repository.NodeRepository;
 import org.segrada.service.repository.TagRepository;
 import org.segrada.service.repository.factory.RepositoryFactory;
+import org.segrada.service.repository.prototype.PaginatingRepositoryOrService;
+import org.segrada.service.util.PaginationInfo;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]
@@ -30,7 +33,7 @@ import java.util.List;
  *
  * Node service
  */
-public class NodeService extends AbstractFullTextService<INode, NodeRepository> implements SearchTermService<INode> {
+public class NodeService extends AbstractFullTextService<INode, NodeRepository> implements SearchTermService<INode>, PaginatingRepositoryOrService<INode> {
 	/**
 	 * Constructor
 	 */
@@ -81,5 +84,10 @@ public class NodeService extends AbstractFullTextService<INode, NodeRepository> 
 			idxEntity.tagIds = tagRepository.findTagIdsConnectedToModel(entity, false);
 
 		return idxEntity;
+	}
+
+	@Override
+	public PaginationInfo<INode> paginate(int page, int entriesPerPage, Map<String, Object> filters) {
+		return repository.paginate(page, entriesPerPage, filters);
 	}
 }

@@ -4,15 +4,13 @@ import com.google.inject.Inject;
 import com.google.inject.servlet.RequestScoped;
 import com.sun.jersey.api.view.Viewable;
 import org.segrada.controller.base.AbstractColoredController;
+import org.segrada.model.Node;
 import org.segrada.model.prototype.INode;
 import org.segrada.service.NodeService;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-import java.util.HashMap;
-import java.util.Map;
+import javax.ws.rs.core.Response;
 
 /**
  * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]
@@ -44,11 +42,44 @@ public class NodeController extends AbstractColoredController<INode> {
 
 	@GET
 	@Produces(MediaType.TEXT_HTML)
-	public Viewable index() {
-		Map<String, Object> model = new HashMap<>();
+	public Viewable index(@QueryParam("page") int page, @QueryParam("entriesPerPage") int entriesPerPage) {
+		// TODO: do filters
+		return handlePaginatedIndex(service, page, entriesPerPage, null);
+	}
 
-		model.put("nodes", service.count());
+	@GET
+	@Path("/show/{uid}")
+	@Produces(MediaType.TEXT_HTML)
+	public Viewable show(@PathParam("uid") String uid) {
+		return handleShow(uid, service);
+	}
 
-		return new Viewable("node/index", model);
+	@GET
+	@Path("/add")
+	@Produces(MediaType.TEXT_HTML)
+	public Viewable add() {
+		return handleForm(service.createNewInstance());
+	}
+
+	@GET
+	@Path("/edit/{uid}")
+	@Produces(MediaType.TEXT_HTML)
+	public Viewable edit(@PathParam("uid") String uid) {
+		return handleForm(service.findById(service.convertUidToId(uid)));
+	}
+
+	@POST
+	@Path("/update")
+	@Produces(MediaType.TEXT_HTML)
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	public Response update(Node entity) {
+		return handleUpdate(entity, service);
+	}
+
+	@GET
+	@Path("/delete/{uid}/{empty}")
+	@Produces(MediaType.TEXT_HTML)
+	public Response delete(@PathParam("uid") String uid, @PathParam("empty") String empty) {
+		return handleDelete(empty, service.findById(service.convertUidToId(uid)), service);
 	}
 }
