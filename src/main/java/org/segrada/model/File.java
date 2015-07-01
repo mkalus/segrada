@@ -36,7 +36,7 @@ public class File extends AbstractAnnotatedModel implements IFile {
 	 */
 	@NotNull(message = "error.notNull")
 	@Size(min=1, message = "error.notEmpty")
-	private String filename = "";
+	private String filename;
 
 	private String description = "";
 

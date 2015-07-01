@@ -6,7 +6,6 @@ import com.sun.jersey.api.view.Viewable;
 import org.segrada.controller.base.AbstractColoredController;
 import org.segrada.model.Source;
 import org.segrada.model.prototype.ISource;
-import org.segrada.model.prototype.SegradaEntity;
 import org.segrada.service.SourceService;
 
 import javax.ws.rs.*;

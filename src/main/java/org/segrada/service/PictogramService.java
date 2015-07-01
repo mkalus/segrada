@@ -10,6 +10,8 @@ import org.segrada.service.repository.PictogramRepository;
 import org.segrada.service.repository.factory.RepositoryFactory;
 import org.segrada.util.ImageManipulator;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -100,6 +102,18 @@ public class PictogramService extends AbstractRepositoryService<IPictogram, Pict
 	@Override
 	public void removeBinaryDataFromService(IPictogram entity) {
 		binaryDataService.removeReference(entity.getFileIdentifier());
+	}
+
+	@Override
+	public InputStream getBinaryDataAsStream(IPictogram entity) {
+		if (entity == null || entity.getFileIdentifier() == null || entity.getFileIdentifier().isEmpty())
+			return null;
+
+		try {
+			return binaryDataService.getBinaryDataAsStream(entity.getFileIdentifier());
+		} catch (IOException e) {
+			return null;
+		}
 	}
 
 	@Override

@@ -14,12 +14,16 @@ import org.segrada.service.binarydata.BinaryDataService;
 import org.segrada.service.repository.FileRepository;
 import org.segrada.service.repository.TagRepository;
 import org.segrada.service.repository.factory.RepositoryFactory;
+import org.segrada.service.repository.prototype.PaginatingRepositoryOrService;
+import org.segrada.service.util.PaginationInfo;
 import org.segrada.util.TextExtractor;
 
 import javax.annotation.Nullable;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]
@@ -38,7 +42,7 @@ import java.util.List;
  *
  * File service
  */
-public class FileService extends AbstractFullTextService<IFile, FileRepository> implements SearchTermService<IFile>, BinaryDataHandler<IFile> {
+public class FileService extends AbstractFullTextService<IFile, FileRepository> implements SearchTermService<IFile>, BinaryDataHandler<IFile>, PaginatingRepositoryOrService<IFile> {
 	/**
 	 * reference to binary data service
 	 */
@@ -179,6 +183,18 @@ public class FileService extends AbstractFullTextService<IFile, FileRepository> 
 	}
 
 	@Override
+	public InputStream getBinaryDataAsStream(IFile entity) {
+		if (entity == null || entity.getFileIdentifier() == null || entity.getFileIdentifier().isEmpty())
+			return null;
+
+		try {
+			return binaryDataService.getBinaryDataAsStream(entity.getFileIdentifier());
+		} catch (IOException e) {
+			return null;
+		}
+	}
+
+	@Override
 	public boolean save(IFile entity) {
 		// new entity?
 		boolean newEntity = entity.getId()==null;
@@ -248,5 +264,10 @@ public class FileService extends AbstractFullTextService<IFile, FileRepository> 
 				}
 			}
 		} else entity.setFullText(null); // remove full text
+	}
+
+	@Override
+	public PaginationInfo<IFile> paginate(int page, int entriesPerPage, Map<String, Object> filters) {
+		return repository.paginate(page, entriesPerPage, filters);
 	}
 }

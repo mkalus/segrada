@@ -2,6 +2,8 @@ package org.segrada.service.base;
 
 import org.segrada.model.prototype.SegradaEntity;
 
+import java.io.InputStream;
+
 /**
  * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]
  *
@@ -35,4 +37,11 @@ public interface BinaryDataHandler<BEAN extends SegradaEntity> {
 	 * @param entity containing binary data
 	 */
 	void removeBinaryDataFromService(BEAN entity);
+
+	/**
+	 * return data as stram
+	 * @param entity containing binary data
+	 * @return input stream for data
+	 */
+	InputStream getBinaryDataAsStream(BEAN entity);
 }

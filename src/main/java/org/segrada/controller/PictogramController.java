@@ -13,7 +13,6 @@ import org.segrada.controller.base.AbstractBaseController;
 import org.segrada.model.Pictogram;
 import org.segrada.model.prototype.IPictogram;
 import org.segrada.service.PictogramService;
-import org.segrada.service.binarydata.BinaryDataService;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -49,9 +48,6 @@ public class PictogramController extends AbstractBaseController<IPictogram> {
 	@Inject
 	private PictogramService service;
 
-	@Inject
-	private BinaryDataService binaryDataService;
-
 	@Override
 	protected String getBasePath() {
 		return "/pictogram/";
@@ -77,7 +73,7 @@ public class PictogramController extends AbstractBaseController<IPictogram> {
 			IPictogram entity = service.findById(service.convertUidToId(uid));
 			final InputStream in = (entity == null)?
 					getClass().getResourceAsStream("/img/no_image.png"):
-					binaryDataService.getBinaryDataAsStream(entity.getFileIdentifier());
+					service.getBinaryDataAsStream(entity);
 
 			// set streaming output
 			StreamingOutput output = outputStream -> {

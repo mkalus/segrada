@@ -1,0 +1,51 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" th:lang="${#locale.language}">
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<title th:text="#{add.file}">Create New File</title>
+	<div th:include="partials/common :: head" th:remove="tag"></div>
+</head>
+
+<body>
+<div th:replace="partials/common :: browser"></div>
+
+<div class="container">
+	<div class="sg-data sg-closeable sg-file" th:with="tempId=${entity.uid}?${entity.uid}:${#strings.randomAlphanumeric(10)}" th:id="${'file-' + tempId}">
+		<h4 class="sg-data-header" th:text="#{add.file}" th:if="${isNewEntity}">Create New</h4>
+		<h4 class="sg-data-header" th:text="#{ChangeTitle(#{File}, ${entity.title})}" th:unless="${isNewEntity}">Change Existing</h4>
+
+		<form method="post" action="#" th:action="@{/file/update}" th:object="${entity}" class="form-horizontal sg-data-form sg-data-content" th:attr="data-id=${'file-' + tempId}" enctype="multipart/form-data">
+
+			<div th:replace="partials/form :: formTextfield (name='title',field=${entity.title},label=#{field.title},id=${tempId},errors=${errors},required=false)"></div>
+			<div th:replace="partials/form :: formMarkupTextarea (name='description',field=${entity.description},label=#{field.description},id=${tempId},rows=5,errors=${errors},required=false,markupName='descriptionMarkup',markupField=${entity.descriptionMarkup})"></div>
+			<div th:replace="partials/form :: formTextarea (name='copyright',field=${entity.copyright},label=#{field.copyright},id=${tempId},rows=2,errors=${errors},required=false)"></div>
+			<div th:replace="partials/form :: formTextarea (name='location',field=${entity.location},label=#{field.location},id=${tempId},rows=2,errors=${errors},required=false)"></div>
+
+			<div class="form-group" th:classappend="${errors}?(${#maps.containsKey(errors, 'uploadedFile')}?'has-error has-feedback')">
+				<label class="col-sm-2 control-label" th:text="#{field.file}">Upload File</label>
+				<div class="col-sm-10 sg-fileupload-small" th:with="tempUploadId=${#strings.randomAlphanumeric(10)}">
+					<input th:attr="data-id=${tempUploadId}" type="file" class="sg-fileupload-small" name="uploadedFile" accept="image/png,image/jpeg,image/gif" />
+					<span class="help-block" th:text="${errors}?(${errors.uploadedFile}?${#messages.msg(errors.uploadedFile)})">Error</span>
+				</div>
+			</div>
+
+			<div th:replace="partials/form :: formCheckbox (name='indexFullText',field=${entity.indexFullText},label=#{field.indexFullText},id=${tempId},errors=${errors},required=false)"></div>
+			<div th:replace="partials/form :: formCheckbox (name='containFile',field=${entity.containFile},label=#{field.containFile},id=${tempId},errors=${errors},required=false)"></div>
+
+			<div th:replace="partials/form :: formColorSelect (colors=${colors},name='color',field=${entity.color},label=#{field.color},id=${tempId},errors=${errors},required=false)"></div>
+			<div th:replace="partials/form :: formPictogram (name='pictogram',field=${entity.pictogram},label=#{Pictogram},id=${tempId},errors=${errors},required=false)"></div>
+			<div th:replace="partials/form :: formTagsfield (name='tags',field=${entity.tags},label=#{field.tags},id=${tempId},errors=${errors},required=false)"></div>
+
+			<input type="hidden" name="id" th:value="${entity.id}" th:if="${entity.id}" />
+
+			<div th:replace="partials/form :: submit (isNewEntity=${isNewEntity})"></div>
+		</form>
+
+		<div th:replace="partials/form :: formPictogramModal (name='pictogram',id=${tempId})"></div>
+	</div>
+</div>
+
+<div th:replace="partials/common :: footer"></div>
+</body>
+</html>
