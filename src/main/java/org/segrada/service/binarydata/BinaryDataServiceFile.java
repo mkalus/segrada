@@ -101,6 +101,10 @@ public class BinaryDataServiceFile implements BinaryDataService {
 			if (suffix.length() <= 1) suffix = ".bin";
 		}
 
+		// to lower case and clean file name
+		suffix = suffix.toLowerCase();
+		prefix = prefix.toLowerCase().replaceAll("[^a-zA-Z0-9_\\-\\.]", "_");
+
 		// too short? Make it longer!
 		int prefixLen = prefix.length();
 		if (prefixLen <= 5) prefix += RandomStringUtils.randomAlphanumeric(5-prefixLen);
