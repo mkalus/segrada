@@ -3,6 +3,7 @@ package org.segrada.controller;
 import com.google.inject.Inject;
 import com.google.inject.servlet.RequestScoped;
 import org.segrada.controller.base.AbstractBaseController;
+import org.segrada.model.prototype.IFile;
 import org.segrada.service.ColorService;
 import org.segrada.service.FileService;
 
@@ -30,7 +31,7 @@ import javax.ws.rs.core.MediaType;
  */
 @Path("/file")
 @RequestScoped
-public class FileController extends AbstractBaseController {
+public class FileController extends AbstractBaseController<IFile> {
 	@Inject
 	private FileService service;
 

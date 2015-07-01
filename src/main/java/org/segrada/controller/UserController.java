@@ -3,6 +3,7 @@ package org.segrada.controller;
 import com.google.inject.Inject;
 import com.google.inject.servlet.RequestScoped;
 import org.segrada.controller.base.AbstractBaseController;
+import org.segrada.model.prototype.IUser;
 import org.segrada.service.ColorService;
 import org.segrada.service.UserService;
 
@@ -30,7 +31,7 @@ import javax.ws.rs.core.MediaType;
  */
 @Path("/user")
 @RequestScoped
-public class UserController extends AbstractBaseController {
+public class UserController extends AbstractBaseController<IUser> {
 	@Inject
 	private UserService service;
 

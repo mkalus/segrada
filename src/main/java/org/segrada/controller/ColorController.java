@@ -6,6 +6,7 @@ import com.sun.jersey.api.view.Viewable;
 import org.segrada.controller.base.AbstractBaseController;
 import org.segrada.model.Color;
 import org.segrada.model.Source;
+import org.segrada.model.prototype.IColor;
 import org.segrada.service.ColorService;
 
 import javax.ws.rs.*;
@@ -31,7 +32,7 @@ import javax.ws.rs.core.Response;
  */
 @Path("/color")
 @RequestScoped
-public class ColorController extends AbstractBaseController {
+public class ColorController extends AbstractBaseController<IColor> {
 	@Inject
 	private ColorService service;
 

@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import com.google.inject.servlet.RequestScoped;
 import com.sun.jersey.api.view.Viewable;
 import org.segrada.controller.base.AbstractBaseController;
+import org.segrada.model.prototype.INode;
 import org.segrada.service.ColorService;
 import org.segrada.service.NodeService;
 
@@ -33,7 +34,7 @@ import java.util.Map;
  */
 @Path("/node")
 @RequestScoped
-public class NodeController extends AbstractBaseController {
+public class NodeController extends AbstractBaseController<INode> {
 	@Inject
 	private NodeService service;
 

@@ -3,6 +3,7 @@ package org.segrada.controller;
 import com.google.inject.Inject;
 import com.google.inject.servlet.RequestScoped;
 import org.segrada.controller.base.AbstractBaseController;
+import org.segrada.model.prototype.ISourceReference;
 import org.segrada.service.ColorService;
 import org.segrada.service.SourceReferenceService;
 
@@ -30,7 +31,7 @@ import javax.ws.rs.core.MediaType;
  */
 @Path("/source_reference")
 @RequestScoped
-public class SourceReferenceController extends AbstractBaseController {
+public class SourceReferenceController extends AbstractBaseController<ISourceReference> {
 	@Inject
 	private SourceReferenceService service;
 

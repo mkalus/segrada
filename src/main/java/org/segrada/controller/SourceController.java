@@ -5,11 +5,14 @@ import com.google.inject.servlet.RequestScoped;
 import com.sun.jersey.api.view.Viewable;
 import org.segrada.controller.base.AbstractColoredController;
 import org.segrada.model.Source;
+import org.segrada.model.prototype.ISource;
+import org.segrada.model.prototype.SegradaEntity;
 import org.segrada.service.SourceService;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.Map;
 
 /**
  * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]
@@ -30,7 +33,7 @@ import javax.ws.rs.core.Response;
  */
 @Path("/source")
 @RequestScoped
-public class SourceController extends AbstractColoredController {
+public class SourceController extends AbstractColoredController<ISource> {
 	@Inject
 	private SourceService service;
 
@@ -73,6 +76,21 @@ public class SourceController extends AbstractColoredController {
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response update(Source entity) {
 		return handleUpdate(entity, service);
+	}
+
+	@Override
+	protected void validateExtra(Map<String, String> errors, ISource entity) {
+		super.validateExtra(errors, entity);
+
+		// check duplicate ref
+		if (entity != null && entity.getShortRef() != null && !entity.getShortRef().isEmpty()) {
+			ISource toCheck = service.findByRef(entity.getShortRef());
+
+			// not the same entity
+			if (toCheck != null && !toCheck.getId().equals(entity.getId())) {
+				errors.put("shortRef", "error.double");
+			}
+		}
 	}
 
 	@GET

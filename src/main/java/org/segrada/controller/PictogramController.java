@@ -45,7 +45,7 @@ import java.util.Map;
  */
 @Path("/pictogram")
 @RequestScoped
-public class PictogramController extends AbstractBaseController {
+public class PictogramController extends AbstractBaseController<IPictogram> {
 	@Inject
 	private PictogramService service;
 
@@ -181,9 +181,9 @@ public class PictogramController extends AbstractBaseController {
 				try {
 					return Response.seeOther(new URI(getBasePath() + "show/" + entity.getUid())).build();
 				} catch (URISyntaxException e) {
-					Response.ok(new Viewable("error", e.getMessage())).build();
+					return Response.ok(new Viewable("error", e.getMessage())).build();
 				}
-			} else Response.ok(new Viewable("error", "SAVE failed.")).build();
+			} else return Response.ok(new Viewable("error", "SAVE failed.")).build();
 		}
 
 		// fill model map

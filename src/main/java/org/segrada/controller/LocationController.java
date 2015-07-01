@@ -3,6 +3,7 @@ package org.segrada.controller;
 import com.google.inject.Inject;
 import com.google.inject.servlet.RequestScoped;
 import org.segrada.controller.base.AbstractBaseController;
+import org.segrada.model.prototype.ILocation;
 import org.segrada.service.ColorService;
 import org.segrada.service.LocationService;
 
@@ -30,7 +31,7 @@ import javax.ws.rs.core.MediaType;
  */
 @Path("/location")
 @RequestScoped
-public class LocationController extends AbstractBaseController {
+public class LocationController extends AbstractBaseController<ILocation> {
 	@Inject
 	private LocationService service;
 

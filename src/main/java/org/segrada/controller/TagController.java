@@ -8,12 +8,14 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.segrada.controller.base.AbstractBaseController;
 import org.segrada.model.Tag;
+import org.segrada.model.prototype.ISource;
 import org.segrada.model.prototype.ITag;
 import org.segrada.service.TagService;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.Map;
 
 /**
  * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]
@@ -34,7 +36,7 @@ import javax.ws.rs.core.Response;
  */
 @Path("/tag")
 @RequestScoped
-public class TagController extends AbstractBaseController {
+public class TagController extends AbstractBaseController<ITag> {
 	@Inject
 	private TagService service;
 
@@ -78,6 +80,22 @@ public class TagController extends AbstractBaseController {
 	public Response update(Tag entity) {
 		return handleUpdate(entity, service);
 	}
+
+	@Override
+	protected void validateExtra(Map<String, String> errors, ITag entity) {
+		super.validateExtra(errors, entity);
+
+		// check duplicate ref
+		if (entity != null && entity.getTitle() != null && !entity.getTitle().isEmpty()) {
+			ITag toCheck = service.findByTitle(entity.getTitle());
+
+			// not the same entity
+			if (toCheck != null && !toCheck.getId().equals(entity.getId())) {
+				errors.put("title", "error.double");
+			}
+		}
+	}
+
 
 	@GET
 	@Path("/delete/{uid}/{empty}")

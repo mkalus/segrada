@@ -1,6 +1,7 @@
 package org.segrada.controller.base;
 
 import com.google.inject.Inject;
+import org.segrada.model.prototype.SegradaEntity;
 import org.segrada.service.ColorService;
 import org.segrada.service.PictogramService;
 
@@ -23,7 +24,7 @@ import java.util.Map;
  *
  * Abstract colored base controller - injects services for colors and pictograms in controller
  */
-abstract public class AbstractColoredController extends AbstractBaseController {
+abstract public class AbstractColoredController<BEAN extends SegradaEntity> extends AbstractBaseController<BEAN> {
 	@Inject
 	protected ColorService colorService;
 

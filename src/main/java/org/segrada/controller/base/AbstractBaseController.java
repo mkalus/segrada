@@ -35,15 +35,14 @@ import java.util.Map;
  *
  * Abstract base controller
  */
-abstract public class AbstractBaseController {
+abstract public class AbstractBaseController<BEAN extends SegradaEntity> {
 	/**
 	 * Handle non paginated index
 	 * @param service showing pages
-	 * @param <T> type of entity
 	 * @param <E> type of repository
 	 * @return view with list of entities set
 	 */
-	protected <T extends SegradaEntity, E extends CRUDRepository<T>> Viewable handleShowAll(AbstractRepositoryService<T, E> service) {
+	protected <E extends CRUDRepository<BEAN>> Viewable handleShowAll(AbstractRepositoryService<BEAN, E> service) {
 		// create model map
 		Map<String, Object> model = new HashMap<>();
 
@@ -58,10 +57,9 @@ abstract public class AbstractBaseController {
 	 * @param page page to show starting with 1
 	 * @param entriesPerPage entries per page
 	 * @param filters filter options
-	 * @param <T> type of entity
 	 * @return view with paginationInfo set
 	 */
-	protected <T extends SegradaEntity> Viewable handlePaginatedIndex(PaginatingRepositoryOrService<T> service, int page, int entriesPerPage, Map<String, Object> filters) {
+	protected Viewable handlePaginatedIndex(PaginatingRepositoryOrService<BEAN> service, int page, int entriesPerPage, Map<String, Object> filters) {
 		// define default values
 		if (page < 1) page = 1;
 		if (entriesPerPage < 1) entriesPerPage = 15;
@@ -78,11 +76,10 @@ abstract public class AbstractBaseController {
 	 * Handle detail view
 	 * @param uid of entity to show
 	 * @param service showing entities
-	 * @param <T> type of entity
 	 * @param <E> type of repository
 	 * @return view with detail of entity
 	 */
-	protected <T extends SegradaEntity, E extends CRUDRepository<T>> Viewable handleShow(String uid, AbstractRepositoryService<T, E> service) {
+	protected <E extends CRUDRepository<BEAN>> Viewable handleShow(String uid, AbstractRepositoryService<BEAN, E> service) {
 		// create model map
 		Map<String, Object> model = new HashMap<>();
 
@@ -111,13 +108,14 @@ abstract public class AbstractBaseController {
 	 * handle whole update method of an entity
 	 * @param entity to save
 	 * @param service saving entity
-	 * @param <T> type of entity
 	 * @param <E> type of repository
 	 * @return response, either form view or redirect
 	 */
-	protected <T extends SegradaEntity, E extends CRUDRepository<T>> Response handleUpdate(T entity, AbstractRepositoryService<T, E> service) {
+	protected <E extends CRUDRepository<BEAN>> Response handleUpdate(BEAN entity, AbstractRepositoryService<BEAN, E> service) {
 		// validate entity
 		Map<String, String> errors = validate(entity);
+		// extra validation
+		validateExtra(errors, entity);
 
 		// create model map
 		Map<String, Object> model = new HashMap<>();
@@ -131,9 +129,9 @@ abstract public class AbstractBaseController {
 				try {
 					return Response.seeOther(new URI(getBasePath() + "show/" + entity.getUid())).build();
 				} catch (URISyntaxException e) {
-					Response.ok(new Viewable("error", e.getMessage())).build();
+					return Response.ok(new Viewable("error", e.getMessage())).build();
 				}
-			} else Response.ok(new Viewable("error", "SAVE failed.")).build();
+			} else return Response.ok(new Viewable("error", "SAVE failed.")).build();
 		}
 
 		// fill model map
@@ -151,11 +149,10 @@ abstract public class AbstractBaseController {
 	 * @param empty if this is empty, redirect to list view, otherwise return empty response
 	 * @param entity to delete
 	 * @param service deleting entity
-	 * @param <T> type of entity
 	 * @param <E> type of repository
 	 * @return response, either empty response or list
 	 */
-	protected <T extends SegradaEntity, E extends CRUDRepository<T>> Response handleDelete(String empty, T entity, AbstractRepositoryService<T, E> service) {
+	protected <E extends CRUDRepository<BEAN>> Response handleDelete(String empty, BEAN entity, AbstractRepositoryService<BEAN, E> service) {
 		boolean emptyValue = empty == null || empty.isEmpty() || empty.equals("0");
 
 		if (!service.delete(entity)) {
@@ -178,15 +175,14 @@ abstract public class AbstractBaseController {
 	/**
 	 * validate bean
 	 * @param entity to validate
-	 * @param <T> type of bean
 	 * @return map containing property and one error message
 	 */
-	protected <T> Map<String, String> validate(T entity) {
+	protected Map<String, String> validate(BEAN entity) {
 		Map<String, String> errors = new HashMap<>();
 
 		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
 		Validator validator = factory.getValidator();
-		for (ConstraintViolation<T> error : validator.validate(entity)) {
+		for (ConstraintViolation<BEAN> error : validator.validate(entity)) {
 			errors.put(error.getPropertyPath().toString(), error.getMessage());
 		}
 
@@ -197,6 +193,15 @@ abstract public class AbstractBaseController {
 	 * @return controller's base path, e.g. "/source/"
 	 */
 	abstract protected String getBasePath();
+
+	/**
+	 * extra validation hook
+	 * @param errors error map
+	 * @param entity to validate
+	 */
+	protected void validateExtra(Map<String, String> errors, BEAN entity) {
+		//Do nothing by default
+	}
 
 	/**
 	 * called to enrich the model for editing and saving - hook

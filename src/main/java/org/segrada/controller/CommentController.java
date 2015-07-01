@@ -3,6 +3,7 @@ package org.segrada.controller;
 import com.google.inject.Inject;
 import com.google.inject.servlet.RequestScoped;
 import org.segrada.controller.base.AbstractBaseController;
+import org.segrada.model.prototype.IComment;
 import org.segrada.service.ColorService;
 import org.segrada.service.CommentService;
 
@@ -30,7 +31,7 @@ import javax.ws.rs.core.MediaType;
  */
 @Path("/comment")
 @RequestScoped
-public class CommentController extends AbstractBaseController {
+public class CommentController extends AbstractBaseController<IComment> {
 	@Inject
 	private CommentService service;
 
