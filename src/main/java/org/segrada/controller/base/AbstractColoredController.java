@@ -3,7 +3,6 @@ package org.segrada.controller.base;
 import com.google.inject.Inject;
 import org.segrada.model.prototype.SegradaEntity;
 import org.segrada.service.ColorService;
-import org.segrada.service.PictogramService;
 
 import java.util.Map;
 
@@ -27,10 +26,6 @@ import java.util.Map;
 abstract public class AbstractColoredController<BEAN extends SegradaEntity> extends AbstractBaseController<BEAN> {
 	@Inject
 	protected ColorService colorService;
-
-	//@Inject
-	//protected PictogramService pictogramService;
-	////TODO
 
 	@Override
 	protected void enrichModelForEditingAndSaving(Map<String, Object> model) {

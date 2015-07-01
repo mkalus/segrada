@@ -28,11 +28,11 @@
 			<div th:replace="partials/form :: formMarkupTextarea (name='description',field=${entity.description},label=#{field.description},id=${tempId},rows=5,errors=${errors},required=false,markupName='descriptionMarkup',markupField=${entity.descriptionMarkup})"></div>
 			<div th:replace="partials/form :: formColorSelect (colors=${colors},name='color',field=${entity.color},label=#{field.color},id=${tempId},errors=${errors},required=false)"></div>
 			<div th:replace="partials/form :: formPictogram (name='pictogram',field=${entity.pictogram},label=#{Pictogram},id=${tempId},errors=${errors},required=false)"></div>
-			<div th:replace="partials/form :: formTagsfield (name='tags',field=${entity.tags},label=#{Tags},id=${tempId},errors=${errors},required=false)"></div>
+			<div th:replace="partials/form :: formTagsfield (name='tags',field=${entity.tags},label=#{field.tags},id=${tempId},errors=${errors},required=false)"></div>
 
 			<input type="hidden" name="id" th:value="${entity.id}" th:if="${entity.id}" />
 
-			<div th:replace="partials/form :: submit (isNewEntity=isNewEntity)"></div>
+			<div th:replace="partials/form :: submit (isNewEntity=${isNewEntity})"></div>
 		</form>
 
 		<div th:replace="partials/form :: formPictogramModal (name='pictogram',id=${tempId})"></div>

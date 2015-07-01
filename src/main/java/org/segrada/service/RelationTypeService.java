@@ -7,8 +7,11 @@ import org.segrada.service.base.AbstractRepositoryService;
 import org.segrada.service.base.SearchTermService;
 import org.segrada.service.repository.RelationTypeRepository;
 import org.segrada.service.repository.factory.RepositoryFactory;
+import org.segrada.service.repository.prototype.PaginatingRepositoryOrService;
+import org.segrada.service.util.PaginationInfo;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]
@@ -27,7 +30,7 @@ import java.util.List;
  *
  * Relation type service
  */
-public class RelationTypeService extends AbstractRepositoryService<IRelationType, RelationTypeRepository> implements SearchTermService<IRelationType> {
+public class RelationTypeService extends AbstractRepositoryService<IRelationType, RelationTypeRepository> implements SearchTermService<IRelationType>, PaginatingRepositoryOrService<IRelationType> {
 	/**
 	 * Constructor
 	 */
@@ -60,5 +63,10 @@ public class RelationTypeService extends AbstractRepositoryService<IRelationType
 	@Override
 	public List<IRelationType> search(String term) {
 		return findBySearchTerm(term, 10, true);
+	}
+
+	@Override
+	public PaginationInfo<IRelationType> paginate(int page, int entriesPerPage, Map<String, Object> filters) {
+		return repository.paginate(page, entriesPerPage, filters);
 	}
 }
