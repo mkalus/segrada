@@ -6,7 +6,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.tika.io.IOUtils;
 import org.segrada.model.prototype.SegradaEntity;
-import org.segrada.service.PictogramService;
+import org.segrada.service.base.AbstractRepositoryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -90,8 +90,18 @@ public class SegradaMessageBodyReader implements MessageBodyReader<SegradaEntity
 				}
 				// handle segrada entities
 				if (SegradaEntity.class.isAssignableFrom(setterType)) {
-					PictogramService service = injector.getInstance(PictogramService.class);
-					value = service.findById((String) value);
+					if (value != null && !((String)value).isEmpty()) {
+						try { // dynamically determine service and fetch element by id
+							String className = setterType.getSimpleName();
+							if (className.startsWith("I")) className = className.substring(1);
+
+							Class serviceClass = Class.forName("org.segrada.service." + className + "Service");
+							AbstractRepositoryService service = (AbstractRepositoryService) injector.getInstance(serviceClass);
+							value = service.findById((String) value);
+						} catch (Exception e) {
+							logger.error("Error getting/setting SegradaEntity reference of type " + setterType + ", value: " + value, e);
+						}
+					} else value = null; // reset in order to avoid warnings
 				}
 				// handle arrays
 				if (String[].class.isAssignableFrom(setterType)) {

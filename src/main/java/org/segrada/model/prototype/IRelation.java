@@ -27,9 +27,9 @@ public interface IRelation extends SegradaCoreEntity {
 	String getDescriptionMarkup();
 	void setDescriptionMarkup(String descriptionMarkup);
 
-	SegradaEntity getFromEntity();
-	void setFromEntity(SegradaEntity fromEntity);
+	INode getFromEntity();
+	void setFromEntity(INode fromEntity);
 
-	SegradaEntity getToEntity();
-	void setToEntity(SegradaEntity toEntity);
+	INode getToEntity();
+	void setToEntity(INode toEntity);
 }

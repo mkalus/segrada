@@ -1,9 +1,9 @@
 package org.segrada.model;
 
 import org.segrada.model.base.AbstractCoreModel;
+import org.segrada.model.prototype.INode;
 import org.segrada.model.prototype.IRelation;
 import org.segrada.model.prototype.IRelationType;
-import org.segrada.model.prototype.SegradaEntity;
 
 import javax.validation.constraints.NotNull;
 
@@ -37,13 +37,13 @@ public class Relation extends AbstractCoreModel implements IRelation {
 	 * from entity
 	 */
 	@NotNull(message = "error.notNull")
-	protected SegradaEntity fromEntity;
+	protected INode fromEntity;
 
 	/**
 	 * to entity
 	 */
 	@NotNull(message = "error.notNull")
-	protected SegradaEntity toEntity;
+	protected INode toEntity;
 
 	/**
 	 * Text
@@ -68,22 +68,22 @@ public class Relation extends AbstractCoreModel implements IRelation {
 	}
 
 	@Override
-	public SegradaEntity getFromEntity() {
+	public INode getFromEntity() {
 		return fromEntity;
 	}
 
 	@Override
-	public void setFromEntity(SegradaEntity fromEntity) {
+	public void setFromEntity(INode fromEntity) {
 		this.fromEntity = fromEntity;
 	}
 
 	@Override
-	public SegradaEntity getToEntity() {
+	public INode getToEntity() {
 		return toEntity;
 	}
 
 	@Override
-	public void setToEntity(SegradaEntity toEntity) {
+	public void setToEntity(INode toEntity) {
 		this.toEntity = toEntity;
 	}
 

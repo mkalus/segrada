@@ -14,6 +14,33 @@
 	});
 
 	/**
+	 * node tokenizer
+	 */
+	var nodeTokenizer = new Bloodhound({
+		datumTokenizer: function (d) {
+			return Bloodhound.tokenizers.whitespace(d.title);
+		},
+		queryTokenizer: Bloodhound.tokenizers.whitespace,
+		remote: {
+			url: urlSegradaNodeSearch,
+			replace: function(url, uriEncodedQuery) {
+				var searchUrl = url + uriEncodedQuery;
+
+				// get current textField
+				var textField = $(".sg-node-search").filter(":focus");
+				var relationTypeSelect = $("#" + textField.attr('data-select-id') + ' option').filter(":selected");
+				var contraintIds = relationTypeSelect.attr(textField.attr('data-attr'));
+				if (contraintIds != null && contraintIds.length > 0) {
+					// add list of ids
+					searchUrl += '&tags=' + encodeURIComponent(contraintIds);
+				}
+
+				return searchUrl;
+			}
+		}
+	});
+
+	/**
 	 * on enter pressed event
 	 * @param func
 	 * @returns {jQuery}
@@ -217,13 +244,13 @@
 
 		// *******************************************************
 		// color picker init
-		$("select.sg-colorpicker").simplepicker({
+		$("select.sg-colorpicker", part).simplepicker({
 			theme: 'fontawesome'
 		});
 
 		// *******************************************************
 		// Tags fields
-		$("select.sg-tags").tagsinput({
+		$("select.sg-tags", part).tagsinput({
 			trimValue: true,
 			confirmKeys: [13], //enter only
 			typeaheadjs: {
@@ -232,6 +259,29 @@
 				valueKey: 'title',
 				source: tagsTokenizer.ttAdapter()
 			}
+		});
+
+		// *******************************************************
+		// node selector for relation forms
+		$("input.sg-node-search", part).each(function() {
+			var $this = $(this);
+			var target = $('#' + $this.attr('data-id'));
+
+			$this.typeahead({hint: true,
+				highlight: true,
+				minLength: 1
+			},{
+				name: 'node',
+				displayKey: 'title',
+				valueKey: 'id',
+				source: nodeTokenizer.ttAdapter()
+			}).bind('typeahead:selected', function(e, datum) {
+				target.val(datum.id);
+			}).bind('keyup', function() { // empty on textbox empty
+				if (!this.value) {
+					target.val('');
+				}
+			});
 		});
 
 		// *******************************************************

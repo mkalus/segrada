@@ -1,14 +1,17 @@
 package org.segrada.service.repository.orientdb;
 
 import com.google.inject.Inject;
+import com.orientechnologies.orient.core.db.record.OIdentifiable;
+import com.orientechnologies.orient.core.id.ORID;
 import com.orientechnologies.orient.core.id.ORecordId;
-import com.orientechnologies.orient.core.metadata.schema.OType;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.orientechnologies.orient.core.sql.OCommandSQL;
 import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
 import com.tinkerpop.blueprints.impls.orient.OrientEdge;
 import org.segrada.model.Relation;
-import org.segrada.model.prototype.*;
+import org.segrada.model.prototype.INode;
+import org.segrada.model.prototype.IRelation;
+import org.segrada.model.prototype.IRelationType;
 import org.segrada.service.repository.NodeRepository;
 import org.segrada.service.repository.RelationRepository;
 import org.segrada.service.repository.RelationTypeRepository;
@@ -238,9 +241,9 @@ public class OrientDbRelationRepository extends AbstractCoreOrientDbRepository<I
 			ODocument relationLink = getRelationLink(document, false);
 			if (relationLink == null) { // no relation yet => create new one
 				// create edge and set it to document
-				List<OrientEdge> edgeList =
+				List<OIdentifiable> edgeList =
 						repositoryFactory.getDb().command(new OCommandSQL("create edge IsRelation from " + entity.getFromEntity().getId() + " to " + entity.getToEntity().getId())).execute();
-				document.field("relationLink", (ORecordId) edgeList.get(0).getId());
+				document.field("relationLink", (ORecordId) edgeList.get(0).getIdentity());
 
 				if (logger.isTraceEnabled())
 					logger.trace("Created brank new IsRelation edge: " + edgeList.get(0).toString());
