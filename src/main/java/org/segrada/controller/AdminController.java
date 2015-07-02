@@ -2,6 +2,7 @@ package org.segrada.controller;
 
 import com.google.inject.Inject;
 import com.google.inject.servlet.RequestScoped;
+import org.segrada.search.SearchEngine;
 import org.segrada.service.base.AbstractFullTextService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +35,9 @@ import java.util.Map;
 public class AdminController {
 	private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
 
+	@Inject
+	private SearchEngine searchEngine;
+
 	/**
 	 * map to all full text services
 	 */
@@ -50,6 +54,9 @@ public class AdminController {
 	@Path("/reindex")
 	@Produces(MediaType.TEXT_HTML)
 	public String reindex() {
+		// clear index
+		searchEngine.clearAllIndexes();
+
 		// how many entities do we have in total?
 		long total = 0;
 		long done = 0;
