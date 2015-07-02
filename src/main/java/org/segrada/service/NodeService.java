@@ -63,6 +63,18 @@ public class NodeService extends AbstractFullTextService<INode, NodeRepository> 
 		return repository.findBySearchTerm(term, maximum, returnWithoutTerm);
 	}
 
+	/**
+	 * find by search terms, but also contain by tags (used in reference search)
+	 * @param term to search for
+	 * @param maximum to show
+	 * @param returnWithoutTerm show list even without search
+	 * @param tagIds list of tag ids to contain search in
+	 * @return list of entities
+	 */
+	public List<INode> findBySearchTermAndTags(@Nullable String term, int maximum, boolean returnWithoutTerm, @Nullable String[] tagIds) {
+		return repository.findBySearchTermAndTags(term, maximum, returnWithoutTerm, tagIds);
+	}
+
 	@Override
 	public List<INode> search(String term) {
 		return findBySearchTerm(term, 10, true);

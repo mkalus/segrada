@@ -3,6 +3,9 @@ package org.segrada.controller;
 import com.google.inject.Inject;
 import com.google.inject.servlet.RequestScoped;
 import com.sun.jersey.api.view.Viewable;
+import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 import org.segrada.controller.base.AbstractColoredController;
 import org.segrada.model.Node;
 import org.segrada.model.prototype.INode;
@@ -52,6 +55,35 @@ public class NodeController extends AbstractColoredController<INode> {
 	@Produces(MediaType.TEXT_HTML)
 	public Viewable show(@PathParam("uid") String uid) {
 		return handleShow(uid, service);
+	}
+
+	@GET
+	@Path("/search")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String search(@QueryParam("s") String term, @QueryParam("tags") String tags) {
+		// json array to hold hits
+		JSONArray jsonArray = new JSONArray();
+
+		// explode tags
+		String[] tagIds;
+		if (tags != null && tags.length() > 0) tagIds = tags.split(",");
+		else tagIds = null;
+
+		// search term finding
+		for (INode node : service.findBySearchTermAndTags(term, 36, true, tagIds)) {
+			try {
+				JSONObject jsonObject = new JSONObject();
+				jsonObject.put("id", node.getId());
+				jsonObject.put("uid", node.getUid());
+				jsonObject.put("title", node.getTitle());
+
+				jsonArray.put(jsonObject);
+			} catch (JSONException e) {
+				//IGNORE
+			}
+		}
+
+		return jsonArray.toString();
 	}
 
 	@GET

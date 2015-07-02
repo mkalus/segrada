@@ -376,6 +376,11 @@ public class OrientDbTagRepository extends AbstractSegradaOrientDbRepository<ITa
 
 	@Override
 	public void connectTag(ITag parent, SegradaTaggable child) {
+		if (parent == null || parent.getId() == null || child == null || child.getId() == null) {
+			logger.warn("connectTag with null warning: " + parent + " => " + child);
+			return;
+		}
+
 		initDb();
 
 		// check of childId is actually parent of parentId (circular tag path not allowed)

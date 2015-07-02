@@ -8,6 +8,7 @@ import org.apache.lucene.index.Term;
 import org.apache.lucene.queryparser.flexible.standard.QueryParserUtil;
 import org.apache.lucene.search.TermQuery;
 import org.segrada.model.Node;
+import org.segrada.model.base.AbstractSegradaEntity;
 import org.segrada.model.prototype.INode;
 import org.segrada.service.repository.NodeRepository;
 import org.segrada.service.repository.RelationRepository;
@@ -23,6 +24,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
 
 /**
  * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]
@@ -118,6 +120,11 @@ public class OrientDbNodeRepository extends AbstractCoreOrientDbRepository<INode
 
 	@Override
 	public List<INode> findBySearchTerm(@Nullable String term, int maximum, boolean returnWithoutTerm) {
+		return findBySearchTermAndTags(term, maximum, returnWithoutTerm, null);
+	}
+
+	@Override
+	public List<INode> findBySearchTermAndTags(@Nullable String term, int maximum, boolean returnWithoutTerm, @Nullable String[] tagIds) {
 		List<INode> hits = new LinkedList<>();
 
 		// empty search term and returnWithoutTerm false
@@ -125,17 +132,43 @@ public class OrientDbNodeRepository extends AbstractCoreOrientDbRepository<INode
 
 		initDb();
 
-		// search for term
-		List<ODocument> result;
-		if (term != null && term.length() > 0) {
-			// execute query
-			OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>("select * from Node where " + createSearchTermFullText(term) + " LIMIT " + maximum);
-			result = db.command(query).execute();
-		} else { // no term, just find top X entries
-			// execute query
-			OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>("select * from Node " + getDefaultOrder(true) + " LIMIT " + maximum);
-			result = db.command(query).execute();
+		// contain by tag ids - case
+		String queryString = "";
+		if (tagIds != null && tagIds.length > 0) {
+			queryString = "select * from ( traverse out('IsTagOf') from [";
+			boolean first = true;
+			for (String tagId : tagIds) {
+				// parse tag id - avoid sql injections
+				Matcher matcher = AbstractSegradaEntity.PATTERN_ORIENTID.matcher(tagId);
+				if (matcher.find()) {
+					if (first) first = false;
+					else queryString += ",";
+					queryString += tagId;
+				} else {
+					logger.warn("Could not parse to tagId: " + tagId);
+				}
+			}
+			queryString += "]) where @class = 'Node'";
+
+			// with search term
+			if (term != null && term.length() > 0) {
+				String escapedTerm = OrientStringEscape.escapeOrientSql(term);
+				queryString += "and (title LIKE '%" + escapedTerm + "%' OR alternativeTitles LIKE '%" + escapedTerm + "%')";
+			}
+
+			queryString += " LIMIT " + maximum;
+		} else { // no tags, do search in normal way
+			String where;
+			if (term != null && term.length() > 0) where = "where " + createSearchTermFullText(term); // create search term
+			else where = getDefaultOrder(true); // no term, just find top X entries
+
+			// create query
+			queryString = "select * from Node " + where + " LIMIT " + maximum;
 		}
+
+		// execute query
+		OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>(queryString);
+		List<ODocument> result = db.command(query).execute();
 
 		// browse entities
 		for (ODocument document : result) {

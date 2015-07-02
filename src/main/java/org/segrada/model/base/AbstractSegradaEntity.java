@@ -27,6 +27,9 @@ import java.util.regex.Pattern;
  * Base model for all entities
  */
 abstract public class AbstractSegradaEntity implements SegradaEntity {
+	public static final Pattern PATTERN_ORIENTID = Pattern.compile("^#(\\d+):(\\d+)$");
+	public static final Pattern PATTERN_UID = Pattern.compile("^(\\d+)-(\\d+)$");
+
 	/**
 	 * document version (may be 0)
 	 */
@@ -65,11 +68,10 @@ abstract public class AbstractSegradaEntity implements SegradaEntity {
 		this.id = id;
 	}
 
-	private static Pattern toUid = Pattern.compile("#(\\d+):(\\d+)");
 	@Override
 	public String getUid() {
 		if (id == null) return "";
-		Matcher matcher = toUid.matcher(id);
+		Matcher matcher = PATTERN_ORIENTID.matcher(id);
 		return matcher.replaceAll("$1-$2");
 	}
 

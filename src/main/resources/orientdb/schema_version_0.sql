@@ -204,11 +204,14 @@ create property Node.maxJD Long
 create property Node.minEntryCalendar String
 create property Node.maxEntryCalendar String
 alter property Node.title MANDATORY true
+alter property Node.title COLLATE ci
+alter property Node.alternativeTitles COLLATE ci
 alter property Node.description MANDATORY true
 alter property Node.descriptionMarkup MANDATORY true
 alter property Node.created MANDATORY true
 alter property Node.modified MANDATORY true
 create index Node.title NOTUNIQUE
+create index Node.alternativeTitles NOTUNIQUE
 create index Node.searchtitle ON Node (title,alternativeTitles) FULLTEXT ENGINE LUCENE
 #+ Edges: Files, Tags, Comments
 #+ Transient links: Locations, Periods, SourceReferences

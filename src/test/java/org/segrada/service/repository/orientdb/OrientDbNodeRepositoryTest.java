@@ -189,6 +189,78 @@ public class OrientDbNodeRepositoryTest {
 		assertEquals(1, hits.size());
 	}
 
+
+	@Test
+	public void testFindBySearchTermAndTags() throws Exception {
+		TagRepository tagRepository = factory.produceRepository(OrientDbTagRepository.class);
+
+		if (tagRepository == null) fail();
+
+		INode node = new Node();
+		node.setTitle("This is the title");
+		node.setAlternativeTitles("and this is its alternatives");
+		node.setDescription("Description");
+		node.setDescriptionMarkup("default");
+		repository.save(node);
+
+		ITag tag1 = new Tag();
+		tag1.setTitle("Tag 1");
+		tagRepository.save(tag1);
+		ITag tag2 = new Tag();
+		tag2.setTitle("Tag 2");
+		tagRepository.save(tag2);
+		ITag tag3 = new Tag();
+		tag3.setTitle("Tag 3");
+		tagRepository.save(tag3);
+		ITag tag4 = new Tag();
+		tag4.setTitle("Tag 4");
+		tagRepository.save(tag4);
+
+		// connect tags
+		tagRepository.connectTag(tag1, node);
+		tagRepository.connectTag(tag2, node);
+		tagRepository.connectTag(tag3, tag1);
+		// now tag1 and tag2 are connected to node, tag3 is parent of tag1, tag 4 is not connected to anyone
+
+		// empty term
+		List<INode> hits = repository.findBySearchTermAndTags("", 1, true, null);
+		assertEquals(1, hits.size());
+		hits = repository.findBySearchTermAndTags("", 1, true, new String[0]);
+		assertEquals(1, hits.size());
+
+		// find by tag ids
+		String[] tagIds = new String[]{ tag1.getId(), tag4.getId() };
+		hits = repository.findBySearchTermAndTags("", 1, true, tagIds);
+		assertEquals(1, hits.size());
+
+		// not in tag
+		tagIds = new String[]{ tag4.getId() };
+		hits = repository.findBySearchTermAndTags("", 1, true, tagIds);
+		assertEquals(0, hits.size());
+
+		// parent tag
+		tagIds = new String[]{ tag3.getId() };
+		hits = repository.findBySearchTermAndTags("", 1, true, tagIds);
+		assertEquals(1, hits.size());
+
+		// with search term
+		tagIds = new String[]{ tag1.getId(), tag4.getId() };
+		hits = repository.findBySearchTermAndTags("title", 1, true, tagIds);
+		assertEquals(1, hits.size());
+
+		tagIds = new String[]{ tag4.getId() };
+		hits = repository.findBySearchTermAndTags("title", 1, true, tagIds);
+		assertEquals(0, hits.size());
+
+		tagIds = new String[]{ tag1.getId(), tag4.getId() };
+		hits = repository.findBySearchTermAndTags("alternative", 1, true, tagIds);
+		assertEquals(1, hits.size());
+
+		tagIds = new String[]{ tag4.getId() };
+		hits = repository.findBySearchTermAndTags("alternative", 1, true, tagIds);
+		assertEquals(0, hits.size());
+	}
+
 	@Test
 	public void testPaginate() throws Exception {
 		TagRepository tagRepository = factory.produceRepository(OrientDbTagRepository.class);

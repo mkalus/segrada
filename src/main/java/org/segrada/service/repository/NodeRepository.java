@@ -5,6 +5,9 @@ import org.segrada.service.repository.prototype.CRUDRepository;
 import org.segrada.service.repository.prototype.PaginatingRepositoryOrService;
 import org.segrada.service.repository.prototype.SearchTermRepository;
 
+import javax.annotation.Nullable;
+import java.util.List;
+
 /**
  * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]
  *
@@ -23,4 +26,13 @@ import org.segrada.service.repository.prototype.SearchTermRepository;
  * Node Repository
  */
 public interface NodeRepository extends CRUDRepository<INode>, SearchTermRepository<INode>, PaginatingRepositoryOrService<INode> {
+	/**
+	 * find by search terms, but also contain by tags (used in reference search)
+	 * @param term to search for
+	 * @param maximum to show
+	 * @param returnWithoutTerm show list even without search
+	 * @param tagIds list of tag ids to contain search in
+	 * @return list of entities
+	 */
+	List<INode> findBySearchTermAndTags(@Nullable String term, int maximum, boolean returnWithoutTerm, @Nullable String[] tagIds);
 }
