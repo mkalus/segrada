@@ -50,9 +50,13 @@ abstract public class AbstractSegradaOrientDbRepository<T extends SegradaEntity>
 	 * @param entity converted
 	 */
 	protected void populateODocumentWithCreatedModified(ODocument document, SegradaEntity entity) {
-		document.field("created", entity.getCreated())
-				.field("modified", entity.getModified())
-				.field("creator", entity.getCreator()==null?null:new ORecordId(entity.getCreator().getId()))
+		// only set in new documents
+		if (document.getIdentity().isNew()) {
+			document.field("created", entity.getCreated())
+					.field("creator", entity.getCreator()==null?null:new ORecordId(entity.getCreator().getId()));
+		}
+
+		document.field("modified", entity.getModified())
 				.field("modifier", entity.getModifier() == null ? null : new ORecordId(entity.getModifier().getId()));
 	}
 
