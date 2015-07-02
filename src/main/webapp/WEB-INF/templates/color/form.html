@@ -11,7 +11,7 @@
 <div th:replace="partials/common :: browser"></div>
 
 <div class="container">
-	<div class="sg-data sg-closeable sg-color" th:with="tempId=${entity.uid}?${entity.uid}:${#strings.randomAlphanumeric(10)}" th:id="${'color-' + tempId}">
+	<div class="sg-data sg-closeable sg-color" th:with="tempId=${#strings.isEmpty(entity.uid)}?${#strings.randomAlphanumeric(10)}:${entity.uid}" th:id="${'color-' + tempId}">
 		<h4 class="sg-data-header" th:text="#{add.color}" th:if="${isNewEntity}">Create New</h4>
 		<h4 class="sg-data-header" th:text="#{ChangeTitle(#{Color}, ${entity.title})}" th:unless="${isNewEntity}">Change Existing</h4>
 

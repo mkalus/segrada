@@ -11,7 +11,7 @@
 <div th:replace="partials/common :: browser"></div>
 
 <div class="container">
-	<div class="sg-data sg-closeable sg-pictogram" th:with="tempId=${entity.uid}?${entity.uid}:${#strings.randomAlphanumeric(10)}" th:id="${'pictogram-' + tempId}">
+	<div class="sg-data sg-closeable sg-pictogram" th:with="tempId=${#strings.isEmpty(entity.uid)}?${#strings.randomAlphanumeric(10)}:${entity.uid}" th:id="${'pictogram-' + tempId}">
 		<h4 class="sg-data-header" th:text="#{add.pictogram}" th:if="${isNewEntity}">Create New</h4>
 		<h4 class="sg-data-header" th:text="#{ChangeTitle(#{Pictogram}, ${entity.title})}" th:unless="${isNewEntity}">Change Existing</h4>
 
