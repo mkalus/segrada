@@ -19,6 +19,8 @@ import org.apache.lucene.util.Version;
 import org.segrada.search.SearchEngine;
 import org.segrada.search.SearchHit;
 import org.segrada.search.SearchResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.PreDestroy;
 import java.io.IOException;
@@ -26,8 +28,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]
@@ -48,7 +48,7 @@ import java.util.logging.Logger;
  */
 @Singleton // thread safety should work
 public class LuceneSearchEngine implements SearchEngine {
-	private static final Logger logger = Logger.getLogger(LuceneSearchEngine.class.getName());
+	private static final Logger logger = LoggerFactory.getLogger(LuceneSearchEngine.class);
 
 	/**
 	 * reference to analyzer
@@ -144,7 +144,7 @@ public class LuceneSearchEngine implements SearchEngine {
 			iWriter.updateDocument(new Term("id", id), doc);
 			iWriter.close();
 		} catch (Exception e) {
-			logger.log(Level.SEVERE, "Could not index document " + id + ": " + e.getMessage());
+			logger.error("Could not index document " + id, e);
 			return false;
 		}
 
@@ -226,7 +226,7 @@ public class LuceneSearchEngine implements SearchEngine {
 				try {
 					maximum = Integer.valueOf(filters.get("limit"));
 				} catch (NumberFormatException e) {
-					logger.warning("Could not parse " + filters.get("limit") + " to integer: " + e.getMessage());
+					logger.warn("Could not parse " + filters.get("limit") + " to integer", e);
 				}
 			}
 
@@ -267,8 +267,7 @@ public class LuceneSearchEngine implements SearchEngine {
 
 			iReader.close();
 		} catch (Throwable e) {
-			e.printStackTrace();
-			logger.log(Level.WARNING, "Error in search: " + e.getMessage());
+			logger.error("Error in search.", e);
 		}
 
 		return searchResult;
@@ -290,7 +289,7 @@ public class LuceneSearchEngine implements SearchEngine {
 
 			iWriter.close();
 		} catch (Exception e) {
-			logger.log(Level.WARNING, "Error while deleting document " + id + ": " + e.getMessage());
+			logger.warn("Error while deleting document " + id, e);
 		}
 	}
 
@@ -327,7 +326,7 @@ public class LuceneSearchEngine implements SearchEngine {
 
 			return searchHit;
 		} catch (Exception e) {
-			logger.log(Level.WARNING, "Error in getById: " + e.getMessage());
+			logger.warn("Error in getById", e);
 		}
 
 		return null;
@@ -346,7 +345,7 @@ public class LuceneSearchEngine implements SearchEngine {
 
 			iWriter.close();
 		} catch (Exception e) {
-			logger.log(Level.WARNING, "Error while deleting all entries: " + e.getMessage());
+			logger.warn("Error while deleting all entries", e);
 		}
 	}
 
@@ -357,7 +356,7 @@ public class LuceneSearchEngine implements SearchEngine {
 		try {
 			directory.close();
 		} catch (IOException e) {
-			logger.log(Level.WARNING, "Error while closing lucene index: " + e.getMessage());
+			logger.warn("Error while closing lucene index", e);
 		}
 	}
 }
