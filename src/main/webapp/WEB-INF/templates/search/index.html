@@ -25,7 +25,7 @@
             <td>
                 &hellip; <span th:each="highlightText : ${hit.highlightText}" th:utext="${highlightText + ' &hellip; '}"></span>
             </td>
-            <td><a href="#" th:href="@{'/' + ${#strings.toLowerCase(hit.className)} + '/{id}'(id=${hit.id})}">Show</a></td>
+            <td><a href="#" th:href="@{'/' + ${#strings.toLowerCase(hit.className)} + '/show/{id}'(id=${hit.id})}">Show</a></td>
         </tr>
     </table>
 </div>

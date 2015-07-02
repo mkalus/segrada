@@ -71,7 +71,7 @@ public class SourceService extends AbstractFullTextService<ISource, SourceReposi
 	@Nullable
 	@Override
 	protected SearchIndexEntity prepareIndexEntity(ISource entity) {
-		SearchIndexEntity idxEntity = new SearchIndexEntity(entity.getId());
+		SearchIndexEntity idxEntity = new SearchIndexEntity(entity.getUid());
 		idxEntity.title = entity.getShortTitle();
 		String subTitles = entity.getCitation();
 		if (subTitles == null || subTitles.isEmpty()) subTitles = entity.getTitle();

@@ -87,7 +87,7 @@ public class FileService extends AbstractFullTextService<IFile, FileRepository> 
 	@Nullable
 	@Override
 	protected SearchIndexEntity prepareIndexEntity(IFile entity) {
-		SearchIndexEntity idxEntity = new SearchIndexEntity(entity.getId());
+		SearchIndexEntity idxEntity = new SearchIndexEntity(entity.getUid());
 		idxEntity.title = entity.getTitle();
 		idxEntity.subTitles = entity.getFilename();
 

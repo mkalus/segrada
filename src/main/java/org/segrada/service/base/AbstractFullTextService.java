@@ -104,7 +104,7 @@ abstract public class AbstractFullTextService<BEAN extends SegradaEntity, REPOSI
 		// to index
 		if (!searchEngine.index(
 				entity.id,
-				getModelClass().getSimpleName(),
+				getModelClass().getSimpleName().substring(1), // clip off the I of the interface
 				entity.title,
 				entity.subTitles,
 				markupFilter.toPlain(entity.content), // convert content to plain, searchable text

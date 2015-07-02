@@ -83,7 +83,7 @@ public class NodeService extends AbstractFullTextService<INode, NodeRepository> 
 	@Nullable
 	@Override
 	protected SearchIndexEntity prepareIndexEntity(INode entity) {
-		SearchIndexEntity idxEntity = new SearchIndexEntity(entity.getId());
+		SearchIndexEntity idxEntity = new SearchIndexEntity(entity.getUid());
 		idxEntity.title = entity.getTitle();
 		idxEntity.subTitles = entity.getAlternativeTitles();
 		idxEntity.content = entity.getDescription();

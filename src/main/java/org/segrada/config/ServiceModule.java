@@ -4,6 +4,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
+import com.google.inject.multibindings.MapBinder;
 import com.google.inject.servlet.RequestScoped;
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 import com.tinkerpop.blueprints.impls.orient.OrientGraphFactory;
@@ -15,6 +16,7 @@ import org.apache.lucene.util.Version;
 import org.segrada.search.SearchEngine;
 import org.segrada.search.lucene.LuceneSearchEngine;
 import org.segrada.service.*;
+import org.segrada.service.base.AbstractFullTextService;
 import org.segrada.service.binarydata.BinaryDataService;
 import org.segrada.service.binarydata.BinaryDataServiceFile;
 import org.segrada.service.repository.factory.RepositoryFactory;
@@ -74,6 +76,15 @@ public class ServiceModule extends AbstractModule {
 		bind(SourceService.class);
 		bind(TagService.class);
 		bind(UserService.class);
+
+		// create mapped binding for services which support indexing
+		MapBinder<String, AbstractFullTextService> fullTextServiceMapBinder
+				= MapBinder.newMapBinder(binder(), String.class, AbstractFullTextService.class);
+		fullTextServiceMapBinder.addBinding("Comment").to(CommentService.class);
+		fullTextServiceMapBinder.addBinding("File").to(FileService.class);
+		fullTextServiceMapBinder.addBinding("Node").to(NodeService.class);
+		fullTextServiceMapBinder.addBinding("Relation").to(RelationService.class);
+		fullTextServiceMapBinder.addBinding("Source").to(SourceService.class);
 	}
 
 	@Provides

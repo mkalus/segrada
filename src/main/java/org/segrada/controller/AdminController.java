@@ -1,12 +1,16 @@
 package org.segrada.controller;
 
+import com.google.inject.Inject;
 import com.google.inject.servlet.RequestScoped;
-import com.sun.jersey.api.view.Viewable;
+import org.segrada.service.base.AbstractFullTextService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import java.util.Map;
 
 /**
  * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]
@@ -28,6 +32,14 @@ import javax.ws.rs.core.MediaType;
 @Path("/admin")
 @RequestScoped
 public class AdminController {
+	private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
+
+	/**
+	 * map to all full text services
+	 */
+	@Inject
+	private Map<String, AbstractFullTextService> fullTextServiceMap;
+
 	@GET
 	@Produces(MediaType.TEXT_HTML)
 	public String index() {
@@ -38,6 +50,27 @@ public class AdminController {
 	@Path("/reindex")
 	@Produces(MediaType.TEXT_HTML)
 	public String reindex() {
-		return "TODO: reindex";
+		// how many entities do we have in total?
+		long total = 0;
+		long done = 0;
+		for (Map.Entry<String, AbstractFullTextService> entry : fullTextServiceMap.entrySet()) {
+			total += (float) entry.getValue().count();
+		}
+		if (logger.isDebugEnabled())
+			logger.debug("Reindexing count: " + total);
+
+		// work all services and update index
+		for (Map.Entry<String, AbstractFullTextService> entry : fullTextServiceMap.entrySet()) {
+			// reindex this batch
+			entry.getValue().reindexAll();
+
+			// all done
+			done += (float) entry.getValue().count();
+
+			if (logger.isDebugEnabled())
+				logger.debug("Reindexed " + entry + ": " + done + "/" + total);
+		}
+
+		return "Fertig.";
 	}
 }

@@ -53,7 +53,7 @@ public class CommentService extends AbstractFullTextService<IComment, CommentRep
 	@Nullable
 	@Override
 	protected SearchIndexEntity prepareIndexEntity(IComment entity) {
-		SearchIndexEntity idxEntity = new SearchIndexEntity(entity.getId());
+		SearchIndexEntity idxEntity = new SearchIndexEntity(entity.getUid());
 		idxEntity.title = null;
 		idxEntity.subTitles = null;
 		idxEntity.content = entity.getText();

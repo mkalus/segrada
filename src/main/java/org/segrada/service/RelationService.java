@@ -56,7 +56,7 @@ public class RelationService extends AbstractFullTextService<IRelation, Relation
 	@Nullable
 	@Override
 	protected SearchIndexEntity prepareIndexEntity(IRelation entity) {
-		SearchIndexEntity idxEntity = new SearchIndexEntity(entity.getId());
+		SearchIndexEntity idxEntity = new SearchIndexEntity(entity.getUid());
 		String fromTitle = entity.getFromEntity().getTitle();
 		String toTitle = entity.getToEntity().getTitle();
 
