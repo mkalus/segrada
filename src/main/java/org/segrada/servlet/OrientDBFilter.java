@@ -3,10 +3,14 @@ package org.segrada.servlet;
 import com.google.inject.Injector;
 import com.orientechnologies.orient.core.Orient;
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
+import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.tinkerpop.blueprints.impls.orient.OrientGraphFactory;
+import org.segrada.model.User;
+import org.segrada.model.prototype.IUser;
 import org.segrada.search.lucene.LuceneSearchEngine;
 import org.segrada.service.repository.orientdb.init.OrientDbSchemaUpdater;
 import org.segrada.session.ApplicationSettings;
+import org.segrada.session.Identity;
 import org.segrada.util.PasswordEncoder;
 
 import javax.servlet.*;
@@ -72,6 +76,31 @@ public class OrientDBFilter implements Filter {
 		// create database instance
 		ODatabaseDocumentTx db = injector.getInstance(ODatabaseDocumentTx.class);
 		//OrientGraph graph = injector.getInstance(OrientGraph.class);
+
+		//*************************** start delete in production **********************
+		//TODO: this is the preliminary autologin should be changed in production
+		// check if an identity has been set
+		Identity identity = injector.getInstance(Identity.class);
+		if (identity.getName()==null) {
+			ODocument document = db.browseClass("User").next();
+			if (document != null) {
+				IUser user = new User();
+
+				user.setLogin(document.field("login", String.class));
+				user.setPassword(document.field("password", String.class));
+				user.setName(document.field("name", String.class));
+				user.setRole(document.field("role", String.class));
+				user.setLastLogin(document.field("lastLogin", Long.class));
+				user.setActive(document.field("active", Boolean.class));
+				user.setId(document.getIdentity().toString());
+				user.setVersion(document.getVersion());
+				user.setCreated(document.field("created", Long.class));
+				user.setModified(document.field("modified", Long.class));
+
+				identity.setUser(user);
+			}
+		}
+		//**************************** end delete in production **********************
 
 		// do whatever has to be done
 		try {
