@@ -139,18 +139,6 @@
 
 
 
-<h2>New HTML5 Color selector</h2>
-
-<div th:fragment="formColorfield (name, field, label, id, errors, required)" class="form-group" th:classappend="${errors}?(${#maps.containsKey(errors, name)}?'has-error has-feedback')">
-	<label class="col-sm-2 control-label" th:for="${name + '-' + id}"><span th:text="${label}"></span><span class="text-danger" th:if="${required}"> *</span></label>
-	<div class="col-sm-10">
-		<input type="color" th:id="${name + '-' + id}" th:name="${name}" th:value="${field}" class="form-control" th:placeholder="${label}" />
-		<span class="help-block" th:text="${errors}?(${errors[name]}?${#messages.msg(errors[name])})">Error</span>
-	</div>
-</div>
-
-
-
 <h2>Tags field</h2>
 
 <div th:fragment="formTagsfield (name, field, label, id, errors, required)" class="form-group" th:classappend="${errors}?(${#maps.containsKey(errors, name)}?'has-error has-feedback')">
