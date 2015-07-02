@@ -22,7 +22,7 @@
 			<div class="form-group" th:classappend="${errors}?(${#maps.containsKey(errors, 'colorCode')}?'has-error has-feedback')">
 				<label class="col-sm-2 control-label" th:for="${'colorCode-' + id}"><span th:text="#{field.color}"></span><span class="text-danger"> *</span></label>
 				<div class="col-sm-10">
-					<input type="color" th:id="${'colorCode-' + id}" name="colorCode" th:value="${entity.colorCode}" class="form-control" th:placeholder="${label}" />
+					<input type="color" th:id="${'colorCode-' + id}" name="colorCode" th:value="${entity.colorCode}" class="form-control" />
 					<span class="help-block" th:text="${errors}?(${errors['colorCode']}?${#messages.msg(errors['colorCode'])})">Error</span>
 				</div>
 			</div>

@@ -7,10 +7,12 @@ import org.segrada.controller.base.AbstractColoredController;
 import org.segrada.model.Relation;
 import org.segrada.model.prototype.IRelation;
 import org.segrada.service.RelationService;
+import org.segrada.service.RelationTypeService;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.Map;
 
 /**
  * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]
@@ -34,6 +36,9 @@ import javax.ws.rs.core.Response;
 public class RelationController extends AbstractColoredController<IRelation> {
 	@Inject
 	private RelationService service;
+
+	@Inject
+	private RelationTypeService relationTypeService;
 
 	@Override
 	protected String getBasePath() {
@@ -81,5 +86,12 @@ public class RelationController extends AbstractColoredController<IRelation> {
 	@Produces(MediaType.TEXT_HTML)
 	public Response delete(@PathParam("uid") String uid, @PathParam("empty") String empty) {
 		return handleDelete(empty, service.findById(service.convertUidToId(uid)), service);
+	}
+
+	@Override
+	protected void enrichModelForEditingAndSaving(Map<String, Object> model) {
+		super.enrichModelForEditingAndSaving(model);
+
+		model.put("relationTypes", relationTypeService.findAll());
 	}
 }

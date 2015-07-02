@@ -30,6 +30,12 @@ public interface IRelationType extends SegradaColoredEntity, SegradaTaggable {
 	String[] getToTags();
 	void setToTags(String[] toTags);
 
+	/**
+	 * Helpers to create comma separated list of tag ids
+	 */
+	String getFromTagIds();
+	String getToTagIds();
+
 	String getDescription();
 	void setDescription(String description);
 

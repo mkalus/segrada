@@ -79,23 +79,33 @@ public class OrientDbRelationTypeRepository extends AbstractColoredOrientDbRepos
 			List<ODocument> list = document.field("fromTags", OType.LINKLIST);
 			if (list != null) {
 				String[] tags = new String[list.size()];
+				StringBuilder tagIds = new StringBuilder();
 				int i = 0;
 
-				for (ODocument tag : list)
-					tags[i++] = tag.field("title", OType.STRING);
+				for (ODocument tag : list) {
+					tags[i] = tag.field("title", OType.STRING);
+					if (i++ > 0) tagIds.append(",");
+					tagIds.append(tag.getIdentity().toString());
+				}
 
 				relationType.setFromTags(tags);
+				relationType.setFromTagIds(tagIds.toString());
 			}
 
 			list = document.field("toTags", OType.LINKLIST);
 			if (list != null) {
 				String[] tags = new String[list.size()];
+				StringBuilder tagIds = new StringBuilder();
 				int i = 0;
 
-				for (ODocument tag : list)
-					tags[i++] = tag.field("title", OType.STRING);
+				for (ODocument tag : list) {
+					tags[i] = tag.field("title", OType.STRING);
+					if (i++ > 0) tagIds.append(",");
+					tagIds.append(tag.getIdentity().toString());
+				}
 
 				relationType.setToTags(tags);
+				relationType.setToTagIds(tagIds.toString());
 			}
 		}
 

@@ -1,0 +1,50 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" th:lang="${#locale.language}">
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<title th:text="#{add.relation}">Create New Relation</title>
+	<div th:include="partials/common :: head" th:remove="tag"></div>
+</head>
+
+<body>
+<div th:replace="partials/common :: browser"></div>
+
+<div class="container">
+	<div class="sg-data sg-closeable sg-relation" th:with="tempId=${entity.uid}?${entity.uid}:${#strings.randomAlphanumeric(10)}" th:id="${'relation-' + tempId}">
+		<h4 class="sg-data-header" th:text="#{add.relation}" th:if="${isNewEntity}">Create New</h4>
+		<h4 class="sg-data-header" th:text="#{ChangeTitle(#{Relation}, ${entity.title})}" th:unless="${isNewEntity}">Change Existing</h4>
+
+		<form method="post" action="#" th:action="@{/relation/update}" th:object="${entity}" class="form-horizontal sg-data-form sg-data-content" th:attr="data-id=${'relation-' + tempId}">
+
+			<div class="form-group" th:classappend="${errors}?(${#maps.containsKey(errors, 'relationType')}?'has-error has-feedback')">
+				<label class="col-sm-2 control-label" th:for="${'relationType-' + id}"><span th:text="#{field.relationType}"></span><span class="text-danger"> *</span></label>
+				<div class="col-sm-10">
+					<select th:id="${'relationType-' + id}" name="relationType" class="form-control sg-relationTypeSelect">
+						<option th:text="#{select.required}" value="" data-tags-from="" data-tags-to=""></option>
+						<option th:each="relationType : ${relationTypes}" th:text="${relationType.fromTitle}" th:attr="data-tags-from=${relationType.fromTagIds},data-tags-to=${relationType.toTagIds}"></option>
+					</select>
+					<span class="help-block" th:text="${errors}?(${errors['relationType']}?${#messages.msg(errors['relationType'])})">Error</span>
+				</div>
+			</div>
+
+			fromEntity
+			toEntity
+
+			<div th:replace="partials/form :: formMarkupTextarea (name='description',field=${entity.description},label=#{field.description},id=${tempId},rows=5,errors=${errors},required=false,markupName='descriptionMarkup',markupField=${entity.descriptionMarkup})"></div>
+			<div th:replace="partials/form :: formColorSelect (colors=${colors},name='color',field=${entity.color},label=#{field.color},id=${tempId},errors=${errors},required=false)"></div>
+			<div th:replace="partials/form :: formPictogram (name='pictogram',field=${entity.pictogram},label=#{Pictogram},id=${tempId},errors=${errors},required=false)"></div>
+			<div th:replace="partials/form :: formTagsfield (name='tags',field=${entity.tags},label=#{field.tags},id=${tempId},errors=${errors},required=false)"></div>
+
+			<input type="hidden" name="id" th:value="${entity.id}" th:if="${entity.id}" />
+
+			<div th:replace="partials/form :: submit (isNewEntity=${isNewEntity})"></div>
+		</form>
+
+		<div th:replace="partials/form :: formPictogramModal (name='pictogram',id=${tempId})"></div>
+	</div>
+</div>
+
+<div th:replace="partials/common :: footer"></div>
+</body>
+</html>

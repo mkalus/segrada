@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-	<title th:text="${entity.title}">Node</title>
+	<title th:text="${entity.title}">Relation</title>
 	<div th:include="partials/common :: head" th:remove="tag"></div>
 </head>
 
@@ -11,8 +11,8 @@
 <div th:replace="partials/common :: browser"></div>
 
 <div class="container">
-	<div class="sg-data sg-closeable sg-node" th:id="${'node-' + entity.uid}">
-		<h4 class="sg-data-header" th:text="${entity.title}">Node</h4>
+	<div class="sg-data sg-closeable sg-relation" th:id="${'relation-' + entity.uid}">
+		<h4 class="sg-data-header" th:text="${entity.title}">Relation</h4>
 	</div>
 </div>
 

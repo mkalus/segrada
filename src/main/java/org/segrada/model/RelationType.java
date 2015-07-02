@@ -40,6 +40,9 @@ public class RelationType extends AbstractColoredModel implements IRelationType 
 
 	private String[] toTags;
 
+	private String fromTagIds;
+	private String toTagIds;
+
 	/**
 	 * Tag list
 	 */
@@ -95,6 +98,24 @@ public class RelationType extends AbstractColoredModel implements IRelationType 
 	@Override
 	public void setToTags(String[] toTags) {
 		this.toTags = toTags;
+	}
+
+	@Override
+	public String getFromTagIds() {
+		return fromTagIds;
+	}
+
+	public void setFromTagIds(String fromTagIds) {
+		this.fromTagIds = fromTagIds;
+	}
+
+	@Override
+	public String getToTagIds() {
+		return toTagIds;
+	}
+
+	public void setToTagIds(String toTagIds) {
+		this.toTagIds = toTagIds;
 	}
 
 	@Override
