@@ -7,7 +7,10 @@
 			return Bloodhound.tokenizers.whitespace(d.title);
 		},
 		queryTokenizer: Bloodhound.tokenizers.whitespace,
-		remote: urlSegradaTagSearch + '%QUERY'
+		remote: {
+			wildcard: '%QUERY',
+			url: urlSegradaTagSearch + '%QUERY'
+		}
 	});
 
 	/**

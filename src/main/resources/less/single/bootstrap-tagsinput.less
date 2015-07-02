@@ -51,7 +51,7 @@
 }
 
 /* typeahead selection */
-.tt-dropdown-menu {
+.tt-menu {
   background-clip: padding-box;
   background-color: #ffffff;
   border: 1px solid rgba(0, 0, 0, 0.15);
@@ -70,7 +70,7 @@
   z-index: 1000;
 }
 
-.tt-suggestion > p {
+.tt-suggestion {
   clear: both;
   color: #333333;
   display: block;
@@ -79,9 +79,10 @@
   padding: 3px 20px;
   white-space: nowrap;
 }
-.tt-suggestion > p:hover, .tt-suggestion > p:focus, .tt-suggestion.tt-cursor p {
+.tt-suggestion:hover, .tt-suggestion:focus, .tt-suggestion.tt-cursor {
   background-color: #428bca;
   color: #ffffff;
   outline: 0 none;
   text-decoration: none;
+  cursor:pointer;
 }
