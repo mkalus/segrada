@@ -59,6 +59,7 @@ public class RelationController extends AbstractColoredController<IRelation> {
 	public Viewable byRelationType(@PathParam("uid") String relationTypeUid, @QueryParam("page") int page, @QueryParam("entriesPerPage") int entriesPerPage) {
 		Map<String, Object> filters = new HashMap<>();
 
+		filters.put("key", "RelationByType" + relationTypeUid); // session key
 		filters.put("relationTypeUid", relationTypeUid);
 
 		// add target id

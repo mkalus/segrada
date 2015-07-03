@@ -9,6 +9,7 @@ import org.segrada.service.repository.prototype.CRUDRepository;
 import org.segrada.service.repository.prototype.PaginatingRepositoryOrService;
 
 import javax.annotation.Nullable;
+import javax.servlet.http.HttpSession;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
@@ -37,6 +38,9 @@ import java.util.Map;
  * Abstract base controller
  */
 abstract public class AbstractBaseController<BEAN extends SegradaEntity> {
+	@Inject
+	HttpSession session;
+
 	/**
 	 * Handle non paginated index
 	 * @param service showing pages
@@ -75,13 +79,37 @@ abstract public class AbstractBaseController<BEAN extends SegradaEntity> {
 	 */
 	protected Viewable handlePaginatedIndex(PaginatingRepositoryOrService<BEAN> service, int page, int entriesPerPage, Map<String, Object> filters, @Nullable String viewName, @Nullable Map<String, Object> model) {
 		// define default values
-		if (page < 1) page = 1;
-		if (entriesPerPage < 1) entriesPerPage = 15;
 		if (viewName == null) viewName = "index";
 		if (model == null) model = new HashMap<>();
+		if (filters == null) filters = new HashMap<>();
+
+		// get filter stuff from session - get or create filter key
+		String key = filters.containsKey("key")?(String)filters.get("key"):service.getClass().getSimpleName();
+		Object o = session.getAttribute(key);
+		if (o != null && o instanceof Map) { // we have a session object saved - now copy filters
+			Map<String, Object> sessionFilter = (Map<String, Object>) session.getAttribute(key);
+			// copy filter keys that are in sessionFilter, but not in filters
+			for (String filterKey : sessionFilter.keySet()) {
+				if (!filters.containsKey(filterKey))
+					filters.put(filterKey, sessionFilter.get(filterKey));
+			}
+		}
+		Map<String, Object> cleanedFilter = new HashMap<>();
+		for (String filterKey : filters.keySet()) {
+			o = filters.get(filterKey);
+			if (o != null && !(o instanceof String && ((String)o).isEmpty())) cleanedFilter.put(filterKey, o);
+		}
+		// get page and per page settings
+		if (page > 0) cleanedFilter.put("page", page); // set page
+		else page = cleanedFilter.containsKey("page")?(int)cleanedFilter.get("page"):1; // set page from filter or initialize
+		if (entriesPerPage > 0) cleanedFilter.put("entriesPerPage", entriesPerPage); // set entriesPerPage
+		else entriesPerPage = cleanedFilter.containsKey("entriesPerPage")?(int)cleanedFilter.get("entriesPerPage"):15; // set entriesPerPage from filter or initialize
+
+		// save to session
+		session.setAttribute(key, cleanedFilter);
 
 		// add to model map
-		model.put("paginationInfo", service.paginate(page, entriesPerPage, filters));
+		model.put("paginationInfo", service.paginate(page, entriesPerPage, cleanedFilter));
 
 		return new Viewable(getBasePath() + viewName, model);
 	}
