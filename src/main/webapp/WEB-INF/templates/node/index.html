@@ -20,6 +20,8 @@
 			<tr>
 				<th class="text-center"><i class="fa fa-dot-circle-o"></i></th>
 				<th th:text="#{field.title}">Title</th>
+				<th th:text="#{field.fromEntry}">Start</th>
+				<th th:text="#{field.toEntry}">Stop</th>
 				<th></th>
 			</tr>
 			<tr th:each="entity : ${paginationInfo.entities}" th:attr="data-data-dblclick=@{/node/show/{uid}(uid=${entity.uid})}">
@@ -28,6 +30,8 @@
 					<img src="#" th:src="@{/pictogram/file/{uid}(uid=${entity.pictogram.uid})}" th:alt-title="${entity.pictogram.title}" alt="" width="24" height="24" th:if="${entity.pictogram}"/>
 				</td>
 				<td th:text="${entity.title}">Title</td>
+				<td th:text="${!#strings.isEmpty(entity.minEntry)}?${entity.minEntry}:'---'">Start</td>
+				<td th:text="${!#strings.isEmpty(entity.maxEntry)}?${entity.maxEntry}:'---'">Stop</td>
 				<td class="text-right">
 					<div class="btn-group btn-group-sm" role="group" aria-label="Actions">
 						<a class="btn btn-primary sg-data-add" href="#" th:title="#{Show}" th:href="@{/node/show/{uid}(uid=${entity.uid})}"><i class="fa fa-eye"></i></a>
