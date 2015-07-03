@@ -8,6 +8,7 @@ import org.thymeleaf.dom.Element;
 import org.thymeleaf.dom.Node;
 import org.thymeleaf.dom.Text;
 import org.thymeleaf.processor.element.AbstractMarkupSubstitutionElementProcessor;
+import org.thymeleaf.processor.element.AbstractUnescapedTextChildModifierElementProcessor;
 import org.thymeleaf.standard.expression.IStandardExpression;
 import org.thymeleaf.standard.expression.IStandardExpressionParser;
 import org.thymeleaf.standard.expression.StandardExpressions;
@@ -34,7 +35,7 @@ import java.util.List;
  *
  * Usage: <th:markup markup="'html'" text="'text'" />
  */
-public class MarkupProcessor extends AbstractMarkupSubstitutionElementProcessor {
+public class MarkupProcessor extends AbstractUnescapedTextChildModifierElementProcessor {
 	public MarkupProcessor() {
 		super("markup");
 	}
@@ -44,7 +45,7 @@ public class MarkupProcessor extends AbstractMarkupSubstitutionElementProcessor 
 	}
 
 	@Override
-	protected List<Node> getMarkupSubstitutes(final Arguments arguments, final Element element) {
+	protected String getText(final Arguments arguments, final Element element) {
 		final Configuration configuration = arguments.getConfiguration();
 
 		// Obtain the Thymeleaf Standard Expression parser
@@ -76,21 +77,8 @@ public class MarkupProcessor extends AbstractMarkupSubstitutionElementProcessor 
 				(String) markupExpression.execute(configuration, arguments);
 
 
-
-		// create div to contain markup text
-		final Element container = new Element("div");
-		container.setAttribute("class", "sg-markup");
-
-		// render
-		try {
-			final Text text = new Text(markup(content, markup));
-			container.addChild(text);
-		} catch (Exception e) {
-			//TODO log
-		}
-
-		final List<Node> nodes = new ArrayList<>();
-		nodes.add(container); return nodes;
+		// create return string
+		return "<div class=\"sg-markup\">" + markup(content, markup) + "</div>";
 	}
 
 	/**
