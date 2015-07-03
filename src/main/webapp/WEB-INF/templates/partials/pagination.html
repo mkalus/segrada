@@ -40,7 +40,7 @@
 				</a>
 			</li>
 			<li th:classappend="${paginationInfo.page == paginationInfo.maxPage}?'disabled'">
-				<a href="#" th:href="@{${base}(page=${paginationInfo.maxPage})}" aria-label="Last" class="sg-control-set" th:attr="data-target-id=${targetId}">
+				<a href="#" th:href="@{${base}(page=${paginationInfo.pages})}" aria-label="Last" class="sg-control-set" th:attr="data-target-id=${targetId}">
 					<span aria-hidden="true"><i class="fa fa-fast-forward"></i></span>
 				</a>
 			</li>

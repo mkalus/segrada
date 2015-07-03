@@ -14,6 +14,8 @@ import org.segrada.service.NodeService;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]
@@ -45,9 +47,23 @@ public class NodeController extends AbstractColoredController<INode> {
 
 	@GET
 	@Produces(MediaType.TEXT_HTML)
-	public Viewable index(@QueryParam("page") int page, @QueryParam("entriesPerPage") int entriesPerPage) {
-		// TODO: do filters
-		return handlePaginatedIndex(service, page, entriesPerPage, null);
+	public Viewable index(
+			@QueryParam("page") int page,
+			@QueryParam("entriesPerPage") int entriesPerPage,
+			@QueryParam("reset") int reset,
+			@QueryParam("search") String search,
+			@QueryParam("minEntry") String minEntry,
+			@QueryParam("maxEntry") String maxEntry
+	) {
+		// filters:
+		Map<String, Object> filters = new HashMap<>();
+		if (reset > 0) filters.put("reset", true);
+		if (search != null) filters.put("search", search);
+		if (minEntry != null) filters.put("minEntry", minEntry);
+		if (maxEntry != null) filters.put("maxEntry", maxEntry);
+
+		// handle pagination
+		return handlePaginatedIndex(service, page, entriesPerPage, filters);
 	}
 
 	@GET

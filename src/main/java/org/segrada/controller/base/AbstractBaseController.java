@@ -83,20 +83,26 @@ abstract public class AbstractBaseController<BEAN extends SegradaEntity> {
 		if (model == null) model = new HashMap<>();
 		if (filters == null) filters = new HashMap<>();
 
-		// get filter stuff from session - get or create filter key
+		//  get or create session key for filter
 		String key = filters.containsKey("key")?(String)filters.get("key"):service.getClass().getSimpleName();
-		Object o = session.getAttribute(key);
-		if (o != null && o instanceof Map) { // we have a session object saved - now copy filters
-			Map<String, Object> sessionFilter = (Map<String, Object>) session.getAttribute(key);
-			// copy filter keys that are in sessionFilter, but not in filters
-			for (String filterKey : sessionFilter.keySet()) {
-				if (!filters.containsKey(filterKey))
-					filters.put(filterKey, sessionFilter.get(filterKey));
+
+		// reset all filters
+		if (filters.containsKey("reset")) filters = new HashMap<>();
+		else {
+			// get filter entries from session
+			Object o = session.getAttribute(key);
+			if (o != null && o instanceof Map) { // we have a session object saved - now copy filters
+				Map<String, Object> sessionFilter = (Map<String, Object>) session.getAttribute(key);
+				// copy filter keys that are in sessionFilter, but not in filters
+				for (String filterKey : sessionFilter.keySet()) {
+					if (!filters.containsKey(filterKey))
+						filters.put(filterKey, sessionFilter.get(filterKey));
+				}
 			}
 		}
 		Map<String, Object> cleanedFilter = new HashMap<>();
 		for (String filterKey : filters.keySet()) {
-			o = filters.get(filterKey);
+			Object o = filters.get(filterKey);
 			if (o != null && !(o instanceof String && ((String)o).isEmpty())) cleanedFilter.put(filterKey, o);
 		}
 		// get page and per page settings
@@ -110,6 +116,7 @@ abstract public class AbstractBaseController<BEAN extends SegradaEntity> {
 
 		// add to model map
 		model.put("paginationInfo", service.paginate(page, entriesPerPage, cleanedFilter));
+		model.put("filters", cleanedFilter);
 
 		return new Viewable(getBasePath() + viewName, model);
 	}

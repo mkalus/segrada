@@ -127,13 +127,33 @@
 		});
 
 		// *******************************************************
+		// bind control form
+		$('.sg-control-form', part).ajaxForm({
+			success: function (responseText, statusText, xhr, $form) {
+				// dynamic target?
+				var target = $form.attr('data-target-id');
+				if (typeof target == "undefined" || target == null || target.length == 0) target = '#sg-control';
+				var container = $(target);
+				container.html(responseText);
+				afterAjax(container);
+			}
+		});
+
+		// *******************************************************
 		// add content to control area
 		$('.sg-control-set', part).click(function (e) {
-			var target = $(this).attr('data-target-id');
+			var $this = $(this);
+
+			var target = $this.attr('data-target-id');
 			if (typeof target == "undefined" || target == null || target.length == 0) target = '#sg-control';
+
+			// define container and set waiting icon
+			var container = $(target);
+			container.wrapInner("<div class='sg-disabled'></div>")
+			container.prepend($('#sg-wait').html());
+
 			// AJAX call
-			$.get($(this).attr('href'), function (data) {
-				var container = $(target);
+			$.get($this.attr('href'), function (data) {
 				container.html(data); // replace html in container
 				// call after AJAX event
 				afterAjax(container);
@@ -337,16 +357,6 @@
 				$(this).remove(); // remove after finishing fading out
 			});
 			e.preventDefault();
-		});
-
-		// *******************************************************
-		// bind control form
-		$('.sg-control-form').ajaxForm({
-			success: function (responseText, statusText, xhr, $form) {
-				var container = $('#sg-control');
-				container.html(responseText);
-				afterAjax(container);
-			}
 		});
 
 		// *******************************************************

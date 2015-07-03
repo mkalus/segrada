@@ -15,6 +15,7 @@ import org.segrada.service.repository.RelationRepository;
 import org.segrada.service.repository.orientdb.base.AbstractCoreOrientDbRepository;
 import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory;
 import org.segrada.service.util.PaginationInfo;
+import org.segrada.util.FlexibleDateParser;
 import org.segrada.util.OrientStringEscape;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -189,12 +190,32 @@ public class OrientDbNodeRepository extends AbstractCoreOrientDbRepository<INode
 		if (filters.get("search") != null) {
 			constraints.add(createSearchTermFullText((String) filters.get("search")));
 		}
+
+
 		// location
 		// TODO search locations and contain
+
+
 		// period
-		//TODO minJD/maxJD
-		// tags
-		if (filters.get("tags") != null) {
+		//Long minJD = null, maxJD = null;
+		// get periods from session - not needed, since we always calculate from min/maxEntries
+		//if (filters.containsKey("minJD")) minJD = (Long)filters.get("minJD");
+		//if (filters.containsKey("maxJD")) maxJD = (Long)filters.get("maxJD");
+		// parse periods from input
+		if (filters.containsKey("minEntry")) { // parse from input
+			FlexibleDateParser parser = new FlexibleDateParser();
+			Long minJD = parser.inputToJd((String) filters.get("minEntry"), "G", false);
+			if (minJD > Long.MIN_VALUE) constraints.add("minJD >= " + minJD);
+		}
+		if (filters.containsKey("maxEntry")) { // parse from input
+			FlexibleDateParser parser = new FlexibleDateParser();
+			Long maxJD = parser.inputToJd((String) filters.get("maxEntry"), "G", true);
+			if (maxJD < Long.MAX_VALUE) constraints.add("maxJD <= " + maxJD);
+		}
+
+
+			// tags
+		if (filters.containsKey("tags")) {
 			StringBuilder sb = new StringBuilder(" in('IsTagOf').title IN [ ");
 			boolean first = true;
 			for (String tag : (String[]) filters.get("tags")) {
