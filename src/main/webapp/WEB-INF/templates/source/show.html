@@ -12,11 +12,8 @@
 
 <div class="container">
 	<div class="sg-data sg-source" th:id="${'source-' + entity.uid}">
-		<div class="sg-headbox-right">
-			<a href="#" type="button" class="close sg-data-close" aria-label="Edit"><i class="fa fa-times"></i></a>
-			<a href="#" th:href="@{/source/edit/{uid}(uid=${entity.uid})}" type="button" class="sg-data-add sg-data-icon" aria-label="Edit"><i class="fa fa-pencil"></i></a>
-			<span class="sg-headbox-info" th:text="#{Source}">Source</span>
-		</div>
+		<div th:replace="partials/common :: headerboxright (type=#{Source},base='source',uid=${entity.uid})"></div>
+		<div th:replace="partials/common :: taglist (tags=${entity.tags})"></div>
 		<h4 class="sg-data-header">
 			<span class="fa fa-briefcase" th:title="#{Source}"></span>
 			<span class="sg-color-icon" th:style="'background-color: ' + ${entity.colorCode}" th:if="${entity.color}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>

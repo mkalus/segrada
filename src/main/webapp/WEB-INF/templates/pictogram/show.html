@@ -12,11 +12,7 @@
 
 <div class="container">
 	<div class="sg-data sg-pictogram" th:id="${'pictogram-' + entity.uid}">
-		<div class="sg-headbox-right">
-			<a href="#" type="button" class="close sg-data-close" aria-label="Edit"><i class="fa fa-times"></i></a>
-			<a href="#" th:href="@{/pictogram/edit/{uid}(uid=${entity.uid})}" type="button" class="sg-data-add sg-data-icon" aria-label="Edit"><i class="fa fa-pencil"></i></a>
-			<span class="sg-headbox-info" th:text="#{Pictogram}">Pictogram</span>
-		</div>
+		<div th:replace="partials/common :: headerboxright (type=#{Pictogram},base='pictogram',uid=${entity.uid})"></div>
 		<h4 class="sg-data-header"><span class="fa fa-university" th:title="#{Pictogram}"></span> <img src="#" th:src="@{/pictogram/file/{uid}(uid=${entity.uid})}" th:alt-title="${entity.title}" alt="" width="24" height="24" /> <span th:text="${entity.title}">Pictogram</span></h4>
 
 		<!--TODO: show all relation types, files, comments, sources, relations and nodes with this pictogram -->

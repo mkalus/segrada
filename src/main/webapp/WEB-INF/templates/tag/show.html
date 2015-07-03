@@ -12,11 +12,7 @@
 
 <div class="container">
 	<div class="sg-data sg-tag" th:id="${'tag-' + entity.uid}">
-		<div class="sg-headbox-right">
-			<a href="#" type="button" class="close sg-data-close" aria-label="Edit"><i class="fa fa-times"></i></a>
-			<a href="#" th:href="@{/tag/edit/{uid}(uid=${entity.uid})}" type="button" class="sg-data-add sg-data-icon" aria-label="Edit"><i class="fa fa-pencil"></i></a>
-			<span class="sg-headbox-info" th:text="#{Tag}">Tag</span>
-		</div>
+		<div th:replace="partials/common :: headerboxright (type=#{Tag},base='tag',uid=${entity.uid})"></div>
 		<h4 class="sg-data-header"><span class="fa fa-tag" th:title="#{Tag}"></span> <span th:text="${entity.title}">Tag</span></h4>
 
 		<!--TODO: show all entities connected to this tag -->

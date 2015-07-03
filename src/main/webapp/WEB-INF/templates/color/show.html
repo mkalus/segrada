@@ -12,11 +12,7 @@
 
 <div class="container">
 	<div class="sg-data sg-color" th:id="${'color-' + entity.uid}">
-		<div class="sg-headbox-right">
-			<a href="#" type="button" class="close sg-data-close" aria-label="Edit"><i class="fa fa-times"></i></a>
-			<a href="#" th:href="@{/color/edit/{uid}(uid=${entity.uid})}" type="button" class="sg-data-add sg-data-icon" aria-label="Edit"><i class="fa fa-pencil"></i></a>
-			<span class="sg-headbox-info" th:text="#{Color}">Color</span>
-		</div>
+		<div th:replace="partials/common :: headerboxright (type=#{Color},base='color',uid=${entity.uid})"></div>
 		<h4 class="sg-data-header"><span class="fa fa-tint" th:title="#{Color}"></span> <span class="sg-color-icon" style="background-color: #000;" th:style="'background-color: ' + ${entity.colorCode}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <span th:text="${entity.title}">Color</span></h4>
 
 		<!--TODO: show all relation types, files, comments, sources, relations and nodes with this color -->

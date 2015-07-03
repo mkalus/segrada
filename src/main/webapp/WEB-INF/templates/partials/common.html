@@ -28,6 +28,21 @@
 
 Common fragments.
 
+<h3>Common header box</h3>
+
+<div th:fragment="headerboxright (type,base,uid)" class="sg-headbox-right">
+	<a href="#" type="button" class="close sg-data-close" aria-label="Edit"><i class="fa fa-times"></i></a>
+	<a href="#" th:href="@{/{base}/edit/{uid}(base=${base},uid=${uid})}" type="button" class="sg-data-add sg-data-icon" aria-label="Edit"><i class="fa fa-pencil"></i></a>
+	<span class="sg-headbox-info" th:text="${type}">Type</span>
+</div>
+
+<h3>Tag list to show tags</h3>
+
+<div th:fragment="taglist (tags)" th:unless="${#arrays.isEmpty(tags)}" class="sg-data-taglist">
+	<span class="label label-info" th:each="tag : ${tags}" th:text="${tag}">Tag</span>
+</div>
+
+
 <div th:fragment="footer">
 	<script th:inline="javascript">
 		/*<![CDATA[*/
