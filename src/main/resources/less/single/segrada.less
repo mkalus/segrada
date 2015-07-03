@@ -1,3 +1,5 @@
+@import "../bootstrap/mixins/opacity.less";
+
 body {
   margin-top: 2em;
 }
@@ -36,6 +38,27 @@ div.sg-fileupload-small .file-caption-name { padding-right: 0 !important; width:
 .sg-headbox-right {
   float: right;
   margin: -1em -0.6em 0 0;
+  display: none;
+}
+
+.sg-headbox-right a {
+  padding: 0.25em;
+
+  color: #000;
+  float: right;
+  font-size: 21px;
+  font-weight: bold;
+  line-height: 1;
+  .opacity(.2);
+  text-shadow: 0 1px 0 #fff;
+
+  &:hover,
+  &:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+    .opacity(.5);
+  }
 }
 
 .sg-data-content {

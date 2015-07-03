@@ -99,10 +99,8 @@
 		// make data elements dynamic
 		$(".sg-data").addClass("sg-dynamic-data");
 
-		// make closeable element closable
-		var closeable = $(".sg-closeable");
-		closeable.prepend('<div class="sg-headbox-right"><a href="#" type="button" class="close sg-data-close" aria-label="Close"><span aria-hidden="true">&times;</span></a></div>');
-		closeable.removeClass("sg-closeable");
+		// show headbox
+		$(".sg-headbox-right").show();
 
 		// dynamic hide
 		$(".sg-dynamic-hide").hide();

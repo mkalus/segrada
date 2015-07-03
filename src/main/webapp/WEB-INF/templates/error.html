@@ -11,8 +11,13 @@
 <div th:replace="partials/common :: browser"></div>
 
 <div class="container">
-	<div class="sg-closeable alert alert-danger" role="alert" th:text="${data}">
-		ERROR
+	<div class="sg-data" th:id="${'error-' + #strings.randomAlphanumeric(10)}">
+		<div class="sg-headbox-right">
+			<a href="#" type="button" class="close sg-data-close" aria-label="Edit"><i class="fa fa-times"></i></a>
+		</div>
+		<div class="alert alert-danger" role="alert" th:text="${data}">
+			ERROR
+		</div>
 	</div>
 </div>
 

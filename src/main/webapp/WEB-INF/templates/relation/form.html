@@ -11,7 +11,11 @@
 <div th:replace="partials/common :: browser"></div>
 
 <div class="container">
-	<div class="sg-data sg-closeable sg-relation" th:with="tempId=${#strings.isEmpty(entity.uid)}?${#strings.randomAlphanumeric(10)}:${entity.uid}" th:id="${'relation-' + tempId}">
+	<div class="sg-data sg-relation" th:with="tempId=${#strings.isEmpty(entity.uid)}?${#strings.randomAlphanumeric(10)}:${entity.uid}" th:id="${'relation-' + tempId}">
+		<div class="sg-headbox-right">
+			<a href="#" type="button" class="close sg-data-close" aria-label="Edit"><i class="fa fa-times"></i></a>
+			<a href="#" th:unless="${isNewEntity}" th:href="@{/relation/show/{uid}(uid=${entity.uid})}" type="button" class="sg-data-add sg-data-icon" aria-label="Show"><i class="fa fa-eye"></i></a>
+		</div>
 		<h4 class="sg-data-header" th:text="#{add.relation}" th:if="${isNewEntity}">Create New</h4>
 		<h4 class="sg-data-header" th:text="#{ChangeTitle(#{Relation}, ${entity.title})}" th:unless="${isNewEntity}">Change Existing</h4>
 

@@ -11,7 +11,11 @@
 <div th:replace="partials/common :: browser"></div>
 
 <div class="container">
-	<div class="sg-data sg-closeable sg-pictogram" th:id="${'file-' + entity.uid}">
+	<div class="sg-data sg-pictogram" th:id="${'file-' + entity.uid}">
+		<div class="sg-headbox-right">
+			<a href="#" type="button" class="close sg-data-close" aria-label="Edit"><i class="fa fa-times"></i></a>
+			<a href="#" th:href="@{/file/edit/{uid}(uid=${entity.uid})}" type="button" class="sg-data-add sg-data-icon" aria-label="Edit"><i class="fa fa-pencil"></i></a>
+		</div>
 		<h4 class="sg-data-header" th:text="${entity.title}">File</h4>
 	</div>
 </div>
