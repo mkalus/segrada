@@ -177,6 +177,10 @@ public class FileController extends AbstractColoredController<IFile> {
 			entity.setMimeType(uploadedFilePart.getMediaType().toString());
 			entity.setFilename(uploadedFileDetail.getFileName());
 			entity.setFileSize(new Long(uploadedFile.length));
+
+			// fix mime type when uploading pdfs with Firefox
+			if (entity.getMimeType().equals("application/x-download") && entity.getFilename().endsWith(".pdf"))
+				entity.setMimeType("application/pdf");
 		} else if (entity.getId() == null || entity.getId().isEmpty())
 			errors.put("uploadedFile", "error.UploadEmpty");
 
