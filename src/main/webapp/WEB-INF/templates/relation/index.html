@@ -13,7 +13,7 @@
 <div class="container">
 	<div class="sg-control-content sg-relation">
 		<div class="pull-right">
-			<a href="#" th:href="@{/relation/add}" th:title="#{add.relation}" class="btn btn-success btn-sm sg-data-add"><i class="fa fa-plus"></i></a>
+			<a href="#" th:href="@{/relation/add} + (${#strings.isEmpty(addLinkParameter)}?'':${addLinkParameter})" th:title="#{add.relation}" class="btn btn-success btn-sm sg-data-add"><i class="fa fa-plus"></i></a>
 		</div>
 
 		<h4 class="sg-control-header"><i class="fa fa-chain"></i> <span th:text="#{list.relation}">List</span></h4>

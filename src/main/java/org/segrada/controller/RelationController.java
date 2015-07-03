@@ -6,6 +6,7 @@ import com.sun.jersey.api.view.Viewable;
 import org.segrada.controller.base.AbstractColoredController;
 import org.segrada.model.Relation;
 import org.segrada.model.prototype.IRelation;
+import org.segrada.service.NodeService;
 import org.segrada.service.RelationService;
 import org.segrada.service.RelationTypeService;
 
@@ -41,6 +42,9 @@ public class RelationController extends AbstractColoredController<IRelation> {
 	@Inject
 	private RelationTypeService relationTypeService;
 
+	@Inject
+	private NodeService nodeService;
+
 	@Override
 	protected String getBasePath() {
 		return "/relation/";
@@ -65,6 +69,7 @@ public class RelationController extends AbstractColoredController<IRelation> {
 		// add target id
 		Map<String, Object> model = new HashMap<>();
 
+		model.put("addLinkParameter", "?relationTypeUid=" + relationTypeUid);
 		model.put("targetId", "#relations-by-type-" + relationTypeUid);
 		model.put("baseUrl", "/relation/by_relation_type/" + relationTypeUid);
 
@@ -81,8 +86,22 @@ public class RelationController extends AbstractColoredController<IRelation> {
 	@GET
 	@Path("/add")
 	@Produces(MediaType.TEXT_HTML)
-	public Viewable add() {
-		return handleForm(service.createNewInstance());
+	public Viewable add(
+			@QueryParam("relationTypeUid") String relationTypeUid,
+			@QueryParam("fromEntityUid") String fromEntityUid,
+			@QueryParam("toEntityUid") String toEntityUid
+	) {
+		IRelation entity = service.createNewInstance();
+
+		// prefill form
+		if (relationTypeUid != null)
+			entity.setRelationType(relationTypeService.findById(relationTypeService.convertUidToId(relationTypeUid)));
+		if (fromEntityUid != null)
+			entity.setFromEntity(nodeService.findById(nodeService.convertUidToId(fromEntityUid)));
+		if (toEntityUid != null)
+			entity.setToEntity(nodeService.findById(nodeService.convertUidToId(toEntityUid)));
+
+		return handleForm(entity);
 	}
 
 	@GET
