@@ -31,7 +31,7 @@ import java.util.List;
  * <p>
  * Helper class to process numbers in a nice way
  *
- * Usage: <th:formatNumber number="'1234567'" format="'si'" />
+ * Usage: <th:formatnumber number="'1234567'" format="'si'" />
  *
  * format must be si or binary
  */
@@ -39,7 +39,7 @@ public class NumberFormatProcessor extends AbstractMarkupSubstitutionElementProc
 	private NumberFormatter numberFormatter;
 
 	public NumberFormatProcessor() {
-		super("formatNumber");
+		super("formatnumber");
 	}
 
 	public int getPrecedence() {

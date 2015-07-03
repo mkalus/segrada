@@ -95,7 +95,7 @@ public class FileController extends AbstractColoredController<IFile> {
 				outputStream.close();
 			};
 
-			return Response.ok(output, mime).build();
+			return Response.ok(output, mime).header("Content-Disposition", "attachment; filename=" + entity.getFilename()).build();
 		} catch (Exception e) {
 			return Response.ok(new Viewable("error", e.getMessage())).build();
 		}

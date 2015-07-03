@@ -5,16 +5,10 @@ import org.segrada.rendering.markup.MarkupFilterFactory;
 import org.thymeleaf.Arguments;
 import org.thymeleaf.Configuration;
 import org.thymeleaf.dom.Element;
-import org.thymeleaf.dom.Node;
-import org.thymeleaf.dom.Text;
-import org.thymeleaf.processor.element.AbstractMarkupSubstitutionElementProcessor;
 import org.thymeleaf.processor.element.AbstractUnescapedTextChildModifierElementProcessor;
 import org.thymeleaf.standard.expression.IStandardExpression;
 import org.thymeleaf.standard.expression.IStandardExpressionParser;
 import org.thymeleaf.standard.expression.StandardExpressions;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]

@@ -28,6 +28,43 @@
 		<div class="tab-content">
 			<div role="tabpanel" class="tab-pane active" id="tab1" th:id="${'tab-1-' + entity.uid}" >
 				<div class="sg-description well well-sm" th:unless="${#strings.isEmpty(entity.description)}"><th:markup text="${entity.description}" markup="${entity.descriptionMarkup}" /></div>
+
+				<div class="sg-file-data sg-margin-top">
+					<div class="row">
+						<div class="col-xs-2"><strong th:text="#{field.filename}">File name</strong></div>
+						<div class="col-xs-10"><code th:text="${entity.filename}">file.txt</code></div>
+					</div>
+					<div class="row">
+						<div class="col-xs-2"><strong th:text="#{field.filesize}">Filesize</strong></div>
+						<div class="col-xs-10"><th:formatnumber number="${entity.fileSize}" format="'si'" /></div>
+					</div>
+					<div class="row" th:unless="${#strings.isEmpty(entity.copyright)}">
+						<div class="col-xs-2"><strong th:text="#{field.copyright}">Copyright</strong></div>
+						<div class="col-xs-10" th:text="${entity.copyright}">copyright</div>
+					</div>
+					<div class="row" th:unless="${#strings.isEmpty(entity.location)}">
+						<div class="col-xs-2"><strong th:text="#{field.location}">Location</strong></div>
+						<div class="col-xs-10" th:text="${entity.location}">location</div>
+					</div>
+					<div class="row">
+						<div class="col-xs-2"><strong th:text="#{field.indexFullTextShort}">Index?</strong></div>
+						<div class="col-xs-10" th:unless="${#strings.isEmpty(entity.fullText)}"><i class="fa fa-check text-success"></i> <span th:text="#{field.indexFullTextOk}">full text?</span></div>
+						<div class="col-xs-10" th:if="${#strings.isEmpty(entity.fullText)}"><i class="fa fa-check text-danger"></i> <span th:text="#{field.indexFullTextNo}">full text?</span></div>
+					</div>
+				</div>
+
+				<div th:if="${entity.fileIdentifier}" class="sg-margin-top">
+					<div th:if="${#strings.startsWith(entity.mimeType,'image/')}">
+						<img src="#" th:src="@{/file/file/{uid}(uid=${entity.uid})}" alt="" th:alt-title="${entity.title}" style="width: 100%;" />
+					</div>
+					<div th:if="${entity.mimeType} == 'application/pdf'">
+						<embed src="#" th:src="@{/file/file/{uid}(uid=${entity.uid})}" width="100%" height="400" alt="pdf" pluginspage="http://www.adobe.com/products/acrobat/readstep2.html" />
+					</div>
+				</div>
+
+				<div th:if="${entity.fileIdentifier}" class="text-center sg-margin-top">
+					<a href="#" th:href="@{/file/file/{uid}(uid=${entity.uid})}" class="btn btn-primary btn-lg" th:text="#{Download}"></a>
+				</div>
 			</div>
 		</div>
 	</div>

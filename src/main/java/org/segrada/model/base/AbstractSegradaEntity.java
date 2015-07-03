@@ -64,6 +64,11 @@ abstract public class AbstractSegradaEntity implements SegradaEntity {
 	 */
 	private String id = null;
 
+	/**
+	 * cached uid
+	 */
+	private String uid = null;
+
 	private Long created = 0L;
 
 	private Long modified = 0L;
@@ -90,12 +95,18 @@ abstract public class AbstractSegradaEntity implements SegradaEntity {
 	@Override
 	public void setId(String id) {
 		this.id = id;
+		this.uid = null; // reset uid
 	}
 
 	@Override
 	public String getUid() {
-		String uid = convertOrientIdToUid(id);
-		return uid==null?"":uid;
+		// cache uid
+		if (this.uid == null) {
+			String uid = convertOrientIdToUid(id);
+
+			this.uid = uid==null?"":uid;
+		}
+		return this.uid;
 	}
 
 	public Long getCreated() {
