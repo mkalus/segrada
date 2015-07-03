@@ -15,6 +15,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -53,7 +54,8 @@ public class NodeController extends AbstractColoredController<INode> {
 			@QueryParam("reset") int reset,
 			@QueryParam("search") String search,
 			@QueryParam("minEntry") String minEntry,
-			@QueryParam("maxEntry") String maxEntry
+			@QueryParam("maxEntry") String maxEntry,
+			@QueryParam("tags") List<String> tags
 	) {
 		// filters:
 		Map<String, Object> filters = new HashMap<>();
@@ -61,6 +63,14 @@ public class NodeController extends AbstractColoredController<INode> {
 		if (search != null) filters.put("search", search);
 		if (minEntry != null) filters.put("minEntry", minEntry);
 		if (maxEntry != null) filters.put("maxEntry", maxEntry);
+		if (tags != null) {
+			if (tags.size() == 0) filters.put("tags", null);
+			else {
+				String[] tagArray = new String[tags.size()];
+				tags.toArray(tagArray);
+				filters.put("tags", tagArray);
+			}
+		}
 
 		// handle pagination
 		return handlePaginatedIndex(service, page, entriesPerPage, filters);

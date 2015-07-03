@@ -291,6 +291,19 @@
 		});
 
 		// *******************************************************
+		// contractable tag list
+		$('.sg-taglist-contract', part).each(function() {
+			var tags = $('span', $(this));
+			if (tags.length > 1) {
+				tags.hide().filter(":first-child").show().after('<span class="sg-tag-show label label-default"><i class="fa fa-plus"></i></span>');
+				$('span.sg-tag-show', $(this)).click(function() {
+					$(this).remove();
+					tags.show();
+				});
+			}
+		});
+
+		// *******************************************************
 		// color picker init
 		$("select.sg-colorpicker", part).simplepicker({
 			theme: 'fontawesome'

@@ -216,10 +216,7 @@ public class OrientDbRelationTypeRepository extends AbstractColoredOrientDbRepos
 		if (filters.get("search") != null) {
 			constraints.add(createSearchTermFullText((String) filters.get("search")));
 		}
-		// location
-		// TODO search locations and contain
-		// period
-		//TODO minJD/maxJD
+
 		// tags
 		if (filters.get("tags") != null) {
 			StringBuilder sb = new StringBuilder(" in('IsTagOf').title IN [ ");
