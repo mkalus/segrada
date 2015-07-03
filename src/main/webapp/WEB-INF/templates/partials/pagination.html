@@ -20,27 +20,27 @@
 
 <body>
 
-<div id="sg-pagination" th:fragment="pagination (paginationInfo, base)">
+<div id="sg-pagination" th:fragment="pagination (paginationInfo,base)">
 	<nav>
 		<ul class="pagination">
 			<li th:classappend="${paginationInfo.page == 1}?'disabled'">
-				<a href="#" th:href="@{${base}(page=1)}" aria-label="First" class="sg-control-set">
+				<a href="#" th:href="@{${base}(page=1)}" aria-label="First" class="sg-control-set" th:attr="data-target-id=${targetId}">
 					<span aria-hidden="true"><i class="fa fa-fast-backward"></i></span>
 				</a>
 			</li>
 			<li th:classappend="${paginationInfo.page == 1}?'disabled'">
-				<a href="#" th:href="@{${base}(page=${paginationInfo.page-1})}" aria-label="Previous" class="sg-control-set">
+				<a href="#" th:href="@{${base}(page=${paginationInfo.page-1})}" aria-label="Previous" class="sg-control-set" th:attr="data-target-id=${targetId}">
 					<span aria-hidden="true"><i class="fa fa-backward"></i></span>
 				</a>
 			</li>
-			<li th:each="i : ${#numbers.sequence(paginationInfo.minPage, paginationInfo.maxPage)}" th:classappend="${paginationInfo.page == i}?'active'"><a href="#" th:text="${i}" th:href="@{${base}(page=${i})}" class="sg-control-set">1</a></li>
+			<li th:each="i : ${#numbers.sequence(paginationInfo.minPage, paginationInfo.maxPage)}" th:classappend="${paginationInfo.page == i}?'active'"><a href="#" th:text="${i}" th:href="@{${base}(page=${i})}" class="sg-control-set" th:attr="data-target-id=${targetId}">1</a></li>
 			<li th:classappend="${paginationInfo.page == paginationInfo.maxPage}?'disabled'">
-				<a href="#" th:href="@{${base}(page=${paginationInfo.page+1})}" aria-label="Next" class="sg-control-set">
+				<a href="#" th:href="@{${base}(page=${paginationInfo.page+1})}" aria-label="Next" class="sg-control-set" th:attr="data-target-id=${targetId}">
 					<span aria-hidden="true"><i class="fa fa-forward"></i></span>
 				</a>
 			</li>
 			<li th:classappend="${paginationInfo.page == paginationInfo.maxPage}?'disabled'">
-				<a href="#" th:href="@{${base}(page=${paginationInfo.maxPage})}" aria-label="Last" class="sg-control-set">
+				<a href="#" th:href="@{${base}(page=${paginationInfo.maxPage})}" aria-label="Last" class="sg-control-set" th:attr="data-target-id=${targetId}">
 					<span aria-hidden="true"><i class="fa fa-fast-forward"></i></span>
 				</a>
 			</li>

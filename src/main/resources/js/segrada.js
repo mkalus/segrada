@@ -129,9 +129,11 @@
 		// *******************************************************
 		// add content to control area
 		$('.sg-control-set', part).click(function (e) {
+			var target = $(this).attr('data-target-id');
+			if (typeof target == "undefined" || target == null || target.length == 0) target = '#sg-control';
 			// AJAX call
 			$.get($(this).attr('href'), function (data) {
-				var container = $('#sg-control');
+				var container = $(target);
 				container.html(data); // replace html in container
 				// call after AJAX event
 				afterAjax(container);
@@ -174,6 +176,24 @@
 				}
 			}
 			e.preventDefault();
+		});
+
+		// *******************************************************
+		// load tab contents dynamically
+		$('.sg-replace-content', part).on('shown.bs.tab', function (e) {
+			var $content = $($(this).attr('href'));
+			var url = $(this).attr('data-url');
+
+			// load via ajax
+			$.get(url, function(content) {
+				$content.html(content);
+				// call after AJAX event
+				afterAjax($content);
+			});
+
+			// unbind action
+			$(this).removeClass('sg-replace-content');
+			$(this).unbind('shown.bs.tab');
 		});
 
 		// *******************************************************

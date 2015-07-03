@@ -8,6 +8,7 @@ import org.segrada.service.base.AbstractRepositoryService;
 import org.segrada.service.repository.prototype.CRUDRepository;
 import org.segrada.service.repository.prototype.PaginatingRepositoryOrService;
 
+import javax.annotation.Nullable;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
@@ -60,16 +61,29 @@ abstract public class AbstractBaseController<BEAN extends SegradaEntity> {
 	 * @return view with paginationInfo set
 	 */
 	protected Viewable handlePaginatedIndex(PaginatingRepositoryOrService<BEAN> service, int page, int entriesPerPage, Map<String, Object> filters) {
+		return handlePaginatedIndex(service, page, entriesPerPage, filters, null, null);
+	}
+
+	/**
+	 * Handle paginated index - generic with custom view name
+	 * @param service showing pages
+	 * @param page page to show starting with 1
+	 * @param entriesPerPage entries per page
+	 * @param filters filter options
+	 * @param viewName name of view, e.g. "index"
+	 * @return view with paginationInfo set
+	 */
+	protected Viewable handlePaginatedIndex(PaginatingRepositoryOrService<BEAN> service, int page, int entriesPerPage, Map<String, Object> filters, @Nullable String viewName, @Nullable Map<String, Object> model) {
 		// define default values
 		if (page < 1) page = 1;
 		if (entriesPerPage < 1) entriesPerPage = 15;
+		if (viewName == null) viewName = "index";
+		if (model == null) model = new HashMap<>();
 
-		// create model map
-		Map<String, Object> model = new HashMap<>();
-
+		// add to model map
 		model.put("paginationInfo", service.paginate(page, entriesPerPage, filters));
 
-		return new Viewable(getBasePath() + "index", model);
+		return new Viewable(getBasePath() + viewName, model);
 	}
 
 	/**

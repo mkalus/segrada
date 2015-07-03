@@ -13,12 +13,36 @@
 <div class="container">
 	<div class="sg-data sg-source" th:id="${'relation-type-' + entity.uid}">
 		<div th:replace="partials/common :: headerboxright (type=#{Relation_Type},base='relation_type',uid=${entity.uid})"></div>
+		<div th:replace="partials/common :: taglist (tags=${entity.tags})"></div>
 		<h4 class="sg-data-header">
 			<span class="fa fa-paperclip" th:title="#{Relation_Type}"></span>
 			<span class="sg-color-icon" th:style="'background-color: ' + ${entity.colorCode}" th:if="${entity.color}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
 			<img src="#" th:src="@{/pictogram/file/{uid}(uid=${entity.pictogram.uid})}" th:alt-title="${entity.pictogram.title}" alt="" width="24" height="24" th:if="${entity.pictogram}"/>
 			<span th:text="${entity.title}">Relation Type</span>
 		</h4>
+
+		<ul class="nav nav-tabs" role="tablist">
+			<li role="presentation" class="active"><a href="#tab1" th:href="${'#tab-1-' + entity.uid}" aria-controls="home" role="tab" data-toggle="tab" th:text="#{Description}">Description</a></li>
+			<li role="presentation"><a href="#tab2" class="sg-replace-content" th:attr="data-url=@{/relation/by_relation_type/{uid}(uid=${entity.uid})}" th:href="${'#relations-by-type-' + entity.uid}" aria-controls="profile" role="tab" data-toggle="tab" th:text="#{Relations}">Relations</a></li>
+		</ul>
+
+		<div class="tab-content">
+			<div role="tabpanel" class="tab-pane active" id="tab1" th:id="${'tab-1-' + entity.uid}" >
+				<div class="sg-description well well-sm" th:unless="${#strings.isEmpty(entity.description)}"><th:markup text="${entity.description}" markup="${entity.descriptionMarkup}" /></div>
+
+				<div class="row sg-margin-bottom-sm">
+					<div class="col-md-3"><strong th:text="#{field.fromTags}">From Tags</strong></div>
+					<div class="col-md-9"><div th:replace="partials/common :: taglist (tags=${entity.fromTags})"></div></div>
+				</div>
+				<div class="row">
+					<div class="col-md-3"><strong th:text="#{field.toTags}">To Tags</strong></div>
+					<div class="col-md-9"><div th:replace="partials/common :: taglist (tags=${entity.toTags})"></div></div>
+				</div>
+			</div>
+			<div role="tabpanel" class="tab-pane" id="tab2" th:id="${'relations-by-type-' + entity.uid}">
+				<div th:replace="partials/common :: loadingicon"></div>
+			</div>
+		</div>
 	</div>
 </div>
 

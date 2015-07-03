@@ -12,6 +12,7 @@ import org.segrada.service.RelationTypeService;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -50,6 +51,23 @@ public class RelationController extends AbstractColoredController<IRelation> {
 	public Viewable index(@QueryParam("page") int page, @QueryParam("entriesPerPage") int entriesPerPage) {
 		// TODO: do filters
 		return handlePaginatedIndex(service, page, entriesPerPage, null);
+	}
+
+	@GET
+	@Path("/by_relation_type/{uid}")
+	@Produces(MediaType.TEXT_HTML)
+	public Viewable byRelationType(@PathParam("uid") String relationTypeUid, @QueryParam("page") int page, @QueryParam("entriesPerPage") int entriesPerPage) {
+		Map<String, Object> filters = new HashMap<>();
+
+		filters.put("relationTypeUid", relationTypeUid);
+
+		// add target id
+		Map<String, Object> model = new HashMap<>();
+
+		model.put("targetId", "#relations-by-type-" + relationTypeUid);
+		model.put("baseUrl", "/relation/by_relation_type/" + relationTypeUid);
+
+		return handlePaginatedIndex(service, page, entriesPerPage, filters, null, model);
 	}
 
 	@GET

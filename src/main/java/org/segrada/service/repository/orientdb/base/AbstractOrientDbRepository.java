@@ -406,8 +406,6 @@ abstract public class AbstractOrientDbRepository<T extends SegradaEntity> implem
 
 	@Override
 	public String convertUidToId(String uid) {
-		if (uid == null || uid.isEmpty()) return null;
-		Matcher matcher =  AbstractSegradaEntity.PATTERN_UID.matcher(uid);
-		return matcher.replaceAll("#$1:$2");
+		return AbstractSegradaEntity.convertUidToOrientId(uid);
 	}
 }

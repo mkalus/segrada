@@ -9,6 +9,7 @@ import com.orientechnologies.orient.core.sql.OCommandSQL;
 import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
 import com.tinkerpop.blueprints.impls.orient.OrientEdge;
 import org.segrada.model.Relation;
+import org.segrada.model.base.AbstractSegradaEntity;
 import org.segrada.model.prototype.INode;
 import org.segrada.model.prototype.IRelation;
 import org.segrada.model.prototype.IRelationType;
@@ -324,7 +325,7 @@ public class OrientDbRelationRepository extends AbstractCoreOrientDbRepository<I
 		// aggregate filters
 		List<String> constraints = new LinkedList<>();
 		// search term
-		if (filters.get("search") != null) {
+		if (filters.containsKey("search")) {
 			//constraints.add(createSearchTermFullText((String) filters.get("search")));
 			//TODO: implement this one day
 		}
@@ -333,7 +334,7 @@ public class OrientDbRelationRepository extends AbstractCoreOrientDbRepository<I
 		// period
 		//TODO minJD/maxJD
 		// tags
-		if (filters.get("tags") != null) {
+		if (filters.containsKey("tags")) {
 			StringBuilder sb = new StringBuilder(" in('IsTagOf').title IN [ ");
 			boolean first = true;
 			for (String tag : (String[]) filters.get("tags")) {
@@ -343,6 +344,15 @@ public class OrientDbRelationRepository extends AbstractCoreOrientDbRepository<I
 			}
 
 			constraints.add(sb.append("]").toString());
+		}
+		// location type uid
+		if (filters.containsKey("relationTypeUid")) {
+			// convert to id
+			String id = AbstractSegradaEntity.convertUidToOrientId((String) filters.get("relationTypeUid"));
+			if (id != null) {
+				constraints.add("relationType = " + id);
+			}
+			//TODO: test
 		}
 
 		// let helper do most of the work
