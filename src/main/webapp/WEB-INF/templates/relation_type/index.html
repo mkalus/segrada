@@ -12,6 +12,10 @@
 
 <div class="container">
 	<div class="sg-control-content sg-relation-type">
+		<div class="pull-right">
+			<a href="#" th:href="@{/relation_type/add}" th:title="#{add.relation_type}" class="btn btn-success btn-sm sg-data-add"><i class="fa fa-plus"></i></a>
+		</div>
+
 		<h4 class="sg-control-header"><i class="fa fa-paperclip"></i> <span th:text="#{list.relation_type}">List</span></h4>
 
 		<p th:text="${#messages.msg('pagination', paginationInfo.page, paginationInfo.pages)}">Pages</p>
