@@ -36,8 +36,9 @@ abstract public class AbstractSegradaEntity implements SegradaEntity {
 	 * @return generic id or null
 	 */
 	public static @Nullable String convertOrientIdToUid(@Nullable String orientId) {
-		if (orientId == null) return "";
+		if (orientId == null || orientId.isEmpty()) return null;
 		Matcher matcher = PATTERN_ORIENTID.matcher(orientId);
+		if (!matcher.find()) return null;
 		return matcher.replaceAll("$1-$2");
 	}
 
@@ -49,6 +50,7 @@ abstract public class AbstractSegradaEntity implements SegradaEntity {
 	public static @Nullable String convertUidToOrientId(@Nullable String uid) {
 		if (uid == null || uid.isEmpty()) return null;
 		Matcher matcher =  PATTERN_UID.matcher(uid);
+		if (!matcher.find()) return null;
 		return matcher.replaceAll("#$1:$2");
 	}
 
@@ -92,7 +94,8 @@ abstract public class AbstractSegradaEntity implements SegradaEntity {
 
 	@Override
 	public String getUid() {
-		return convertOrientIdToUid(id);
+		String uid = convertOrientIdToUid(id);
+		return uid==null?"":uid;
 	}
 
 	public Long getCreated() {

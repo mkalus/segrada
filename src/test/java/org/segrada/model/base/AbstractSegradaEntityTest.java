@@ -91,6 +91,24 @@ public class AbstractSegradaEntityTest {
 		assertEquals("Id to Uid conversion failed", "12345-45678", entity.getUid());
 	}
 
+	@Test
+	public void testConvertOrientIdToUid() throws Exception {
+		assertNull(AbstractSegradaEntity.convertOrientIdToUid(null));
+		assertNull(AbstractSegradaEntity.convertOrientIdToUid(""));
+		assertEquals("Id to Uid conversion failed", "12345-45678", AbstractSegradaEntity.convertOrientIdToUid("#12345:45678"));
+		assertNull(AbstractSegradaEntity.convertOrientIdToUid("xxx"));
+		assertNull(AbstractSegradaEntity.convertOrientIdToUid("123-123"));
+	}
+
+	@Test
+	public void testConvertUidToOrientId() throws Exception {
+		assertNull(AbstractSegradaEntity.convertUidToOrientId(null));
+		assertNull(AbstractSegradaEntity.convertUidToOrientId(""));
+		assertEquals("Uid to id conversion failed", "#12345:45678", AbstractSegradaEntity.convertUidToOrientId("12345-45678"));
+		assertNull(AbstractSegradaEntity.convertUidToOrientId("xxx"));
+		assertNull(AbstractSegradaEntity.convertUidToOrientId("#123:123"));
+	}
+
 	private class MockEntity extends AbstractSegradaEntity {
 		/**
 		 * load for testing equality
