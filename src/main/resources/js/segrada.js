@@ -129,6 +129,16 @@
 		// *******************************************************
 		// bind control form
 		$('.sg-control-form', part).ajaxForm({
+			beforeSubmit: function(arr, $form, options) {
+				// dynamic target?
+				var target = $form.attr('data-target-id');
+				if (typeof target == "undefined" || target == null || target.length == 0) target = '#sg-control';
+				var container = $(target);
+				// disable container
+				container.wrapInner("<div class='sg-disabled'></div>")
+				container.prepend($('#sg-wait').html());
+				return true;
+			},
 			success: function (responseText, statusText, xhr, $form) {
 				// dynamic target?
 				var target = $form.attr('data-target-id');
