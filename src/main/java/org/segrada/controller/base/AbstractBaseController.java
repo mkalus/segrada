@@ -142,7 +142,10 @@ abstract public class AbstractBaseController<BEAN extends SegradaEntity> {
 	 * @param entity to be created or edited (controller has to create form)
 	 * @return view containing form
 	 */
-	protected Viewable handleForm(SegradaEntity entity) {
+	protected Viewable handleForm(@Nullable SegradaEntity entity) {
+		if (entity == null)
+			return new Viewable("error", "Could not find entity in database.");
+
 		Map<String, Object> model = new HashMap<>();
 
 		model.put("isNewEntity", entity.getId()==null|| entity.getId().isEmpty());

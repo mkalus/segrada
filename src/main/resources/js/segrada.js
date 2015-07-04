@@ -193,17 +193,21 @@
 
 		// *******************************************************
 		// delete confirmation
-		$('[data-confirm]', part).click(function (e) {
-			if (confirm($(this).attr('data-confirm'))) {
-				if ($(this).hasClass('sg-control-confirm')) {
-					// AJAX call
-					$.get($(this).attr('href'), function (data) {
-						var container = $('#sg-control');
-						container.html(data); // replace html in container
-						// call after AJAX event
-						afterAjax(container);
+		$('tr [data-confirm]', part).click(function (e) {
+			var $this = $(this);
+
+			if (confirm($this.attr('data-confirm'))) {
+				// remove tr dynamically
+				var row = $this.closest('tr');
+				row.addClass("sg-disabled");
+
+				// AJAX call
+				$.get($this.attr('href'), function (data) {
+					// delete row
+					row.slideUp('fast', function() {
+						row.remove();
 					});
-				}
+				});
 			}
 			e.preventDefault();
 		});
