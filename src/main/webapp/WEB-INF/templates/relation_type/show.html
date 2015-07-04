@@ -38,6 +38,8 @@
 					<div class="col-md-3"><strong th:text="#{field.toTags}">To Tags</strong></div>
 					<div class="col-md-9"><div th:replace="partials/common :: taglist (tags=${entity.toTags})"></div></div>
 				</div>
+
+				<div th:replace="partials/common :: datafooter (entity=${entity})"></div>
 			</div>
 			<div role="tabpanel" class="tab-pane" id="tab2" th:id="${'relations-by-type-' + entity.uid}">
 				<div th:replace="partials/common :: loadingicon"></div>

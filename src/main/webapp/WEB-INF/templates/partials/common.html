@@ -32,6 +32,8 @@ Common fragments.
 
 <span th:fragment="loadingicon" class="sg-loading"><img src="../../../img/loading.gif" alt="" th:src="@{/img/loading.gif}" th:alt-title="#{Loading}" /></span>
 
+
+
 <h3>Common header box</h3>
 
 <div th:fragment="headerboxright (type,base,uid)" class="sg-headbox-right">
@@ -40,11 +42,25 @@ Common fragments.
 	<span class="sg-headbox-info" th:text="${type}">Type</span>
 </div>
 
+
+
 <h3>Tag list to show tags</h3>
 
 <div th:fragment="taglist (tags)" th:unless="${#arrays.isEmpty(tags)}" class="sg-data-taglist">
 	<span class="label label-info" th:each="tag : ${tags}" th:text="${tag}">Tag</span>
 </div>
+
+
+
+<h3>Data footer line</h3>
+
+<div th:fragment="datafooter (entity)" class="small text-muted">
+	<span th:inline="text">Id: [[${entity.id}]] Version: [[${entity.version}]] [[#{field.createdOn}]] [[${entity.created}]]</span>
+	<span th:if="${entity.creator}" th:inline="text">[[#{field.createdBy}]] [[${entity.creator.name}]]</span>
+	<span th:inline="text">[[#{field.modifiedOn}]] [[${entity.modified}]]</span>
+	<span th:if="${entity.modifier}" th:inline="text">[[#{field.modifiedBy}]] [[${entity.modifier.name}]]</span>
+</div>
+
 
 
 <div th:fragment="footer">

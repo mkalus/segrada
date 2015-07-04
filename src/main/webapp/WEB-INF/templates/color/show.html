@@ -16,6 +16,7 @@
 		<h4 class="sg-data-header"><span class="fa fa-tint" th:title="#{Color}"></span> <span class="sg-color-icon" style="background-color: #000;" th:style="'background-color: ' + ${entity.colorCode}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <span th:text="${entity.title}">Color</span></h4>
 
 		<!--TODO: show all relation types, files, comments, sources, relations and nodes with this color -->
+		<div th:replace="partials/common :: datafooter (entity=${entity})"></div>
 	</div>
 </div>
 

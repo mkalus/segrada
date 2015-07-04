@@ -65,6 +65,8 @@
 				<div th:if="${entity.fileIdentifier}" class="text-center sg-margin-top">
 					<a href="#" th:href="@{/file/file/{uid}(uid=${entity.uid})}" class="btn btn-primary btn-lg" th:text="#{Download}"></a>
 				</div>
+
+				<div th:replace="partials/common :: datafooter (entity=${entity})"></div>
 			</div>
 		</div>
 	</div>

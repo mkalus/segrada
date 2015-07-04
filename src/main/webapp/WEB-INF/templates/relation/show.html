@@ -34,6 +34,8 @@
 		<div class="tab-content">
 			<div role="tabpanel" class="tab-pane active" id="tab1" th:id="${'tab-1-' + entity.uid}" >
 				<div class="sg-description well well-sm" th:unless="${#strings.isEmpty(entity.description)}"><th:markup text="${entity.description}" markup="${entity.descriptionMarkup}" /></div>
+
+				<div th:replace="partials/common :: datafooter (entity=${entity})"></div>
 			</div>
 		</div>
 	</div>
