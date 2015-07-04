@@ -142,8 +142,7 @@ public class OrientDbRelationRepository extends AbstractCoreOrientDbRepository<I
 			return null;
 		}
 		String id;
-		if (relationO instanceof ORecordId) id = ((ORecordId)relationO).getIdentity().toString();
-		else if (relationO instanceof ODocument) id = ((ODocument)relationO).getIdentity().toString();
+		if (relationO instanceof OIdentifiable) id = ((ORecordId)relationO).getIdentity().toString();
 		else {
 			logger.error("Invalid class type: " + relationO.getClass().getName());
 			return null;
