@@ -83,8 +83,8 @@ public class ServiceModule extends AbstractModule {
 		fullTextServiceMapBinder.addBinding("Comment").to(CommentService.class);
 		fullTextServiceMapBinder.addBinding("File").to(FileService.class);
 		fullTextServiceMapBinder.addBinding("Node").to(NodeService.class);
-		fullTextServiceMapBinder.addBinding("Relation").to(RelationService.class);
 		fullTextServiceMapBinder.addBinding("Source").to(SourceService.class);
+		fullTextServiceMapBinder.addBinding("Relation").to(RelationService.class);
 	}
 
 	@Provides
