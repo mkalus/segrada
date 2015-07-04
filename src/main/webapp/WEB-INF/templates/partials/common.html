@@ -55,9 +55,9 @@ Common fragments.
 <h3>Data footer line</h3>
 
 <div th:fragment="datafooter (entity)" class="small text-muted">
-	<span th:inline="text">Id: [[${entity.id}]] Version: [[${entity.version}]] [[#{field.createdOn}]] [[${entity.created}]]</span>
+	<span th:inline="text">Id: [[${entity.id}]] Version: [[${entity.version}]] [[#{field.createdOn}]] <th:datetimeformat millis="${entity.created}" format="#{datetime}" /></span>
 	<span th:if="${entity.creator}" th:inline="text">[[#{field.createdBy}]] [[${entity.creator.name}]]</span>
-	<span th:inline="text">[[#{field.modifiedOn}]] [[${entity.modified}]]</span>
+	<span th:inline="text">[[#{field.modifiedOn}]] <th:datetimeformat millis="${entity.modified}" format="#{datetime}" /></span>
 	<span th:if="${entity.modifier}" th:inline="text">[[#{field.modifiedBy}]] [[${entity.modifier.name}]]</span>
 </div>
 

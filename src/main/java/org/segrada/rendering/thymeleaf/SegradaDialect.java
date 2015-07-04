@@ -1,5 +1,6 @@
 package org.segrada.rendering.thymeleaf;
 
+import org.segrada.rendering.thymeleaf.processor.DateTimeFormatProcessor;
 import org.segrada.rendering.thymeleaf.processor.MarkupProcessor;
 import org.segrada.rendering.thymeleaf.processor.Nl2BrProcessor;
 import org.segrada.rendering.thymeleaf.processor.NumberFormatProcessor;
@@ -37,6 +38,7 @@ public class SegradaDialect extends AbstractDialect {
 		processors.add(new Nl2BrProcessor());
 		processors.add(new MarkupProcessor());
 		processors.add(new NumberFormatProcessor());
+		processors.add(new DateTimeFormatProcessor());
 		return processors;
 	}
 }
