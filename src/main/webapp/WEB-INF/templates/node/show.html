@@ -22,7 +22,7 @@
 			<small th:unless="${#strings.isEmpty(entity.minEntry)} and ${#strings.isEmpty(entity.maxEntry)}">
 				<span th:text="${entity.minEntry}"></span>
 				<span th:if="${entity.minEntry} != ${entity.maxEntry}">&ndash;</span>
-				<span th:text="${entity.maxEntry}"></span>
+				<span th:text="${entity.maxEntry}" th:unless="${entity.minEntry} == ${entity.maxEntry}"></span>
 			</small>
 		</h4>
 
