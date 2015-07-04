@@ -77,6 +77,25 @@ public class RelationController extends AbstractColoredController<IRelation> {
 	}
 
 	@GET
+	@Path("/by_node/{uid}")
+	@Produces(MediaType.TEXT_HTML)
+	public Viewable byNode(@PathParam("uid") String nodeUid, @QueryParam("page") int page, @QueryParam("entriesPerPage") int entriesPerPage) {
+		Map<String, Object> filters = new HashMap<>();
+
+		filters.put("key", "RelationByNode" + nodeUid); // session key
+		filters.put("nodeUid", nodeUid);
+
+		// add target id
+		Map<String, Object> model = new HashMap<>();
+
+		model.put("addLinkParameter", "?nodeUid=" + nodeUid);
+		model.put("targetId", "#relations-by-node-" + nodeUid);
+		model.put("baseUrl", "/relation/by_node/" + nodeUid);
+
+		return handlePaginatedIndex(service, page, entriesPerPage, filters, null, model);
+	}
+
+	@GET
 	@Path("/show/{uid}")
 	@Produces(MediaType.TEXT_HTML)
 	public Viewable show(@PathParam("uid") String uid) {

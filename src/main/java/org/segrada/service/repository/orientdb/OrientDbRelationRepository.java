@@ -374,6 +374,15 @@ public class OrientDbRelationRepository extends AbstractCoreOrientDbRepository<I
 			}
 			//TODO: test
 		}
+		// node uid
+		if (filters.containsKey("nodeUid")) {
+			// convert to id
+			String id = AbstractSegradaEntity.convertUidToOrientId((String) filters.get("nodeUid"));
+			if (id != null) {
+				constraints.add("(relationLink.in = " + id + " OR relationLink.out = " + id + ")");
+			}
+			//TODO: test
+		}
 
 		// let helper do most of the work
 		return super.paginate(page, entriesPerPage, constraints);

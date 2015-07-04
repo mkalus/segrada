@@ -28,11 +28,31 @@
 
 		<ul class="nav nav-tabs" role="tablist">
 			<li role="presentation" class="active"><a href="#tab1" th:href="${'#tab-1-' + entity.uid}" aria-controls="home" role="tab" data-toggle="tab" th:text="#{Description}">Description</a></li>
+			<li role="presentation"><a href="#tab2" th:href="${'#tab-2-' + entity.uid}" aria-controls="times" role="tab" data-toggle="tab" th:text="#{Instants_Periods}">Instants/Periods</a></li>
+			<li role="presentation"><a href="#tab3" th:href="${'#tab-3-' + entity.uid}" aria-controls="times" role="tab" data-toggle="tab" th:text="#{Geo_Locations}">Geo Locations</a></li>
+			<li role="presentation"><a href="#tab4" class="sg-replace-content" th:attr="data-url=@{/relation/by_node/{uid}(uid=${entity.uid})}" th:href="${'#relations-by-node-' + entity.uid}" aria-controls="relations" role="tab" data-toggle="tab" th:text="#{Relations}">Relations</a></li>
+			<li role="presentation"><a href="#tab5" th:href="${'#tab-5-' + entity.uid}" aria-controls="times" role="tab" data-toggle="tab" th:text="#{Comments}">Comments</a></li>
+			<li role="presentation"><a href="#tab6" th:href="${'#tab-6-' + entity.uid}" aria-controls="times" role="tab" data-toggle="tab" th:text="#{Files}">Files</a></li>
 		</ul>
 
 		<div class="tab-content">
-			<div role="tabpanel" class="tab-pane active" id="tab1" th:id="${'tab-1-' + entity.uid}" >
+			<div role="tabpanel" class="tab-pane active" id="tab1" th:id="${'tab-1-' + entity.uid}">
 				<div class="sg-description well well-sm" th:unless="${#strings.isEmpty(entity.description)}"><th:markup text="${entity.description}" markup="${entity.descriptionMarkup}" /></div>
+			</div>
+			<div role="tabpanel" class="tab-pane" id="tab2" th:id="${'tab-2-' + entity.uid}">
+				<div th:each="period : ${entity.periods}" th:text="${period.toString()}"></div>
+			</div>
+			<div role="tabpanel" class="tab-pane" id="tab3" th:id="${'tab-3-' + entity.uid}">
+				<div th:each="location : ${entity.locations}" th:text="${location.toString()}"></div>
+			</div>
+			<div role="tabpanel" class="tab-pane" id="tab4" th:id="${'relations-by-node-' + entity.uid}">
+				<div th:replace="partials/common :: loadingicon"></div>
+			</div>
+			<div role="tabpanel" class="tab-pane" id="tab5" th:id="${'tab-5-' + entity.uid}">
+				Comments
+			</div>
+			<div role="tabpanel" class="tab-pane" id="tab6" th:id="${'tab-6-' + entity.uid}">
+				Files
 			</div>
 		</div>
 	</div>

@@ -23,11 +23,11 @@
 
 		<ul class="nav nav-tabs" role="tablist">
 			<li role="presentation" class="active"><a href="#tab1" th:href="${'#tab-1-' + entity.uid}" aria-controls="home" role="tab" data-toggle="tab" th:text="#{Description}">Description</a></li>
-			<li role="presentation"><a href="#tab2" class="sg-replace-content" th:attr="data-url=@{/relation/by_relation_type/{uid}(uid=${entity.uid})}" th:href="${'#relations-by-type-' + entity.uid}" aria-controls="profile" role="tab" data-toggle="tab" th:text="#{Relations}">Relations</a></li>
+			<li role="presentation"><a href="#tab2" class="sg-replace-content" th:attr="data-url=@{/relation/by_relation_type/{uid}(uid=${entity.uid})}" th:href="${'#relations-by-type-' + entity.uid}" aria-controls="relations" role="tab" data-toggle="tab" th:text="#{Relations}">Relations</a></li>
 		</ul>
 
 		<div class="tab-content">
-			<div role="tabpanel" class="tab-pane active" id="tab1" th:id="${'tab-1-' + entity.uid}" >
+			<div role="tabpanel" class="tab-pane active" id="tab1" th:id="${'tab-1-' + entity.uid}">
 				<div class="sg-description well well-sm" th:unless="${#strings.isEmpty(entity.description)}"><th:markup text="${entity.description}" markup="${entity.descriptionMarkup}" /></div>
 
 				<div class="row sg-margin-bottom-sm">
