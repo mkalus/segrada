@@ -8,7 +8,9 @@ import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.orientechnologies.orient.core.sql.OCommandSQL;
 import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
 import com.tinkerpop.blueprints.impls.orient.OrientEdge;
+import org.segrada.model.Node;
 import org.segrada.model.Relation;
+import org.segrada.model.base.AbstractCoreModel;
 import org.segrada.model.base.AbstractSegradaEntity;
 import org.segrada.model.prototype.INode;
 import org.segrada.model.prototype.IRelation;
@@ -72,16 +74,9 @@ public class OrientDbRelationRepository extends AbstractCoreOrientDbRepository<I
 		ODocument relationLink = getRelationLink(document, true);
 		if (relationLink == null) return null; // exact error was logged below
 
-		// load node repository
-		NodeRepository nodeRepository = repositoryFactory.produceRepository(OrientDbNodeRepository.class);
-		if (nodeRepository == null) {
-			logger.error("Could not create NodeRepository while converting relation.");
-			return null;
-		}
-
-		// get from/to
-		relation.setFromEntity(getRelatedEntity(relationLink, "out", nodeRepository));
-		relation.setToEntity(getRelatedEntity(relationLink, "in", nodeRepository));
+		// get from/to - slim entities, just title and id
+		relation.setFromEntity(getRelatedEntity(relationLink, "out"));
+		relation.setToEntity(getRelatedEntity(relationLink, "in"));
 
 		// set relation type
 		ORecordId relationType = document.field("relationType", ORecordId.class);
@@ -132,15 +127,32 @@ public class OrientDbRelationRepository extends AbstractCoreOrientDbRepository<I
 	 * helper to load nodes relation to document
 	 * @param document relationLink document/link
 	 * @param direction "in" or "out"
-	 * @param nodeRepository reference to node repository
 	 * @return INode instance or null
 	 */
-	private @Nullable INode getRelatedEntity(ODocument document, String direction, NodeRepository nodeRepository) {
-		Object relationO = document.field(direction, ORecordId.class);
-		if (relationO == null) {
+	private @Nullable INode getRelatedEntity(ODocument document, String direction) {
+		Object nodeO = document.field(direction, ORecordId.class);
+		if (nodeO == null) {
 			logger.error("Could not create related entity while converting relation with direction " + direction);
 			return null;
 		}
+		if (nodeO instanceof ORecordId) nodeO = repositoryFactory.getDb().load((ORecordId) nodeO);
+		if (nodeO == null) {
+			logger.error("Invalid record in direction " + direction + ": " + document.toString());
+			return null;
+		}
+
+		//convert
+		ODocument nodeDoc = (ODocument) nodeO;
+
+		// slim node: just set title and id
+		INode node = new Node();
+		node.setTitle(nodeDoc.field("title"));
+		node.setId(nodeDoc.getIdentity().toString());
+
+		return node;
+
+		/*
+		old -not performant
 		String id;
 		if (relationO instanceof OIdentifiable) id = ((ORecordId)relationO).getIdentity().toString();
 		else {
@@ -148,7 +160,7 @@ public class OrientDbRelationRepository extends AbstractCoreOrientDbRepository<I
 			return null;
 		}
 
-		return nodeRepository.find(id);
+		return nodeRepository.find(id);*/
 	}
 
 	@Override
