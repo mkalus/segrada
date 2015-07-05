@@ -19,6 +19,7 @@ create property Color.modified Datetime
 create property Color.creator Link<User>
 create property Color.modifier Link<User>
 alter property Color.title MANDATORY true
+alter property Color.title COLLATE ci
 alter property Color.color MANDATORY true
 alter property Color.created MANDATORY true
 alter property Color.modified MANDATORY true
@@ -34,6 +35,7 @@ create property Pictogram.modified Datetime
 create property Pictogram.creator Link<User>
 create property Pictogram.modifier Link<User>
 alter property Pictogram.title MANDATORY true
+alter property Pictogram.title COLLATE ci
 alter property Pictogram.fileIdentifier MANDATORY true
 alter property Pictogram.created MANDATORY true
 alter property Pictogram.modified MANDATORY true
@@ -85,6 +87,7 @@ create property Tag.modified Datetime
 create property Tag.creator Link<User>
 create property Tag.modifier Link<User>
 alter property Tag.title MANDATORY true
+alter property Tag.title COLLATE ci
 alter property Tag.created MANDATORY true
 alter property Tag.modified MANDATORY true
 create index Tag.title UNIQUE_HASH_INDEX
@@ -147,6 +150,7 @@ create property File.created Datetime
 create property File.modified Datetime
 create property File.creator Link<User>
 create property File.modifier Link<User>
+alter property File.title COLLATE ci
 alter property File.filename MANDATORY true
 alter property File.mimeType MANDATORY true
 alter property File.descriptionMarkup MANDATORY true
@@ -177,7 +181,10 @@ create property Source.modified Datetime
 create property Source.creator Link<User>
 create property Source.modifier Link<User>
 alter property Source.shortTitle MANDATORY true
+alter property Source.shortTitle COLLATE ci
+alter property Source.longTitle COLLATE ci
 alter property Source.shortRef MANDATORY true
+alter property Source.shortRef COLLATE ci
 alter property Source.created MANDATORY true
 alter property Source.modified MANDATORY true
 create index Source.shortTitle NOTUNIQUE
@@ -231,7 +238,9 @@ create property RelationType.modified Datetime
 create property RelationType.creator Link<User>
 create property RelationType.modifier Link<User>
 alter property RelationType.fromTitle MANDATORY true
+alter property RelationType.fromTitle COLLATE ci
 alter property RelationType.toTitle MANDATORY true
+alter property RelationType.toTitle COLLATE ci
 alter property RelationType.description MANDATORY true
 alter property RelationType.descriptionMarkup MANDATORY true
 alter property RelationType.created MANDATORY true
@@ -292,16 +301,17 @@ create index SourceReference.source NOTUNIQUE_HASH_INDEX
 create index SourceReference.reference NOTUNIQUE_HASH_INDEX
 
 ######################################################################################################################
-create class RememberMeTokens
-create property RememberMeTokens.username String
-create property RememberMeTokens.series String
-create property RememberMeTokens.token String
-create property RememberMeTokens.lastUsed Datetime
-alter property RememberMeTokens.username MANDATORY true
-alter property RememberMeTokens.series MANDATORY true
-alter property RememberMeTokens.token MANDATORY true
-alter property RememberMeTokens.lastUsed MANDATORY true
-create index RememberMeTokens.series DICTIONARY_HASH_INDEX
+# TODO: do this some time in the future
+#create class RememberMeTokens
+#create property RememberMeTokens.username String
+#create property RememberMeTokens.series String
+#create property RememberMeTokens.token String
+#create property RememberMeTokens.lastUsed Datetime
+#alter property RememberMeTokens.username MANDATORY true
+#alter property RememberMeTokens.series MANDATORY true
+#alter property RememberMeTokens.token MANDATORY true
+#alter property RememberMeTokens.lastUsed MANDATORY true
+#create index RememberMeTokens.series DICTIONARY_HASH_INDEX
 
 ######################################################################################################################
 create class IsTagOf extends E
