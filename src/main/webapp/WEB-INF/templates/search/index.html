@@ -18,7 +18,11 @@
 	<div><span th:text="${searchResult.startIndex}"></span> &ndash; <span th:text="${searchResult.stopIndex}"></span></div>
 
 	<div th:each="hit : ${searchResult.hits}" class="sg-search-list">
-		<p><strong th:text="${hit.title}">Title</strong></p>
+		<p>
+			<span class="sg-color-icon" th:style="'background-color: ' + ${hit.colorCode}" th:if="${hit.color}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+			<img src="#" th:src="@{/pictogram/by_ref(ref=${hit.iconFileIdentifier})}" alt="" width="24" height="24" th:if="${hit.iconFileIdentifier}"/>
+			<strong th:text="${hit.title}">Title</strong>
+		</p>
 		<p th:text="${hit.subTitles}" th:if="${hit.subTitles}">subTitles</p>
 
 		<a href="#" th:href="@{'/' + ${#strings.toLowerCase(hit.className)} + '/show/{id}'(id=${hit.id})}" class="sg-data-add"><i class="fa fa-eye"></i></a>

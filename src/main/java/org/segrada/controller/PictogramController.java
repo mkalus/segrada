@@ -96,6 +96,32 @@ public class PictogramController extends AbstractBaseController<IPictogram> {
 	}
 
 	@GET
+	@Path("/by_ref")
+	public Response downloadRaw(@QueryParam("ref") String iconFileIdentifier) {
+		try {
+			final InputStream in = service.getBinaryDataAsStream(iconFileIdentifier);
+
+			// set streaming output
+			StreamingOutput output = outputStream -> {
+				byte[] buffer = new byte[4096];
+				int bytesRead = -1;
+
+				// write bytes read from the input stream into the output stream
+				while ((bytesRead = in.read(buffer)) != -1) {
+					outputStream.write(buffer, 0, bytesRead);
+				}
+
+				in.close();
+				outputStream.close();
+			};
+
+			return Response.ok(output, "image/png").build();
+		} catch (Exception e) {
+			return Response.ok(new Viewable("error", e.getMessage())).build();
+		}
+	}
+
+	@GET
 	@Path("/search")
 	@Produces(MediaType.APPLICATION_JSON)
 	public String search(@QueryParam("s") String term) {

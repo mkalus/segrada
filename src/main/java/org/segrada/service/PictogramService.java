@@ -117,6 +117,17 @@ public class PictogramService extends AbstractRepositoryService<IPictogram, Pict
 	}
 
 	@Override
+	public InputStream getBinaryDataAsStream(String fileIdentifier) {
+		if (fileIdentifier == null) return null;
+
+		try {
+			return binaryDataService.getBinaryDataAsStream(fileIdentifier);
+		} catch (IOException e) {
+			return null;
+		}
+	}
+
+	@Override
 	public boolean save(IPictogram entity) {
 		// new entity?
 		boolean newEntity = entity.getId()==null;

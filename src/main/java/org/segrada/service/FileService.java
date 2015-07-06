@@ -198,6 +198,17 @@ public class FileService extends AbstractFullTextService<IFile, FileRepository> 
 	}
 
 	@Override
+	public InputStream getBinaryDataAsStream(String fileIdentifier) {
+		if (fileIdentifier == null) return null;
+
+		try {
+			return binaryDataService.getBinaryDataAsStream(fileIdentifier);
+		} catch (IOException e) {
+			return null;
+		}
+	}
+
+	@Override
 	public boolean save(IFile entity) {
 		// new entity?
 		boolean newEntity = entity.getId()==null;

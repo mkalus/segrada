@@ -39,9 +39,16 @@ public interface BinaryDataHandler<BEAN extends SegradaEntity> {
 	void removeBinaryDataFromService(BEAN entity);
 
 	/**
-	 * return data as stram
+	 * return data as stream
 	 * @param entity containing binary data
 	 * @return input stream for data
 	 */
 	InputStream getBinaryDataAsStream(BEAN entity);
+
+	/**
+	 * return data as stream
+	 * @param fileIdentifier referencing binary data
+	 * @return input stream for data
+	 */
+	InputStream getBinaryDataAsStream(String fileIdentifier);
 }

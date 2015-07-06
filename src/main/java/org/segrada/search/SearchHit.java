@@ -1,5 +1,7 @@
 package org.segrada.search;
 
+import org.apache.commons.lang3.StringUtils;
+
 /**
  * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]
  * <p>
@@ -81,6 +83,10 @@ public class SearchHit {
 
 	public Integer getColor() {
 		return color;
+	}
+
+	public String getColorCode() {
+		return (color == null)?"":"#" + StringUtils.leftPad(Long.toHexString(color).toUpperCase(), 6, "0");
 	}
 
 	public void setColor(Integer color) {
