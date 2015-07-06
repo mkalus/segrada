@@ -2,15 +2,21 @@ package org.segrada.controller;
 
 import com.google.inject.Inject;
 import com.google.inject.servlet.RequestScoped;
+import com.sun.jersey.api.view.Viewable;
+import org.codehaus.jettison.json.JSONObject;
 import org.segrada.controller.base.AbstractBaseController;
 import org.segrada.model.prototype.ISourceReference;
+import org.segrada.model.prototype.SegradaAnnotatedEntity;
 import org.segrada.service.ColorService;
 import org.segrada.service.SourceReferenceService;
+import org.segrada.service.base.AbstractRepositoryService;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]
@@ -35,6 +41,9 @@ public class SourceReferenceController extends AbstractBaseController<ISourceRef
 	@Inject
 	private SourceReferenceService service;
 
+	@Inject
+	private Map<String, AbstractRepositoryService> annotatedServices;
+
 	@Override
 	protected String getBasePath() {
 		return "/source_reference/";
@@ -43,6 +52,60 @@ public class SourceReferenceController extends AbstractBaseController<ISourceRef
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
 	public String index() {
-		return "Not implemented yet.";
+		return "Not implemented.";
+	}
+
+	/**
+	 * show files by reference
+	 * @param referenceUid uid of reference
+	 * @param referenceModel reference model, e.g. "node"
+	 * @param errors json encoded errors
+	 * @return view
+	 */
+	@GET
+	@Path("/by_reference/{model}/{uid}")
+	@Produces(MediaType.TEXT_HTML)
+	public Viewable byReference(
+			@PathParam("uid") String referenceUid,
+			@PathParam("model") String referenceModel,
+			@QueryParam("errors") String errors // json object of errors
+	) {
+		// get reference by uid
+		SegradaAnnotatedEntity referenceEntity;
+		referenceModel = referenceModel.substring(0,1).toUpperCase() + referenceModel.substring(1);
+		AbstractRepositoryService referenceService = annotatedServices.get(referenceModel);
+		if (referenceService == null) {
+			return new Viewable("error", "referenceService not found");
+		} else {
+			referenceEntity = (SegradaAnnotatedEntity) referenceService.findById(service.convertUidToId(referenceUid));
+		}
+
+		// get references
+		List<ISourceReference> entities = service.findByReference(service.convertUidToId(referenceUid));
+
+		// create model map
+		Map<String, Object> model = new HashMap<>();
+		model.put("uid", referenceUid);
+		model.put("model", referenceModel);
+		model.put("referenceEntity", referenceEntity);
+		model.put("entities", entities);
+		model.put("targetId", "#files-by-ref-" + referenceUid);
+
+		if (errors != null) {
+			try {
+				JSONObject errorData = new JSONObject(errors);
+				Map<String, String> errorMessages = new HashMap<>();
+				Iterator it = errorData.keys();
+				while (it.hasNext()) {
+					String key = (String) it.next();
+					errorMessages.put(key, errorData.getString(key));
+				}
+				model.put("errors", errorMessages);
+			} catch (Exception e) {
+				//TODO: log
+			}
+		}
+
+		return new Viewable("source_reference/by_reference", model);
 	}
 }

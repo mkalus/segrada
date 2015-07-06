@@ -1,0 +1,47 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" th:lang="${#locale.language}">
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<title th:text="#{list.file}">File</title>
+	<div th:include="partials/common :: head" th:remove="tag"></div>
+</head>
+
+<body>
+<div th:replace="partials/common :: browser"></div>
+
+<div class="container">
+	<div class="sg-control-content sg-file">
+		<h4 class="sg-control-header"><i class="fa fa-bookmark"></i> <span th:text="#{list.source_references}">References to entity</span></h4>
+
+		<p th:text="${#messages.msg('showEntities', entities.size())}">Size</p>
+
+		TODO: diesen Reiter vielleicht in der Detailansicht direkt unterhalb der Beschreibung?
+
+		<table class="table table-hover table-striped table-condensed">
+			<tr>
+				<th class="text-center"><i class="fa fa-bookmark"></i></th>
+				<th th:text="#{field.source}">Source</th>
+				<th th:text="#{field.text}">Text</th>
+				<th></th>
+			</tr>
+			<tr th:each="entity : ${entities}" th:attr="data-data-dblclick=@{/file/show/{uid}(uid=${entity.uid})}">
+				<td></td>
+				<td><a class="sg-data-icon sg-data-add" href="#" th:title="#{Show}" th:href="@{/source/show/{uid}(uid=${entity.source.uid})}"><i class="fa fa-eye"></i></a> <span th:text="${entity.source.shortTitle}">Source</span></td>
+				<td th:text="${entity.referenceText}">Text</td>
+				<td class="text-right">
+					<div class="sg-data-icon-bar" role="group" aria-label="Actions">
+						<a class="sg-data-icon sg-data-add" href="#" th:title="#{Edit}" th:href="@{/source_reference/edit/{uid}(uid=${entity.uid})}"><i class="fa fa-pencil"></i></a>
+						<a class="sg-data-icon" href="#" th:title="#{Unlink}" th:href="@{/source_reference/remove_reference/{model}/{uid}/{source}(model=${model},uid=${uid},source=${entity.uid})}" th:attr="data-confirm=${#messages.msg('ReallyUnlink', entity.title, referenceEntity.title)}"><i class="fa fa-unlink"></i></a>
+					</div>
+				</td>
+			</tr>
+		</table>
+
+		TODO: Formular
+	</div>
+</div>
+
+<div th:replace="partials/common :: footer"></div>
+</body>
+</html>
