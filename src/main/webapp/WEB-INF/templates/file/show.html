@@ -53,7 +53,7 @@
 					</div>
 				</div>
 
-				<div th:if="${entity.fileIdentifier}" class="sg-margin-top">
+				<div th:if="${entity.fileIdentifier}" class="sg-margin-top sg-margin-bottom">
 					<div th:if="${#strings.startsWith(entity.mimeType,'image/')}">
 						<img src="#" th:src="@{/file/file/{uid}(uid=${entity.uid})}" alt="" th:alt-title="${entity.title}" style="width: 100%;" />
 					</div>
@@ -62,7 +62,7 @@
 					</div>
 				</div>
 
-				<div th:if="${entity.fileIdentifier}" class="text-center sg-margin-top">
+				<div th:if="${entity.fileIdentifier}" class="text-center sg-margin-top sg-margin-bottom">
 					<a href="#" th:href="@{/file/file/{uid}(uid=${entity.uid})}" class="btn btn-primary btn-lg" th:text="#{Download}"></a>
 				</div>
 
