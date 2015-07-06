@@ -185,12 +185,14 @@ public class OrientDbSourceRepository extends AbstractAnnotatedOrientDbRepositor
 		// aggregate filters
 		List<String> constraints = new LinkedList<>();
 		// search term
-		if (filters.get("search") != null) {
+		if (filters.containsKey("search")) {
 			constraints.add(createSearchTermFullText((String) filters.get("search")));
 		}
-		//TODO: more filters?
+		if (filters.containsKey("shortRef")) {
+			constraints.add("shortRef LIKE '%" + OrientStringEscape.escapeOrientSql((String) filters.get("shortRef")) + "%'");
+		}
 		// tags
-		if (filters.get("tags") != null) {
+		if (filters.containsKey("tags")) {
 			StringBuilder sb = new StringBuilder(" in('IsTagOf').title IN [ ");
 			boolean first = true;
 			for (String tag : (String[]) filters.get("tags")) {
