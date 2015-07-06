@@ -58,9 +58,27 @@ public class FileController extends AbstractColoredController<IFile> {
 
 	@GET
 	@Produces(MediaType.TEXT_HTML)
-	public Viewable index(@QueryParam("page") int page, @QueryParam("entriesPerPage") int entriesPerPage) {
-		// TODO: do filters
-		return handlePaginatedIndex(service, page, entriesPerPage, null);
+	public Viewable index(
+			@QueryParam("page") int page,
+			@QueryParam("entriesPerPage") int entriesPerPage,
+			@QueryParam("reset") int reset,
+			@QueryParam("search") String search,
+			@QueryParam("tags") List<String> tags
+	) {
+		// filters:
+		Map<String, Object> filters = new HashMap<>();
+		if (reset > 0) filters.put("reset", true);
+		if (search != null) filters.put("search", search);
+		if (tags != null) {
+			if (tags.size() == 0) filters.put("tags", null);
+			else {
+				String[] tagArray = new String[tags.size()];
+				tags.toArray(tagArray);
+				filters.put("tags", tagArray);
+			}
+		}
+
+		return handlePaginatedIndex(service, page, entriesPerPage, filters);
 	}
 
 	@GET

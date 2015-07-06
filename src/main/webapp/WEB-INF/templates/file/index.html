@@ -20,27 +20,43 @@
 
 		<p th:text="${#messages.msg('pagination', paginationInfo.page, paginationInfo.pages)}">Pages</p>
 
-		<table class="table table-hover table-striped table-condensed">
-			<tr>
-				<th class="text-center"><i class="fa fs-file"></i></th>
-				<th th:text="#{field.title}">Title</th>
-				<th></th>
-			</tr>
-			<tr th:each="entity : ${paginationInfo.entities}" th:attr="data-data-dblclick=@{/file/show/{uid}(uid=${entity.uid})}">
-				<td class="text-center">
-					<span class="sg-color-icon" th:style="'background-color: ' + ${entity.colorCode}" th:if="${entity.color}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-					<img src="#" th:src="@{/pictogram/file/{uid}(uid=${entity.pictogram.uid})}" th:alt-title="${entity.pictogram.title}" alt="" width="24" height="24" th:if="${entity.pictogram}"/>
-				</td>
-				<td th:text="${entity.title}">Title</td>
-				<td class="text-right">
-					<div class="sg-data-icon-bar" role="group" aria-label="Actions">
-						<a class="sg-data-icon sg-data-add" href="#" th:title="#{Show}" th:href="@{/file/show/{uid}(uid=${entity.uid})}"><i class="fa fa-eye"></i></a>
-						<a class="sg-data-icon sg-data-add" href="#" th:title="#{Edit}" th:href="@{/file/edit/{uid}(uid=${entity.uid})}"><i class="fa fa-pencil"></i></a>
-						<a class="sg-data-icon" href="#" th:title="#{Delete}" th:href="@{/file/delete/{uid}/0(uid=${entity.uid})}" th:attr="data-confirm=${#messages.msg('ReallyDelete', entity.title)}"><i class="fa fa-times-circle-o"></i></a>
-					</div>
-				</td>
-			</tr>
-		</table>
+		<form method="get" action="#" th:action="@{${baseUrl}?${baseUrl}:'/file'}" class="sg-control-form" th:attr="data-target-id=${targetId}">
+			<table class="table table-hover table-striped table-condensed">
+				<tr>
+					<th class="text-center"><i class="fa fs-file"></i></th>
+					<th th:text="#{field.title}">Title</th>
+					<th class="col-xs-1" th:text="#{field.tags}">Tags</th>
+					<th></th>
+				</tr>
+				<tr>
+					<td class="text-center"><a class="sg-control-set btn btn-sm btn-link" href="#" th:href="@{${baseUrl}?${baseUrl}:'/file'(reset=1)}" th:title="#{reset}" th:attr="data-target-id=${targetId}"><i class="fa fa-eraser"></i></a></td>
+					<td><input type="text" class="form-control" th:value="${filters.search}" name="search" th:placeholder="#{field.filter_title}" title="#{field.filter_title}" /></td>
+					<td>
+						<select multiple="multiple" type="text" name="tags" class="sg-tags">
+							<option th:each="tag : ${filters.tags}" selected="selected" th:value="${tag}" th:text="${tag}">Tag</option>
+						</select>
+					</td>
+					<td class="text-right"><button type="submit" class="btn btn-info btn-sm" th:text="#{SubmitFilter}">Filter</button></td>
+				</tr>
+				<tr th:each="entity : ${paginationInfo.entities}" th:attr="data-data-dblclick=@{/file/show/{uid}(uid=${entity.uid})}">
+					<td class="text-center">
+						<span class="sg-color-icon" th:style="'background-color: ' + ${entity.colorCode}" th:if="${entity.color}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+						<img src="#" th:src="@{/pictogram/file/{uid}(uid=${entity.pictogram.uid})}" th:alt-title="${entity.pictogram.title}" alt="" width="24" height="24" th:if="${entity.pictogram}"/>
+					</td>
+					<td th:text="${entity.title}">Title</td>
+					<td class="sg-taglist-contract">
+						<div th:replace="partials/common :: taglist (tags=${entity.tags})"></div>
+					</td>
+					<td class="text-right">
+						<div class="sg-data-icon-bar" role="group" aria-label="Actions">
+							<a class="sg-data-icon sg-data-add" href="#" th:title="#{Show}" th:href="@{/file/show/{uid}(uid=${entity.uid})}"><i class="fa fa-eye"></i></a>
+							<a class="sg-data-icon sg-data-add" href="#" th:title="#{Edit}" th:href="@{/file/edit/{uid}(uid=${entity.uid})}"><i class="fa fa-pencil"></i></a>
+							<a class="sg-data-icon" href="#" th:title="#{Delete}" th:href="@{/file/delete/{uid}/0(uid=${entity.uid})}" th:attr="data-confirm=${#messages.msg('ReallyDelete', entity.title)}"><i class="fa fa-times-circle-o"></i></a>
+						</div>
+					</td>
+				</tr>
+			</table>
+		</form>
 
 		<div th:replace="partials/pagination :: pagination (paginationInfo=${paginationInfo},base='file')"></div>
 	</div>
