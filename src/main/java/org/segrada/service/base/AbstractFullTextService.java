@@ -109,6 +109,8 @@ abstract public class AbstractFullTextService<BEAN extends SegradaEntity, REPOSI
 				entity.subTitles,
 				markupFilter.toPlain(entity.content), // convert content to plain, searchable text
 				entity.tagIds,
+				entity.color,
+				entity.iconFileIdentifier,
 				entity.weight
 		))
 			logger.error("Could not write entity to search index: " + entity.id);
@@ -143,6 +145,10 @@ abstract public class AbstractFullTextService<BEAN extends SegradaEntity, REPOSI
 		public String contentMarkup;
 
 		public String[] tagIds = new String[]{};
+
+		public Integer color;
+
+		public String iconFileIdentifier;
 
 		public float weight;
 

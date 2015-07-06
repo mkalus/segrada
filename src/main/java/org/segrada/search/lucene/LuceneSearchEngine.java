@@ -3,10 +3,7 @@ package org.segrada.search.lucene;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.document.Document;
-import org.apache.lucene.document.Field;
-import org.apache.lucene.document.FieldType;
-import org.apache.lucene.document.TextField;
+import org.apache.lucene.document.*;
 import org.apache.lucene.index.*;
 import org.apache.lucene.queries.ChainedFilter;
 import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
@@ -101,7 +98,7 @@ public class LuceneSearchEngine implements SearchEngine {
 	}
 
 	@Override
-	public synchronized boolean index(String id, String className, String title, String subTitles, String content, String[] tagIds, float weight) {
+	public synchronized boolean index(String id, String className, String title, String subTitles, String content, String[] tagIds, Integer color, String iconFileIdentifier, float weight) {
 		try {
 			// init index writer config
 			IndexWriterConfig indexWriterConfig = new IndexWriterConfig(Version.LUCENE_47, this.analyzer);
@@ -115,13 +112,13 @@ public class LuceneSearchEngine implements SearchEngine {
 
 			Field field;
 			if (title != null) {
-				field = new Field("title", title, TextField.TYPE_STORED);
+				field = new Field("title", title, indexedTextType);
 				field.setBoost(10f * weight);
 				doc.add(field);
 			}
 
 			if (subTitles != null) {
-				field = new Field("subTitles", subTitles, TextField.TYPE_STORED);
+				field = new Field("subTitles", subTitles, indexedTextType);
 				field.setBoost(6f * weight);
 				doc.add(field);
 			}
@@ -139,6 +136,18 @@ public class LuceneSearchEngine implements SearchEngine {
 					field.setBoost(weight);
 					doc.add(field);
 				}
+
+			// add color and icon - just stored
+			if (color != null) {
+				field = new IntField("color", color, IntField.TYPE_STORED);
+				doc.add(field);
+			}
+
+			// add color and icon - just stored
+			if (iconFileIdentifier != null) {
+				field = new Field("iconFileIdentifier", iconFileIdentifier, TextField.TYPE_STORED);
+				doc.add(field);
+			}
 
 			// create or update document
 			iWriter.updateDocument(new Term("id", id), doc);
@@ -253,6 +262,9 @@ public class LuceneSearchEngine implements SearchEngine {
 				searchHit.setTitle(hitDoc.get("title"));
 				searchHit.setSubTitles(hitDoc.get("subTitles"));
 				searchHit.setTagIds(hitDoc.getValues("tag"));
+				String color = hitDoc.get("color");
+				searchHit.setColor(color!=null?new Integer(color):null);
+				searchHit.setIconFileIdentifier(hitDoc.get("iconFileIdentifier"));
 				searchHit.setRelevance(hit.score);
 
 				// get highlighted components

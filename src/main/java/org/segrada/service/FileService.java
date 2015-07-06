@@ -103,6 +103,9 @@ public class FileService extends AbstractFullTextService<IFile, FileRepository> 
 		idxEntity.content = description;
 		idxEntity.contentMarkup = "plain";
 		idxEntity.weight = 5f; // relatively important
+		idxEntity.color = entity.getColor();
+		if (entity.getPictogram() != null)
+			idxEntity.iconFileIdentifier = entity.getPictogram().getFileIdentifier();
 
 		// get tag ids and add them to entity
 		TagRepository tagRepository = repositoryFactory.produceRepository(TagRepository.class);

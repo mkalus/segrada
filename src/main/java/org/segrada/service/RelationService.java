@@ -65,6 +65,9 @@ public class RelationService extends AbstractFullTextService<IRelation, Relation
 		idxEntity.content = entity.getDescription();
 		idxEntity.contentMarkup = entity.getDescriptionMarkup();
 		idxEntity.weight = 5f; // relatively important
+		idxEntity.color = entity.getColor();
+		if (entity.getPictogram() != null)
+			idxEntity.iconFileIdentifier = entity.getPictogram().getFileIdentifier();
 
 		// get tag ids and add them to entity
 		TagRepository tagRepository = repositoryFactory.produceRepository(TagRepository.class);

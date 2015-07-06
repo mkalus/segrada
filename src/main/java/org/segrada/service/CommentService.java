@@ -59,6 +59,9 @@ public class CommentService extends AbstractFullTextService<IComment, CommentRep
 		idxEntity.content = entity.getText();
 		idxEntity.contentMarkup = entity.getMarkup();
 		idxEntity.weight = 1f; // not so important
+		idxEntity.color = entity.getColor();
+		if (entity.getPictogram() != null)
+			idxEntity.iconFileIdentifier = entity.getPictogram().getFileIdentifier();
 
 		// get tag ids and add them to entity
 		TagRepository tagRepository = repositoryFactory.produceRepository(TagRepository.class);

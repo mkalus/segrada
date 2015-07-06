@@ -80,6 +80,9 @@ public class SourceService extends AbstractFullTextService<ISource, SourceReposi
 		idxEntity.content = entity.getDescription();
 		idxEntity.contentMarkup = entity.getDescriptionMarkup();
 		idxEntity.weight = 1f; // not so important
+		idxEntity.color = entity.getColor();
+		if (entity.getPictogram() != null)
+			idxEntity.iconFileIdentifier = entity.getPictogram().getFileIdentifier();
 
 		// get tag ids and add them to entity
 		TagRepository tagRepository = repositoryFactory.produceRepository(TagRepository.class);

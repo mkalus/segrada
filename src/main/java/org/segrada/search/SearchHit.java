@@ -28,6 +28,10 @@ public class SearchHit {
 
 	protected String[] tagIds;
 
+	protected Integer color;
+
+	protected String iconFileIdentifier;
+
 	/**
 	 * should contain highlight fragments
 	 */
@@ -73,6 +77,22 @@ public class SearchHit {
 
 	public void setTagIds(String[] tagIds) {
 		this.tagIds = tagIds;
+	}
+
+	public Integer getColor() {
+		return color;
+	}
+
+	public void setColor(Integer color) {
+		this.color = color;
+	}
+
+	public String getIconFileIdentifier() {
+		return iconFileIdentifier;
+	}
+
+	public void setIconFileIdentifier(String iconFileIdentifier) {
+		this.iconFileIdentifier = iconFileIdentifier;
 	}
 
 	public String[] getHighlightText() {

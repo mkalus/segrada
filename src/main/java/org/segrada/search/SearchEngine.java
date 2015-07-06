@@ -28,11 +28,13 @@ public interface SearchEngine {
 	 * @param title     title of document, if any (should be ranked very high)
 	 * @param subTitles subtitles of document, if any (should be ranked relatively high)
 	 * @param content   text content of document, if any (plain text)
-	 * @param tagIds    ids of tags the indexed element belongs to
+	 * @param tagIds    ids of tags the indexed element belongs to (optional)
+	 * @param color     color id (optional)
+	 * @param iconFileIdentifier file identifier for icon (optional)
 	 * @param weight    weight of document, might be dependent of class or user definition
 	 * @return
 	 */
-	boolean index(String id, String className, String title, String subTitles, String content, String[] tagIds, float weight);
+	boolean index(String id, String className, String title, String subTitles, String content, String[] tagIds,  Integer color, String iconFileIdentifier, float weight);
 
 	/**
 	 * Do a search

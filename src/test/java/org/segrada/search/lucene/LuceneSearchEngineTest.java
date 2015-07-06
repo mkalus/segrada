@@ -34,7 +34,7 @@ public class LuceneSearchEngineTest {
 						"dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy " +
 						"eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero " +
 						"eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata " +
-						"sanctus est Lorem ipsum dolor sit amet.", new String[]{}, 1.0f);
+						"sanctus est Lorem ipsum dolor sit amet.", new String[]{}, null, null,1.0f);
 
 		assertTrue("Could not save document to index", check);
 
@@ -74,9 +74,9 @@ public class LuceneSearchEngineTest {
 						"dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy " +
 						"eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero " +
 						"eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata " +
-						"sanctus est Lorem ipsum dolor sit amet.", new String[]{"tag1", "tag2", "tag4"}, 1.0f);
+						"sanctus est Lorem ipsum dolor sit amet.", new String[]{"tag1", "tag2", "tag4"}, null, null, 1.0f);
 		searchEngine.index("2", "AnotherDummyClass", "Title 2 Avocado", "This is a completely different Subtitle",
-				"Little text.", new String[]{"tag1"}, 1.0f);
+				"Little text.", new String[]{"tag1"}, null, null, 1.0f);
 
 		SearchResult searchResult;
 		Map<String, String> filter = new HashMap<>();
@@ -221,7 +221,7 @@ public class LuceneSearchEngineTest {
 						"sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod " +
 						"tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et " +
 						"accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus " +
-						"est Lorem ipsum dolor sit amet.", new String[]{"12-5", "12-8", "12-99"}, 1.0f);
+						"est Lorem ipsum dolor sit amet.", new String[]{"12-5", "12-8", "12-99"}, null, null, 1.0f);
 
 		SearchHit hit = searchEngine.getById("2");
 
@@ -244,7 +244,7 @@ public class LuceneSearchEngineTest {
 	@Test
 	public void testEmptyTags() throws Exception {
 		searchEngine.index("2b", "DummyClass", "Hello World", "Another Title\nAnd my subtitle",
-				"Text.", new String[]{}, 1.0f);
+				"Text.", new String[]{}, null, null, 1.0f);
 
 		SearchHit hit = searchEngine.getById("2b");
 		assertNotNull(hit.getTagIds());
@@ -252,7 +252,7 @@ public class LuceneSearchEngineTest {
 
 		// null value
 		searchEngine.index("2c", "DummyClass", "Hello World", "Another Title\nAnd my subtitle",
-				"Text.", null, 1.0f);
+				"Text.", null, null, null, 1.0f);
 
 		hit = searchEngine.getById("2c");
 		assertNotNull(hit.getTagIds());
@@ -269,7 +269,7 @@ public class LuceneSearchEngineTest {
 						"sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod " +
 						"tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et " +
 						"accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus " +
-						"est Lorem ipsum dolor sit amet.", new String[]{}, 1.0f);
+						"est Lorem ipsum dolor sit amet.", new String[]{}, null, null, 1.0f);
 
 		searchEngine.clearAllIndexes();
 
@@ -289,8 +289,8 @@ public class LuceneSearchEngineTest {
 		searchEngine.clearAllIndexes();
 
 		// index twice
-		searchEngine.index("4", "DummyClass", "Hello World 1", "xyzzy", "xyzzy", new String[]{}, 1.0f);
-		searchEngine.index("4", "DummyClass", "Hello World 2", "xyzzy", "xyzzy", new String[]{}, 1.0f);
+		searchEngine.index("4", "DummyClass", "Hello World 1", "xyzzy", "xyzzy", new String[]{}, null, null, 1.0f);
+		searchEngine.index("4", "DummyClass", "Hello World 2", "xyzzy", "xyzzy", new String[]{}, null, null, 1.0f);
 
 		// search
 		SearchResult searchResult = searchEngine.search("xyzzy", null);
