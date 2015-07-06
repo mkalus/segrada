@@ -81,7 +81,7 @@ public class FileService extends AbstractFullTextService<IFile, FileRepository> 
 
 	@Override
 	public List<IFile> search(String term) {
-		return findBySearchTerm(term, 10, true);
+		return findBySearchTerm(term, 30, true);
 	}
 
 	@Nullable

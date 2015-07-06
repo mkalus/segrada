@@ -6,12 +6,17 @@ import com.sun.jersey.api.view.Viewable;
 import com.sun.jersey.core.header.FormDataContentDisposition;
 import com.sun.jersey.multipart.FormDataBodyPart;
 import com.sun.jersey.multipart.FormDataParam;
+import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 import org.segrada.controller.base.AbstractColoredController;
 import org.segrada.model.File;
 import org.segrada.model.prototype.IFile;
 import org.segrada.model.prototype.IPictogram;
+import org.segrada.model.prototype.SegradaAnnotatedEntity;
 import org.segrada.service.FileService;
 import org.segrada.service.PictogramService;
+import org.segrada.service.base.AbstractRepositoryService;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -20,10 +25,8 @@ import javax.ws.rs.core.StreamingOutput;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.net.URLEncoder;
+import java.util.*;
 
 /**
  * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]
@@ -50,6 +53,9 @@ public class FileController extends AbstractColoredController<IFile> {
 
 	@Inject
 	private PictogramService pictogramService;
+
+	@Inject
+	private Map<String, AbstractRepositoryService> annotatedServices;
 
 	@Override
 	protected String getBasePath() {
@@ -82,10 +88,137 @@ public class FileController extends AbstractColoredController<IFile> {
 	}
 
 	@GET
+	@Path("/by_reference/{model}/{uid}")
+	@Produces(MediaType.TEXT_HTML)
+	public Viewable byReference(
+			@PathParam("uid") String referenceUid,
+			@PathParam("model") String referenceModel,
+			@QueryParam("reset") int reset,
+			@QueryParam("search") String search,
+			@QueryParam("tags") List<String> tags,
+			@QueryParam("errors") String errors // json object of errors
+	) {
+		// filters:
+		Map<String, Object> filters = new HashMap<>();
+		if (reset > 0) filters.put("reset", true);
+		if (search != null) filters.put("search", search);
+		if (tags != null) {
+			if (tags.size() == 0) filters.put("tags", null);
+			else {
+				String[] tagArray = new String[tags.size()];
+				tags.toArray(tagArray);
+				filters.put("tags", tagArray);
+			}
+		}
+
+		// get references
+		List<IFile> entities = service.findByReference(service.convertUidToId(referenceUid));
+
+		// create model map
+		Map<String, Object> model = new HashMap<>();
+		model.put("uid", referenceUid);
+		model.put("model", referenceModel);
+		model.put("entities", entities);
+		model.put("filters", filters);
+		model.put("targetId", "#files-by-ref-" + referenceUid);
+
+		if (errors != null) {
+			try {
+				JSONObject errorData = new JSONObject(errors);
+				Map<String, String> errorMessages = new HashMap<>();
+				Iterator it = errorData.keys();
+				while (it.hasNext()) {
+					String key = (String) it.next();
+					errorMessages.put(key, errorData.getString(key));
+				}
+				model.put("errors", errorMessages);
+			} catch (Exception e) {
+				//TODO: log
+			}
+		}
+
+		return new Viewable("file/by_reference", model);
+	}
+
+	@GET
+	@Path("/add_reference/{model}/{uid}")
+	public Response addReference(@PathParam("uid") String referenceUid, @PathParam("model") String referenceModel, @QueryParam("source") String sourceId) {
+		// create error map
+		Map<String, String> errors = new HashMap<>();
+
+		// find source
+		IFile source = service.findById(sourceId);
+		if (source == null) errors.put("source", "error.notNull");
+
+		// find reference model
+		SegradaAnnotatedEntity referenceEntity;
+		referenceModel = referenceModel.substring(0,1).toUpperCase() + referenceModel.substring(1);
+		AbstractRepositoryService referenceService = annotatedServices.get(referenceModel);
+		if (referenceService == null) {
+			errors.put("model", "error.notNull");
+			referenceEntity = null;
+		} else {
+			referenceEntity = (SegradaAnnotatedEntity) referenceService.findById(service.convertUidToId(referenceUid));
+		}
+
+		// do connect
+		if (referenceEntity != null && source != null)
+			service.connectFileToEntity(source, referenceEntity);
+
+		String add = "";
+		if (errors.size() > 0) {
+			try {
+				JSONObject jsonObject = new JSONObject();
+				for (String key : errors.keySet())
+					jsonObject.put(key, errors.get(key));
+
+				add = "?errors=" + URLEncoder.encode(jsonObject.toString(), "UTF-8");
+			} catch (Exception e) {
+				//TODO: log
+			}
+		}
+
+		try {
+			return Response.seeOther(new URI(getBasePath() + "by_reference/" + referenceModel + "/" + referenceUid + add)).build();
+		} catch (URISyntaxException e) {
+			return Response.ok(new Viewable("error", e.getMessage())).build();
+		}
+	}
+
+	@GET
 	@Path("/show/{uid}")
 	@Produces(MediaType.TEXT_HTML)
 	public Viewable show(@PathParam("uid") String uid) {
 		return handleShow(uid, service);
+	}
+
+	@GET
+	@Path("/search")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String search(@QueryParam("s") String term, @QueryParam("tags") String tags) {
+		// json array to hold hits
+		JSONArray jsonArray = new JSONArray();
+
+		// explode tags
+		String[] tagIds;
+		if (tags != null && tags.length() > 0) tagIds = tags.split(",");
+		else tagIds = null;
+
+		// search term finding
+		for (IFile node : service.search(term)) {
+			try {
+				JSONObject jsonObject = new JSONObject();
+				jsonObject.put("id", node.getId());
+				jsonObject.put("uid", node.getUid());
+				jsonObject.put("title", node.getTitle());
+
+				jsonArray.put(jsonObject);
+			} catch (JSONException e) {
+				//IGNORE
+			}
+		}
+
+		return jsonArray.toString();
 	}
 
 	@GET

@@ -17,6 +17,7 @@ import org.segrada.search.SearchEngine;
 import org.segrada.search.lucene.LuceneSearchEngine;
 import org.segrada.service.*;
 import org.segrada.service.base.AbstractFullTextService;
+import org.segrada.service.base.AbstractRepositoryService;
 import org.segrada.service.binarydata.BinaryDataService;
 import org.segrada.service.binarydata.BinaryDataServiceFile;
 import org.segrada.service.repository.factory.RepositoryFactory;
@@ -85,6 +86,15 @@ public class ServiceModule extends AbstractModule {
 		fullTextServiceMapBinder.addBinding("Node").to(NodeService.class);
 		fullTextServiceMapBinder.addBinding("Source").to(SourceService.class);
 		fullTextServiceMapBinder.addBinding("Relation").to(RelationService.class);
+
+		// create mapped binding for services that can be annotated
+		MapBinder<String, AbstractRepositoryService> annotatedServices
+				= MapBinder.newMapBinder(binder(), String.class, AbstractRepositoryService.class);
+		annotatedServices.addBinding("Comment").to(CommentService.class);
+		annotatedServices.addBinding("File").to(FileService.class);
+		annotatedServices.addBinding("Node").to(NodeService.class);
+		annotatedServices.addBinding("Source").to(SourceService.class);
+		annotatedServices.addBinding("Relation").to(RelationService.class);
 	}
 
 	@Provides

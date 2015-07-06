@@ -41,6 +41,20 @@
 	});
 
 	/**
+	 * file tokenizer
+	 */
+	var fileTokenizer = new Bloodhound({
+		datumTokenizer: function (d) {
+			return Bloodhound.tokenizers.whitespace(d.title);
+		},
+		queryTokenizer: Bloodhound.tokenizers.whitespace,
+		remote: {
+			wildcard: '%QUERY',
+			url: urlSegradaFileSearch + '%QUERY'
+		}
+	});
+
+	/**
 	 * on enter pressed event
 	 * @param func
 	 * @returns {jQuery}
@@ -340,6 +354,29 @@
 				displayKey: 'title',
 				valueKey: 'id',
 				source: nodeTokenizer.ttAdapter()
+			}).bind('typeahead:selected', function(e, datum) {
+				target.val(datum.id);
+			}).bind('keyup', function() { // empty on textbox empty
+				if (!this.value) {
+					target.val('');
+				}
+			});
+		});
+
+		// *******************************************************
+		// node selector for relation forms
+		$("input.sg-file-search", part).each(function() {
+			var $this = $(this);
+			var target = $('#' + $this.attr('data-id'));
+
+			$this.typeahead({hint: true,
+				highlight: true,
+				minLength: 1
+			},{
+				name: 'file',
+				displayKey: 'title',
+				valueKey: 'id',
+				source: fileTokenizer.ttAdapter()
 			}).bind('typeahead:selected', function(e, datum) {
 				target.val(datum.id);
 			}).bind('keyup', function() { // empty on textbox empty

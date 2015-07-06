@@ -87,7 +87,17 @@ abstract public class AbstractBaseController<BEAN extends SegradaEntity> {
 		String key = filters.containsKey("key")?(String)filters.get("key"):service.getClass().getSimpleName();
 
 		// reset all filters
-		if (filters.containsKey("reset")) filters = new HashMap<>();
+		if (filters.containsKey("reset")) {
+			Map<String, Object> newFilters = new HashMap<>();
+			// keep certain values?
+			if (filters.containsKey("resetKeep")) {
+				for (String keepKey : (String[])filters.get("resetKeep")) {
+					if (filters.containsKey(keepKey))
+						newFilters.put(keepKey, filters.get(keepKey));
+				}
+			}
+			filters = newFilters;
+		}
 		else {
 			// get filter entries from session
 			Object o = session.getAttribute(key);
