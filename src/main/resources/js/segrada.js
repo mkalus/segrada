@@ -373,6 +373,50 @@
 				}
 			}
 		});
+
+		// *******************************************************
+		// dynamic map loader
+		$('.sg-geotab', part).on('shown.bs.tab', function (e) {
+			var target = $(e.target);
+			var id = target.attr('data-map-id');
+
+			var map = new ol.Map({
+				target: id,
+				layers: [
+					new ol.layer.Tile({
+						source: new ol.source.MapQuest({layer: 'sat'})
+					})
+				],
+				view: new ol.View({
+					center: ol.proj.fromLonLat([0, 0]),
+					zoom: 1,
+					maxZoom: 10
+				}),
+				controls: ol.control.defaults({
+					attributionOptions: {
+						collapsible: false
+					}
+				})
+			});
+
+			// add vector layer
+			var mapVectorSource = new ol.source.Vector({
+				features: []
+			});
+			var mapVectorLayer = new ol.layer.Vector({
+				source: mapVectorSource
+			});
+			map.addLayer(mapVectorLayer);
+
+			// get coordinates
+			$('#' + id + '-content div').each(function() {
+				var lng = parseFloat($(this).attr('data-lng'));
+				var lat = parseFloat($(this).attr('data-lat'));
+
+				var marker = createMarker(ol.proj.transform([lng, lat], 'EPSG:4326', 'EPSG:3857'), mapIconStyle);
+				mapVectorSource.addFeature(marker);
+			});
+		});
 	}
 
 	// called after document is ready
@@ -393,5 +437,24 @@
 
 		// init defaults
 		afterAjax($('body'));
+	});
+
+	// create open layers marker
+	function createMarker(location, style){
+		var iconFeature = new ol.Feature({
+			geometry: new ol.geom.Point(location)
+		});
+		iconFeature.setStyle(style);
+
+		return iconFeature
+	}
+
+	mapIconStyle = new ol.style.Style({
+		image: new ol.style.Icon(/** @type {olx.style.IconOptions} */ ({
+			anchor: [0.5, 1],
+			anchorXUnits: 'fraction',
+			anchorYUnits: 'fraction',
+			src: '/img/marker-icon.png' //TODO: base URL!
+		}))
 	});
 })(jQuery);

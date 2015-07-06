@@ -7,6 +7,7 @@
 	<link rel="stylesheet" href="../../../css/bootstrap.css" th:href="@{/css/bootstrap.css}" />
 	<link rel="stylesheet" href="../../../css/theme.css" th:href="@{/css/theme.css}" />
 	<link rel="stylesheet" href="../../../css/font-awesome.css" th:href="@{/css/font-awesome.css}" />
+	<link rel="stylesheet" href="../../../css/ol.css" th:href="@{/css/ol.css}" />
 	<link rel="stylesheet" href="../../../css/fileinput.min.css" th:href="@{/css/fileinput.min.css}" />
 	<link rel="stylesheet" href="../../../css/bootstrap-tagsinput.css" th:href="@{/css/bootstrap-tagsinput.css}" />
 	<link rel="stylesheet" href="../../../css/jquery.simplepicker.css" th:href="@{/css/jquery.simplepicker.css}" />
@@ -63,6 +64,38 @@ Common fragments.
 
 
 
+<h3>List of Periods</h3>
+
+<div th:fragment="listperiods (entity)" th:id="${'periods-' + entity.uid}">
+	<table class="table table-hover table-striped table-condensed sg-margin-top">
+		<tr>
+			<th class="col-xs-5" th:text="#{field.fromEntry}">Start</th>
+			<th class="col-xs-5" th:text="#{field.toEntry}">Stop</th>
+			<th></th>
+		</tr>
+		<tr th:each="period : ${entity.periods}">
+			<td th:text="${!#strings.isEmpty(period.fromEntry)}?${period.fromEntry}:'---'">Start</td>
+			<td th:text="${!#strings.isEmpty(period.toEntry)}?${period.toEntry}:'---'">Stop</td>
+			<td></td>
+		</tr>
+	</table>
+</div>
+
+
+
+<h3>List of Locations</h3>
+
+<div th:fragment="listlocations (entity)" th:id="${'locations-' + entity.uid}">
+	<div class="sg-map sg-margin-top" th:id="${'location-map-' + entity.uid}">
+	</div>
+	<div class="hidden" th:id="${'location-map-' + entity.uid + '-content'}">
+		<div th:each="location : ${entity.locations}" th:text="${location.toString()}" th:attr="data-lng=${location.longitude},data-lat=${location.latitude}"></div>
+	</div>
+</div>
+
+
+
+
 <div th:fragment="footer">
 	<script th:inline="javascript">
 		/*<![CDATA[*/
@@ -82,6 +115,7 @@ Common fragments.
 	<script src="../../../js/vendor/jquery.form.min.js" th:src="@{/js/vendor/jquery.form.min.js}"></script>
 	<script src="../../../js/vendor/typeahead.bundle.min.js" th:src="@{/js/vendor/typeahead.bundle.min.js}"></script>
 	<script src="../../../js/vendor/bootstrap-tagsinput.min.js" th:src="@{/js/vendor/bootstrap-tagsinput.min.js}"></script>
+	<script src="../../../js/vendor/ol.js" th:src="@{/js/vendor/ol.js}"></script>
 	<script src="../../../js/jquery.simplepicker.min.js" th:src="@{/js/jquery.simplepicker.min.js}"></script>
 	<script src="../../../js/segrada.min.js" th:src="@{/js/segrada.min.js}"></script>
 </div>
