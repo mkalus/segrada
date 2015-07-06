@@ -30,10 +30,10 @@
 				<td th:text="${entity.title}">Name</td>
 				<td th:title="${entity.colorCode}" class="text-center"><span class="sg-color-icon" style="background-color: #000;" th:style="'background-color: ' + ${entity.colorCode}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></td>
 				<td class="text-right">
-					<div class="btn-group btn-group-sm" role="group" aria-label="Actions">
-						<a class="btn btn-primary sg-data-add" href="#" th:title="#{Show}" th:href="@{/color/show/{uid}(uid=${entity.uid})}"><i class="fa fa-eye"></i></a>
-						<a class="btn btn-default sg-data-add" href="#" th:title="#{Edit}" th:href="@{/color/edit/{uid}(uid=${entity.uid})}"><i class="fa fa-pencil"></i></a>
-						<a class="btn btn-default sg-control-confirm" href="#" th:title="#{Delete}" th:href="@{/color/delete/{uid}/0(uid=${entity.uid})}" th:attr="data-confirm=${#messages.msg('ReallyDelete', entity.title)}"><i class="fa fa-times-circle-o"></i></a>
+					<div class="sg-data-icon-bar" role="group" aria-label="Actions">
+						<a class="sg-data-icon sg-data-add" href="#" th:title="#{Show}" th:href="@{/color/show/{uid}(uid=${entity.uid})}"><i class="fa fa-eye"></i></a>
+						<a class="sg-data-icon sg-data-add" href="#" th:title="#{Edit}" th:href="@{/color/edit/{uid}(uid=${entity.uid})}"><i class="fa fa-pencil"></i></a>
+						<a class="sg-data-icon sg-control-confirm" href="#" th:title="#{Delete}" th:href="@{/color/delete/{uid}/0(uid=${entity.uid})}" th:attr="data-confirm=${#messages.msg('ReallyDelete', entity.title)}"><i class="fa fa-times-circle-o"></i></a>
 					</div>
 				</td>
 			</tr>
