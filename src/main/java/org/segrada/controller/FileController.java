@@ -87,28 +87,29 @@ public class FileController extends AbstractColoredController<IFile> {
 		return handlePaginatedIndex(service, page, entriesPerPage, filters);
 	}
 
+	/**
+	 * show files by reference
+	 * @param referenceUid uid of reference
+	 * @param referenceModel reference model, e.g. "node"
+	 * @param errors json encoded errors
+	 * @return view
+	 */
 	@GET
 	@Path("/by_reference/{model}/{uid}")
 	@Produces(MediaType.TEXT_HTML)
 	public Viewable byReference(
 			@PathParam("uid") String referenceUid,
 			@PathParam("model") String referenceModel,
-			@QueryParam("reset") int reset,
-			@QueryParam("search") String search,
-			@QueryParam("tags") List<String> tags,
 			@QueryParam("errors") String errors // json object of errors
 	) {
-		// filters:
-		Map<String, Object> filters = new HashMap<>();
-		if (reset > 0) filters.put("reset", true);
-		if (search != null) filters.put("search", search);
-		if (tags != null) {
-			if (tags.size() == 0) filters.put("tags", null);
-			else {
-				String[] tagArray = new String[tags.size()];
-				tags.toArray(tagArray);
-				filters.put("tags", tagArray);
-			}
+		// get reference by uid
+		SegradaAnnotatedEntity referenceEntity;
+		referenceModel = referenceModel.substring(0,1).toUpperCase() + referenceModel.substring(1);
+		AbstractRepositoryService referenceService = annotatedServices.get(referenceModel);
+		if (referenceService == null) {
+			return new Viewable("error", "referenceService not found");
+		} else {
+			referenceEntity = (SegradaAnnotatedEntity) referenceService.findById(service.convertUidToId(referenceUid));
 		}
 
 		// get references
@@ -118,8 +119,8 @@ public class FileController extends AbstractColoredController<IFile> {
 		Map<String, Object> model = new HashMap<>();
 		model.put("uid", referenceUid);
 		model.put("model", referenceModel);
+		model.put("referenceEntity", referenceEntity);
 		model.put("entities", entities);
-		model.put("filters", filters);
 		model.put("targetId", "#files-by-ref-" + referenceUid);
 
 		if (errors != null) {
@@ -140,8 +141,16 @@ public class FileController extends AbstractColoredController<IFile> {
 		return new Viewable("file/by_reference", model);
 	}
 
+	/**
+	 * add a reference to an entity
+	 * @param referenceUid uid of reference
+	 * @param referenceModel reference model, e.g. "node"
+	 * @param sourceId source id to be added
+	 * @return response
+	 */
 	@GET
 	@Path("/add_reference/{model}/{uid}")
+	@Produces(MediaType.TEXT_HTML)
 	public Response addReference(@PathParam("uid") String referenceUid, @PathParam("model") String referenceModel, @QueryParam("source") String sourceId) {
 		// create error map
 		Map<String, String> errors = new HashMap<>();
@@ -180,6 +189,41 @@ public class FileController extends AbstractColoredController<IFile> {
 
 		try {
 			return Response.seeOther(new URI(getBasePath() + "by_reference/" + referenceModel + "/" + referenceUid + add)).build();
+		} catch (URISyntaxException e) {
+			return Response.ok(new Viewable("error", e.getMessage())).build();
+		}
+	}
+
+	/**
+	 * add a reference to an entity
+	 * @param referenceUid uid of reference
+	 * @param referenceModel reference model, e.g. "node"
+	 * @param sourceUid source uid to be removed
+	 * @return response
+	 */
+	@GET
+	@Path("/remove_reference/{model}/{uid}/{source}")
+	@Produces(MediaType.TEXT_HTML)
+	public Response removeReference(@PathParam("uid") String referenceUid, @PathParam("model") String referenceModel, @PathParam("source") String sourceUid) {
+		// find source
+		IFile source = service.findById(service.convertUidToId(sourceUid));
+
+		// find reference model
+		SegradaAnnotatedEntity referenceEntity;
+		referenceModel = referenceModel.substring(0,1).toUpperCase() + referenceModel.substring(1);
+		AbstractRepositoryService referenceService = annotatedServices.get(referenceModel);
+		if (referenceService == null) {
+			referenceEntity = null;
+		} else {
+			referenceEntity = (SegradaAnnotatedEntity) referenceService.findById(service.convertUidToId(referenceUid));
+		}
+
+		// do removal
+		if (referenceEntity != null && source != null)
+			service.removeFileFromEntity(source, referenceEntity);
+
+		try {
+			return Response.seeOther(new URI(getBasePath() + "by_reference/" + referenceModel + "/" + referenceUid)).build();
 		} catch (URISyntaxException e) {
 			return Response.ok(new Viewable("error", e.getMessage())).build();
 		}
