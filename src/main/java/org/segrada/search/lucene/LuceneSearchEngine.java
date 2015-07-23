@@ -179,7 +179,8 @@ public class LuceneSearchEngine implements SearchEngine {
 			// fo we have a filter to contain to certain fields?
 			if (filters.containsKey("fields")) {
 				String fields = filters.get("fields");
-				if (fields.equalsIgnoreCase("title")) containFields = new String[]{"title"};
+				if (fields.isEmpty()) containFields = new String[]{"title", "subTitles", "content"};
+				else if (fields.equalsIgnoreCase("title")) containFields = new String[]{"title"};
 				else if (fields.equalsIgnoreCase("subTitles")) containFields = new String[]{"subTitles"};
 				else if (fields.equalsIgnoreCase("content")) containFields = new String[]{"content"};
 				else if (fields.equalsIgnoreCase("allTitles")) containFields = new String[]{"title", "subTitles"};
@@ -188,24 +189,24 @@ public class LuceneSearchEngine implements SearchEngine {
 			parser = new MultiFieldQueryParser(Version.LUCENE_47, containFields, analyzer);
 
 			// which operator do we use?
+			parser.setDefaultOperator(QueryParser.Operator.AND);
 			if (filters.containsKey("operator")) {
 				String operator = filters.get("operator");
-				if (operator.equalsIgnoreCase("and")) parser.setDefaultOperator(QueryParser.Operator.AND);
-				else if (operator.equalsIgnoreCase("or")) parser.setDefaultOperator(QueryParser.Operator.OR);
-				else throw new RuntimeException("operator-Filter " + operator + " is not and/or.");
+				if (operator.equalsIgnoreCase("or")) parser.setDefaultOperator(QueryParser.Operator.OR);
+				else if (!operator.isEmpty() && !operator.equalsIgnoreCase("and")) throw new RuntimeException("operator-Filter " + operator + " is not and/or.");
 			}
 
 			// filters for query
 			List<Filter> searchFilters = new LinkedList<>();
 
 			// class filter?
-			if (filters.containsKey("class")) {
+			if (filters.containsKey("class") && !filters.get("class").isEmpty()) {
 				TermQuery categoryQuery = new TermQuery(new Term("className", filters.get("class")));
 				searchFilters.add(new QueryWrapperFilter(categoryQuery));
 			}
 
 			// tag filter
-			if (filters.containsKey("tags")) {
+			if (filters.containsKey("tags") && !filters.get("tags").isEmpty()) {
 				// split tags into array
 				String[] tags = filters.get("tags").split(",");
 				BooleanQuery booleanQuery = new BooleanQuery();

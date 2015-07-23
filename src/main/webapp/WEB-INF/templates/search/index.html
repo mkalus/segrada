@@ -13,6 +13,79 @@
 <div class="container" th:fragment="content">
 	<h4 class="sg-control-header"><i class="fa fa-search"></i> <span th:text="#{Search_Results}">Search Results</span></h4>
 
+	<form method="get" action="#" th:action="@{${baseUrl}?${baseUrl}:'/search'}" class="sg-control-form" th:attr="data-target-id=${targetId}">
+		<div class="row">
+			<div class="col-md-4">
+				<div class="form-group">
+					<label for="searchDetailText" th:text="#{SearchTerm}">Search term</label>
+					<input type="text" class="form-control" id="searchDetailText" name="s" th:placeholder="#{SearchTerm}" th:value="${searchTerm}" />
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="form-group">
+					<label for="searchDetailOperator" th:text="#{SearchOR}">SearchOR</label>
+					<input type="checkbox" class="form-control" id="searchDetailOperator" name="operator" value="or" th:checked="${filters.operator == 'or'}" />
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="form-group">
+					<label for="searchDetailSubmit"></label>
+					<input type="submit" class="form-control btn btn-primary" id="searchDetailSubmit" />
+				</div>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-md-4">
+				<div class="form-group">
+					<label for="searchDetailFields" th:text="#{SearchFields}">Search in fields</label>
+					<select id="searchDetailFields" name="fields" class="form-control">
+						<option value="" th:text="#{SearchFields.all}">all</option>
+						<option value="allTitles" th:text="#{SearchFields.allTitles}" th:selected="${filters.fields == 'allTitles'}">allTitles</option>
+						<option value="content" th:text="#{SearchFields.content}" th:selected="${filters.fields == 'content'}">content</option>
+					</select>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="form-group">
+					<label for="searchDetailClass" th:text="#{SearchClass}">Search in type</label>
+					<select id="searchDetailClass" name="class" class="form-control">
+						<option value="" th:text="#{SearchClass.all}">all</option>
+						<option value="Node" th:text="#{Node}" th:selected="${filters.class == 'Node'}">Node</option>
+						<option value="Relation" th:text="#{Relation}" th:selected="${filters.class == 'Relation'}">Relation</option>
+						<option value="File" th:text="#{File}" th:selected="${filters.class == 'File'}">File</option>
+						<option value="Source" th:text="#{Source}" th:selected="${filters.class == 'Source'}">Source</option>
+						<!--<option value="Comment" th:text="#{Comment}" th:selected="${filters.class == 'Comment'}">Comment</option>-->
+					</select>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="form-group">
+					<label for="searchDetailLimit" th:text="#{entriesPerPage}">entriesPerPage</label>
+					<select id="searchDetailLimit" name="limit" class="form-control">
+						<option value="5" th:selected="${paginationInfo.entriesPerPage == 5}">5</option>
+						<option value="10" th:selected="${paginationInfo.entriesPerPage == 10}">10</option>
+						<option value="20" th:selected="${paginationInfo.entriesPerPage == 20}">20</option>
+						<option value="50" th:selected="${paginationInfo.entriesPerPage == 50}">50</option>
+						<option value="100" th:selected="${paginationInfo.entriesPerPage == 100}">100</option>
+					</select>
+				</div>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-md-12">
+				<div class="form-group">
+					<label for="searchDetailTags" th:text="#{Tags}">Tags</label>
+					<select multiple="multiple" type="text" id="searchDetailTags" name="tags" class="sg-tags">
+						<option th:if="${tags}" th:each="tag : ${tags}" selected="selected" th:value="${tag}" th:text="${tag}">Tag</option>
+					</select>
+				</div>
+			</div>
+		</div>
+	</form>
+
+
 	<p th:text="${#messages.msg('pagination', paginationInfo.page, paginationInfo.pages)}">Pages</p>
 
 	<table class="table table-hover table-striped table-condensed sg-search-list">
@@ -36,7 +109,7 @@
 		</tr>
 	</table>
 
-	<div th:replace="partials/pagination :: searchPagination (paginationInfo=${paginationInfo},base=${baseUrl}?${baseUrl}:'/search',targetId=${targetId},s=${searchTerm})"></div>
+	<div th:replace="partials/pagination :: searchPagination (paginationInfo=${paginationInfo},base=${baseUrl}?${baseUrl}:'/search',targetId=${targetId},s=${searchTerm},fields=${filters.fields},operator=${filters.operator},class=${filters.class},tags=${filters.tags},limit=${filters.limit})"></div>
 </div>
 
 <div th:replace="partials/common :: footer"></div>
