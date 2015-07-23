@@ -16,11 +16,13 @@ import org.thymeleaf.templateresolver.TemplateResolver;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.ext.Provider;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -46,6 +48,9 @@ public class ThymeleafViewProcessor implements ViewProcessor<String> {
 
 	@Context
 	ServletContext servletContext;
+
+	@Context
+	HttpServletRequest servletRequest;
 
 	@Context
 	ThreadLocal<HttpServletRequest> requestInvoker;
@@ -123,7 +128,28 @@ public class ThymeleafViewProcessor implements ViewProcessor<String> {
 
 		///TODO: handle redirects?
 
+		// update locale
+		updateLocale(context);
+
 		templateEngine.process(templateName, context, fragmentSpec, responseInvoker
 				.get().getWriter());
+	}
+
+	/**
+	 * set locale according to session, if needed
+	 * @param context web context
+	 */
+	private void updateLocale(WebContext context) {
+		if (context != null && context.getHttpSession() != null) {
+			// get locale saved in session
+			Object lObject = context.getHttpSession().getAttribute("language");
+			String language = lObject==null?null:(String) lObject;
+
+			if (language != null && !language.isEmpty()) {
+				Locale newLocale = new Locale(language);
+
+				context.setLocale(newLocale);
+			}
+		}
 	}
 }

@@ -59,6 +59,7 @@ public class SegradaGuiceServletContextListener extends GuiceServletContextListe
 						bind(UserController.class);
 						bind(SearchController.class);
 						bind(AdminController.class);
+						bind(LocaleController.class);
 
 						Map<String, String> initParams = new TreeMap<String, String>();
 						initParams.put("com.sun.jersey.config.property.WebPageContentRegex", "/.*\\.(jpg|ico|png|gif|html|txt|css|js|xml|otf|svg|ttf|woff|woff2|eot)");

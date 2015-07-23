@@ -467,6 +467,17 @@
 			e.preventDefault();
 		});
 
+		// locale change
+		$('.sg-locale').click(function(e) {
+			// AJAX call
+			$.get($(this).attr('href'), function (data) {
+				var url = $('#sg-base').html();
+				// reload base url
+				if (data != '') window.location.href = url;
+			});
+			e.preventDefault();
+		});
+
 		// *******************************************************
 		// initialize tokenizers
 		tagsTokenizer.initialize();
