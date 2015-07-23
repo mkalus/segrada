@@ -23,6 +23,7 @@
 
 		<ul class="nav nav-tabs" role="tablist">
 			<li role="presentation" class="active"><a href="#tab1" th:href="${'#tab-1-' + entity.uid}" aria-controls="home" role="tab" data-toggle="tab" th:text="#{Description}">Description</a></li>
+			<li role="presentation"><a href="#tab-source-ref" class="sg-replace-content" th:attr="data-url=@{/source_reference/by_source/{uid}(uid=${entity.uid})}" th:href="${'#references-by-ref-' + entity.uid}" aria-controls="references" role="tab" data-toggle="tab" th:text="#{References}">References</a></li>
 			<li role="presentation"><a href="#tab-ref-files" class="sg-replace-content" th:attr="data-url=@{/file/by_reference/source/{uid}(uid=${entity.uid})}" th:href="${'#files-by-ref-' + entity.uid}" aria-controls="times" role="tab" data-toggle="tab" th:text="#{Files}">Files</a></li>
 		</ul>
 
@@ -66,6 +67,9 @@
 				</div>
 
 				<div th:replace="partials/common :: datafooter (entity=${entity})"></div>
+			</div>
+			<div role="tabpanel" class="tab-pane" id="tab-source-ref" th:id="${'references-by-ref-' + entity.uid}">
+				<div th:replace="partials/common :: loadingicon"></div>
 			</div>
 			<div role="tabpanel" class="tab-pane" id="tab-ref-files" th:id="${'files-by-ref-' + entity.uid}">
 				<div th:replace="partials/common :: loadingicon"></div>

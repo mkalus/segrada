@@ -96,6 +96,20 @@ Common fragments.
 
 
 
+<h3>Font Awesome Icons</h3>
+
+<span th:fragment="faIcon (modelName)" th:switch="${modelName}">
+	<i th:case="'Comment'" th:title="#{Comment}" class="fa fa-comment"></i>
+	<i th:case="'File'" th:title="#{File}" class="fa fa-file"></i>
+	<i th:case="'Node'" th:title="#{Node}" class="fa fa-dot-circle-o"></i>
+	<i th:case="'Source'" th:title="#{Source}" class="fa fa-briefcase"></i>
+	<i th:case="'Relation'" th:title="#{Relation}" class="fa fa-chain"></i>
+	<i th:case="*" th:text="${modelName}">X</i>
+</span>
+
+
+
+
 <div th:fragment="footer">
 	<script th:inline="javascript">
 		/*<![CDATA[*/

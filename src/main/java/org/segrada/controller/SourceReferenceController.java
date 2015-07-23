@@ -5,10 +5,11 @@ import com.google.inject.servlet.RequestScoped;
 import com.sun.jersey.api.view.Viewable;
 import org.codehaus.jettison.json.JSONObject;
 import org.segrada.controller.base.AbstractBaseController;
+import org.segrada.model.prototype.ISource;
 import org.segrada.model.prototype.ISourceReference;
 import org.segrada.model.prototype.SegradaAnnotatedEntity;
-import org.segrada.service.ColorService;
 import org.segrada.service.SourceReferenceService;
+import org.segrada.service.SourceService;
 import org.segrada.service.base.AbstractRepositoryService;
 
 import javax.ws.rs.*;
@@ -40,6 +41,9 @@ import java.util.Map;
 public class SourceReferenceController extends AbstractBaseController<ISourceReference> {
 	@Inject
 	private SourceReferenceService service;
+
+	@Inject
+	private SourceService sourceService;
 
 	@Inject
 	private Map<String, AbstractRepositoryService> annotatedServices;
@@ -107,5 +111,50 @@ public class SourceReferenceController extends AbstractBaseController<ISourceRef
 		}
 
 		return new Viewable("source_reference/by_reference", model);
+	}
+
+	/**
+	 * show references by source
+	 * @param sourceUid uid of source
+	 * @param errors json encoded errors
+	 * @return view
+	 */
+	@GET
+	@Path("/by_source/{uid}")
+	@Produces(MediaType.TEXT_HTML)
+	public Viewable bySource(
+			@PathParam("uid") String sourceUid,
+			@QueryParam("errors") String errors // json object of errors
+	) {
+		// get source by uid
+		ISource source = sourceService.findById(sourceService.convertUidToId(sourceUid));
+		if (source == null) return new Viewable("error", "source not found");
+
+		// get references
+		List<ISourceReference> entities = service.findBySource(source.getId());
+
+		// create model map
+		Map<String, Object> model = new HashMap<>();
+		model.put("uid", sourceUid);
+		model.put("source", source);
+		model.put("entities", entities);
+		model.put("targetId", "#references-by-ref-" + sourceUid);
+
+		if (errors != null) {
+			try {
+				JSONObject errorData = new JSONObject(errors);
+				Map<String, String> errorMessages = new HashMap<>();
+				Iterator it = errorData.keys();
+				while (it.hasNext()) {
+					String key = (String) it.next();
+					errorMessages.put(key, errorData.getString(key));
+				}
+				model.put("errors", errorMessages);
+			} catch (Exception e) {
+				//TODO: log
+			}
+		}
+
+		return new Viewable("source_reference/by_source", model);
 	}
 }
