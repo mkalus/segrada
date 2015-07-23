@@ -47,10 +47,10 @@
 
 			<form th:id="${'add-file-ref-' + uid}" action="#" th:action="${baseUrl}?${baseUrl}:@{/file/add_reference/{model}/{uid}(model=${model},uid=${uid})}" class="sg-control-form" th:attr="data-target-id=${targetId}">
 				<div class="form-group" th:classappend="${errors}?(${#maps.containsKey(errors, 'source')}?'has-error has-feedback')">
-					<label class="col-sm-2 control-label" th:for="${'source-' + uid}"><span th:text="#{Source}"></span><span class="text-danger"> *</span></label>
+					<label class="col-sm-2 control-label" th:for="${'ref-source-' + uid}"><span th:text="#{File}"></span><span class="text-danger"> *</span></label>
 					<div class="col-sm-10">
-						<input type="text" th:id="${'source-' + uid + '-select'}" name="sourceName" class="form-control sg-file-search" th:placeholder="#{Source}" th:attr="data-id=${'source-' + uid},data-select-id=${selectReference}" />
-						<input type="hidden" th:id="${'source-' + uid}" name="source" />
+						<input type="text" th:id="${'ref-source-' + uid + '-select'}" name="sourceName" class="form-control sg-file-search" th:placeholder="#{Source}" th:attr="data-id=${'ref-source-' + uid},data-select-id=${selectReference}" />
+						<input type="hidden" th:id="${'ref-source-' + uid}" name="source" />
 						<span class="help-block" th:text="${errors}?(${errors['source']}?${#messages.msg(errors['source'])})">Error</span>
 					</div>
 				</div>

@@ -28,11 +28,11 @@
 
 		<ul class="nav nav-tabs" role="tablist">
 			<li role="presentation" class="active"><a href="#tab1" th:href="${'#tab-1-' + entity.uid}" aria-controls="home" role="tab" data-toggle="tab" th:text="#{Description}">Description</a></li>
-			<li role="presentation"><a href="#tab2" th:href="${'#tab-2-' + entity.uid}" aria-controls="times" role="tab" data-toggle="tab" th:text="#{Instants_Periods}">Instants/Periods</a></li>
-			<li role="presentation"><a href="#tab3" class="sg-geotab" th:attr="data-map-id=${'location-map-' + entity.uid}" th:href="${'#tab-3-' + entity.uid}" aria-controls="times" role="tab" data-toggle="tab" th:text="#{Geo_Locations}">Geo Locations</a></li>
-			<li role="presentation"><a href="#tab4" class="sg-replace-content" th:attr="data-url=@{/relation/by_node/{uid}(uid=${entity.uid})}" th:href="${'#relations-by-node-' + entity.uid}" aria-controls="relations" role="tab" data-toggle="tab" th:text="#{Relations}">Relations</a></li>
-			<li role="presentation"><a href="#tab5" class="sg-replace-content" th:attr="data-url=@{/source_reference/by_reference/node/{uid}(uid=${entity.uid})}" th:href="${'#sources-by-ref-' + entity.uid}" aria-controls="sources" role="tab" data-toggle="tab" th:text="#{Sources}">Sources</a></li>
-			<li role="presentation"><a href="#tab6" class="sg-replace-content" th:attr="data-url=@{/file/by_reference/node/{uid}(uid=${entity.uid})}" th:href="${'#files-by-ref-' + entity.uid}" aria-controls="times" role="tab" data-toggle="tab" th:text="#{Files}">Files</a></li>
+			<li role="presentation"><a href="#tab-periods" th:href="${'#tab-2-' + entity.uid}" aria-controls="times" role="tab" data-toggle="tab" th:text="#{Instants_Periods}">Instants/Periods</a></li>
+			<li role="presentation"><a href="#tab-map" class="sg-geotab" th:attr="data-map-id=${'location-map-' + entity.uid}" th:href="${'#tab-3-' + entity.uid}" aria-controls="times" role="tab" data-toggle="tab" th:text="#{Geo_Locations}">Geo Locations</a></li>
+			<li role="presentation"><a href="#tab-relations" class="sg-replace-content" th:attr="data-url=@{/relation/by_node/{uid}(uid=${entity.uid})}" th:href="${'#relations-by-node-' + entity.uid}" aria-controls="relations" role="tab" data-toggle="tab" th:text="#{Relations}">Relations</a></li>
+			<li role="presentation"><a href="#tab-source-ref" class="sg-replace-content" th:attr="data-url=@{/source_reference/by_reference/node/{uid}(uid=${entity.uid})}" th:href="${'#sources-by-ref-' + entity.uid}" aria-controls="sources" role="tab" data-toggle="tab" th:text="#{Sources}">Sources</a></li>
+			<li role="presentation"><a href="#tab-ref-files" class="sg-replace-content" th:attr="data-url=@{/file/by_reference/node/{uid}(uid=${entity.uid})}" th:href="${'#files-by-ref-' + entity.uid}" aria-controls="times" role="tab" data-toggle="tab" th:text="#{Files}">Files</a></li>
 			<!--<li role="presentation"><a href="#tab7" th:href="${'#tab-5-' + entity.uid}" aria-controls="times" role="tab" data-toggle="tab" th:text="#{Comments}">Comments</a></li>-->
 		</ul>
 
@@ -42,19 +42,19 @@
 
 				<div th:replace="partials/common :: datafooter (entity=${entity})"></div>
 			</div>
-			<div role="tabpanel" class="tab-pane" id="tab2" th:id="${'tab-2-' + entity.uid}">
+			<div role="tabpanel" class="tab-pane" id="tab-periods" th:id="${'tab-2-' + entity.uid}">
 				<div th:replace="partials/common :: listperiods (entity=${entity})"></div>
 			</div>
-			<div role="tabpanel" class="tab-pane" id="tab3" th:id="${'tab-3-' + entity.uid}">
+			<div role="tabpanel" class="tab-pane" id="tab-map" th:id="${'tab-3-' + entity.uid}">
 				<div th:replace="partials/common :: listlocations (entity=${entity})"></div>
 			</div>
-			<div role="tabpanel" class="tab-pane" id="tab4" th:id="${'relations-by-node-' + entity.uid}">
+			<div role="tabpanel" class="tab-pane" id="tab-relations" th:id="${'relations-by-node-' + entity.uid}">
 				<div th:replace="partials/common :: loadingicon"></div>
 			</div>
-			<div role="tabpanel" class="tab-pane" id="tab5" th:id="${'sources-by-ref-' + entity.uid}">
+			<div role="tabpanel" class="tab-pane" id="tab-source-ref" th:id="${'sources-by-ref-' + entity.uid}">
 				<div th:replace="partials/common :: loadingicon"></div>
 			</div>
-			<div role="tabpanel" class="tab-pane" id="tab6" th:id="${'files-by-ref-' + entity.uid}">
+			<div role="tabpanel" class="tab-pane" id="tab-ref-files" th:id="${'files-by-ref-' + entity.uid}">
 				<div th:replace="partials/common :: loadingicon"></div>
 			</div>
 			<!--<div role="tabpanel" class="tab-pane" id="tab5" th:id="${'tab-5-' + entity.uid}">
