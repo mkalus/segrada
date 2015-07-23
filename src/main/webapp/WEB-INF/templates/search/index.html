@@ -95,7 +95,17 @@
 				<img src="#" th:src="@{/pictogram/by_ref(ref=${hit.iconFileIdentifier})}" alt="" width="24" height="24" th:if="${hit.iconFileIdentifier}"/>
 			</td>
 			<td>
-				<div class="sg-search-entry-title" th:text="${hit.title}" th:if="${hit.title}">Header</div>
+				<div class="sg-search-entry-title">
+					<span th:switch="${hit.className}">
+						<i th:case="'Comment'" th:title="#{Comment}" class="fa fa-comment"></i>
+						<i th:case="'File'" th:title="#{File}" class="fa fa-file"></i>
+						<i th:case="'Node'" th:title="#{Node}" class="fa fa-dot-circle-o"></i>
+						<i th:case="'Source'" th:title="#{Source}" class="fa fa-briefcase"></i>
+						<i th:case="'Relation'" th:title="#{Relation}" class="fa fa-chain"></i>
+					</span>
+					<span th:text="${hit.title}" th:if="${hit.title}">Header</span>
+					<span th:text="#{${hit.className}}" th:unless="${hit.title}">Class name</span>
+				</div>
 				<!-- TODO: comments etc. should get a generic header -->
 				<div  th:text="${hit.subTitles}" th:if="${hit.subTitles}" class="small text-muted">subTitles</div>
 
