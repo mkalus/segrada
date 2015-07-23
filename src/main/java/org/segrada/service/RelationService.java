@@ -64,7 +64,7 @@ public class RelationService extends AbstractFullTextService<IRelation, Relation
 		idxEntity.subTitles = entity.getRelationType().getFromTitle() + " " + entity.getRelationType().getToTitle();
 		idxEntity.content = entity.getDescription();
 		idxEntity.contentMarkup = entity.getDescriptionMarkup();
-		idxEntity.weight = 5f; // relatively important
+		idxEntity.weight = 0.1f;
 		idxEntity.color = entity.getColor();
 		if (entity.getPictogram() != null)
 			idxEntity.iconFileIdentifier = entity.getPictogram().getFileIdentifier();

@@ -58,7 +58,7 @@ public class CommentService extends AbstractFullTextService<IComment, CommentRep
 		idxEntity.subTitles = null;
 		idxEntity.content = entity.getText();
 		idxEntity.contentMarkup = entity.getMarkup();
-		idxEntity.weight = 1f; // not so important
+		idxEntity.weight = 0.9f;
 		idxEntity.color = entity.getColor();
 		if (entity.getPictogram() != null)
 			idxEntity.iconFileIdentifier = entity.getPictogram().getFileIdentifier();

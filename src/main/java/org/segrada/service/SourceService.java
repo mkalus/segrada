@@ -79,7 +79,7 @@ public class SourceService extends AbstractFullTextService<ISource, SourceReposi
 		idxEntity.subTitles = subTitles;
 		idxEntity.content = entity.getDescription();
 		idxEntity.contentMarkup = entity.getDescriptionMarkup();
-		idxEntity.weight = 1f; // not so important
+		idxEntity.weight = 1f;
 		idxEntity.color = entity.getColor();
 		if (entity.getPictogram() != null)
 			idxEntity.iconFileIdentifier = entity.getPictogram().getFileIdentifier();

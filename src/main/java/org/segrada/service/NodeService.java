@@ -88,7 +88,7 @@ public class NodeService extends AbstractFullTextService<INode, NodeRepository> 
 		idxEntity.subTitles = entity.getAlternativeTitles();
 		idxEntity.content = entity.getDescription();
 		idxEntity.contentMarkup = entity.getDescriptionMarkup();
-		idxEntity.weight = 10f; // quite important
+		idxEntity.weight = 1.1f;
 		idxEntity.color = entity.getColor();
 		if (entity.getPictogram() != null)
 			idxEntity.iconFileIdentifier = entity.getPictogram().getFileIdentifier();
