@@ -136,6 +136,10 @@
 				var addedChild = container.children(":first");
 				// call after AJAX event
 				afterAjax(addedChild);
+				// scroll to element
+				$('html, body').animate({
+					scrollTop: addedChild.offset().top
+				}, 500);
 			});
 			e.preventDefault();
 		});
@@ -202,6 +206,10 @@
 				var addedChild = container.children(":first");
 				// call after AJAX event
 				afterAjax(addedChild);
+				// scroll to element
+				$('html, body').animate({
+					scrollTop: addedChild.offset().top
+				}, 500);
 			});
 		});
 
