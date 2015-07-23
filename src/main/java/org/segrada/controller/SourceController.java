@@ -5,6 +5,7 @@ import com.google.inject.servlet.RequestScoped;
 import com.sun.jersey.api.view.Viewable;
 import org.segrada.controller.base.AbstractColoredController;
 import org.segrada.model.Source;
+import org.segrada.model.prototype.IFile;
 import org.segrada.model.prototype.ISource;
 import org.segrada.service.SourceService;
 
@@ -73,7 +74,25 @@ public class SourceController extends AbstractColoredController<ISource> {
 	@Path("/show/{uid}")
 	@Produces(MediaType.TEXT_HTML)
 	public Viewable show(@PathParam("uid") String uid) {
-		return handleShow(uid, service);
+		// create model map
+		Map<String, Object> model = new HashMap<>();
+
+		// get source
+		ISource source = service.findById(service.convertUidToId(uid));
+		model.put("entity", source);
+
+		// check whether we have a pdf connected to the source: this will be shown on the first page
+		IFile pdfFile = null;
+		List<IFile> files = source.getFiles();
+		if (files != null && !files.isEmpty())
+			for (IFile file : files)
+				if (file.getMimeType().equals("application/pdf")) {
+					pdfFile = file;
+					break;
+				}
+		model.put("pdfFile", pdfFile);
+
+		return new Viewable(getBasePath() + "show", model);
 	}
 
 	@GET

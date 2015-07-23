@@ -61,6 +61,10 @@
 
 				<div class="sg-description well well-sm" th:unless="${#strings.isEmpty(entity.description)}"><th:markup text="${entity.description}" markup="${entity.descriptionMarkup}" /></div>
 
+				<div th:if="${pdfFile}" class="sg-margin-top sg-margin-bottom">
+					<iframe src="../../../js/pdfjs/web/viewer.html" th:src="@{/js/pdfjs/web/viewer.html(file=@{/file/file/{uid}(uid=${pdfFile.uid})})}" width="100%" height="400"></iframe>
+				</div>
+
 				<div th:replace="partials/common :: datafooter (entity=${entity})"></div>
 			</div>
 			<div role="tabpanel" class="tab-pane" id="tab-ref-files" th:id="${'files-by-ref-' + entity.uid}">

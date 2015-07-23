@@ -33,7 +33,7 @@
 			<li role="presentation"><a href="#tab-relations" class="sg-replace-content" th:attr="data-url=@{/relation/by_node/{uid}(uid=${entity.uid})}" th:href="${'#relations-by-node-' + entity.uid}" aria-controls="relations" role="tab" data-toggle="tab" th:text="#{Relations}">Relations</a></li>
 			<li role="presentation"><a href="#tab-source-ref" class="sg-replace-content" th:attr="data-url=@{/source_reference/by_reference/node/{uid}(uid=${entity.uid})}" th:href="${'#sources-by-ref-' + entity.uid}" aria-controls="sources" role="tab" data-toggle="tab" th:text="#{Sources}">Sources</a></li>
 			<li role="presentation"><a href="#tab-ref-files" class="sg-replace-content" th:attr="data-url=@{/file/by_reference/node/{uid}(uid=${entity.uid})}" th:href="${'#files-by-ref-' + entity.uid}" aria-controls="times" role="tab" data-toggle="tab" th:text="#{Files}">Files</a></li>
-			<!--<li role="presentation"><a href="#tab7" th:href="${'#tab-5-' + entity.uid}" aria-controls="times" role="tab" data-toggle="tab" th:text="#{Comments}">Comments</a></li>-->
+			<!--/*<li role="presentation"><a href="#tab7" th:href="${'#tab-5-' + entity.uid}" aria-controls="times" role="tab" data-toggle="tab" th:text="#{Comments}">Comments</a></li>*/-->
 		</ul>
 
 		<div class="tab-content">
@@ -57,9 +57,9 @@
 			<div role="tabpanel" class="tab-pane" id="tab-ref-files" th:id="${'files-by-ref-' + entity.uid}">
 				<div th:replace="partials/common :: loadingicon"></div>
 			</div>
-			<!--<div role="tabpanel" class="tab-pane" id="tab5" th:id="${'tab-5-' + entity.uid}">
+			<!--/*<div role="tabpanel" class="tab-pane" id="tab5" th:id="${'tab-5-' + entity.uid}">
 				Comments
-			</div>-->
+			</div>*/-->
 		</div>
 	</div>
 </div>
