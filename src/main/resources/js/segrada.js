@@ -386,6 +386,14 @@
 			});
 		});
 
+		// bind external links
+		$(".sg-link-external").click(function(e) {
+			var url = $(this).attr('href');
+			var win = window.open(url, '_blank');
+			win.focus();
+			e.preventDefault();
+		});
+
 		// *******************************************************
 		// bind data forms (left side)
 		$("form.sg-data-form", part).ajaxForm({

@@ -26,6 +26,38 @@
 		</ul>
 
 		<div class="tab-content">
+			<div class="sg-source-data sg-margin-top">
+				<div class="row">
+					<div class="col-xs-2"><strong th:text="#{field.shortRef}">Reference</strong></div>
+					<div class="col-xs-10"><code th:text="${entity.shortRef}">[ref]</code></div>
+				</div>
+				<div class="row">
+					<div class="col-xs-2"><strong th:text="#{field.title}">Title</strong></div>
+					<div class="col-xs-10" th:text="${entity.title}">Title</div>
+				</div>
+				<div class="row" th:unless="${#strings.isEmpty(entity.citation)}">
+					<div class="col-xs-2"><strong th:text="#{field.citation}">Citation</strong></div>
+					<div class="col-xs-10" th:text="${entity.citation}">citation</div>
+				</div>
+				<div class="row" th:unless="${#strings.isEmpty(entity.author)}">
+					<div class="col-xs-2"><strong th:text="#{field.author}">Author</strong></div>
+					<div class="col-xs-10" th:text="${entity.author}">author</div>
+				</div>
+				<div class="row" th:unless="${#strings.isEmpty(entity.url)}">
+					<div class="col-xs-2"><strong th:text="#{field.url}">URL</strong></div>
+					<div class="col-xs-10"><a th:text="${entity.url}" th:href="${entity.url}" class="sg-link-external">url</a></div>
+				</div>
+				<div class="row" th:unless="${#strings.isEmpty(entity.productCode)}">
+					<div class="col-xs-2"><strong th:text="#{field.productCode}">Product code</strong></div>
+					<div class="col-xs-10" th:text="${entity.productCode}">productCode</div>
+				</div>
+				<div class="row" th:unless="${#strings.isEmpty(entity.copyright)}">
+					<div class="col-xs-2"><strong th:text="#{field.copyright}">Copyright</strong></div>
+					<div class="col-xs-10" th:text="${entity.copyright}">copyright</div>
+				</div>
+			</div>
+
+
 			<div role="tabpanel" class="tab-pane active" id="tab1" th:id="${'tab-1-' + entity.uid}" >
 				<div class="sg-description well well-sm" th:unless="${#strings.isEmpty(entity.description)}"><th:markup text="${entity.description}" markup="${entity.descriptionMarkup}" /></div>
 
