@@ -38,10 +38,18 @@ public class SearchController {
 
 	@GET
 	@Produces(MediaType.TEXT_HTML)
-	public Viewable index(@QueryParam("s") String term) {
+	public Viewable index(
+			@QueryParam("s") String term,
+			@QueryParam("page") String page
+	) {
+		// filters:
+		Map<String, String> filters = new HashMap<>();
+		if (page != null) filters.put("page", page);
+
 		// create model map
 		Map<String, Object> model = new HashMap<>();
-		model.put("searchResult", searchEngine.search(term, null));
+		model.put("paginationInfo", searchEngine.search(term, filters));
+		model.put("searchTerm", term);
 		return new Viewable("search/index", model);
 	}
 }

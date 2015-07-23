@@ -15,7 +15,7 @@ import org.apache.lucene.store.Directory;
 import org.apache.lucene.util.Version;
 import org.segrada.search.SearchEngine;
 import org.segrada.search.SearchHit;
-import org.segrada.search.SearchResult;
+import org.segrada.service.util.PaginationInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -161,11 +161,13 @@ public class LuceneSearchEngine implements SearchEngine {
 	}
 
 	@Override
-	public SearchResult search(String searchTerm, Map<String, String> filters) {
-		SearchResult searchResult = new SearchResult();
-
+	public PaginationInfo<SearchHit> search(String searchTerm, Map<String, String> filters) {
 		// to avoid NPEs
 		if (filters == null) filters = new HashMap<>();
+
+		// set defaults
+		int page = 1;
+		int entriesPerPage = 20;
 
 		try {
 			DirectoryReader iReader = DirectoryReader.open(directory);
@@ -229,21 +231,39 @@ public class LuceneSearchEngine implements SearchEngine {
 				query = parser.parse(searchTerm);
 			if (query == null) query = new MatchAllDocsQuery(); // fallback to match all documents
 
-			// calculate maximum hits
-			int maximum = 1000;
+			// get hits per page
 			if (filters.containsKey("limit")) {
 				try {
-					maximum = Integer.valueOf(filters.get("limit"));
+					entriesPerPage = Integer.valueOf(filters.get("limit"));
+					if (entriesPerPage <= 0 || entriesPerPage > 1000) entriesPerPage = 20;
 				} catch (NumberFormatException e) {
-					logger.warn("Could not parse " + filters.get("limit") + " to integer", e);
+					logger.warn("Could not parse limit " + filters.get("limit") + " to integer", e);
 				}
 			}
 
-			// do search
-			TopDocs topDocs = iSearcher.search(query, filter, maximum);
+			// get page number
+			if (filters.containsKey("page")) {
+				try {
+					page = Integer.valueOf(filters.get("page"));
+				} catch (NumberFormatException e) {
+					logger.warn("Could not parse page " + filters.get("page") + " to integer", e);
+				}
+			}
 
-			searchResult.setTotalHits(topDocs.totalHits); // TODO: better actual hits?
-			searchResult.setStartIndex(1); // TODO: fix this - pagination?
+			// calculate start/stop indexes
+			int startIndex = (page - 1) * entriesPerPage;
+			int endIndex = page * entriesPerPage;
+
+			// do search
+			TopDocs topDocs = iSearcher.search(query, filter, 1000);
+
+			// update end index
+			if (topDocs.scoreDocs.length < endIndex)
+				endIndex = topDocs.scoreDocs.length;
+			// how many pages do we have?
+			int pages = topDocs.scoreDocs.length / entriesPerPage + 1;
+			// reset page to sane limit, if needed
+			if (page <= 0 || page > pages) page = 1;
 
 			// highlighter
 			FastVectorHighlighter highlighter = new FastVectorHighlighter();
@@ -253,8 +273,11 @@ public class LuceneSearchEngine implements SearchEngine {
 				fieldQuery = highlighter.getFieldQuery(new QueryParser(Version.LUCENE_47, "content", analyzer).parse(searchTerm), iReader);
 
 			// cycle trough hits
-			for (ScoreDoc hit : topDocs.scoreDocs) {
-				Document hitDoc = iSearcher.doc(hit.doc);
+			List<SearchHit> hits = new LinkedList<>();
+
+			for (int i = startIndex ; i < endIndex ; i++) {
+				ScoreDoc scoreDoc = topDocs.scoreDocs[i];
+				Document hitDoc = iSearcher.doc(scoreDoc.doc);
 
 				SearchHit searchHit = new SearchHit();
 				searchHit.setId(hitDoc.get("id"));
@@ -265,24 +288,28 @@ public class LuceneSearchEngine implements SearchEngine {
 				String color = hitDoc.get("color");
 				searchHit.setColor(color!=null?new Integer(color):null);
 				searchHit.setIconFileIdentifier(hitDoc.get("iconFileIdentifier"));
-				searchHit.setRelevance(hit.score);
+				searchHit.setRelevance(scoreDoc.score);
 
 				// get highlighted components
 				if (searchTerm != null) {
-					String[] bestFragments = highlighter.getBestFragments(fieldQuery, iReader, hit.doc, "content", 18, 10);
+					String[] bestFragments = highlighter.getBestFragments(fieldQuery, iReader, scoreDoc.doc, "content", 18, 10);
 					searchHit.setHighlightText(bestFragments);
 				}
 
 				// add hit
-				searchResult.addHit(searchHit);
+				hits.add(searchHit);
 			}
 
 			iReader.close();
+
+			// return pagination info
+			return new PaginationInfo<>(page, pages, topDocs.totalHits, entriesPerPage, hits);
 		} catch (Throwable e) {
 			logger.error("Error in search.", e);
 		}
 
-		return searchResult;
+		// return empty list result in order to avoid NPEs
+		return new PaginationInfo<>(page, 1, 0, entriesPerPage, new LinkedList<>());
 	}
 
 	@Override

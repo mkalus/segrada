@@ -1,5 +1,7 @@
 package org.segrada.search;
 
+import org.segrada.service.util.PaginationInfo;
+
 import java.util.Map;
 
 /**
@@ -41,9 +43,9 @@ public interface SearchEngine {
 	 *
 	 * @param searchTerm term(s) to search for
 	 * @param filters    possible filters to search in, e.g. class names, etc.
-	 * @return
+	 * @return paginated search results
 	 */
-	SearchResult search(String searchTerm, Map<String, String> filters);
+	PaginationInfo<SearchHit> search(String searchTerm, Map<String, String> filters);
 
 	/**
 	 * Remove entity from index

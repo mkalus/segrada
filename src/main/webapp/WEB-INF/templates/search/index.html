@@ -13,36 +13,30 @@
 <div class="container" th:fragment="content">
 	<h4 class="sg-control-header"><i class="fa fa-search"></i> <span th:text="#{Search_Results}">Search Results</span></h4>
 
-	<div th:text="${searchResult.totalHits}"></div>
+	<p th:text="${#messages.msg('pagination', paginationInfo.page, paginationInfo.pages)}">Pages</p>
 
-	<div><span th:text="${searchResult.startIndex}"></span> &ndash; <span th:text="${searchResult.stopIndex}"></span></div>
-
-	<div class="sg-search-list">
-		<div th:each="hit : ${searchResult.hits}" class="sg-search-entry row" th:attr="data-data-dblclick=@{/{model}/show/{uid}(model=${#strings.toLowerCase(hit.className)},uid=${hit.id})}">
-			<div class="col-xs-1 sg-search-icons">
+	<table class="table table-hover table-striped table-condensed sg-search-list">
+		<tr th:each="hit : ${paginationInfo.entities}" th:attr="data-data-dblclick=@{/{model}/show/{uid}(model=${#strings.toLowerCase(hit.className)},uid=${hit.id})}">
+			<td class="text-center col-xs-1">
 				<span class="sg-color-icon" th:style="'background-color: ' + ${hit.colorCode}" th:if="${hit.color}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
 				<img src="#" th:src="@{/pictogram/by_ref(ref=${hit.iconFileIdentifier})}" alt="" width="24" height="24" th:if="${hit.iconFileIdentifier}"/>
-			</div>
-			<div class="col-xs-11">
-				<a class="sg-data-icon sg-data-add pull-right" href="#" th:title="#{Show}" th:href="@{/{model}/show/{uid}(model=${#strings.toLowerCase(hit.className)},uid=${hit.id})}"><i class="fa fa-eye"></i></a>
-
-				<h4 class="sg-search-entry-title" th:text="${hit.title}" th:if="${hit.title}">Header</h4>
+			</td>
+			<td>
+				<div class="sg-search-entry-title" th:text="${hit.title}" th:if="${hit.title}">Header</div>
 				<!-- TODO: comments etc. should get a generic header -->
 				<div  th:text="${hit.subTitles}" th:if="${hit.subTitles}" class="small text-muted">subTitles</div>
 
 				<div th:unless="${#arrays.isEmpty(hit.highlightText)}" class="small">
 					&hellip; <span th:each="highlightText : ${hit.highlightText}" th:utext="${highlightText + ' &hellip; '}"></span>
 				</div>
-			</div>
-		</div>
-	</div>
+			</td>
+			<td class="text-right col-xs-1">
+				<a class="sg-data-icon sg-data-add" href="#" th:title="#{Show}" th:href="@{/{model}/show/{uid}(model=${#strings.toLowerCase(hit.className)},uid=${hit.id})}"><i class="fa fa-eye"></i></a>
+			</td>
+		</tr>
+	</table>
 
-
-	<!--<div th:each="hit : ${searchResult.hits}" class="sg-search-list">
-		<a href="#" th:href="@{'/' + ${#strings.toLowerCase(hit.className)} + '/show/{id}'(id=${hit.id})}" class="sg-data-add"><i class="fa fa-eye"></i></a>
-
-
-	</div>-->
+	<div th:replace="partials/pagination :: searchPagination (paginationInfo=${paginationInfo},base=${baseUrl}?${baseUrl}:'/search',targetId=${targetId},s=${searchTerm})"></div>
 </div>
 
 <div th:replace="partials/common :: footer"></div>
