@@ -1,6 +1,7 @@
 package org.segrada.search;
 
 import org.apache.commons.lang3.StringUtils;
+import org.segrada.model.base.AbstractSegradaEntity;
 import org.segrada.model.prototype.IUser;
 import org.segrada.model.prototype.SegradaEntity;
 
@@ -21,9 +22,7 @@ import org.segrada.model.prototype.SegradaEntity;
  * <p>
  * Representation of a single search hit
  */
-public class SearchHit implements SegradaEntity {
-	protected String id;
-
+public class SearchHit extends AbstractSegradaEntity {
 	protected String className;
 
 	protected String title;
@@ -42,16 +41,6 @@ public class SearchHit implements SegradaEntity {
 	protected String[] highlightText;
 
 	protected float relevance;
-
-	@Override
-	public String getId() {
-		return id;
-	}
-
-	@Override
-	public void setId(String id) {
-		this.id = id;
-	}
 
 	public String getClassName() {
 		return className;
@@ -120,65 +109,5 @@ public class SearchHit implements SegradaEntity {
 
 	public void setRelevance(float relevance) {
 		this.relevance = relevance;
-	}
-
-	@Override
-	public String getUid() {
-		return null;
-	}
-
-	@Override
-	public void setVersion(int version) {
-
-	}
-
-	@Override
-	public int getVersion() {
-		return 0;
-	}
-
-	@Override
-	public String getModelName() {
-		return null;
-	}
-
-	@Override
-	public Long getCreated() {
-		return null;
-	}
-
-	@Override
-	public void setCreated(Long created) {
-
-	}
-
-	@Override
-	public Long getModified() {
-		return null;
-	}
-
-	@Override
-	public void setModified(Long created) {
-
-	}
-
-	@Override
-	public IUser getCreator() {
-		return null;
-	}
-
-	@Override
-	public void setCreator(IUser creator) {
-
-	}
-
-	@Override
-	public IUser getModifier() {
-		return null;
-	}
-
-	@Override
-	public void setModifier(IUser modifier) {
-
 	}
 }
