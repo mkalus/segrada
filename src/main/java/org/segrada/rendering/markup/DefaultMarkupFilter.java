@@ -50,7 +50,9 @@ public class DefaultMarkupFilter extends MarkupFilter {
 	private static final Map<String, String> sourceReferenceCache = new HashMap<>();
 
 	public DefaultMarkupFilter() {
-		sourceService = injector.getInstance(SourceService.class);
+		if (injector != null)
+			sourceService = injector.getInstance(SourceService.class);
+		else sourceService = null;
 	}
 
 	/**
@@ -143,30 +145,32 @@ public class DefaultMarkupFilter extends MarkupFilter {
 	 * @return output text
 	 */
 	protected String annotateBibliographies(String text) {
-		// bibliographic references
-		Matcher matcher = bibRefPattern.matcher(text);
-		StringBuffer sb = new StringBuffer(text.length());
-		while (matcher.find()) {
-			String match = matcher.group(1);
+		if (sourceService != null) { // skipped in tests
+			// bibliographic references
+			Matcher matcher = bibRefPattern.matcher(text);
+			StringBuffer sb = new StringBuffer(text.length());
+			while (matcher.find()) {
+				String match = matcher.group(1);
 
-			// try to get cached entry
-			String replacement = sourceReferenceCache.get(match);
-			if (replacement == null) {
-				// find corresponding source
-				ISource source = sourceService.findByRef(match);
-				if (source == null) replacement = "[[" + match + "]]"; // fallback
-				else {
-					replacement = "<a href=\"source/show/" + source.getUid() + "\" class=\"sg-data-add\">" + source.getShortTitle() + "</a>";
+				// try to get cached entry
+				String replacement = sourceReferenceCache.get(match);
+				if (replacement == null) {
+					// find corresponding source
+					ISource source = sourceService.findByRef(match);
+					if (source == null) replacement = "[[" + match + "]]"; // fallback
+					else {
+						replacement = "<a href=\"source/show/" + source.getUid() + "\" class=\"sg-data-add\">" + source.getShortTitle() + "</a>";
+					}
+
+					// write to cache
+					sourceReferenceCache.put(match, replacement);
 				}
 
-				// write to cache
-				sourceReferenceCache.put(match, replacement);
+				matcher.appendReplacement(sb, Matcher.quoteReplacement(replacement));
 			}
-
-			matcher.appendReplacement(sb, Matcher.quoteReplacement(replacement));
+			matcher.appendTail(sb);
+			text = sb.toString();
 		}
-		matcher.appendTail(sb);
-		text = sb.toString();
 
 		// page reference
 		text = text.replaceAll("\\[([0-9f]+:)\\]", "<span class=\"sg-label sg-info\">$1</span>");
