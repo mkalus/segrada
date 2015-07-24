@@ -47,7 +47,8 @@ Common fragments.
 
 <h3>Tag list to show tags</h3>
 
-<div th:fragment="taglist (tags)" th:unless="${#arrays.isEmpty(tags)}" class="sg-data-taglist">
+<div th:fragment="taglist (tags)" th:unless="${#arrays.isEmpty(tags) and #arrays.isEmpty(prefixTags)}" class="sg-data-taglist">
+	<span class="label label-info" th:each="tag : ${prefixTags}" th:text="${tag}">Tag</span>
 	<span class="label label-info" th:each="tag : ${tags}" th:text="${tag}">Tag</span>
 </div>
 
