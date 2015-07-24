@@ -18,9 +18,41 @@ package org.segrada.rendering.markup;
  * Default text markup filter - mostly plain text with some link elements
  */
 
+import com.google.inject.Injector;
+import org.segrada.model.prototype.ISource;
+import org.segrada.service.SourceService;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import static org.apache.commons.lang3.StringEscapeUtils.escapeHtml4;
 
 public class DefaultMarkupFilter extends MarkupFilter {
+	/**
+	 * reference to injector
+	 */
+	public static Injector injector;
+
+	public static void setInjector(Injector injector) {
+		DefaultMarkupFilter.injector = injector;
+	}
+
+	/**
+	 * reference to source service
+	 */
+	private final SourceService sourceService;
+
+	/**
+	 * cache for source reference links
+	 */
+	private static final Map<String, String> sourceReferenceCache = new HashMap<>();
+
+	public DefaultMarkupFilter() {
+		sourceService = injector.getInstance(SourceService.class);
+	}
+
 	/**
 	 * replacement entities
 	 */
@@ -96,6 +128,8 @@ public class DefaultMarkupFilter extends MarkupFilter {
 		return text;
 	}
 
+	private static final Pattern bibRefPattern = Pattern.compile("\\[\\[([a-zA-Z0-9]+:[a-zA-Z0-9]+)\\]\\]");
+
 	/**
 	 * replace text parts with bibliographic annotations
 	 *
@@ -109,6 +143,31 @@ public class DefaultMarkupFilter extends MarkupFilter {
 	 * @return output text
 	 */
 	protected String annotateBibliographies(String text) {
+		// bibliographic references
+		Matcher matcher = bibRefPattern.matcher(text);
+		StringBuffer sb = new StringBuffer(text.length());
+		while (matcher.find()) {
+			String match = matcher.group(1);
+
+			// try to get cached entry
+			String replacement = sourceReferenceCache.get(match);
+			if (replacement == null) {
+				// find corresponding source
+				ISource source = sourceService.findByRef(match);
+				if (source == null) replacement = "[[" + match + "]]"; // fallback
+				else {
+					replacement = "<a href=\"source/show/" + source.getUid() + "\" class=\"sg-data-add\">" + source.getShortTitle() + "</a>";
+				}
+
+				// write to cache
+				sourceReferenceCache.put(match, replacement);
+			}
+
+			matcher.appendReplacement(sb, Matcher.quoteReplacement(replacement));
+		}
+		matcher.appendTail(sb);
+		text = sb.toString();
+
 		// page reference
 		text = text.replaceAll("\\[([0-9f]+:)\\]", "<span class=\"sg-label sg-info\">$1</span>");
 

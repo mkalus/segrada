@@ -9,6 +9,7 @@ import org.glassfish.jersey.client.filter.CsrfProtectionFilter;
 import org.segrada.config.ServiceModule;
 import org.segrada.config.TemplateModule;
 import org.segrada.controller.*;
+import org.segrada.rendering.markup.DefaultMarkupFilter;
 
 import javax.servlet.annotation.WebListener;
 import java.util.Map;
@@ -74,6 +75,7 @@ public class SegradaGuiceServletContextListener extends GuiceServletContextListe
 
 		// manually inject this injector
 		orientDBFilter.setInjector(injector);
+		DefaultMarkupFilter.setInjector(injector);
 
 		return injector;
 	}
