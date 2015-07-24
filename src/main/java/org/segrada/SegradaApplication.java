@@ -1,6 +1,7 @@
 package org.segrada;
 
 import com.google.inject.servlet.GuiceFilter;
+import com.sun.jersey.api.core.PackagesResourceConfig;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.DefaultServlet;
 import org.eclipse.jetty.servlet.ServletContextHandler;
@@ -8,6 +9,7 @@ import org.segrada.servlet.SegradaGuiceServletContextListener;
 
 import javax.servlet.DispatcherType;
 import java.util.EnumSet;
+import java.util.Map;
 
 /**
  * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]
@@ -26,7 +28,18 @@ import java.util.EnumSet;
  *
  * Application launcher
  */
-public class SegradaApplication {
+public class SegradaApplication extends PackagesResourceConfig {
+	/**
+	 * constructor to create proper PackagesResourceConfig
+	 * @param props properties
+	 */
+	public SegradaApplication(Map<String, Object> props) {
+		super(props);
+
+		// register FormDataMultiPartDispatchProvider explicitly
+		getClasses().add(com.sun.jersey.multipart.impl.FormDataMultiPartDispatchProvider.class);
+	}
+
 	public static void main(String[] args) throws Exception {
 		// create server
 		Server server = new Server(8080);

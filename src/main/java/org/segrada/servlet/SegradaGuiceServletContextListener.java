@@ -44,6 +44,8 @@ public class SegradaGuiceServletContextListener extends GuiceServletContextListe
 				new ServletModule() {
 					@Override
 					protected void configureServlets() {
+						//getServletContext().setInitParameter("javax.ws.rs.Application", "org.segrada.SegradaApplication");
+
 						bind(MainController.class);
 						bind(ColorController.class);
 						bind(CommentController.class);
@@ -66,6 +68,10 @@ public class SegradaGuiceServletContextListener extends GuiceServletContextListe
 						initParams.put("com.sun.jersey.config.property.WebPageContentRegex", "/.*\\.(jpg|ico|png|gif|html|txt|css|js|xml|otf|svg|ttf|woff|woff2|eot)");
 						//TODO: implement client side of this, in order to make it work
 						//initParams.put("com.sun.jersey.spi.container.ContainerRequestFilters", "com.sun.jersey.api.container.filter.CsrfProtectionFilter");
+
+						// set init params in order to make stuff work
+						initParams.put("com.sun.jersey.config.property.packages", "org.segrada.servlet");
+						initParams.put("javax.ws.rs.Application", "org.segrada.SegradaApplication");
 
 						filter("/*").through(GuiceContainer.class, initParams);
 						filter("/*").through(orientDBFilter);
