@@ -1,0 +1,52 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" th:lang="${#locale.language}">
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<title th:text="#{add.source}">Create New Node</title>
+	<div th:include="partials/common :: head" th:remove="tag"></div>
+</head>
+
+<body>
+<div th:replace="partials/common :: browser"></div>
+
+<div class="container">
+	<div class="sg-data sg-source" th:with="tempId=${#strings.isEmpty(entity.uid)}?${#strings.randomAlphanumeric(10)}:${entity.uid}" th:id="${'source-reference-' + tempId}">
+		<form method="post" action="#" th:action="@{/source_reference/update}" th:object="${entity}" class="form-horizontal sg-data-form sg-data-content" th:attr="data-id=${'source-reference-' + tempId}">
+			<div class="form-group">
+				<label class="col-sm-2 control-label" th:text="#{field.source}">Source</label>
+				<div class="col-sm-10" style="padding-top: 7px;">
+					<span th:text="${entity.source.shortTitle}">Source</span>
+					<span class="help-block"></span>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label" th:text="#{field.reference}">Reference</label>
+				<div class="col-sm-10" style="padding-top: 7px;">
+					<span th:text="${entity.reference.title}">Reference</span>
+					<span class="help-block"></span>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-sm-2 control-label" th:for="${'referenceText-' + uid}"><span th:text="#{field.referenceText}"></span></label>
+				<div class="col-sm-10">
+					<input type="text" th:id="${'referenceText-' + uid}" name="referenceText" class="form-control" th:placeholder="#{field.referenceText}" th:value="${entity.referenceText}" />
+					<span class="help-block"></span>
+				</div>
+			</div>
+
+			<input type="hidden" name="id" th:value="${entity.id}" th:if="${entity.id}" />
+			<input type="hidden" name="sourceId" th:value="${entity.source.id}" />
+			<input type="hidden" name="referenceId" th:value="${entity.reference.id}" />
+			<input type="hidden" name="referenceModel" th:value="${entity.reference.modelName}" />
+			<input type="hidden" name="backUrl" th:value="@{${backUrl}}" />
+
+			<div th:replace="partials/form :: submit (isNewEntity=${isNewEntity})"></div>
+		</form>
+	</div>
+</div>
+
+<div th:replace="partials/common :: footer"></div>
+</body>
+</html>

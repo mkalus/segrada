@@ -14,6 +14,8 @@
 	<div class="sg-control-content sg-file">
 		<h4 class="sg-control-header"><i class="fa fa-bookmark"></i> <span th:text="#{list.references_to_source}">References to source</span></h4>
 
+		<div th:if="${error}" th:text="#{${error}}" class="alert alert-danger">Error</div>
+
 		<p th:text="${#messages.msg('pagination', paginationInfo.page, paginationInfo.pages)}">Pages</p>
 
 		<table class="table table-hover table-striped table-condensed">
@@ -29,18 +31,28 @@
 				<td th:text="${entity.referenceText}">Text</td>
 				<td class="text-right">
 					<div class="sg-data-icon-bar" role="group" aria-label="Actions">
-						<a class="sg-data-icon sg-data-add" href="#" th:title="#{Edit}" th:href="@{/source_reference/edit/{uid}(uid=${entity.uid})}"><i class="fa fa-pencil"></i></a>
-						<a class="sg-data-icon" href="#" th:title="#{Unlink}" th:href="@{/source_reference/remove_reference/{model}/{uid}/{source}(model=${model},uid=${uid},source=${entity.uid})}" th:attr="data-confirm=${#messages.msg('ReallyUnlink', entity.title, source.title)}"><i class="fa fa-unlink"></i></a>
+						<a class="sg-data-icon sg-source-ref-editor" href="#" th:href="@{/source_reference/edit/{uid}(uid=${entity.uid},backUrl=@{/source_reference/by_source/{uid}(uid=${uid})})}" th:title="#{Edit}" th:attr="data-id=${'edit-source-ref-' + uid}"><i class="fa fa-pencil"></i></a>
+						<a class="sg-data-icon" href="#" th:title="#{Unlink}" th:href="@{/source_reference/delete/{uid}(uid=${entity.uid},backUrl=@{/source_reference/by_source/{uid}(uid=${uid})})}" th:attr="data-confirm=${#messages.msg('ReallyUnlink', entity.title, source.title)}"><i class="fa fa-unlink"></i></a>
 					</div>
-
-					TODO: back url?
 				</td>
 			</tr>
 		</table>
 
 		<div th:replace="partials/pagination :: pagination (paginationInfo=${paginationInfo},base=${'source_reference/by_source/' + source.uid})"></div>
 
-		TODO: Formular
+		<div class="modal fade sg-source-ref-modal" id="edit-source-ref-xxx" th:id="${'edit-source-ref-' + uid}" data-href="" th:attr="data-target=${targetId}" tabindex="-1" role="dialog" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<h4 class="modal-title" th:text="#{modal.SourceReference}">Change Source Reference</h4>
+					</div>
+					<div class="modal-body">
+						<div th:replace="partials/common :: loadingicon"></div>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
 </div>
 

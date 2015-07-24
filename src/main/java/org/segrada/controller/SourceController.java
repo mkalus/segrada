@@ -3,6 +3,9 @@ package org.segrada.controller;
 import com.google.inject.Inject;
 import com.google.inject.servlet.RequestScoped;
 import com.sun.jersey.api.view.Viewable;
+import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 import org.segrada.controller.base.AbstractColoredController;
 import org.segrada.model.Source;
 import org.segrada.model.prototype.IFile;
@@ -137,5 +140,29 @@ public class SourceController extends AbstractColoredController<ISource> {
 	@Produces(MediaType.TEXT_HTML)
 	public Response delete(@PathParam("uid") String uid, @PathParam("empty") String empty) {
 		return handleDelete(empty, service.findById(service.convertUidToId(uid)), service);
+	}
+
+	@GET
+	@Path("/search")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String search(@QueryParam("s") String term) {
+		// json array to hold hits
+		JSONArray jsonArray = new JSONArray();
+
+		// search term finding
+		for (ISource node : service.findBySearchTerm(term, 30, true)) {
+			try {
+				JSONObject jsonObject = new JSONObject();
+				jsonObject.put("id", node.getId());
+				jsonObject.put("uid", node.getUid());
+				jsonObject.put("title", node.getTitle());
+
+				jsonArray.put(jsonObject);
+			} catch (JSONException e) {
+				//IGNORE
+			}
+		}
+
+		return jsonArray.toString();
 	}
 }

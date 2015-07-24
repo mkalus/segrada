@@ -5,6 +5,7 @@ import com.google.inject.servlet.RequestScoped;
 import com.sun.jersey.api.view.Viewable;
 import org.codehaus.jettison.json.JSONObject;
 import org.segrada.controller.base.AbstractBaseController;
+import org.segrada.model.SourceReference;
 import org.segrada.model.prototype.ISource;
 import org.segrada.model.prototype.ISourceReference;
 import org.segrada.model.prototype.SegradaAnnotatedEntity;
@@ -17,6 +18,9 @@ import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import java.net.URI;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -63,11 +67,104 @@ public class SourceReferenceController extends AbstractBaseController<ISourceRef
 		return "Not implemented.";
 	}
 
+	@GET
+	@Path("/edit/{uid}")
+	@Produces(MediaType.TEXT_HTML)
+	public Viewable edit(
+			@PathParam("uid") String uid,
+			@QueryParam("backUrl") String backUrl
+	) {
+		ISourceReference entity = service.findById(service.convertUidToId(uid));
+
+		if (entity == null)
+			return new Viewable("error", "Could not find entity in database.");
+
+		Map<String, Object> model = new HashMap<>();
+
+		model.put("isNewEntity", entity.getId()==null|| entity.getId().isEmpty());
+		model.put("entity", entity);
+		model.put("backUrl", backUrl);
+
+		enrichModelForEditingAndSaving(model);
+
+		return new Viewable(getBasePath() + "form", model);
+	}
+
+	@GET
+	@Path("/delete/{uid}")
+	@Produces(MediaType.TEXT_HTML)
+	public Response delete(@PathParam("uid") String uid, @QueryParam("backUrl") String backUrl) {
+		if (!service.delete(service.findById(service.convertUidToId(uid)))) {
+			return Response.ok(new Viewable("error", "DELETE failed.")).build();
+		}
+
+		return Response.seeOther(URI.create(backUrl)).build();
+	}
+
+	@POST
+	@Path("/update")
+	public Response update(
+			@FormParam("id") String id,
+			@FormParam("referenceId") String referenceId,
+			@FormParam("referenceModel") String referenceModel,
+			@FormParam("sourceId") String sourceId,
+			@FormParam("referenceText") String referenceText,
+			@FormParam("backUrl") String backUrl
+	) {
+		String error = null;
+
+		// create or load?
+		ISourceReference sourceReference;
+		if (id != null && !id.isEmpty()) sourceReference = service.findById(id);
+		else sourceReference = new SourceReference();
+
+		// sanity checks
+		if (sourceReference == null) error = "error.entityNotFound";
+		if (referenceId == null || referenceId.isEmpty() || referenceModel == null || referenceModel.isEmpty()) error = "error.referenceEmpty";
+		if (sourceId == null || sourceId.isEmpty()) error = "error.sourceEmpty";
+
+		// no errors, yet: load reference and source
+		if (error == null) {
+			ISource source = sourceReference.getSource();
+			if (source == null || !source.getId().equals(sourceId)) {
+				// load source
+				source = sourceService.findById(sourceId);
+				if (source == null) error = "error.sourceEmpty";
+				sourceReference.setSource(source);
+			}
+			SegradaAnnotatedEntity referenceEntity = sourceReference.getReference();
+			if (referenceEntity == null || !referenceEntity.getId().equals(referenceId)) {
+				// load reference
+				referenceModel = referenceModel.substring(0,1).toUpperCase() + referenceModel.substring(1);
+				AbstractRepositoryService referenceService = annotatedServices.get(referenceModel);
+				if (referenceService == null) error = "error.referenceEmpty";
+				else referenceEntity = (SegradaAnnotatedEntity) referenceService.findById(referenceId);
+				if (referenceEntity == null) error = "error.referenceEmpty";
+				sourceReference.setReference(referenceEntity);
+			}
+			// update text
+			if (referenceText != null && referenceText.isEmpty()) referenceText = null;
+			sourceReference.setReferenceText(referenceText);
+		}
+
+		// no errors: save
+		if (error == null && !service.save(sourceReference)) error = "error.whileSaving";
+
+		if (error != null)
+			try {
+				return Response.seeOther(URI.create(backUrl + "?error=" + URLEncoder.encode(error, "UTF-8"))).build();
+			} catch (Exception e) {
+				logger.warn("Could not encode error.", e);
+			}
+
+		return Response.seeOther(URI.create(backUrl)).build();
+	}
+
 	/**
 	 * show files by reference
 	 * @param referenceUid uid of reference
 	 * @param referenceModel reference model, e.g. "node"
-	 * @param errors json encoded errors
+	 * @param error error message string
 	 * @return view
 	 */
 	@GET
@@ -78,7 +175,7 @@ public class SourceReferenceController extends AbstractBaseController<ISourceRef
 			@PathParam("model") String referenceModel,
 			@QueryParam("page") int page,
 			@QueryParam("entriesPerPage") int entriesPerPage,
-			@QueryParam("errors") String errors // json object of errors
+			@QueryParam("error") String error
 	) {
 		// get reference by uid
 		SegradaAnnotatedEntity referenceEntity;
@@ -99,22 +196,8 @@ public class SourceReferenceController extends AbstractBaseController<ISourceRef
 		model.put("model", referenceModel);
 		model.put("referenceEntity", referenceEntity);
 		model.put("paginationInfo", paginationInfo);
-		model.put("targetId", "#files-by-ref-" + referenceUid);
-
-		if (errors != null) {
-			try {
-				JSONObject errorData = new JSONObject(errors);
-				Map<String, String> errorMessages = new HashMap<>();
-				Iterator it = errorData.keys();
-				while (it.hasNext()) {
-					String key = (String) it.next();
-					errorMessages.put(key, errorData.getString(key));
-				}
-				model.put("errors", errorMessages);
-			} catch (Exception e) {
-				logger.error("Error calling byReference.", e);
-			}
-		}
+		model.put("targetId", "#sources-by-ref-" + referenceUid);
+		model.put("error", error);
 
 		return new Viewable("source_reference/by_reference", model);
 	}
@@ -122,7 +205,7 @@ public class SourceReferenceController extends AbstractBaseController<ISourceRef
 	/**
 	 * show references by source
 	 * @param sourceUid uid of source
-	 * @param errors json encoded errors
+	 * @param error error message string
 	 * @return view
 	 */
 	@GET
@@ -132,7 +215,7 @@ public class SourceReferenceController extends AbstractBaseController<ISourceRef
 			@PathParam("uid") String sourceUid,
 			@QueryParam("page") int page,
 			@QueryParam("entriesPerPage") int entriesPerPage,
-			@QueryParam("errors") String errors // json object of errors
+			@QueryParam("error") String error
 	) {
 		// get source by uid
 		ISource source = sourceService.findById(sourceService.convertUidToId(sourceUid));
@@ -147,21 +230,7 @@ public class SourceReferenceController extends AbstractBaseController<ISourceRef
 		model.put("source", source);
 		model.put("paginationInfo", paginationInfo);
 		model.put("targetId", "#references-by-ref-" + sourceUid);
-
-		if (errors != null) {
-			try {
-				JSONObject errorData = new JSONObject(errors);
-				Map<String, String> errorMessages = new HashMap<>();
-				Iterator it = errorData.keys();
-				while (it.hasNext()) {
-					String key = (String) it.next();
-					errorMessages.put(key, errorData.getString(key));
-				}
-				model.put("errors", errorMessages);
-			} catch (Exception e) {
-				logger.error("Error calling bySource.", e);
-			}
-		}
+		model.put("error", error);
 
 		return new Viewable("source_reference/by_source", model);
 	}

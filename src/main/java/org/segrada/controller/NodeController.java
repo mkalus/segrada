@@ -96,7 +96,7 @@ public class NodeController extends AbstractColoredController<INode> {
 		else tagIds = null;
 
 		// search term finding
-		for (INode node : service.findBySearchTermAndTags(term, 36, true, tagIds)) {
+		for (INode node : service.findBySearchTermAndTags(term, 30, true, tagIds)) {
 			try {
 				JSONObject jsonObject = new JSONObject();
 				jsonObject.put("id", node.getId());

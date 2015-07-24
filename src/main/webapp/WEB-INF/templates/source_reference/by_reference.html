@@ -16,8 +16,6 @@
 
 		<p th:text="${#messages.msg('pagination', paginationInfo.page, paginationInfo.pages)}">Pages</p>
 
-		TODO: diesen Reiter vielleicht in der Detailansicht direkt unterhalb der Beschreibung?
-
 		<table class="table table-hover table-striped table-condensed">
 			<tr>
 				<th class="text-center"><i class="fa fa-bookmark"></i></th>
@@ -31,18 +29,63 @@
 				<td th:text="${entity.referenceText}">Text</td>
 				<td class="text-right">
 					<div class="sg-data-icon-bar" role="group" aria-label="Actions">
-						<a class="sg-data-icon sg-data-add" href="#" th:title="#{Edit}" th:href="@{/source_reference/edit/{uid}(uid=${entity.uid})}"><i class="fa fa-pencil"></i></a>
-						<a class="sg-data-icon" href="#" th:title="#{Unlink}" th:href="@{/source_reference/remove_reference/{model}/{uid}/{source}(model=${model},uid=${uid},source=${entity.uid})}" th:attr="data-confirm=${#messages.msg('ReallyUnlink', entity.title, referenceEntity.title)}"><i class="fa fa-unlink"></i></a>
+						<a class="sg-data-icon sg-source-ref-editor" href="#" th:href="@{/source_reference/edit/{uid}(uid=${entity.uid},backUrl=@{/source_reference/by_reference/{model}/{uid}(model=${model},uid=${uid})})}" th:title="#{Edit}" th:attr="data-id=${'edit-source-ref-' + uid}"><i class="fa fa-pencil"></i></a>
+						<a class="sg-data-icon" href="#" th:title="#{Unlink}" th:href="@{/source_reference/delete/{uid}(uid=${entity.uid},backUrl=@{/source_reference/by_reference/{model}/{uid}(model=${model},uid=${uid})})}" th:attr="data-confirm=${#messages.msg('ReallyUnlink', entity.title, referenceEntity.title)}"><i class="fa fa-unlink"></i></a>
 					</div>
-
-					TODO: back url?
 				</td>
 			</tr>
 		</table>
 
+		<div class="modal fade sg-source-ref-modal" id="edit-source-ref-xxx" th:id="${'edit-source-ref-' + uid}" data-href="" tabindex="-1" th:attr="data-target=${targetId}" role="dialog" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<h4 class="modal-title" th:text="#{modal.SourceReference}">Change Source Reference</h4>
+					</div>
+					<div class="modal-body">
+						<div th:replace="partials/common :: loadingicon"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+
 		<div th:replace="partials/pagination :: pagination (paginationInfo=${paginationInfo},base=${'source_reference/by_reference/' + referenceEntity.uid})"></div>
 
-		TODO: Formular
+		<div class="sg-stop-flow">
+			<h4 th:text="#{add.sourceReference}">Add source reference</h4>
+
+			<div th:if="${error}" th:text="#{${error}}" class="alert alert-danger">Error</div>
+
+			<form method="post" action="#" th:action="@{${baseUrl}?${baseUrl}:'/source_reference/update'}" class="sg-control-form" th:attr="data-target-id=${targetId}">
+				<div class="form-group">
+					<label class="col-sm-2 control-label" th:for="${'sourceId-' + uid}"><span th:text="#{field.source}"></span></label>
+					<div class="col-sm-10">
+						<input type="text" th:id="${'sourceId-' + uid}" th:attr="data-id=${'sourceId-' + uid + '-data'}" name="sourceTitle" class="form-control sg-source-search" th:placeholder="#{field.source}" />
+						<input type="hidden" th:id="${'sourceId-' + uid + '-data'}" name="sourceId" />
+						<span class="help-block"></span>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label class="col-sm-2 control-label" th:for="${'referenceText-' + uid}"><span th:text="#{field.referenceText}"></span></label>
+					<div class="col-sm-10">
+						<input type="text" th:id="${'referenceText-' + uid}" name="referenceText" class="form-control" th:placeholder="#{field.referenceText}" />
+						<span class="help-block"></span>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<div class="col-sm-offset-2 col-sm-10">
+						<button type="submit" class="btn btn-default" th:text="#{Create}">Create</button>
+					</div>
+				</div>
+
+				<input type="hidden" name="referenceId" th:value="${referenceEntity.id}" />
+				<input type="hidden" name="referenceModel" th:value="${referenceEntity.modelName}" />
+				<input type="hidden" name="backUrl" th:value="@{/source_reference/by_reference/{model}/{uid}(model=${model},uid=${uid})}" />
+			</form>
+		</div>
 	</div>
 </div>
 

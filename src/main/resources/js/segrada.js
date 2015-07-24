@@ -55,6 +55,20 @@
 	});
 
 	/**
+	 * source tokenizer
+	 */
+	var sourceTokenizer = new Bloodhound({
+		datumTokenizer: function (d) {
+			return Bloodhound.tokenizers.whitespace(d.title);
+		},
+		queryTokenizer: Bloodhound.tokenizers.whitespace,
+		remote: {
+			wildcard: '%QUERY',
+			url: urlSegradaSourceSearch + '%QUERY'
+		}
+	});
+
+	/**
 	 * on enter pressed event
 	 * @param func
 	 * @returns {jQuery}
@@ -317,6 +331,42 @@
 		});
 
 		// *******************************************************
+		// source ref editor modal
+		$(".sg-source-ref-modal").on('shown.bs.modal', function () {
+			var modal = $(this);
+			var myId = modal.attr('id');
+			var modalContent = $(".modal-body", modal);
+
+			$.get(modal.attr('data-href'), function (data) {
+				modalContent.html(data);
+				$('form', modalContent).ajaxForm({
+					beforeSubmit: function(arr, $form, options) {
+						// disable container
+						$form.wrapInner("<div class='sg-disabled'></div>")
+						$form.prepend($('#sg-wait').html());
+						return true;
+					},
+					success: function (responseText, statusText, xhr, $form) {
+						// replace target by response text
+						var target = $(modal.attr('data-target'));
+						target.html(responseText);
+						afterAjax(target);
+						modal.modal('hide');
+					}
+				});
+			});
+		}).on('hidden.bs.modal', function () {
+			$(".modal-body", $(this)).html($('#sg-wait').html()); // replace by waiting icon
+		});
+		// source ref editor
+		$(".sg-source-ref-editor", part).click(function (e) {
+			var myModal = $('#' + $(this).attr('data-id'));
+			myModal.attr("data-href", $(this).attr('href'));
+			myModal.modal('show');
+			e.preventDefault();
+		});
+
+		// *******************************************************
 		// contractable tag list
 		$('.sg-taglist-contract', part).each(function() {
 			var tags = $('span', $(this));
@@ -385,6 +435,28 @@
 				displayKey: 'title',
 				valueKey: 'id',
 				source: fileTokenizer.ttAdapter()
+			}).bind('typeahead:selected', function(e, datum) {
+				target.val(datum.id);
+			}).bind('keyup', function() { // empty on textbox empty
+				if (!this.value) {
+					target.val('');
+				}
+			});
+		});
+
+		// source selector for forms
+		$("input.sg-source-search", part).each(function() {
+			var $this = $(this);
+			var target = $('#' + $this.attr('data-id'));
+
+			$this.typeahead({hint: true,
+				highlight: true,
+				minLength: 1
+			},{
+				name: 'source',
+				displayKey: 'title',
+				valueKey: 'id',
+				source: sourceTokenizer.ttAdapter()
 			}).bind('typeahead:selected', function(e, datum) {
 				target.val(datum.id);
 			}).bind('keyup', function() { // empty on textbox empty

@@ -218,7 +218,7 @@ abstract public class AbstractBaseController<BEAN extends SegradaEntity> {
 		boolean emptyValue = empty == null || empty.isEmpty() || empty.equals("0");
 
 		if (!service.delete(entity)) {
-			//TODO: show error?
+			return Response.ok(new Viewable("error", "DELETE failed.")).build();
 		}
 
 		// empty response

@@ -68,6 +68,6 @@ public class SourceReference extends AbstractSegradaEntity implements ISourceRef
 
 	@Override
 	public String getTitle() {
-		return getSource().getShortTitle() + (getReferenceText()==null?"":", " + getReferenceText());
+		return getSource().getShortTitle() + (getReferenceText()==null||getReferenceText().isEmpty()?"":", " + getReferenceText());
 	}
 }
