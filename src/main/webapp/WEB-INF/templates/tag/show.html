@@ -13,9 +13,14 @@
 <div class="container">
 	<div class="sg-data sg-tag" th:id="${'tag-' + entity.uid}">
 		<div th:replace="partials/common :: headerboxright (type=#{Tag},base='tag',uid=${entity.uid})"></div>
+		<div th:replace="partials/common :: taglist (tags=${entity.tags})"></div>
 		<h4 class="sg-data-header"><span class="fa fa-tag" th:title="#{Tag}"></span> <span th:text="${entity.title}">Tag</span></h4>
 
-		<!--TODO: show all entities connected to this tag -->
+		<div class="sg-margin-bottom sg-stop-flow" th:unless="${#lists.isEmpty(childTags)}">
+			<div th:replace="partials/common :: taglist (tags=${childTags})"></div>
+		</div>
+
+
 		<!--TODO: connect to new entity -->
 		<!--TODO: connect to parent -->
 

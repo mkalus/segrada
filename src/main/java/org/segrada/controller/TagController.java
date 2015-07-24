@@ -10,11 +10,15 @@ import org.segrada.controller.base.AbstractBaseController;
 import org.segrada.model.Tag;
 import org.segrada.model.prototype.ISource;
 import org.segrada.model.prototype.ITag;
+import org.segrada.model.prototype.SegradaTaggable;
 import org.segrada.service.TagService;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -47,16 +51,45 @@ public class TagController extends AbstractBaseController<ITag> {
 
 	@GET
 	@Produces(MediaType.TEXT_HTML)
-	public Viewable index(@QueryParam("page") int page, @QueryParam("entriesPerPage") int entriesPerPage) {
-		// TODO: do filters
-		return handlePaginatedIndex(service, page, entriesPerPage, null);
+	public Viewable index(
+			@QueryParam("page") int page,
+			@QueryParam("entriesPerPage") int entriesPerPage,
+			@QueryParam("reset") int reset,
+			@QueryParam("search") String search,
+			@QueryParam("tags") List<String> tags
+	) {
+		// filters:
+		Map<String, Object> filters = new HashMap<>();
+		if (reset > 0) filters.put("reset", true);
+		if (search != null) filters.put("search", search);
+		if (tags != null) {
+			if (tags.size() == 0) filters.put("tags", null);
+			else {
+				String[] tagArray = new String[tags.size()];
+				tags.toArray(tagArray);
+				filters.put("tags", tagArray);
+			}
+		}
+
+		// handle pagination
+		return handlePaginatedIndex(service, page, entriesPerPage, filters);
 	}
 
 	@GET
 	@Path("/show/{uid}")
 	@Produces(MediaType.TEXT_HTML)
 	public Viewable show(@PathParam("uid") String uid) {
-		return handleShow(uid, service);
+		// create model map
+		Map<String, Object> model = new HashMap<>();
+
+		model.put("entity", service.findById(service.convertUidToId(uid)));
+		List<String> childTags = new LinkedList<>();
+		for (SegradaTaggable tag : service.findByTag(service.convertUidToId(uid), false, new String[]{"Tag"})) {
+			childTags.add(((ITag) tag).getTitle());
+		}
+		model.put("childTags", childTags);
+
+		return new Viewable(getBasePath() + "show", model);
 	}
 
 	@GET

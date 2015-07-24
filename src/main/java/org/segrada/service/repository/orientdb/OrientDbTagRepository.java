@@ -64,14 +64,14 @@ public class OrientDbTagRepository extends AbstractSegradaOrientDbRepository<ITa
 
 		tag.setTitle(document.field("title", String.class));
 
+		// populate with data
+		populateEntityWithBaseData(document, tag);
+		populateEntityWithCreatedModified(document, tag);
+
 		if (tag.getId() != null) {
 			// set tags
 			tag.setTags(lazyLoadTags(tag));
 		}
-
-		// populate with data
-		populateEntityWithBaseData(document, tag);
-		populateEntityWithCreatedModified(document, tag);
 
 		return tag;
 	}
@@ -448,7 +448,7 @@ public class OrientDbTagRepository extends AbstractSegradaOrientDbRepository<ITa
 		List<String> constraints = new LinkedList<>();
 		// search term
 		if (filters.get("search") != null) {
-			constraints.add("title LIKE '" + OrientStringEscape.escapeOrientSql((String)filters.get("search")) + "'");
+			constraints.add("title LIKE '%" + OrientStringEscape.escapeOrientSql((String)filters.get("search")) + "%'");
 		}
 		// tags
 		if (filters.get("tags") != null) {
