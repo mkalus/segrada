@@ -7,6 +7,7 @@ import org.segrada.service.repository.prototype.CRUDRepository;
 import org.segrada.service.repository.prototype.PaginatingRepositoryOrService;
 import org.segrada.service.repository.prototype.SearchTermRepository;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -37,16 +38,18 @@ public interface FileRepository extends CRUDRepository<IFile>, SearchTermReposit
 	/**
 	 * find files referencing entity with id
 	 * @param id of entity referenced
+	 * @param isFile true if id is from file (will activate non directed connection search)
 	 * @return list of files
 	 */
-	List<IFile> findByReference(String id);
+	List<IFile> findByReference(String id, boolean isFile);
 
 	/**
 	 * find entities referencing file with id
 	 * @param id of file referencing
+	 * @param byClass if not null, contains the class the list is contained of
 	 * @return list of entities referenced by file
 	 */
-	List<SegradaEntity> findByFile(String id);
+	List<SegradaEntity> findByFile(String id, @Nullable String byClass);
 
 	/**
 	 * Create new file connection (only once)

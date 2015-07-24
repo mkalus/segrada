@@ -312,15 +312,17 @@ public class OrientDbFileRepositoryTest {
 		comment.save();
 
 		// no files yet
-		List<IFile> files = repository.findByReference(comment.getIdentity().toString());
+		List<IFile> files = repository.findByReference(comment.getIdentity().toString(), false);
 		assertTrue(files.isEmpty());
 
 		// create edge
 		factory.getDb().command(new OCommandSQL("create edge IsFileOf from " + document.getIdentity().toString() + " to " + comment.getIdentity().toString())).execute();
 
-		files = repository.findByReference(comment.getIdentity().toString());
+		files = repository.findByReference(comment.getIdentity().toString(), false);
 		assertFalse(files.isEmpty());
 		assertEquals(document.getIdentity().toString(), files.get(0).getId());
+
+		//TODO test undirected search when two files are connected
 	}
 
 	@Test
@@ -352,16 +354,18 @@ public class OrientDbFileRepositoryTest {
 		comment.save();
 
 		// no files yet
-		List<SegradaEntity> entities = repository.findByFile(document.getIdentity().toString());
+		List<SegradaEntity> entities = repository.findByFile(document.getIdentity().toString(), null);
 		assertTrue(entities.isEmpty());
 
 		// create edge
 		factory.getDb().command(new OCommandSQL("create edge IsFileOf from " + document.getIdentity().toString() + " to " + comment.getIdentity().toString())).execute();
 
-		entities = repository.findByFile(document.getIdentity().toString());
+		entities = repository.findByFile(document.getIdentity().toString(), null);
 		assertFalse(entities.isEmpty());
 		assertEquals(comment.getIdentity().toString(), entities.get(0).getId());
 		assertEquals("Comment", entities.get(0).getModelName());
+
+		//TODO: test filter by classes
 	}
 
 	@Test

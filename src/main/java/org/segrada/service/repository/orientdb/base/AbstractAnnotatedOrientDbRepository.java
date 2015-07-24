@@ -141,7 +141,7 @@ abstract public class AbstractAnnotatedOrientDbRepository<T extends SegradaAnnot
 							FileRepository fileRepository =
 									repositoryFactory.produceRepository(OrientDbFileRepository.class);
 
-							return fileRepository.findByReference(entity.getId());
+							return fileRepository.findByReference(entity.getId(), entity.getModelName().equals("File"));
 						}
 					}
 			);

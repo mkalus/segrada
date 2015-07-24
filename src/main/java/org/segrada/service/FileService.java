@@ -129,8 +129,8 @@ public class FileService extends AbstractFullTextService<IFile, FileRepository> 
 	 * @param id of entity referenced
 	 * @return list of files
 	 */
-	public List<IFile> findByReference(String id) {
-		return repository.findByReference(id);
+	public List<IFile> findByReference(String id, boolean isFile) {
+		return repository.findByReference(id,isFile);
 	}
 
 	/**
@@ -138,8 +138,8 @@ public class FileService extends AbstractFullTextService<IFile, FileRepository> 
 	 * @param id of file referencing
 	 * @return list of entities referenced by file
 	 */
-	public List<SegradaEntity> findByFile(String id) {
-		return repository.findByFile(id);
+	public List<SegradaEntity> findByFile(String id, @Nullable String byClass) {
+		return repository.findByFile(id, byClass);
 	}
 
 	/**

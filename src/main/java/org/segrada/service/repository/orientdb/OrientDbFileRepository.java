@@ -20,6 +20,7 @@ import org.segrada.util.OrientStringEscape;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -128,7 +129,7 @@ public class OrientDbFileRepository extends AbstractAnnotatedOrientDbRepository<
 	}
 
 	@Override
-	public List<IFile> findByReference(String id) {
+	public List<IFile> findByReference(String id, boolean isFile) {
 		List<IFile> list = new LinkedList<>();
 
 		// avoid NPEs
@@ -136,18 +137,30 @@ public class OrientDbFileRepository extends AbstractAnnotatedOrientDbRepository<
 
 		initDb();
 
-		OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>("select out from IsFileOf where in = " + id);
-		List<ODocument> result = db.command(query).execute();
+		if (isFile) { // undirected aggregation
+			OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>("select out, in from IsFileOf where in.@class = 'File' AND out.@class = 'File' AND (in = " + id + " OR out = " + id + ")");
+			List<ODocument> result = db.command(query).execute();
 
-		for (ODocument document : result) {
-			list.add(convertToEntity(document.field("out")));
+			for (ODocument document : result) {
+				ODocument doc = document.field("out");
+				if (doc != null && doc.getIdentity().toString().equals(id))
+					list.add(convertToEntity(document.field("in")));
+				else list.add(convertToEntity(document.field("out")));
+			}
+		} else {
+			OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>("select out from IsFileOf where in = " + id);
+			List<ODocument> result = db.command(query).execute();
+
+			for (ODocument document : result) {
+				list.add(convertToEntity(document.field("out")));
+			}
 		}
 
 		return list;
 	}
 
 	@Override
-	public List<SegradaEntity> findByFile(String id) {
+	public List<SegradaEntity> findByFile(String id, @Nullable String byClass) {
 		List<SegradaEntity> list = new LinkedList<>();
 
 		// avoid NPEs
@@ -155,7 +168,11 @@ public class OrientDbFileRepository extends AbstractAnnotatedOrientDbRepository<
 
 		initDb();
 
-		OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>("select in from IsFileOf where out = " + id);
+		String constraints;
+		if (byClass != null) constraints = " AND in.@class = '" + OrientStringEscape.escapeOrientSql(byClass) + "'";
+		else constraints = "";
+
+		OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>("select in from IsFileOf where out = " + id + constraints);
 		List<ODocument> result = db.command(query).execute();
 
 		for (ODocument document : result) {
@@ -186,7 +203,10 @@ public class OrientDbFileRepository extends AbstractAnnotatedOrientDbRepository<
 		initDb();
 
 		// execute query
-		OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>("select @RID as id from IsFileOf where out = " + file.getId() + " and in = " + entity.getId());
+		String sql;
+		if (entity.getModelName().equals("File")) sql = "select @RID as id from IsFileOf where (out = " + file.getId() + " and in = " + entity.getId() + ") OR (in = " + file.getId() + " and out = " + entity.getId() + ")";
+		else sql = "select @RID as id from IsFileOf where out = " + file.getId() + " and in = " + entity.getId();
+		OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>(sql);
 		List<ODocument> result = db.command(query).execute();
 
 		if (result.size() > 0) {
@@ -199,7 +219,10 @@ public class OrientDbFileRepository extends AbstractAnnotatedOrientDbRepository<
 	public boolean isFileOf(IFile file, SegradaAnnotatedEntity entity) {
 		initDb();
 
-		OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>("select in from IsFileOf where out = " + file.getId() + " and in = " + entity.getId());
+		String sql;
+		if (entity.getModelName().equals("File")) sql = "select in from IsFileOf where (out = " + file.getId() + " and in = " + entity.getId() + ") OR (in = " + file.getId() + " and out = " + entity.getId() + ")";
+		else sql = "select @RID as id from IsFileOf where out = " + file.getId() + " and in = " + entity.getId();
+		OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>(sql);
 		List<ODocument> result = db.command(query).execute();
 
 		return !result.isEmpty();

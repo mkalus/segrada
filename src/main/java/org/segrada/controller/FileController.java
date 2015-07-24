@@ -14,6 +14,7 @@ import org.segrada.model.File;
 import org.segrada.model.prototype.IFile;
 import org.segrada.model.prototype.IPictogram;
 import org.segrada.model.prototype.SegradaAnnotatedEntity;
+import org.segrada.model.prototype.SegradaEntity;
 import org.segrada.service.FileService;
 import org.segrada.service.PictogramService;
 import org.segrada.service.base.AbstractRepositoryService;
@@ -89,6 +90,56 @@ public class FileController extends AbstractColoredController<IFile> {
 
 	/**
 	 * show files by reference
+	 * @param fileUid uid of file
+	 * @param referenceModel contain hits by this
+	 * @param errors json encoded errors
+	 * @return view
+	 */
+	@GET
+	@Path("/by_file/{uid}/{model}")
+	@Produces(MediaType.TEXT_HTML)
+	public Viewable byFile(
+			@PathParam("uid") String fileUid,
+			@PathParam("model") String referenceModel,
+			@QueryParam("errors") String errors // json object of errors
+	) {
+		IFile file = service.findById(service.convertUidToId(fileUid));
+
+		// null, if empty
+		if (referenceModel != null && referenceModel.isEmpty()) referenceModel = null;
+		String modelName = referenceModel.substring(0, 1).toUpperCase() + referenceModel.substring(1);
+
+		List<SegradaEntity> entities = service.findByFile(file.getId(), modelName);
+
+		// create model map
+		Map<String, Object> model = new HashMap<>();
+		model.put("uid", fileUid);
+		model.put("model", referenceModel);
+		model.put("modelName", modelName);
+		model.put("file", file);
+		model.put("entities", entities);
+		model.put("targetId", "#refs-by-file-" + fileUid + "-" + referenceModel);
+
+		if (errors != null) {
+			try {
+				JSONObject errorData = new JSONObject(errors);
+				Map<String, String> errorMessages = new HashMap<>();
+				Iterator it = errorData.keys();
+				while (it.hasNext()) {
+					String key = (String) it.next();
+					errorMessages.put(key, errorData.getString(key));
+				}
+				model.put("errors", errorMessages);
+			} catch (Exception e) {
+				//TODO: log
+			}
+		}
+
+		return new Viewable("file/by_file", model);
+	}
+
+	/**
+	 * show files by reference
 	 * @param referenceUid uid of reference
 	 * @param referenceModel reference model, e.g. "node"
 	 * @param errors json encoded errors
@@ -113,7 +164,7 @@ public class FileController extends AbstractColoredController<IFile> {
 		}
 
 		// get references
-		List<IFile> entities = service.findByReference(service.convertUidToId(referenceUid));
+		List<IFile> entities = service.findByReference(service.convertUidToId(referenceUid), referenceEntity.getModelName().equals("File"));
 
 		// create model map
 		Map<String, Object> model = new HashMap<>();
@@ -219,8 +270,13 @@ public class FileController extends AbstractColoredController<IFile> {
 		}
 
 		// do removal
-		if (referenceEntity != null && source != null)
+		if (referenceEntity != null && source != null) {
 			service.removeFileFromEntity(source, referenceEntity);
+
+			// also delete other direction, if file
+			if (referenceEntity.getModelName().equals("File"))
+				service.removeFileFromEntity((IFile) referenceEntity, source);
+		}
 
 		try {
 			return Response.seeOther(new URI(getBasePath() + "by_reference/" + referenceModel + "/" + referenceUid)).build();
