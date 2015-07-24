@@ -328,10 +328,48 @@
 								<resource>
 									<directory>src/main/resources</directory>
 									<includes>
-										<include>application.properties</include>
 										<include>start.sh</include>
 										<include>start.bat</include>
 									</includes>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+					<execution>
+						<id>copy-prod-resources-2</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<!-- this is important -->
+							<overwrite>true</overwrite>
+							<!-- this as well (target/ was missing) -->
+							<outputDirectory>${basedir}/target/src/main/resources</outputDirectory>
+							<resources>
+								<resource>
+									<directory>src/main/resources</directory>
+									<includes>
+										<include>img/**</include>
+									</includes>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+					<execution>
+						<id>copy-prod-resources-3</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<!-- this is important -->
+							<overwrite>true</overwrite>
+							<!-- this as well (target/ was missing) -->
+							<outputDirectory>${basedir}/target/src/main/webapp</outputDirectory>
+							<resources>
+								<resource>
+									<directory>src/main/webapp</directory>
 								</resource>
 							</resources>
 						</configuration>
