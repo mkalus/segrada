@@ -16,6 +16,7 @@ import org.segrada.model.prototype.ISourceReference;
 import org.segrada.service.repository.CommentRepository;
 import org.segrada.service.repository.SourceRepository;
 import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory;
+import org.segrada.service.util.PaginationInfo;
 import org.segrada.session.Identity;
 import org.segrada.test.OrientDBTestInstance;
 import org.segrada.test.OrientDbTestApplicationSettings;
@@ -185,13 +186,13 @@ public class OrientDbSourceReferenceRepositoryTest {
 		repository.save(sourceReference);
 
 		// do not find anything when dummy searching
-		List<ISourceReference> list = repository.findBySource("99:99");
-		assertTrue(list.isEmpty());
+		PaginationInfo<ISourceReference> list = repository.findBySource("99:99", 1, 15);
+		assertTrue(list.entities.isEmpty());
 
 		// find by reference
-		list = repository.findBySource(source.getId());
-		assertTrue(list.size() == 1);
-		assertEquals(sourceReference.getId(), list.get(0).getId());
+		list = repository.findBySource(source.getId(), 1, 15);
+		assertTrue(list.entities.size() == 1);
+		assertEquals(sourceReference.getId(), list.entities.get(0).getId());
 	}
 
 	@Test
@@ -219,12 +220,12 @@ public class OrientDbSourceReferenceRepositoryTest {
 		repository.save(sourceReference);
 
 		// do not find anything when dummy searching
-		List<ISourceReference> list = repository.findByReference("99:99");
-		assertTrue(list.isEmpty());
+		PaginationInfo<ISourceReference> list = repository.findByReference("99:99", 1, 15);
+		assertTrue(list.entities.isEmpty());
 
 		// find by reference
-		list = repository.findByReference(comment.getId());
-		assertTrue(list.size() == 1);
-		assertEquals(sourceReference.getId(), list.get(0).getId());
+		list = repository.findByReference(comment.getId(), 1, 15);
+		assertTrue(list.entities.size() == 1);
+		assertEquals(sourceReference.getId(), list.entities.get(0).getId());
 	}
 }

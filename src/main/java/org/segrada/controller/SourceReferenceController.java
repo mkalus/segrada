@@ -11,12 +11,14 @@ import org.segrada.model.prototype.SegradaAnnotatedEntity;
 import org.segrada.service.SourceReferenceService;
 import org.segrada.service.SourceService;
 import org.segrada.service.base.AbstractRepositoryService;
+import org.segrada.service.util.PaginationInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -39,6 +41,8 @@ import java.util.Map;
 @Path("/source_reference")
 @RequestScoped
 public class SourceReferenceController extends AbstractBaseController<ISourceReference> {
+	private static final Logger logger = LoggerFactory.getLogger(SourceReferenceController.class);
+
 	@Inject
 	private SourceReferenceService service;
 
@@ -72,6 +76,8 @@ public class SourceReferenceController extends AbstractBaseController<ISourceRef
 	public Viewable byReference(
 			@PathParam("uid") String referenceUid,
 			@PathParam("model") String referenceModel,
+			@QueryParam("page") int page,
+			@QueryParam("entriesPerPage") int entriesPerPage,
 			@QueryParam("errors") String errors // json object of errors
 	) {
 		// get reference by uid
@@ -85,14 +91,14 @@ public class SourceReferenceController extends AbstractBaseController<ISourceRef
 		}
 
 		// get references
-		List<ISourceReference> entities = service.findByReference(service.convertUidToId(referenceUid));
+		PaginationInfo<ISourceReference> paginationInfo = service.findByReference(service.convertUidToId(referenceUid), page, entriesPerPage);
 
 		// create model map
 		Map<String, Object> model = new HashMap<>();
 		model.put("uid", referenceUid);
 		model.put("model", referenceModel);
 		model.put("referenceEntity", referenceEntity);
-		model.put("entities", entities);
+		model.put("paginationInfo", paginationInfo);
 		model.put("targetId", "#files-by-ref-" + referenceUid);
 
 		if (errors != null) {
@@ -106,7 +112,7 @@ public class SourceReferenceController extends AbstractBaseController<ISourceRef
 				}
 				model.put("errors", errorMessages);
 			} catch (Exception e) {
-				//TODO: log
+				logger.error("Error calling byReference.", e);
 			}
 		}
 
@@ -124,6 +130,8 @@ public class SourceReferenceController extends AbstractBaseController<ISourceRef
 	@Produces(MediaType.TEXT_HTML)
 	public Viewable bySource(
 			@PathParam("uid") String sourceUid,
+			@QueryParam("page") int page,
+			@QueryParam("entriesPerPage") int entriesPerPage,
 			@QueryParam("errors") String errors // json object of errors
 	) {
 		// get source by uid
@@ -131,13 +139,13 @@ public class SourceReferenceController extends AbstractBaseController<ISourceRef
 		if (source == null) return new Viewable("error", "source not found");
 
 		// get references
-		List<ISourceReference> entities = service.findBySource(source.getId());
+		PaginationInfo<ISourceReference> paginationInfo = service.findBySource(source.getId(), page, entriesPerPage);
 
 		// create model map
 		Map<String, Object> model = new HashMap<>();
 		model.put("uid", sourceUid);
 		model.put("source", source);
-		model.put("entities", entities);
+		model.put("paginationInfo", paginationInfo);
 		model.put("targetId", "#references-by-ref-" + sourceUid);
 
 		if (errors != null) {
@@ -151,7 +159,7 @@ public class SourceReferenceController extends AbstractBaseController<ISourceRef
 				}
 				model.put("errors", errorMessages);
 			} catch (Exception e) {
-				//TODO: log
+				logger.error("Error calling bySource.", e);
 			}
 		}
 

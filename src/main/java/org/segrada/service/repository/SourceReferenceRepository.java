@@ -2,8 +2,7 @@ package org.segrada.service.repository;
 
 import org.segrada.model.prototype.ISourceReference;
 import org.segrada.service.repository.prototype.CRUDRepository;
-
-import java.util.List;
+import org.segrada.service.util.PaginationInfo;
 
 /**
  * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]
@@ -28,12 +27,12 @@ public interface SourceReferenceRepository extends CRUDRepository<ISourceReferen
 	 * @param id source id
 	 * @return list of entities or null
 	 */
-	List<ISourceReference> findBySource(String id);
+	PaginationInfo<ISourceReference> findBySource(String id, int page, int entriesPerPage);
 
 	/**
 	 * Find entities by reference id
 	 * @param id reference id
 	 * @return list of entities or null
 	 */
-	List<ISourceReference> findByReference(String id);
+	PaginationInfo<ISourceReference> findByReference(String id, int page, int entriesPerPage);
 }

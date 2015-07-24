@@ -14,7 +14,7 @@
 	<div class="sg-control-content sg-file">
 		<h4 class="sg-control-header"><i class="fa fa-bookmark"></i> <span th:text="#{list.references_to_source}">References to source</span></h4>
 
-		<p th:text="${#messages.msg('showEntities', entities.size())}">Size</p>
+		<p th:text="${#messages.msg('pagination', paginationInfo.page, paginationInfo.pages)}">Pages</p>
 
 		<table class="table table-hover table-striped table-condensed">
 			<tr>
@@ -23,7 +23,7 @@
 				<th th:text="#{field.text}">Text</th>
 				<th></th>
 			</tr>
-			<tr th:each="entity : ${entities}" th:attr="data-data-dblclick=@{/{model}/show/{uid}(uid=${entity.reference.uid},model=${#strings.toLowerCase(entity.reference.modelName)})}">
+			<tr th:each="entity : ${paginationInfo.entities}" th:attr="data-data-dblclick=@{/{model}/show/{uid}(uid=${entity.reference.uid},model=${#strings.toLowerCase(entity.reference.modelName)})}">
 				<td class="text-center"><span th:replace="partials/common :: faIcon (modelName=${entity.reference.modelName})"></span></td>
 				<td th:text="${entity.reference.title}">Title</td>
 				<td th:text="${entity.referenceText}">Text</td>
@@ -37,6 +37,8 @@
 				</td>
 			</tr>
 		</table>
+
+		<div th:replace="partials/pagination :: pagination (paginationInfo=${paginationInfo},base=${'source_reference/by_source/' + source.uid})"></div>
 
 		TODO: Formular
 	</div>

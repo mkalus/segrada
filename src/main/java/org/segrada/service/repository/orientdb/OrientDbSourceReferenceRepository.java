@@ -12,6 +12,7 @@ import org.segrada.service.repository.SourceRepository;
 import org.segrada.service.repository.orientdb.base.AbstractOrientDbRepository;
 import org.segrada.service.repository.orientdb.base.AbstractSegradaOrientDbRepository;
 import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory;
+import org.segrada.service.util.PaginationInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -107,13 +108,13 @@ public class OrientDbSourceReferenceRepository extends AbstractSegradaOrientDbRe
 	}
 
 	@Override
-	public List<ISourceReference> findBySource(String id) {
-		return findByX(id, "source");
+	public PaginationInfo<ISourceReference> findBySource(String id, int page, int entriesPerPage) {
+		return findByX(id, "source", page, entriesPerPage);
 	}
 
 	@Override
-	public List<ISourceReference> findByReference(String id) {
-		return findByX(id, "reference");
+	public PaginationInfo<ISourceReference> findByReference(String id, int page, int entriesPerPage) {
+		return findByX(id, "reference", page, entriesPerPage);
 	}
 
 	/**
@@ -122,21 +123,69 @@ public class OrientDbSourceReferenceRepository extends AbstractSegradaOrientDbRe
 	 * @param direction either "in" or "out"
 	 * @return list of source references found
 	 */
-	private List<ISourceReference> findByX(String id, String direction) {
+	private PaginationInfo<ISourceReference> findByX(String id, String direction, int page, int entriesPerPage) {
 		List<ISourceReference> list = new LinkedList<>();
 
 		// empty?
-		if (id == null) return list;
+		if (id == null) return new PaginationInfo<>(
+				1, // page
+				1, // pages
+				0, // total entries
+				entriesPerPage, // per page
+				list // list of entities
+		);
 
 		initDb();
 
-		OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>("select * from SourceReference where " + direction + " = ?");
+		// first, do a count of the entities
+		OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>("select count(*) from SourceReference where " + direction + " = ?");
 		List<ODocument> result = db.command(query).execute(new ORecordId(id));
+		int total = result.get(0).field("count", Integer.class);
+
+		if (total == 0)
+			return new PaginationInfo<>(
+					1, // page
+					1, // pages
+					0, // total entries
+					entriesPerPage, // per page
+					list // list of entities
+			);
+
+		// calculate pages
+		if (entriesPerPage < 1) entriesPerPage = 10; // sanity
+		int pages = total / entriesPerPage + (total % entriesPerPage == 0?0:1);
+
+		// make sure we are inside the bounds
+		if (page < 1) page = 1;
+		else if (page > pages) page = pages;
+
+		// prepare skip/limit strings
+		int skip = (page-1) * entriesPerPage;
+		String skipLimit = (skip>0?" SKIP ".concat(Integer.toString(skip)).concat(" "):"")
+				.concat(" LIMIT ").concat(Integer.toString(entriesPerPage));
+
+		// create query itself and fetch entities
+		query = new OSQLSynchQuery<>("select * from SourceReference where " + direction + " = ?" + skipLimit + getDefaultOrder());
+		result = db.command(query).execute(new ORecordId(id));
 
 		for (ODocument document : result) {
 			list.add(convertToEntity(document));
 		}
 
-		return list;
+		/**
+		 * return pagination list
+		 */
+		return new PaginationInfo<>(
+				page, // page
+				pages, // pages
+				total, // total entries
+				entriesPerPage, // per page
+				list // list of entities
+		);
+	}
+
+	@Override
+	protected String getDefaultOrder(boolean addOrderBy) {
+		return (addOrderBy?" ORDER BY":"").concat(" referenceText");
 	}
 }

@@ -6,8 +6,7 @@ import org.segrada.model.prototype.ISourceReference;
 import org.segrada.service.base.AbstractRepositoryService;
 import org.segrada.service.repository.SourceReferenceRepository;
 import org.segrada.service.repository.factory.RepositoryFactory;
-
-import java.util.List;
+import org.segrada.service.util.PaginationInfo;
 
 /**
  * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]
@@ -50,8 +49,8 @@ public class SourceReferenceService extends AbstractRepositoryService<ISourceRef
 	 * @param id source id
 	 * @return list of entities or null
 	 */
-	public List<ISourceReference> findBySource(String id) {
-		return repository.findBySource(id);
+	public PaginationInfo<ISourceReference> findBySource(String id, int page, int entriesPerPage) {
+		return repository.findBySource(id, page, entriesPerPage);
 	}
 
 	/**
@@ -59,7 +58,7 @@ public class SourceReferenceService extends AbstractRepositoryService<ISourceRef
 	 * @param id reference id
 	 * @return list of entities or null
 	 */
-	public List<ISourceReference> findByReference(String id) {
-		return repository.findByReference(id);
+	public PaginationInfo<ISourceReference> findByReference(String id, int page, int entriesPerPage) {
+		return repository.findByReference(id, page, entriesPerPage);
 	}
 }

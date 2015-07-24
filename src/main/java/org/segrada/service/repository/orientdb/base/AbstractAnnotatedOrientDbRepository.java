@@ -13,11 +13,13 @@ import org.segrada.service.repository.orientdb.OrientDbSourceReferenceRepository
 import org.segrada.service.repository.orientdb.OrientDbTagRepository;
 import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory;
 import org.segrada.service.util.AbstractLazyLoadedObject;
+import org.segrada.service.util.PaginationInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -57,7 +59,7 @@ abstract public class AbstractAnnotatedOrientDbRepository<T extends SegradaAnnot
 			// set tags
 			entity.setTags(lazyLoadTags(entity));
 			// set source references
-			entity.setSourceReferences(lazyLoadSourceReferences(entity));
+			entity.setSourceReferences(lazyLoadSourceReferences(entity, 1, 1000)); // TODO: should we change this into something more intelligent?
 			// set source references
 			entity.setComments(lazyLoadComments(entity));
 			// set source references
@@ -71,7 +73,7 @@ abstract public class AbstractAnnotatedOrientDbRepository<T extends SegradaAnnot
 	 * @return list of source references (proxy)
 	 */
 	@SuppressWarnings("unchecked")
-	public List<ISourceReference> lazyLoadSourceReferences(final SegradaAnnotatedEntity entity) {
+	public List<ISourceReference> lazyLoadSourceReferences(final SegradaAnnotatedEntity entity, final int page, final int entriesPerPage) {
 		try {
 			return (List<ISourceReference>) java.lang.reflect.Proxy.newProxyInstance(
 					List.class.getClassLoader(),
@@ -82,7 +84,10 @@ abstract public class AbstractAnnotatedOrientDbRepository<T extends SegradaAnnot
 							SourceReferenceRepository sourceReferenceRepository =
 									repositoryFactory.produceRepository(OrientDbSourceReferenceRepository.class);
 
-							return sourceReferenceRepository.findByReference(entity.getId());
+							if (sourceReferenceRepository != null) {
+								PaginationInfo<ISourceReference> paginationInfo = sourceReferenceRepository.findByReference(entity.getId(), page, entriesPerPage);
+								return paginationInfo.entities;
+							} else throw new NullPointerException("NULL sourceReferenceRepository");
 						}
 					}
 			);

@@ -14,7 +14,7 @@
 	<div class="sg-control-content sg-file">
 		<h4 class="sg-control-header"><i class="fa fa-bookmark"></i> <span th:text="#{list.source_references}">References to entity</span></h4>
 
-		<p th:text="${#messages.msg('showEntities', entities.size())}">Size</p>
+		<p th:text="${#messages.msg('pagination', paginationInfo.page, paginationInfo.pages)}">Pages</p>
 
 		TODO: diesen Reiter vielleicht in der Detailansicht direkt unterhalb der Beschreibung?
 
@@ -25,7 +25,7 @@
 				<th th:text="#{field.text}">Text</th>
 				<th></th>
 			</tr>
-			<tr th:each="entity : ${entities}" th:attr="data-data-dblclick=@{/source/show/{uid}(uid=${entity.source.uid})}">
+			<tr th:each="entity : ${paginationInfo.entities}" th:attr="data-data-dblclick=@{/source/show/{uid}(uid=${entity.source.uid})}">
 				<td></td>
 				<td><a class="sg-data-icon sg-data-add" href="#" th:title="#{Show}" th:href="@{/source/show/{uid}(uid=${entity.source.uid})}"><i class="fa fa-eye"></i></a> <span th:text="${entity.source.shortTitle}">Source</span></td>
 				<td th:text="${entity.referenceText}">Text</td>
@@ -39,6 +39,8 @@
 				</td>
 			</tr>
 		</table>
+
+		<div th:replace="partials/pagination :: pagination (paginationInfo=${paginationInfo},base=${'source_reference/by_reference/' + referenceEntity.uid})"></div>
 
 		TODO: Formular
 	</div>

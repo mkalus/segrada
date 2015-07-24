@@ -159,7 +159,7 @@ public class AbstractAnnotatedOrientDbRepositoryTest {
 		MockEntity mockEntity = new MockEntity();
 		mockOrientDbRepository.save(mockEntity);
 
-		List<ISourceReference> list = mockOrientDbRepository.lazyLoadSourceReferences(mockEntity);
+		List<ISourceReference> list = mockOrientDbRepository.lazyLoadSourceReferences(mockEntity, 1, 15);
 		assertTrue(list.isEmpty());
 
 		// create source
@@ -173,7 +173,7 @@ public class AbstractAnnotatedOrientDbRepositoryTest {
 		sourceReference.save();
 
 		// load again with created references
-		list = mockOrientDbRepository.lazyLoadSourceReferences(mockEntity);
+		list = mockOrientDbRepository.lazyLoadSourceReferences(mockEntity, 1, 15);
 		assertFalse(list.isEmpty());
 		assertEquals(mockEntity.getId(), list.get(0).getReference().getId());
 		assertEquals(source.getIdentity().toString(), list.get(0).getSource().getId());
