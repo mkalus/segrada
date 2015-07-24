@@ -86,7 +86,7 @@
 			<div class="col-sm-6">
 				<div th:id="${'preview-' + name + '-' + id}">
 								<span th:if="${field}" th:inline="text">
-									<img src="#" th:src="@{/pictogram/file/{id}(id=${field.id})}" alt="" th:alt-title="${field.title}" width="24" height="24" />
+									<img src="#" th:src="@{/pictogram/file/{id}(id=${field.uid})}" alt="" th:alt-title="${field.title}" width="24" height="24" />
 									[[${field.title}]]
 								</span>
 				</div>
