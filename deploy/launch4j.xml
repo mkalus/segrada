@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch4jConfig>
   <dontWrapJar>false</dontWrapJar>
-  <headerType>console</headerType>
+  <headerType>gui</headerType>
   <jar>/home/mkalus/devel/Java/Segrada/target/segrada-1.0-SNAPSHOT.jar</jar>
   <outfile>/home/mkalus/devel/Java/Segrada/target/Segrada.exe</outfile>
   <errTitle></errTitle>
@@ -13,7 +13,7 @@
   <stayAlive>false</stayAlive>
   <restartOnCrash>false</restartOnCrash>
   <manifest></manifest>
-  <icon></icon>
+  <icon>/home/mkalus/devel/Java/Segrada/src/main/webapp/favicon.ico</icon>
   <singleInstance>
     <mutexName>Segrada</mutexName>
     <windowTitle>Segrada</windowTitle>
@@ -29,4 +29,10 @@
     <opt>-DsavePath=&quot;%PWD%/segrada_data&quot;</opt>
     <opt>-DorientDB.url=&quot;plocal:%PWD%/segrada_data/db&quot;</opt>
   </jre>
+  <splash>
+    <file>/home/mkalus/devel/Java/Segrada/deploy/splash.bmp</file>
+    <waitForWindow>true</waitForWindow>
+    <timeout>60</timeout>
+    <timeoutErr>true</timeoutErr>
+  </splash>
 </launch4jConfig>
