@@ -293,7 +293,7 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>org.segrada.SegradaApplication</mainClass>
+							<mainClass>org.segrada.SegradaLauncher</mainClass>
 							<addClasspath>true</addClasspath>
 							<classpathPrefix>lib/</classpathPrefix>
 						</manifest>
@@ -327,6 +327,10 @@
 							<resources>
 								<resource>
 									<directory>deploy/resources</directory>
+								</resource>
+								<resource>
+									<directory>deploy</directory>
+									<include>launch4j.xml</include>
 								</resource>
 							</resources>
 						</configuration>

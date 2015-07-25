@@ -7,6 +7,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.net.URI;
 
 /**
  * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]
@@ -31,6 +32,7 @@ public class SegradaLauncher extends JFrame implements ApplicationStatusChangedL
 	 */
 	private final JLabel statusText;
 	private final JButton startStopButton;
+	private final JButton browserButton;
 
 	/**
 	 * Constructor
@@ -38,7 +40,7 @@ public class SegradaLauncher extends JFrame implements ApplicationStatusChangedL
 	public SegradaLauncher() {
 		super("Segrada");
 
-		setSize(400, 100);
+		setSize(400, 150);
 		addWindowListener(new WindowListener() {
 			@Override
 			public void windowOpened(WindowEvent windowEvent) {
@@ -96,17 +98,27 @@ public class SegradaLauncher extends JFrame implements ApplicationStatusChangedL
 		// add change listener
 		SegradaApplication.addApplicationStatusChangedListener(this);
 
+		Font fatFont = new Font("sans-serif", Font.BOLD, 16);
+
 		// create elements
 		statusText = new JLabel("Stopped");
 		statusText.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-		statusText.setFont(new Font("sans-serif", Font.BOLD, 16));
+		statusText.setFont(fatFont);
+
 		startStopButton = new JButton("Start");
+		startStopButton.setFont(fatFont);
 		startStopButton.addActionListener(this::buttonClicked);
+
+		browserButton = new JButton("Open Application");
+		browserButton.addActionListener(this::openBrowser);
+		browserButton.setEnabled(false);
+		browserButton.setFont(fatFont);
 
 		// add elements
 		Container pane = getContentPane();
 		pane.add(statusText, BorderLayout.NORTH);
 		pane.add(startStopButton, BorderLayout.CENTER);
+		pane.add(browserButton, BorderLayout.SOUTH);
 
 		setVisible(true);
 	}
@@ -143,6 +155,21 @@ public class SegradaLauncher extends JFrame implements ApplicationStatusChangedL
 	}
 
 	/**
+	 * open browser window
+	 * @param actionEvent triggered
+	 */
+	private void openBrowser(ActionEvent actionEvent) {
+		Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
+		if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
+			try {
+				desktop.browse(new URI("http://localhost:8080/"));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	/**
 	 * show error message
 	 * @param error message
 	 */
@@ -167,23 +194,28 @@ public class SegradaLauncher extends JFrame implements ApplicationStatusChangedL
 				statusText.setText("Stopped");
 				startStopButton.setText("Start");
 				startStopButton.setEnabled(true);
+				browserButton.setEnabled(false);
 				break;
 			case SegradaApplication.STATUS_STARTING:
 				statusText.setText("Starting");
 				startStopButton.setEnabled(false);
+				browserButton.setEnabled(false);
 				break;
 			case SegradaApplication.STATUS_UPDATING_DATABASE:
 				statusText.setText("Updating database - please be patient");
 				startStopButton.setEnabled(false);
+				browserButton.setEnabled(false);
 				break;
 			case SegradaApplication.STATUS_RUNNING:
 				statusText.setText("Running");
 				startStopButton.setText("Stop");
 				startStopButton.setEnabled(true);
+				browserButton.setEnabled(true);
 				break;
 			case SegradaApplication.STATUS_STOPPING:
 				statusText.setText("Stopping");
 				startStopButton.setEnabled(false);
+				browserButton.setEnabled(false);
 				break;
 		}
 
