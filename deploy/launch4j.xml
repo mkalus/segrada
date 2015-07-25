@@ -29,10 +29,4 @@
     <opt>-DsavePath=&quot;%PWD%/segrada_data&quot;</opt>
     <opt>-DorientDB.url=&quot;plocal:%PWD%/segrada_data/db&quot;</opt>
   </jre>
-  <splash>
-    <file>/home/mkalus/devel/Java/Segrada/deploy/splash.bmp</file>
-    <waitForWindow>true</waitForWindow>
-    <timeout>60</timeout>
-    <timeoutErr>true</timeoutErr>
-  </splash>
 </launch4jConfig>
