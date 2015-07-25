@@ -26,6 +26,8 @@ import org.segrada.session.ApplicationSettings;
 import org.segrada.session.ApplicationSettingsProperties;
 import org.segrada.util.PBKDF2WithHmacSHA1PasswordEncoder;
 import org.segrada.util.PasswordEncoder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static org.segrada.util.Preconditions.checkNotNull;
 
@@ -47,6 +49,8 @@ import static org.segrada.util.Preconditions.checkNotNull;
  * Bind services
  */
 public class ServiceModule extends AbstractModule {
+	private static final Logger logger = LoggerFactory.getLogger(ServiceModule.class);
+
 	@Override
 	protected void configure() {
 		// bind settings
@@ -101,6 +105,9 @@ public class ServiceModule extends AbstractModule {
 	@Singleton
 	@Inject
 	OrientGraphFactory provideOrientGraphFactory(ApplicationSettings settings) {
+		if (logger.isInfoEnabled())
+			logger.info("Providing OrientGraphFactory: " + settings.getSetting("orientDB.url"));
+
 		return new OrientGraphFactory(
 				settings.getSetting("orientDB.url"),
 				settings.getSetting("orientDB.login"),
@@ -111,6 +118,9 @@ public class ServiceModule extends AbstractModule {
 	@Provides @RequestScoped
 	@Inject
 	public ODatabaseDocumentTx provideDatabase(OrientGraphFactory orientGraphFactory) {
+		if (logger.isTraceEnabled())
+			logger.trace("Getting database.");
+
 		//System.out.println("Available: " + orientGraphFactory.getAvailableInstancesInPool());
 		//System.out.println("Created: " + orientGraphFactory.getCreatedInstancesInPool());
 		return orientGraphFactory.getDatabase();
@@ -119,6 +129,9 @@ public class ServiceModule extends AbstractModule {
 	// lucene should be thread save in practice
 	@Provides @Singleton @Inject
 	public Directory provideLuceneDirectory(ApplicationSettings settings) {
+		if (logger.isInfoEnabled())
+			logger.info("Providing LuceneDirectory: " + settings.getSetting("savePath") + java.io.File.separator + "lucene");
+
 		// construct save path from settings
 		String savePath = checkNotNull(settings.getSetting("savePath"), "savePath");
 

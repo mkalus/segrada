@@ -1,9 +1,12 @@
 package org.segrada.session;
 
 import com.google.inject.Singleton;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.InputStream;
 import java.util.Collection;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -25,6 +28,8 @@ import java.util.Properties;
  */
 @Singleton
 public class ApplicationSettingsProperties implements ApplicationSettings {
+	private static final Logger logger = LoggerFactory.getLogger(ApplicationSettingsProperties.class);
+
 	/**
 	 * loaded properties
 	 */
@@ -47,6 +52,18 @@ public class ApplicationSettingsProperties implements ApplicationSettings {
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.exit(-1);
+		}
+
+		// now overwrite properties with those defined via command line
+		Properties env = System.getProperties();
+
+		for (String key : settings.stringPropertyNames()) {
+			String value = env.getProperty(key);
+			if (value != null) {
+				settings.setProperty(key, value);
+				if (logger.isInfoEnabled())
+					logger.info("Property set: " + key + ": " + value);
+			}
 		}
 	}
 
