@@ -326,11 +326,7 @@
 							<outputDirectory>${basedir}/target</outputDirectory>
 							<resources>
 								<resource>
-									<directory>src/main/resources</directory>
-									<includes>
-										<include>start.sh</include>
-										<include>start.bat</include>
-									</includes>
+									<directory>deploy/resources</directory>
 								</resource>
 							</resources>
 						</configuration>
