@@ -5,9 +5,12 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.DefaultServlet;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.segrada.servlet.SegradaGuiceServletContextListener;
+import org.segrada.util.ApplicationStatusChangedListener;
 
 import javax.servlet.DispatcherType;
 import java.util.EnumSet;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]
@@ -24,12 +27,81 @@ import java.util.EnumSet;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Application launcher
+ * Segrada application standalone server
  */
 public class SegradaApplication {
-	public static void main(String[] args) throws Exception {
+	/**
+	 * server statuses
+	 */
+	public static final int STATUS_OFF = 0;
+	public static final int STATUS_STARTING = 1;
+	public static final int STATUS_UPDATING_DATABASE = 2;
+	public static final int STATUS_RUNNING = 3;
+	public static final int STATUS_STOPPING = 4;
+
+	/**
+	 * current server status
+	 */
+	private static int serverStatus = STATUS_OFF;
+
+	/**
+	 * listeners for application status changes
+	 */
+	private static List<ApplicationStatusChangedListener> applicationStatusChangedListeners;
+
+	/**
+	 * @return serverStatus
+	 */
+	public static int getServerStatus() {
+		return serverStatus;
+	}
+
+	/**
+	 * set new server status
+	 * @param serverStatus new status
+	 */
+	public static void setServerStatus(int serverStatus) {
+		// keep old status
+		int oldStatus = SegradaApplication.serverStatus;
+
+		// set new status
+		SegradaApplication.serverStatus = serverStatus;
+
+		// call listeners
+		if (applicationStatusChangedListeners != null)
+			for (ApplicationStatusChangedListener listener : applicationStatusChangedListeners)
+				listener.onApplicationStatusChanged(serverStatus, oldStatus);
+	}
+
+	/**
+	 * add a new listener to application status changes
+	 * @param listener new listener
+	 */
+	public static void addApplicationStatusChangedListener(ApplicationStatusChangedListener listener) {
+		if (applicationStatusChangedListeners == null)
+			applicationStatusChangedListeners = new LinkedList<>();
+
+		applicationStatusChangedListeners.add(listener);
+	}
+
+	/**
+	 * server instance
+	 */
+	private static Server server;
+
+	/**
+	 * start server
+	 * @throws Exception
+	 */
+	public static void startServer() throws Exception {
+		if (server != null)
+			throw new Exception("Server instance already created.");
+
+		// set server starting
+		setServerStatus(STATUS_STARTING);
+
 		// create server
-		Server server = new Server(8080);
+		server = new Server(8080);
 
 		// Create a servlet context
 		ServletContextHandler sch = new ServletContextHandler(server, "/", ServletContextHandler.SESSIONS);
@@ -56,5 +128,25 @@ public class SegradaApplication {
 		// start server
 		server.start();
 		server.join();
+	}
+
+	/**
+	 * stop server instance
+	 * @throws Exception
+	 */
+	public static void stopServer() throws Exception {
+		if (server == null) throw new Exception("Server instance not created.");
+
+		server.stop();
+		server = null;
+	}
+
+	/**
+	 * starter for command line version
+	 * @param args
+	 * @throws Exception
+	 */
+	public static void main(String[] args) throws Exception {
+		startServer();
 	}
 }

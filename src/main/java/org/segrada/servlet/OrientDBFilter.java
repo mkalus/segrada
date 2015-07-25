@@ -5,6 +5,7 @@ import com.orientechnologies.orient.core.Orient;
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.tinkerpop.blueprints.impls.orient.OrientGraphFactory;
+import org.segrada.SegradaApplication;
 import org.segrada.model.User;
 import org.segrada.model.prototype.IUser;
 import org.segrada.search.lucene.LuceneSearchEngine;
@@ -57,6 +58,9 @@ public class OrientDBFilter implements Filter {
 
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
+		// set server status
+		SegradaApplication.setServerStatus(SegradaApplication.STATUS_UPDATING_DATABASE);
+
 		this.filterConfig = filterConfig;
 		logger.finer("OrientDBFilter initialized - running db update");
 
@@ -69,6 +73,9 @@ public class OrientDBFilter implements Filter {
 		updater.initializeDatabase();
 		updater.buildOrUpdateSchema();
 		updater.populateWithData(passwordEncoder);
+
+		// set server status
+		SegradaApplication.setServerStatus(SegradaApplication.STATUS_RUNNING);
 	}
 
 	@Override
@@ -115,6 +122,9 @@ public class OrientDBFilter implements Filter {
 
 	@Override
 	public void destroy() {
+		// set server status
+		SegradaApplication.setServerStatus(SegradaApplication.STATUS_STOPPING);
+
 		try {
 			OrientGraphFactory orientGraphFactory = injector.getInstance(OrientGraphFactory.class);
 			if (orientGraphFactory != null) {
@@ -138,5 +148,8 @@ public class OrientDBFilter implements Filter {
 		} catch (Exception e) {
 			logger.warning("Could not shut down LuceneSearchEngine properly.");
 		}
+
+		// set server status
+		SegradaApplication.setServerStatus(SegradaApplication.STATUS_OFF);
 	}
 }
