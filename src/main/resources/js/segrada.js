@@ -505,6 +505,12 @@
 			var target = $(e.target);
 			var id = target.attr('data-map-id');
 
+			// map created already?
+			if (target.attr('data-created') == '1') return;
+
+			// set flag
+			target.attr('data-created', '1');
+
 			var map = new ol.Map({
 				target: id,
 				layers: [
