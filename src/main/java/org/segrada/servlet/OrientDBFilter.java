@@ -5,6 +5,7 @@ import com.orientechnologies.orient.core.Orient;
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.tinkerpop.blueprints.impls.orient.OrientGraphFactory;
+import org.eclipse.jetty.server.Request;
 import org.segrada.SegradaApplication;
 import org.segrada.model.User;
 import org.segrada.model.prototype.IUser;
@@ -13,10 +14,12 @@ import org.segrada.service.repository.orientdb.init.OrientDbSchemaUpdater;
 import org.segrada.session.ApplicationSettings;
 import org.segrada.session.Identity;
 import org.segrada.util.PasswordEncoder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.*;
 import java.io.IOException;
-import java.util.logging.Logger;
+import java.util.regex.Pattern;
 
 /**
  * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]
@@ -36,7 +39,7 @@ import java.util.logging.Logger;
  * Servlet filter loading and destroying orient db instance on each request
  */
 public class OrientDBFilter implements Filter {
-	private final static Logger logger = Logger.getLogger(OrientDBFilter.class.getName());
+	private final static Logger logger = LoggerFactory.getLogger(OrientDBFilter.class.getName());
 
 	/**
 	 * filter configuration
@@ -47,6 +50,11 @@ public class OrientDBFilter implements Filter {
 	 * reference to injector
 	 */
 	private Injector injector;
+
+	/**
+	 * excluded patterns
+	 */
+	private Pattern excludePatterns;
 
 	/**
 	 * set the injector - called by Bootstrap
@@ -62,7 +70,7 @@ public class OrientDBFilter implements Filter {
 		SegradaApplication.setServerStatus(SegradaApplication.STATUS_UPDATING_DATABASE);
 
 		this.filterConfig = filterConfig;
-		logger.finer("OrientDBFilter initialized - running db update");
+		logger.info("OrientDBFilter initialized - running db update");
 
 		// get orientdb instance and password encoder
 		OrientGraphFactory orientGraphFactory = injector.getInstance(OrientGraphFactory.class);
@@ -74,15 +82,33 @@ public class OrientDBFilter implements Filter {
 		updater.buildOrUpdateSchema();
 		updater.populateWithData(passwordEncoder);
 
+		// add exclude patterns
+		String pattern = filterConfig.getInitParameter("excludePatterns");
+		excludePatterns = Pattern.compile(pattern);
+
 		// set server status
 		SegradaApplication.setServerStatus(SegradaApplication.STATUS_RUNNING);
 	}
 
 	@Override
 	public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+		// exclude?
+		String url = ((Request) servletRequest).getRequestURL().toString();
+
+		if (logger.isTraceEnabled())
+			logger.trace("Filtering " + url);
+
+		if (excludePatterns.matcher(url).find()) {
+			filterChain.doFilter(servletRequest, servletResponse);
+			return; // ignore matched entries
+		}
+
 		// create database instance
 		ODatabaseDocumentTx db = injector.getInstance(ODatabaseDocumentTx.class);
 		//OrientGraph graph = injector.getInstance(OrientGraph.class);
+
+		if (logger.isTraceEnabled())
+			logger.trace("DB instance created");
 
 		//*************************** start delete in production **********************
 		//TODO: this is the preliminary autologin should be changed in production
@@ -116,7 +142,8 @@ public class OrientDBFilter implements Filter {
 			// close database instance
 			db.close();
 			//graph.shutdown(); // do not shutdown graph!
-			//System.out.println("destroyed...");
+			if (logger.isTraceEnabled())
+				logger.trace("DB instance destroyed");
 		}
 	}
 
@@ -131,7 +158,7 @@ public class OrientDBFilter implements Filter {
 				orientGraphFactory.close();
 			}
 		} catch (Exception e) {
-			logger.warning("Could not shut down OrientGraphFactory properly.");
+			logger.warn("Could not shut down OrientGraphFactory properly.", e);
 		}
 
 		// shut down instance completely
@@ -146,7 +173,7 @@ public class OrientDBFilter implements Filter {
 
 			logger.info("LuceneSearchEngine has been shut down.");
 		} catch (Exception e) {
-			logger.warning("Could not shut down LuceneSearchEngine properly.");
+			logger.warn("Could not shut down LuceneSearchEngine properly.", e);
 		}
 
 		// set server status

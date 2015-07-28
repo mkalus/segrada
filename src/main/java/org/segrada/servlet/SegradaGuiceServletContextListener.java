@@ -63,13 +63,18 @@ public class SegradaGuiceServletContextListener extends GuiceServletContextListe
 						bind(AdminController.class);
 						bind(LocaleController.class);
 
+						String filterPattern = "/.*\\.(jpg|ico|png|gif|html|txt|css|js|xml|otf|svg|ttf|woff|woff2|eot)";
+
 						Map<String, String> initParams = new TreeMap<String, String>();
-						initParams.put("com.sun.jersey.config.property.WebPageContentRegex", "/.*\\.(jpg|ico|png|gif|html|txt|css|js|xml|otf|svg|ttf|woff|woff2|eot)");
+						initParams.put("com.sun.jersey.config.property.WebPageContentRegex", filterPattern);
 						//TODO: implement client side of this, in order to make it work
 						//initParams.put("com.sun.jersey.spi.container.ContainerRequestFilters", "com.sun.jersey.api.container.filter.CsrfProtectionFilter");
 
 						filter("/*").through(GuiceContainer.class, initParams);
-						filter("/*").through(orientDBFilter);
+
+						initParams = new TreeMap<String, String>();
+						initParams.put("excludePatterns", filterPattern + "$");
+						filter("/*").through(orientDBFilter, initParams);
 					}
 				}
 		);
