@@ -503,6 +503,41 @@
 		});
 
 		// *******************************************************
+		// period handler
+		$('.sg-periods').each(function() {
+			var container = $(this);
+			var id = container.attr('id');
+
+			var form = $('.sg-period-form', container);
+
+			// show add form
+			$('.sg-period-add', container).click(function(e) {
+				$(this).hide();
+				form.show();
+				e.preventDefault();
+			});
+
+			// show/hide period field
+			$('.sg-period-form-period', container).change(function(e) {
+				if ($(this).is(':checked')) $('.sg-period-toggle', container).show();
+				else $('.sg-period-toggle', container).hide();
+			});
+
+			// form submit
+			form.ajaxForm({
+				beforeSubmit: function(arr, $form, options) {
+					// disable container
+					container.addClass('disabled');
+					return true;
+				},
+				success: function (responseText, statusText, xhr, $form) {
+					container.replaceWith(responseText);
+					afterAjax(container);
+				}
+			});
+		});
+
+		// *******************************************************
 		// dynamic map loader
 		$('.sg-geotab', part).on('shown.bs.tab', function (e) {
 			var target = $(e.target);

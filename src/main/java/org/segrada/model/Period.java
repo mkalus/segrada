@@ -59,7 +59,7 @@ public class Period extends AbstractSegradaEntity implements IPeriod {
 	@AssertTrue(message = "error.calendar.fromTo")
 	public boolean getFromLowerEqualThanTo() {
 		if (this.fromJD == null || this.toJD == null) return true; // no NPEs
-		return this.fromJD < this.toJD;
+		return this.fromJD <= this.toJD;
 	}
 
 	/**

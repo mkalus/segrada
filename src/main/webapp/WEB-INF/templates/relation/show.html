@@ -29,7 +29,7 @@
 
 		<ul class="nav nav-tabs" role="tablist">
 			<li role="presentation" class="active"><a href="#tab1" th:href="${'#tab-1-' + entity.uid}" aria-controls="home" role="tab" data-toggle="tab" th:text="#{Description}">Description</a></li>
-			<li role="presentation"><a href="#tab2" th:href="${'#tab-2-' + entity.uid}" aria-controls="times" role="tab" data-toggle="tab" th:text="#{Instants_Periods}">Instants/Periods</a></li>
+			<li role="presentation"><a href="#tab2" class="sg-periodtab" th:href="${'#periods-' + entity.uid}" aria-controls="times" role="tab" data-toggle="tab" th:text="#{Instants_Periods}">Instants/Periods</a></li>
 			<li role="presentation"><a href="#tab3" class="sg-geotab" th:attr="data-locations-id=${'#locations-' + entity.uid}" th:href="${'#tab-3-' + entity.uid}" aria-controls="times" role="tab" data-toggle="tab" th:text="#{Geo_Locations}">Geo Locations</a></li>
 			<li role="presentation"><a href="#source-ref" class="sg-replace-content" th:attr="data-url=@{/source_reference/by_reference/relation/{uid}(uid=${entity.uid})}" th:href="${'#sources-by-ref-' + entity.uid}" aria-controls="sources" role="tab" data-toggle="tab" th:text="#{Sources}">Sources</a></li>
 			<li role="presentation"><a href="#file-ref" class="sg-replace-content" th:attr="data-url=@{/file/by_reference/relation/{uid}(uid=${entity.uid})}" th:href="${'#files-by-ref-' + entity.uid}" aria-controls="times" role="tab" data-toggle="tab" th:text="#{Files}">Files</a></li>
@@ -77,7 +77,7 @@
 
 				<div th:replace="partials/common :: datafooter (entity=${entity})"></div>
 			</div>
-			<div role="tabpanel" class="tab-pane" id="tab2" th:id="${'tab-2-' + entity.uid}">
+			<div role="tabpanel" class="tab-pane" id="tab2" th:id="${'periods-' + entity.uid}">
 				<div th:replace="partials/common :: listperiods (entity=${entity})"></div>
 			</div>
 			<div role="tabpanel" class="tab-pane" id="tab3" th:id="${'tab-3-' + entity.uid}">

@@ -67,19 +67,52 @@ Common fragments.
 
 <h3>List of Periods</h3>
 
-<div th:fragment="listperiods (entity)" th:id="${'periods-' + entity.uid}">
+<div th:fragment="listperiods (entity)" th:id="${'periods-' + entity.uid}" class="sg-periods">
 	<table class="table table-hover table-striped table-condensed sg-margin-top">
 		<tr>
 			<th class="col-xs-5" th:text="#{field.fromEntry}">Start</th>
 			<th class="col-xs-5" th:text="#{field.toEntry}">Stop</th>
 			<th></th>
 		</tr>
-		<tr th:each="period : ${entity.periods}">
-			<td th:text="${!#strings.isEmpty(period.fromEntry)}?${period.fromEntry}:'---'">Start</td>
-			<td th:text="${!#strings.isEmpty(period.toEntry)}?${period.toEntry}:'---'">Stop</td>
-			<td></td>
+		<tr th:each="myPeriod : ${entity.periods}">
+			<td th:text="${!#strings.isEmpty(myPeriod.fromEntry)}?${myPeriod.fromEntry}:'---'">Start</td>
+			<td th:text="${!#strings.isEmpty(myPeriod.toEntry)}?${myPeriod.toEntry}:'---'">Stop</td>
+			<td class="text-right">
+				<div class="sg-data-icon-bar" role="group" aria-label="Actions">
+					<a class="sg-data-icon" href="#" th:title="#{Delete}" th:href="@{/period/delete/{uid}(uid=${myPeriod.uid})}" th:attr="data-confirm=${#messages.msg('ReallyDelete', myPeriod.title)}"><i class="fa fa-times-circle-o"></i></a>
+				</div>
+			</td>
 		</tr>
 	</table>
+
+	<div class="sg-margin-top-sm" th:unless="${period}"><a href="#" class="btn btn-success sg-period-add"><i class="fa fa-plus"></i> <span th:text="#{add.period}">Add period</span></a></div>
+
+	<form action="#" th:action="@{/period/add/{model}/{uid}(model=${entity.modelName},uid=${entity.uid})}" method="post" class="sg-margin-top-sm sg-period-form" style="display: none;" th:style="${period}?'':'display:none;'">
+		<div class="row">
+			<div class="col-md-3" th:classappend="${errors} and (${errors['fromLowerEqualThanTo']} or ${errors['fromJD']})?'has-error has-feedback'">
+				<input name="fromEntry" class="form-control" type="text" placeholder="Start" th:placeholder="#{field.fromEntry}" th:value="${period}?${period.fromEntry}" />
+				<span class="help-block" th:if="${errors} and ${errors['fromLowerEqualThanTo']}" th:text="${errors}?(${errors['fromLowerEqualThanTo']}?${#messages.msg(errors['fromLowerEqualThanTo'])})">Error</span>
+				<span class="help-block" th:if="${errors} and ${errors['fromJD']}" th:text="${errors}?(${errors['fromJD']}?#{error.calendar.incorrect})">Error</span>
+			</div>
+			<div class="col-md-2">
+				<div class="checkbox">
+					<label>
+						<input type="checkbox" name="isPeriod" value="1" checked="checked" class="sg-period-form-period" th:checked="${hidePeriod}?false:true" />
+						<span th:text="#{field.isPeriod}">Period?</span>
+					</label>
+				</div>
+			</div>
+			<div class="col-md-3" th:classappend="${errors} and ${errors['toJD']}?'has-error has-feedback'">
+				<div class="sg-period-toggle" th:style="${hidePeriod}?'display: none;'">
+					<input name="toEntry" class="form-control" type="text" placeholder="End" th:placeholder="#{field.toEntry}" th:value="${period}?${period.fromEntry}" />
+					<span class="help-block" th:if="${errors} and ${errors['toJD']}" th:text="${errors}?(${errors['toJD']}?#{error.calendar.incorrect})">Error</span>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<input type="submit" value="Add location" class="btn btn-primary" th:value="#{add.period}" />
+			</div>
+		</div>
+	</form>
 </div>
 
 

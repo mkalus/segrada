@@ -210,6 +210,8 @@ public class FileService extends AbstractFullTextService<IFile, FileRepository> 
 
 	@Override
 	public boolean save(IFile entity) {
+		if (entity == null) return false;
+
 		// new entity?
 		boolean newEntity = entity.getId()==null;
 

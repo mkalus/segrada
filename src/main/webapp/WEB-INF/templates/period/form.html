@@ -1,0 +1,17 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" th:lang="${#locale.language}">
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<title th:unless="${error}" th:text="${entity.title}">Node</title>
+	<div th:include="partials/common :: head" th:remove="tag"></div>
+</head>
+
+<body>
+<div th:replace="partials/common :: browser"></div>
+
+<div class="container">
+	<div th:replace="partials/common :: listperiods (entity=${parent},errors=${errors},period=${entity},hidePeriod=${hidePeriod})"></div>
+</div>
+</body>
+</html>
