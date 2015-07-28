@@ -281,13 +281,14 @@ abstract public class AbstractOrientDbRepository<T extends SegradaEntity> implem
 			if (logger.isInfoEnabled())
 				logger.info("Deleting entity : " + entity.toString());
 
-			if (db.delete(new ORecordId(entity.getId())) != null) {
-				// delete connected edges, if there are any
-				repositoryFactory.getDb().command(new OCommandSQL("delete edge where in = " + entity.getId() + " OR out = " + entity.getId())).execute();
+			// delete connected edges, if there are any
+			OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>("select from E where in = " + entity.getId() + " OR out = " + entity.getId());
+			for (ODocument edge : (List<ODocument>) db.command(query).execute())
+					edge.delete();
+			// The following code renders an NPE
+			//repositoryFactory.getDb().command(new OCommandSQL("delete edge where in = " + entity.getId() + " OR out = " + entity.getId())).execute();
 
-				return true;
-			}
-			return false;
+			return db.delete(new ORecordId(entity.getId())) != null;
 		} catch (Exception e) {
 			logger.warn("Could not delete entry (search engine entry deleted if applicable): " + entity.getId());
 		}
