@@ -43,6 +43,6 @@ public class PeriodController extends AbstractBaseController<IPeriod> {
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
 	public String index() {
-		return "Not implemented yet.";
+		return "Not implemented.";
 	}
 }

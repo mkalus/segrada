@@ -68,6 +68,9 @@
 		}
 	});
 
+	// geocoding object
+	var geocoder = (typeof google === 'object' && typeof google.maps === 'object')?new google.maps.Geocoder():null;
+
 	/**
 	 * on enter pressed event
 	 * @param func
@@ -503,7 +506,6 @@
 		// dynamic map loader
 		$('.sg-geotab', part).on('shown.bs.tab', function (e) {
 			var target = $(e.target);
-			var id = target.attr('data-map-id');
 
 			// map created already?
 			if (target.attr('data-created') == '1') return;
@@ -511,44 +513,147 @@
 			// set flag
 			target.attr('data-created', '1');
 
-			var map = new ol.Map({
-				target: id,
-				layers: [
-					new ol.layer.Tile({
-						source: new ol.source.MapQuest({layer: 'sat'})
-					})
-				],
-				view: new ol.View({
-					center: ol.proj.fromLonLat([0, 0]),
+			var id = target.attr('data-locations-id');
+			var container = $(id);
+
+			var form = $('.sg-map-form', container);
+			var input = $('.sg-geocomplete', form);
+			var point = new google.maps.LatLng(0, 0);
+			input.geocomplete({
+				map: id + '-map',
+				details: id + '-form',
+				markerOptions: {
+					draggable: true
+				},
+				mapOptions: {
+					mapTypeId: google.maps.MapTypeId.HYBRID,
 					zoom: 1,
-					maxZoom: 10
-				}),
-				controls: ol.control.defaults({
-					attributionOptions: {
-						collapsible: false
-					}
-				})
+					center: point,
+					scrollwheel: true,
+					draggable: true
+				}
+			}).bind("geocode:result", function(event, result) {
+				$('input[type=submit]', form).show();
+			}).bind("geocode:dragged", function(event, latLng){
+				$("input[name=lat]", form).val(latLng.lat());
+				$("input[name=lng]", form).val(latLng.lng());
 			});
 
-			// add vector layer
-			var mapVectorSource = new ol.source.Vector({
-				features: []
+			// add form adder
+			$('.sg-map-add-marker', container).click(function(e) {
+				$(this).hide();
+				form.show();
+				e.preventDefault();
 			});
-			var mapVectorLayer = new ol.layer.Vector({
-				source: mapVectorSource
+
+			// add markers
+			updateGeocompleteMap(id, $(id + '-markers', container), input);
+
+			// add removal listener to clean marker array below
+			$(id + '-map').on("destroyed", function () {
+				if(typeof segradaMapMarkers[id] !== 'undefined') {
+					// remove markers
+					for (var i = 0; i < segradaMapMarkers[id].length; i++)
+						segradaMapMarkers[id][i].setMap(null);
+
+					delete segradaMapMarkers[id];
+				}
+
+				//console.log(segradaMapMarkers);
 			});
-			map.addLayer(mapVectorLayer);
 
-			// get coordinates
-			$('#' + id + '-content div').each(function() {
-				var lng = parseFloat($(this).attr('data-lng'));
-				var lat = parseFloat($(this).attr('data-lat'));
+			$('.sg-geocomplete-find', form).click(function(){
+				input.trigger("geocode");
+			}).click(); // click to create map
 
-				var marker = createMarker(ol.proj.transform([lng, lat], 'EPSG:4326', 'EPSG:3857'), mapIconStyle);
-				mapVectorSource.addFeature(marker);
+			// form submitted
+			form.ajaxForm({
+				beforeSubmit: function(arr, $form, options) {
+					// disable container
+					container.addClass('disabled');
+					return true;
+				},
+				success: function (responseText, statusText, xhr, $form) {
+					container.removeClass('disabled');
+					$(id + '-markers', container).replaceWith(responseText);
+					updateGeocompleteMap(id, $(id + '-markers', container), input);
+				}
 			});
 		});
 	}
+
+	// keeps markers
+	var segradaMapMarkers = [];
+
+	// update map with markers
+	function updateGeocompleteMap(id, markerContainer, input) {
+		var map = input.geocomplete("map");
+
+		// clear old markers
+		if(typeof segradaMapMarkers[id] !== 'undefined') {
+			// remove markers
+			for (var i = 0; i < segradaMapMarkers[id].length; i++)
+				segradaMapMarkers[id][i].setMap(null);
+
+			delete segradaMapMarkers[id];
+		}
+
+		// create new marker array
+		segradaMapMarkers[id] = [];
+		var deleteText = $(id + '-delete').html();
+
+		// this is the bounding box container
+		var bounds = new google.maps.LatLngBounds();
+
+		$('.sg-location-marker', markerContainer).each(function() {
+			var myLatlng = new google.maps.LatLng($(this).attr('data-lat'),$(this).attr('data-lng'));
+			bounds.extend(myLatlng);
+			var dataId = $(this).attr('data-id');
+			var infowindow = new google.maps.InfoWindow({
+				content: '<p>' + $(this).attr('data-lat') + ',' + $(this).attr('data-lng') + '</p>'
+					+ '<p><a href="' + $(this).attr('data-delete') + '" id="' + dataId + '">' + deleteText + '</a></p>'
+			});
+			var marker = new google.maps.Marker({
+				position: myLatlng,
+				map: map,
+				icon: 'https://maps.google.com/mapfiles/ms/micons/blue-dot.png'
+			});
+			google.maps.event.addListener(marker, 'click', function() {
+				infowindow.open(map,marker);
+				var link = $('#' + dataId);
+				link.unbind("click");
+				link.click(function(e) {
+					// call ajax
+					$.get($(this).attr('href'), function (responseText) {
+						markerContainer.replaceWith(responseText);
+						updateGeocompleteMap(id, $(id + '-markers'), input);
+					});
+					e.preventDefault();
+				});
+			});
+			segradaMapMarkers[id][segradaMapMarkers[id].length] = marker;
+		});
+
+		//contain by map markers
+		if (segradaMapMarkers[id].length == 0) {
+			map.setZoom(1);
+			map.setCenter(new google.maps.LatLng(0, 0));
+		} else {
+			// zoom in onto the markers
+			map.fitBounds(bounds);
+		}
+
+		//console.log(segradaMapMarkers);
+	}
+
+	// add destroyed events when elements are destroyed
+	$.event.special.destroyed = {
+		remove: function(o) {
+			if (o.handler) {
+				o.handler()
+			}
+		}
+	};
 
 	// called after document is ready
 	$(document).ready(function () {
@@ -579,24 +684,5 @@
 
 		// init defaults
 		afterAjax($('body'));
-	});
-
-	// create open layers marker
-	function createMarker(location, style){
-		var iconFeature = new ol.Feature({
-			geometry: new ol.geom.Point(location)
-		});
-		iconFeature.setStyle(style);
-
-		return iconFeature
-	}
-
-	mapIconStyle = new ol.style.Style({
-		image: new ol.style.Icon(/** @type {olx.style.IconOptions} */ ({
-			anchor: [0.5, 1],
-			anchorXUnits: 'fraction',
-			anchorYUnits: 'fraction',
-			src: '/img/marker-icon.png' //TODO: base URL!
-		}))
 	});
 })(jQuery);
