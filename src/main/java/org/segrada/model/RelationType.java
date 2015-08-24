@@ -58,7 +58,7 @@ public class RelationType extends AbstractColoredModel implements IRelationType 
 	 * Markup of description field
 	 */
 	@NotNull(message = "error.notNull")
-	private String descriptionMarkup = "html";
+	private String descriptionMarkup = "default";
 
 	@Override
 	public String getFromTitle() {

@@ -48,7 +48,7 @@ public class Source extends AbstractAnnotatedModel implements ISource {
 
 	private String description = "";
 
-	private String descriptionMarkup = "html";
+	private String descriptionMarkup = "default";
 
 	@Override
 	public String getShortTitle() {

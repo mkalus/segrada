@@ -55,7 +55,7 @@ public class Relation extends AbstractCoreModel implements IRelation {
 	 * Markup type of text - see org.segrada.MarkupFilter
 	 */
 	@NotNull(message = "error.notNull")
-	private String descriptionMarkup = "html";
+	private String descriptionMarkup = "default";
 
 	@Override
 	public IRelationType getRelationType() {

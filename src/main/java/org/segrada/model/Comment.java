@@ -37,7 +37,7 @@ public class Comment extends AbstractAnnotatedModel implements IComment {
 	 * Markup type of text - see org.segrada.MarkupFilter
 	 */
 	@NotNull(message = "error.notNull")
-	private String markup = "html";
+	private String markup = "default";
 
 	@Override
 	public String getText() {

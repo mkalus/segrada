@@ -49,7 +49,7 @@ public class Node extends AbstractCoreModel implements INode {
 	 * Markup type of text - see org.segrada.MarkupFilter
 	 */
 	@NotNull(message = "error.notNull")
-	private String descriptionMarkup = "html";
+	private String descriptionMarkup = "default";
 
 	@Override
 	public String getTitle() {

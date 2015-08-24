@@ -44,7 +44,7 @@ public class File extends AbstractAnnotatedModel implements IFile {
 	 * Markup of description field
 	 */
 	@NotNull(message = "error.notNull")
-	private String descriptionMarkup = "html";
+	private String descriptionMarkup = "default";
 
 	private String copyright = "";
 
