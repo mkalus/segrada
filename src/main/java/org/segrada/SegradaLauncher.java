@@ -8,6 +8,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.net.URI;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 /**
  * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]
@@ -35,10 +37,17 @@ public class SegradaLauncher extends JFrame implements ApplicationStatusChangedL
 	private final JButton browserButton;
 
 	/**
+	 * resource bundle
+	 */
+	private ResourceBundle messages;
+
+	/**
 	 * Constructor
 	 */
 	public SegradaLauncher() {
 		super("Segrada");
+
+		initI18N();
 
 		setSize(400, 150);
 		addWindowListener(new WindowListener() {
@@ -100,16 +109,18 @@ public class SegradaLauncher extends JFrame implements ApplicationStatusChangedL
 
 		Font fatFont = new Font("sans-serif", Font.BOLD, 16);
 
+		setTitle(messages.getString("segrada"));
+
 		// create elements
-		statusText = new JLabel("Stopped");
+		statusText = new JLabel(messages.getString("stopped"));
 		statusText.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		statusText.setFont(fatFont);
 
-		startStopButton = new JButton("Start");
+		startStopButton = new JButton(messages.getString("start"));
 		startStopButton.setFont(fatFont);
 		startStopButton.addActionListener(this::buttonClicked);
 
-		browserButton = new JButton("Open Application");
+		browserButton = new JButton(messages.getString("openApplication"));
 		browserButton.addActionListener(this::openBrowser);
 		browserButton.setEnabled(false);
 		browserButton.setFont(fatFont);
@@ -121,6 +132,14 @@ public class SegradaLauncher extends JFrame implements ApplicationStatusChangedL
 		pane.add(browserButton, BorderLayout.SOUTH);
 
 		setVisible(true);
+	}
+
+	/**
+	 * Initialize I18N
+	 */
+	private void initI18N() {
+		Locale locale = Locale.getDefault();
+		messages = ResourceBundle.getBundle("launcher/Messages", locale);
 	}
 
 	/**
@@ -191,29 +210,29 @@ public class SegradaLauncher extends JFrame implements ApplicationStatusChangedL
 	public void onApplicationStatusChanged(int newStatus, int oldStatus) {
 		switch (newStatus) {
 			case SegradaApplication.STATUS_OFF:
-				statusText.setText("Stopped");
-				startStopButton.setText("Start");
+				statusText.setText(messages.getString("stopped"));
+				startStopButton.setText(messages.getString("start"));
 				startStopButton.setEnabled(true);
 				browserButton.setEnabled(false);
 				break;
 			case SegradaApplication.STATUS_STARTING:
-				statusText.setText("Starting");
+				statusText.setText(messages.getString("starting"));
 				startStopButton.setEnabled(false);
 				browserButton.setEnabled(false);
 				break;
 			case SegradaApplication.STATUS_UPDATING_DATABASE:
-				statusText.setText("Updating database - please be patient");
+				statusText.setText(messages.getString("updatingDb"));
 				startStopButton.setEnabled(false);
 				browserButton.setEnabled(false);
 				break;
 			case SegradaApplication.STATUS_RUNNING:
-				statusText.setText("Running");
-				startStopButton.setText("Stop");
+				statusText.setText(messages.getString("running"));
+				startStopButton.setText(messages.getString("stop"));
 				startStopButton.setEnabled(true);
 				browserButton.setEnabled(true);
 				break;
 			case SegradaApplication.STATUS_STOPPING:
-				statusText.setText("Stopping");
+				statusText.setText(messages.getString("stopping"));
 				startStopButton.setEnabled(false);
 				browserButton.setEnabled(false);
 				break;
