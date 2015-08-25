@@ -93,7 +93,7 @@ public class RelationController extends AbstractColoredController<IRelation> {
 		// add target id
 		Map<String, Object> model = new HashMap<>();
 
-		model.put("addLinkParameter", "?relationTypeUid=" + relationTypeUid);
+		model.put("relationTypeUid", relationTypeUid);
 		model.put("targetId", "#relations-by-type-" + relationTypeUid);
 		model.put("baseUrl", "/relation/by_relation_type/" + relationTypeUid);
 
@@ -112,7 +112,8 @@ public class RelationController extends AbstractColoredController<IRelation> {
 		// add target id
 		Map<String, Object> model = new HashMap<>();
 
-		model.put("addLinkParameter", "?nodeUid=" + nodeUid);
+		model.put("nodeUid", nodeUid);
+		model.put("hasNode", true);
 		model.put("targetId", "#relations-by-node-" + nodeUid);
 		model.put("baseUrl", "/relation/by_node/" + nodeUid);
 
