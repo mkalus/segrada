@@ -78,14 +78,22 @@ public class TagController extends AbstractBaseController<ITag> {
 	@GET
 	@Path("/show/{uid}")
 	@Produces(MediaType.TEXT_HTML)
-	public Viewable show(@PathParam("uid") String uid) {
+	public Viewable show(
+			@PathParam("uid") String uid,
+			@QueryParam("name") String name
+	) {
 		// create model map
 		Map<String, Object> model = new HashMap<>();
 
-		model.put("entity", service.findById(service.convertUidToId(uid)));
+		// get tag
+		ITag tag;
+		if (name != null && uid.equals("name")) tag = service.findByTitle(name);
+		else tag = service.findById(service.convertUidToId(uid));
+		model.put("entity", tag);
+
 		List<String> childTags = new LinkedList<>();
-		for (SegradaTaggable tag : service.findByTag(service.convertUidToId(uid), false, new String[]{"Tag"})) {
-			childTags.add(((ITag) tag).getTitle());
+		for (SegradaTaggable taggable : service.findByTag(tag.getId(), false, new String[]{"Tag"})) {
+			childTags.add(((ITag) taggable).getTitle());
 		}
 		model.put("childTags", childTags);
 
