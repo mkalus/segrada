@@ -97,13 +97,13 @@ public class OrientDbTagRepository extends AbstractSegradaOrientDbRepository<ITa
 	}
 
 	@Override
-	public ITag findByTitle(String title) {
+	public ITag findByTitle(String title, boolean useSlug) {
 		if (title == null) return null;
 
 		initDb();
 
 		// execute query
-		OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>("select * from Tag where title LIKE ?");
+		OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>("select * from Tag where title" + (useSlug?"asc":"") + " LIKE ?");
 		List<ODocument> result = db.command(query).execute(title);
 
 		// no entry found?
@@ -325,7 +325,7 @@ public class OrientDbTagRepository extends AbstractSegradaOrientDbRepository<ITa
 		if (title == null) return new String[]{};
 
 		// get tag
-		ITag tag = findByTitle(title);
+		ITag tag = findByTitle(title, false);
 		if (tag == null) return new String[]{};
 
 		// call findTagIdsByParent to resolve rest

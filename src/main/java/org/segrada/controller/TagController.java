@@ -12,6 +12,7 @@ import org.segrada.model.prototype.ISource;
 import org.segrada.model.prototype.ITag;
 import org.segrada.model.prototype.SegradaTaggable;
 import org.segrada.service.TagService;
+import org.segrada.util.Sluggify;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -79,16 +80,24 @@ public class TagController extends AbstractBaseController<ITag> {
 	@Path("/show/{uid}")
 	@Produces(MediaType.TEXT_HTML)
 	public Viewable show(
-			@PathParam("uid") String uid,
-			@QueryParam("name") String name
+			@PathParam("uid") String uid
 	) {
+		return reallyShow(service.findById(service.convertUidToId(uid)));
+	}
+
+	@GET
+	@Path("/by_title/{title}")
+	@Produces(MediaType.TEXT_HTML)
+	public Viewable showByTitle(
+			@PathParam("title") String title
+	) {
+		return reallyShow(service.findByTitle(title, true));
+	}
+
+	private Viewable reallyShow(ITag tag) {
 		// create model map
 		Map<String, Object> model = new HashMap<>();
 
-		// get tag
-		ITag tag;
-		if (name != null && uid.equals("name")) tag = service.findByTitle(name);
-		else tag = service.findById(service.convertUidToId(uid));
 		model.put("entity", tag);
 
 		List<String> childTags = new LinkedList<>();
@@ -128,7 +137,10 @@ public class TagController extends AbstractBaseController<ITag> {
 
 		// check duplicate ref
 		if (entity != null && entity.getTitle() != null && !entity.getTitle().isEmpty()) {
-			ITag toCheck = service.findByTitle(entity.getTitle());
+			ITag toCheck = service.findByTitle(entity.getTitle(), false);
+			// also check slug title
+			if (toCheck == null)
+				toCheck = service.findByTitle(Sluggify.sluggify(entity.getTitle()), true);
 
 			// not the same entity
 			if (toCheck != null && !toCheck.getId().equals(entity.getId())) {

@@ -30,9 +30,10 @@ public interface TagRepository extends CRUDRepository<ITag>, SearchTermRepositor
 	/**
 	 * Find entity by title
 	 * @param title login name
+	 * @param useSlug true if slug title shall be used instead of normal title
 	 * @return entity or null
 	 */
-	ITag findByTitle(String title);
+	ITag findByTitle(String title, boolean useSlug);
 
 	/**
 	 * create new tags from those titles that do not exist

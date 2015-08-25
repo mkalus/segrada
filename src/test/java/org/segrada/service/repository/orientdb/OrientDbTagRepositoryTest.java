@@ -16,6 +16,7 @@ import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory
 import org.segrada.session.Identity;
 import org.segrada.test.OrientDBTestInstance;
 import org.segrada.test.OrientDbTestApplicationSettings;
+import org.segrada.util.Sluggify;
 
 import java.util.List;
 
@@ -123,12 +124,19 @@ public class OrientDbTagRepositoryTest {
 
 		repository.save(tag);
 
-		ITag testTag = repository.findByTitle(tag.getTitle());
+		ITag testTag = repository.findByTitle(tag.getTitle(), false);
 
 		assertEquals(tag.getId(), testTag.getId());
 
+		// find sluggified variant
+		ITag testTag2 = repository.findByTitle(tag.getTitle(), true);
+		assertNull(testTag2);
+
+		testTag2 = repository.findByTitle(Sluggify.sluggify(tag.getTitle()), true);
+		assertEquals(tag.getId(), testTag2.getId());
+
 		// return null for non-existing entities
-		testTag = repository.findByTitle("NON-EXIST");
+		testTag = repository.findByTitle("NON-EXIST", false);
 
 		assertEquals(null, testTag);
 	}
@@ -173,9 +181,9 @@ public class OrientDbTagRepositoryTest {
 
 		// correctly created all tags?
 		assertTrue(repository.count() == 3);
-		assertNotNull(repository.findByTitle("Tag1"));
-		assertNotNull(repository.findByTitle("Tag2"));
-		assertNotNull(repository.findByTitle("Tag3"));
+		assertNotNull(repository.findByTitle("Tag1", false));
+		assertNotNull(repository.findByTitle("Tag2", false));
+		assertNotNull(repository.findByTitle("Tag3", false));
 
 		// now try to create new entries, but list contains entries already created
 		tags = new String[]{"Tag3", "Tag4"};
@@ -184,10 +192,10 @@ public class OrientDbTagRepositoryTest {
 
 		// correctly created one tag?
 		assertTrue(repository.count() == 4);
-		assertNotNull(repository.findByTitle("Tag1"));
-		assertNotNull(repository.findByTitle("Tag2"));
-		assertNotNull(repository.findByTitle("Tag3"));
-		assertNotNull(repository.findByTitle("Tag4"));
+		assertNotNull(repository.findByTitle("Tag1", false));
+		assertNotNull(repository.findByTitle("Tag2", false));
+		assertNotNull(repository.findByTitle("Tag3", false));
+		assertNotNull(repository.findByTitle("Tag4", false));
 	}
 
 	@Test

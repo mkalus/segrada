@@ -1,9 +1,6 @@
 package org.segrada.rendering.thymeleaf;
 
-import org.segrada.rendering.thymeleaf.processor.DateTimeFormatProcessor;
-import org.segrada.rendering.thymeleaf.processor.MarkupProcessor;
-import org.segrada.rendering.thymeleaf.processor.Nl2BrProcessor;
-import org.segrada.rendering.thymeleaf.processor.NumberFormatProcessor;
+import org.segrada.rendering.thymeleaf.processor.*;
 import org.thymeleaf.dialect.AbstractDialect;
 import org.thymeleaf.processor.IProcessor;
 
@@ -36,6 +33,7 @@ public class SegradaDialect extends AbstractDialect {
 	public Set<IProcessor> getProcessors() {
 		final Set<IProcessor> processors = new HashSet<>();
 		processors.add(new Nl2BrProcessor());
+		processors.add(new SluggifyProcessor());
 		processors.add(new MarkupProcessor());
 		processors.add(new NumberFormatProcessor());
 		processors.add(new DateTimeFormatProcessor());

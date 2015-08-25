@@ -70,10 +70,11 @@ public class TagService extends AbstractRepositoryService<ITag, TagRepository> i
 	/**
 	 * Find entity by title
 	 * @param title login name
+	 * @param fuzzySearch true if fuzzy search for title shall be tried (e.g. sluggified)
 	 * @return entity or null
 	 */
-	public ITag findByTitle(String title) {
-		return repository.findByTitle(title);
+	public ITag findByTitle(String title, boolean fuzzySearch) {
+		return repository.findByTitle(title, fuzzySearch);
 	}
 
 	/**

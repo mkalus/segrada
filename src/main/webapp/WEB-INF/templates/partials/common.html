@@ -48,8 +48,10 @@ Common fragments.
 <h3>Tag list to show tags</h3>
 
 <div th:fragment="taglist (tags)" th:unless="${#arrays.isEmpty(tags) and #arrays.isEmpty(prefixTags)}" class="sg-data-taglist">
-	<span class="label label-info" th:each="tag : ${prefixTags}"><a href="#" th:href="@{/tag/show/name(name=${tag})}" th:text="${tag}" class="sg-data-add">Tag</a></span>
-	<span class="label label-info" th:each="tag : ${tags}"><a href="#" th:href="@{/tag/show/name(name=${tag})}" th:text="${tag}" class="sg-data-add">Tag</a></span>
+	<span class="label label-info" th:each="tag : ${prefixTags}"><a href="#" th:href="@{/tag/by_title/{title}(title=${@org.segrada.util.Sluggify@sluggify(tag)})}" th:text="${tag}" class="sg-data-add">Tag</a></span>
+	<span class="label label-info" th:each="tag : ${tags}"><a href="#" th:href="@{/tag/by_title/{title}(title=${@org.segrada.util.Sluggify@sluggify(tag)})}" th:text="${tag}" class="sg-data-add">Tag</a></span>
+
+
 </div>
 
 
