@@ -9,6 +9,7 @@ import org.segrada.service.repository.orientdb.base.AbstractSegradaOrientDbRepos
 import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory;
 import org.segrada.service.util.PaginationInfo;
 import org.segrada.util.OrientStringEscape;
+import org.segrada.util.Sluggify;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -59,6 +60,7 @@ public class OrientDbUserRepository extends AbstractSegradaOrientDbRepository<IU
 		document.field("login", entity.getLogin())
 				.field("password", entity.getPassword())
 				.field("name", entity.getName())
+				.field("nameasc", Sluggify.sluggify(entity.getName()))
 				.field("role", entity.getRole())
 				.field("created", entity.getCreated())
 				.field("modified", entity.getModified())

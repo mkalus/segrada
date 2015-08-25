@@ -7,6 +7,8 @@ import org.segrada.model.prototype.IColor;
 import org.segrada.service.repository.ColorRepository;
 import org.segrada.service.repository.orientdb.base.AbstractSegradaOrientDbRepository;
 import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory;
+import org.segrada.util.Sluggify;
+
 /**
  * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]
  *
@@ -58,6 +60,7 @@ public class OrientDbColorRepository extends AbstractSegradaOrientDbRepository<I
 
 		// populate with data
 		document.field("title", entity.getTitle())
+				.field("titleasc", Sluggify.sluggify(entity.getTitle()))
 				.field("color", entity.getColor());
 
 		// populate with data

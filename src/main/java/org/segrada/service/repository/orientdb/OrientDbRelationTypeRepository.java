@@ -19,6 +19,7 @@ import org.segrada.service.repository.orientdb.base.AbstractColoredOrientDbRepos
 import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory;
 import org.segrada.service.util.PaginationInfo;
 import org.segrada.util.OrientStringEscape;
+import org.segrada.util.Sluggify;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -119,6 +120,8 @@ public class OrientDbRelationTypeRepository extends AbstractColoredOrientDbRepos
 		// populate with data
 		document.field("fromTitle", entity.getFromTitle())
 				.field("toTitle", entity.getToTitle())
+				.field("fromTitleAsc", Sluggify.sluggify(entity.getFromTitle()))
+				.field("toTitleAsc", Sluggify.sluggify(entity.getToTitle()))
 				.field("description", entity.getDescription())
 				.field("descriptionMarkup", entity.getDescriptionMarkup());
 

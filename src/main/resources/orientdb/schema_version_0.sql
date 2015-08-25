@@ -13,6 +13,7 @@ create class User
 ######################################################################################################################
 create class Color
 create property Color.title String
+create property Color.titleasc String
 create property Color.color Integer
 create property Color.created Datetime
 create property Color.modified Datetime
@@ -20,14 +21,17 @@ create property Color.creator Link<User>
 create property Color.modifier Link<User>
 alter property Color.title MANDATORY true
 alter property Color.title COLLATE ci
+alter property Color.titleasc MANDATORY true
 alter property Color.color MANDATORY true
 alter property Color.created MANDATORY true
 alter property Color.modified MANDATORY true
 create index Color.color NOTUNIQUE
+create index Color.titleasc NOTUNIQUE
 
 ######################################################################################################################
 create class Pictogram
 create property Pictogram.title String
+create property Pictogram.titleasc String
 create property Pictogram.fileIdentifier String
 create property Pictogram.mimeType String
 create property Pictogram.created Datetime
@@ -36,16 +40,19 @@ create property Pictogram.creator Link<User>
 create property Pictogram.modifier Link<User>
 alter property Pictogram.title MANDATORY true
 alter property Pictogram.title COLLATE ci
+alter property Pictogram.titleasc MANDATORY true
 alter property Pictogram.fileIdentifier MANDATORY true
 alter property Pictogram.created MANDATORY true
 alter property Pictogram.modified MANDATORY true
 create index Pictogram.title on Pictogram (title) FULLTEXT ENGINE LUCENE
+create index Pictogram.titleasc NOTUNIQUE
 
 ######################################################################################################################
 #create class User
 create property User.login String
 create property User.password String
 create property User.name String
+create property User.nameasc String
 create property User.role String
 create property User.lastLogin Datetime
 create property User.active Boolean
@@ -56,12 +63,14 @@ create property User.modifier Link<User>
 alter property User.login MANDATORY true
 alter property User.password MANDATORY true
 alter property User.name MANDATORY true
+alter property User.nameasc MANDATORY true
 alter property User.role MANDATORY true
 alter property User.active MANDATORY true
 alter property User.created MANDATORY true
 alter property User.modified MANDATORY true
 create index User.login UNIQUE_HASH_INDEX
 create index User.name NOTUNIQUE
+create index User.nameasc NOTUNIQUE
 
 ######################################################################################################################
 create class Comment extends V
@@ -82,15 +91,18 @@ alter property Comment.modified MANDATORY true
 ######################################################################################################################
 create class Tag extends V
 create property Tag.title String
+create property Tag.titleasc String
 create property Tag.created Datetime
 create property Tag.modified Datetime
 create property Tag.creator Link<User>
 create property Tag.modifier Link<User>
 alter property Tag.title MANDATORY true
 alter property Tag.title COLLATE ci
+alter property Tag.titleasc MANDATORY true
 alter property Tag.created MANDATORY true
 alter property Tag.modified MANDATORY true
 create index Tag.title UNIQUE_HASH_INDEX
+create index Tag.titleasc NOTUNIQUE
 create index Tag.searchtitle on Tag (title) FULLTEXT ENGINE LUCENE
 
 ######################################################################################################################
@@ -135,6 +147,7 @@ create index Period.fromJD_toJD ON Period (fromJD, toJD) NOTUNIQUE
 create class File extends V
 create property File.filename String
 create property File.title String
+create property File.titleasc String
 create property File.description String
 create property File.descriptionMarkup String
 create property File.copyright String
@@ -150,7 +163,9 @@ create property File.created Datetime
 create property File.modified Datetime
 create property File.creator Link<User>
 create property File.modifier Link<User>
+alter property File.title MANDATORY true
 alter property File.title COLLATE ci
+alter property File.titleasc MANDATORY true
 alter property File.filename MANDATORY true
 alter property File.mimeType MANDATORY true
 alter property File.descriptionMarkup MANDATORY true
@@ -160,11 +175,13 @@ alter property File.indexFullText MANDATORY true
 alter property File.containFile MANDATORY true
 create index File.filename NOTUNIQUE
 create index File.searchtitle on File (title,filename) FULLTEXT ENGINE LUCENE
+create index File.titleasc NOTUNIQUE
 #+ Edges: Files, Tags, Comments
 
 ######################################################################################################################
 create class Source extends V
 create property Source.shortTitle String
+create property Source.shortTitleasc String
 create property Source.longTitle String
 create property Source.shortRef String
 create property Source.url String
@@ -182,12 +199,14 @@ create property Source.creator Link<User>
 create property Source.modifier Link<User>
 alter property Source.shortTitle MANDATORY true
 alter property Source.shortTitle COLLATE ci
+alter property Source.shortTitleasc MANDATORY true
 alter property Source.longTitle COLLATE ci
 alter property Source.shortRef MANDATORY true
 alter property Source.shortRef COLLATE ci
 alter property Source.created MANDATORY true
 alter property Source.modified MANDATORY true
 create index Source.shortTitle NOTUNIQUE
+create index Source.shortTitleAsc NOTUNIQUE
 create index Source.shortRef UNIQUE_HASH_INDEX
 create index Source.searchtitle on Source (longTitle,shortRef,shortTitle) FULLTEXT ENGINE LUCENE
 #+ Edges: Files, Tags, Comments
@@ -195,6 +214,7 @@ create index Source.searchtitle on Source (longTitle,shortRef,shortTitle) FULLTE
 ######################################################################################################################
 create class Node extends V
 create property Node.title String
+create property Node.titleasc String
 create property Node.alternativeTitles String
 create property Node.description String
 create property Node.descriptionMarkup String
@@ -212,12 +232,14 @@ create property Node.minEntryCalendar String
 create property Node.maxEntryCalendar String
 alter property Node.title MANDATORY true
 alter property Node.title COLLATE ci
+alter property Node.titleasc MANDATORY true
 alter property Node.alternativeTitles COLLATE ci
 alter property Node.description MANDATORY true
 alter property Node.descriptionMarkup MANDATORY true
 alter property Node.created MANDATORY true
 alter property Node.modified MANDATORY true
 create index Node.title NOTUNIQUE
+create index Node.titleasc NOTUNIQUE
 create index Node.alternativeTitles NOTUNIQUE
 create index Node.searchtitle ON Node (title,alternativeTitles) FULLTEXT ENGINE LUCENE
 #+ Edges: Files, Tags, Comments
@@ -227,6 +249,8 @@ create index Node.searchtitle ON Node (title,alternativeTitles) FULLTEXT ENGINE 
 create class RelationType extends V
 create property RelationType.fromTitle String
 create property RelationType.toTitle String
+create property RelationType.fromTitleAsc String
+create property RelationType.toTitleAsc String
 create property RelationType.fromTags Linklist<Tag>
 create property RelationType.toTags Linklist<Tag>
 create property RelationType.description String
@@ -241,12 +265,16 @@ alter property RelationType.fromTitle MANDATORY true
 alter property RelationType.fromTitle COLLATE ci
 alter property RelationType.toTitle MANDATORY true
 alter property RelationType.toTitle COLLATE ci
+alter property RelationType.fromTitleAsc MANDATORY true
+alter property RelationType.toTitleAsc MANDATORY true
 alter property RelationType.description MANDATORY true
 alter property RelationType.descriptionMarkup MANDATORY true
 alter property RelationType.created MANDATORY true
 alter property RelationType.modified MANDATORY true
 create index RelationType.fromTitle NOTUNIQUE
 create index RelationType.toTitle NOTUNIQUE
+create index RelationType.fromTitleAsc NOTUNIQUE
+create index RelationType.toTitleAsc NOTUNIQUE
 create index RelationType.fromTitle_toTitle ON RelationType (fromTitle,toTitle) FULLTEXT ENGINE LUCENE
 create index RelationType.fromTags NOTUNIQUE_HASH_INDEX
 create index RelationType.toTags NOTUNIQUE_HASH_INDEX

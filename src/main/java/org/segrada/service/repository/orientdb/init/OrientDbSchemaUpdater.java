@@ -7,6 +7,7 @@ import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 import com.tinkerpop.blueprints.impls.orient.OrientGraphFactory;
 import org.segrada.util.PasswordEncoder;
+import org.segrada.util.Sluggify;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -172,6 +173,7 @@ public class OrientDbSchemaUpdater {
 				if (!line.equals("") && !line.startsWith("#"))
 					try {
 						db.command(new OCommandSQL(line)).execute();
+						logger.info(line);
 					} catch (Exception e) {
 						logger.warn("Exception in schema update while executing \"" + line + "\"", e);
 					} catch (Error e) {
@@ -213,6 +215,7 @@ public class OrientDbSchemaUpdater {
 					.field("login", "admin")
 					.field("password", password)
 					.field("name", "Administrator")
+					.field("nameasc", "administrator")
 					.field("role", "ADMIN")
 					.field("created", now)
 					.field("modified", now)
@@ -228,6 +231,7 @@ public class OrientDbSchemaUpdater {
 			for (String color : defaultColors) {
 				doc = new ODocument("Color")
 						.field("title", color)
+						.field("titleasc", Sluggify.sluggify(color))
 						.field("color", Long.decode(color))
 						.field("created", currentTime).field("modified", currentTime);
 				db.save(doc);

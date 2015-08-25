@@ -10,6 +10,7 @@ import org.segrada.model.prototype.IPictogram;
 import org.segrada.service.repository.PictogramRepository;
 import org.segrada.service.repository.orientdb.base.AbstractSegradaOrientDbRepository;
 import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory;
+import org.segrada.util.Sluggify;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -56,6 +57,7 @@ public class OrientDbPictogramRepository extends AbstractSegradaOrientDbReposito
 
 		// fields to document
 		document.field("title", entity.getTitle())
+				.field("titleasc", Sluggify.sluggify(entity.getTitle()))
 				.field("fileIdentifier", entity.getFileIdentifier());
 
 		// populate with data

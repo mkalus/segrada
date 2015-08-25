@@ -17,6 +17,7 @@ import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory
 import org.segrada.service.util.PaginationInfo;
 import org.segrada.util.FlexibleDateParser;
 import org.segrada.util.OrientStringEscape;
+import org.segrada.util.Sluggify;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -85,6 +86,7 @@ public class OrientDbNodeRepository extends AbstractCoreOrientDbRepository<INode
 
 		// fields to document
 		document.field("title", entity.getTitle())
+				.field("titleasc", Sluggify.sluggify(entity.getTitle()))
 				.field("alternativeTitles", entity.getAlternativeTitles())
 				.field("description", entity.getDescription())
 				.field("descriptionMarkup", entity.getDescriptionMarkup());

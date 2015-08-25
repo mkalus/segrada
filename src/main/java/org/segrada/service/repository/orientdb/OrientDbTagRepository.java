@@ -16,6 +16,7 @@ import org.segrada.service.repository.orientdb.base.AbstractSegradaOrientDbRepos
 import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory;
 import org.segrada.service.util.PaginationInfo;
 import org.segrada.util.OrientStringEscape;
+import org.segrada.util.Sluggify;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -81,7 +82,8 @@ public class OrientDbTagRepository extends AbstractSegradaOrientDbRepository<ITa
 		ODocument document = createOrLoadDocument(entity);
 
 		// populate with data
-		document.field("title", entity.getTitle());
+		document.field("title", entity.getTitle())
+				.field("titleasc", Sluggify.sluggify(entity.getTitle()));
 
 		// populate with data
 		populateODocumentWithCreatedModified(document, entity);
