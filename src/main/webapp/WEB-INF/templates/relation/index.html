@@ -35,7 +35,7 @@
 				<tr>
 					<td class="text-center"><a class="sg-control-set btn btn-sm btn-link" href="#" th:href="@{${baseUrl}?${baseUrl}:'/relation'(reset=1)}" th:title="#{reset}" th:attr="data-target-id=${targetId}"><i class="fa fa-eraser"></i></a></td>
 					<td><!--/*<input type="text" class="form-control" th:value="${filters.search}" name="search" th:placeholder="#{field.filter_title}" title="#{field.filter_title}" />*/--></td>
-					<td><input type="text" class="form-control" th:value="${filters.minEntry}" name="minEntry" title="Start" th:title="#{field.fromEntry}" /></td>
+					<td><input type="text" class="form-control" th:value="${filters.minEntry}" name="minEntry" title="Start" th:title="#{field.fromEntryShort}" /></td>
 					<td><input type="text" class="form-control" th:value="${filters.maxEntry}" name="maxEntry" title="Stop" th:title="#{field.toEntry}" /></td>
 					<!--/*<td>
 						<select multiple="multiple" type="text" name="tags" class="sg-tags">

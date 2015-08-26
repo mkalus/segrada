@@ -147,8 +147,8 @@ public class OrientDbNodeRepositoryTest {
 
 	@Test
 	public void testGetDefaultOrder() throws Exception {
-		assertEquals(" ORDER BY title", repository.getDefaultOrder(true));
-		assertEquals(" title", repository.getDefaultOrder(false));
+		assertEquals(" ORDER BY titleasc", repository.getDefaultOrder(true));
+		assertEquals(" titleasc", repository.getDefaultOrder(false));
 	}
 
 	@Test

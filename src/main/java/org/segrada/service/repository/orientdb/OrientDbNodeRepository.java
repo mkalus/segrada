@@ -22,10 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 
 /**
@@ -118,7 +115,7 @@ public class OrientDbNodeRepository extends AbstractCoreOrientDbRepository<INode
 
 	@Override
 	protected String getDefaultOrder(boolean addOrderBy) {
-		return (addOrderBy?" ORDER BY":"").concat(" title");
+		return (addOrderBy?" ORDER BY":"").concat(" titleasc");
 	}
 
 	@Override
@@ -181,6 +178,11 @@ public class OrientDbNodeRepository extends AbstractCoreOrientDbRepository<INode
 		return hits;
 	}
 
+	/**
+	 * keep allowed sorting fields here
+	 */
+	private static final Set<String> allowedSorts = new HashSet<>(Arrays.asList(new String[]{"titleasc", "minJD", "maxJD"}));
+
 	@Override
 	public PaginationInfo<INode> paginate(int page, int entriesPerPage, @Nullable Map<String, Object> filters) {
 		// avoid NPEs
@@ -229,8 +231,18 @@ public class OrientDbNodeRepository extends AbstractCoreOrientDbRepository<INode
 			constraints.add(sb.append("]").toString());
 		}
 
+		// sorting
+		String customOrder = null;
+		if (filters.get("sort") != null) {
+			String field = (String) filters.get("sort");
+			if (allowedSorts.contains(field)) { // sanity check
+				String dir = getDirectionFromString(filters.get("dir"));
+				if (dir != null) customOrder = field.concat(dir);
+			}
+		}
+
 		// let helper do most of the work
-		return super.paginate(page, entriesPerPage, constraints, null);
+		return super.paginate(page, entriesPerPage, constraints, customOrder);
 	}
 
 	/**

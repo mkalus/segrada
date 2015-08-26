@@ -11,7 +11,7 @@
 <div th:replace="partials/common :: browser"></div>
 
 <div class="container">
-	<div class="sg-control-content sg-node">
+	<div class="sg-control-content sg-node" th:with="myurl=@{${baseUrl}?${baseUrl}:'/node'}">
 		<div class="pull-right">
 			<a href="#" th:href="@{/node/add}" th:title="#{add.node}" class="btn btn-success btn-sm sg-data-add"><i class="fa fa-plus"></i></a>
 		</div>
@@ -20,18 +20,18 @@
 
 		<p th:text="${#messages.msg('pagination', paginationInfo.page, paginationInfo.pages)}">Pages</p>
 
-		<form method="get" action="#" th:action="@{${baseUrl}?${baseUrl}:'/node'}" class="sg-control-form" th:attr="data-target-id=${targetId}">
+		<form method="get" action="#" th:action="${myurl}" class="sg-control-form" th:attr="data-target-id=${targetId}">
 			<table class="table table-hover table-striped table-condensed">
 				<tr>
 					<th class="text-center col-xs-1"><i class="fa fa-dot-circle-o"></i></th>
-					<th th:text="#{field.title}">Title</th>
-					<th class="col-xs-1" th:text="#{field.fromEntry}">Start</th>
-					<th class="col-xs-1" th:text="#{field.toEntry}">Stop</th>
+					<th th:with="sortHelper=${@org.segrada.rendering.thymeleaf.util.TableSortPreprocessor@createSortLink(myurl, 'titleasc', 'titleasc', 'asc', filters)}"><a href="#" class="sg-control-set" th:href="${sortHelper.url}" th:utext="|#{field.title}${sortHelper.icon}|">Title</a></th>
+					<th class="col-xs-1" th:with="sortHelper=${@org.segrada.rendering.thymeleaf.util.TableSortPreprocessor@createSortLink(myurl, 'minJD', 'title', 'asc', filters)}"><a href="#" class="sg-control-set" th:href="${sortHelper.url}" th:utext="|#{field.fromEntryShort}${sortHelper.icon}|">Start</a></th>
+					<th class="col-xs-1" th:with="sortHelper=${@org.segrada.rendering.thymeleaf.util.TableSortPreprocessor@createSortLink(myurl, 'maxJD', 'title', 'asc', filters)}"><a href="#" class="sg-control-set" th:href="${sortHelper.url}" th:utext="|#{field.toEntry}${sortHelper.icon}|">Stop</a></th>
 					<th class="col-xs-1" th:text="#{field.tags}">Tags</th>
 					<th></th>
 				</tr>
 				<tr>
-					<td class="text-center"><a class="sg-control-set btn btn-sm btn-link" href="#" th:href="@{${baseUrl}?${baseUrl}:'/node'(reset=1)}" th:title="#{reset}" th:attr="data-target-id=${targetId}"><i class="fa fa-eraser"></i></a></td>
+					<td class="text-center"><a class="sg-control-set btn btn-sm btn-link" href="#" th:href="@{${myurl}(reset=1)}" th:title="#{reset}" th:attr="data-target-id=${targetId}"><i class="fa fa-eraser"></i></a></td>
 					<td><input type="text" class="form-control" th:value="${filters.search}" name="search" th:placeholder="#{field.filter_title}" title="#{field.filter_title}" /></td>
 					<td><input type="text" class="form-control" th:value="${filters.minEntry}" name="minEntry" title="Start" th:title="#{field.fromEntry}" /></td>
 					<td><input type="text" class="form-control" th:value="${filters.maxEntry}" name="maxEntry" title="Stop" th:title="#{field.toEntry}" /></td>

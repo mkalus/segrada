@@ -73,6 +73,7 @@ public class TagController extends AbstractBaseController<ITag> {
 				filters.put("tags", tagArray);
 			}
 		}
+		// sorting
 		if (sortBy != null && sortOrder != null) {
 			filters.put("sort", sortBy);
 			filters.put("dir", sortOrder);

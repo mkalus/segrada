@@ -38,11 +38,10 @@ public class TableSortPreprocessor {
 		// filter active?
 		if (filters.get("sort") != null) {
 			String sortedField = (String) filters.get("sort");
+			String sortDirection = filters.get("dir")==null?null:(String)filters.get("dir");
 
 			// is sorted field our field?
 			if (sortedField.equals(field)) {
-				String sortDirection = filters.get("dir")==null?null:(String)filters.get("dir");
-
 				if (sortDirection != null && !sortDirection.isEmpty()) {
 					// define new sort directions
 					if (sortDirection.equalsIgnoreCase("asc")) {
@@ -56,6 +55,17 @@ public class TableSortPreprocessor {
 						//icon = getIcon(false);
 						//url = createSortUrl(baseUrl, field, "asc"); // not changed
 					}
+				}
+			} else if (sortDirection != null && sortDirection.equals("none") && field.equals(defaultField)) {
+				// no filter set, but field equals default field: create
+				if (defaultSort == null || defaultSort.isEmpty() || !defaultSort.equalsIgnoreCase("asc")) {
+					// default is desc
+					icon = getIcon(false);
+					//url = createSortUrl(baseUrl, field, "asc"); // not changed
+				} else {
+					// default is asc
+					icon = getIcon(true);
+					url = createSortUrl(baseUrl, field, "desc");
 				}
 			}
 		} else if (field.equals(defaultField)) {
@@ -86,7 +96,7 @@ public class TableSortPreprocessor {
 	 * @return icon code
 	 */
 	private static String getIcon(boolean asc) {
-		return asc?" <i class=\"fa fa-caret-down\"></i>":" <i class=\"fa fa-caret-up\"></i>";
+		return asc?"<i class=\"fa fa-caret-down\"></i>":"<i class=\"fa fa-caret-up\"></i>";
 	}
 
 	/**
