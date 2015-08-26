@@ -1,0 +1,25 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" th:lang="${#locale.language}">
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<title th:text="#{Search}">Search</title>
+	<div th:include="partials/common :: head" th:remove="tag"></div>
+</head>
+
+<body>
+<div th:replace="partials/common :: browser"></div>
+
+<div class="container" th:fragment="content">
+	<div th:unless="${#arrays.isEmpty(hits)}" class="small sg-margin-top sg-margin-top sg-highlight-list">
+		<div th:each="highlightText : ${hits}" th:utext="${highlightText}"></div>
+	</div>
+	<div th:if="${#arrays.isEmpty(hits)}" class="small">
+		<div class="alert alert-danger sg-margin-top" role="alert" th:text="#{error.nothingFound}">
+			ERROR
+		</div>
+	</div>
+</div>
+
+</body>
+</html>

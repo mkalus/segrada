@@ -502,6 +502,33 @@
 			}
 		});
 
+		// second type of data form (left side)
+		$("form.sg-simple-form", part).ajaxForm({
+			beforeSubmit: function (arr, $form, options) {
+				// disable form elements
+				$(":input", $form).attr("disabled", true);
+
+				// determine target to replace
+				var target = $form.attr('data-id');
+				if (typeof target !== 'undefined') target = $('#' + target);
+				target = target || $form;
+
+				target.html($('#sg-wait'));
+
+				return true;
+			},
+			success: function (responseText, statusText, xhr, $form) {
+				// determine target to replace
+				var target = $form.attr('data-id');
+				if (typeof target !== 'undefined') target = $('#' + target);
+				target = target || $form;
+
+				target.html(responseText);
+
+				$(":input", $form).attr("disabled", false);
+			}
+		});
+
 		// *******************************************************
 		// period handler
 		$('.sg-periods').each(function() {

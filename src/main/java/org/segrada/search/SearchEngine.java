@@ -48,6 +48,14 @@ public interface SearchEngine {
 	PaginationInfo<SearchHit> search(String searchTerm, Map<String, String> filters);
 
 	/**
+	 * search within a document for certain terms and return list of highlighted hits
+	 * @param searchTerm term(s) to search for
+	 * @param id of document to search in
+	 * @return list of highlighted hits or empty array
+	 */
+	String[] searchInDocument(String searchTerm, String id);
+
+	/**
 	 * Remove entity from index
 	 *
 	 * @param id of document e.g. db id

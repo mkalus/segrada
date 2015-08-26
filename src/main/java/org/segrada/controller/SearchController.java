@@ -84,4 +84,18 @@ public class SearchController {
 		}
 		return new Viewable("search/index", model);
 	}
+
+	@GET
+	@Path("/in_document")
+	@Produces(MediaType.TEXT_HTML)
+	public Viewable searchInDocument(
+			@QueryParam("s") String term,
+			@QueryParam("id") String id
+	) {
+		// create model map
+		Map<String, Object> model = new HashMap<>();
+		model.put("hits", searchEngine.searchInDocument(term, id));
+
+		return new Viewable("search/in_document", model);
+	}
 }

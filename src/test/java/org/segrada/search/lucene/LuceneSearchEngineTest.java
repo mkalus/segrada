@@ -304,4 +304,32 @@ public class LuceneSearchEngineTest {
 		SearchHit hit = searchResult.entities.get(0);
 		assertEquals("Hello World 2", hit.getTitle()); // should be second title which has been saved
 	}
+
+	@Test
+	public void testSearchInDocument() throws Exception {
+		// index
+		searchEngine.index("4", "DummyClass", "Hello World", "Another Title\nAnd my subtitle",
+				"Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut " +
+						"x labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo " +
+						"dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor " +
+						"sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod " +
+						"tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et " +
+						"accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus " +
+						"est Lorem ipsum dolor sit amet.", new String[]{}, null, null, 1.0f);
+
+		// assert null and empty values
+		assertEquals(0, searchEngine.searchInDocument("", "").length);
+		assertEquals(0, searchEngine.searchInDocument(null, null).length);
+		assertEquals(0, searchEngine.searchInDocument("", null).length);
+		assertEquals(0, searchEngine.searchInDocument(null, "").length);
+
+		// now check normal operation
+		assertEquals(0, searchEngine.searchInDocument("notExistant", "4").length);
+
+		String[] highlights = searchEngine.searchInDocument("labore", "4");
+
+		assertEquals(2, highlights.length);
+		assertEquals("elitr, sed diam nonumy eirmod tempor invidunt ut x <b>labore</b> et dolore magna aliquyam erat, sed diam voluptua", highlights[0]);
+		assertEquals("elitr, sed diam nonumy eirmod tempor invidunt ut <b>labore</b> et dolore magna aliquyam erat, sed diam voluptua", highlights[1]);
+	}
 }

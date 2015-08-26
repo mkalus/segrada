@@ -314,6 +314,43 @@ public class LuceneSearchEngine implements SearchEngine {
 	}
 
 	@Override
+	public String[] searchInDocument(String searchTerm, String id) {
+		// sanity check
+		if (searchTerm == null || id == null || searchTerm.isEmpty() || id.isEmpty()) return new String[]{};
+
+		try {
+			DirectoryReader iReader = DirectoryReader.open(directory);
+			IndexSearcher iSearcher = new IndexSearcher(iReader);
+
+			// only search content
+			MultiFieldQueryParser parser = new MultiFieldQueryParser(Version.LUCENE_47, new String[]{"content"}, analyzer);
+
+			// set operator and contain by id
+			parser.setDefaultOperator(QueryParser.Operator.AND);
+			Query query = parser.parse(searchTerm);
+			Filter filter = new QueryWrapperFilter(new TermQuery(new Term("id", id)));
+
+			// do search, maximum of 1 document
+			TopDocs topDocs = iSearcher.search(query, filter, 1);
+
+			if (topDocs.scoreDocs.length > 0) {
+				ScoreDoc scoreDoc = topDocs.scoreDocs[0];
+
+				// get highlighted text
+				FastVectorHighlighter highlighter = new FastVectorHighlighter();
+				FieldQuery fieldQuery = highlighter.getFieldQuery(new QueryParser(Version.LUCENE_47, "content", analyzer).parse(searchTerm), iReader);
+
+				// return max of 100 highlighted elements
+				return highlighter.getBestFragments(fieldQuery, iReader, scoreDoc.doc, "content", 100, 100);
+			}
+		} catch (Throwable e) {
+			logger.error("Error in search.", e);
+		}
+
+		return new String[]{};
+	}
+
+	@Override
 	public synchronized void remove(String id) {
 		try {
 			// init index writer config
