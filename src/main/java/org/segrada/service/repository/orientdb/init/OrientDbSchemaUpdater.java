@@ -231,7 +231,7 @@ public class OrientDbSchemaUpdater {
 			for (String color : defaultColors) {
 				doc = new ODocument("Color")
 						.field("title", color)
-						.field("titleasc", Sluggify.sluggify(color))
+						.field("titleasc", Sluggify.asciify(color))
 						.field("color", Long.decode(color))
 						.field("created", currentTime).field("modified", currentTime);
 				db.save(doc);

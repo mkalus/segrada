@@ -33,7 +33,6 @@ public class SegradaDialect extends AbstractDialect {
 	public Set<IProcessor> getProcessors() {
 		final Set<IProcessor> processors = new HashSet<>();
 		processors.add(new Nl2BrProcessor());
-		processors.add(new SluggifyProcessor());
 		processors.add(new MarkupProcessor());
 		processors.add(new NumberFormatProcessor());
 		processors.add(new DateTimeFormatProcessor());

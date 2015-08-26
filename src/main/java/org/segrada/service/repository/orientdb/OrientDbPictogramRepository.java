@@ -57,7 +57,7 @@ public class OrientDbPictogramRepository extends AbstractSegradaOrientDbReposito
 
 		// fields to document
 		document.field("title", entity.getTitle())
-				.field("titleasc", Sluggify.sluggify(entity.getTitle()))
+				.field("titleasc", Sluggify.asciify(entity.getTitle()))
 				.field("fileIdentifier", entity.getFileIdentifier());
 
 		// populate with data

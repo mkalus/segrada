@@ -120,8 +120,8 @@ public class OrientDbRelationTypeRepository extends AbstractColoredOrientDbRepos
 		// populate with data
 		document.field("fromTitle", entity.getFromTitle())
 				.field("toTitle", entity.getToTitle())
-				.field("fromTitleAsc", Sluggify.sluggify(entity.getFromTitle()))
-				.field("toTitleAsc", Sluggify.sluggify(entity.getToTitle()))
+				.field("fromTitleAsc", Sluggify.asciify(entity.getFromTitle()))
+				.field("toTitleAsc", Sluggify.asciify(entity.getToTitle()))
 				.field("description", entity.getDescription())
 				.field("descriptionMarkup", entity.getDescriptionMarkup());
 

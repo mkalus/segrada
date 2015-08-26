@@ -81,7 +81,7 @@ public class OrientDbSourceRepository extends AbstractAnnotatedOrientDbRepositor
 		ODocument document = createOrLoadDocument(entity);
 
 		document.field("shortTitle", entity.getShortTitle())
-				.field("shortTitleasc", Sluggify.sluggify(entity.getShortTitle()))
+				.field("shortTitleasc", Sluggify.asciify(entity.getShortTitle()))
 				.field("longTitle", entity.getLongTitle())
 				.field("shortRef", entity.getShortRef())
 				.field("url", entity.getUrl())

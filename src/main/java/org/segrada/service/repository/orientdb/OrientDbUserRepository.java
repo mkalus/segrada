@@ -60,7 +60,7 @@ public class OrientDbUserRepository extends AbstractSegradaOrientDbRepository<IU
 		document.field("login", entity.getLogin())
 				.field("password", entity.getPassword())
 				.field("name", entity.getName())
-				.field("nameasc", Sluggify.sluggify(entity.getName()))
+				.field("nameasc", Sluggify.asciify(entity.getName()))
 				.field("role", entity.getRole())
 				.field("created", entity.getCreated())
 				.field("modified", entity.getModified())

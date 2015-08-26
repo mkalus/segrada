@@ -86,7 +86,7 @@ public class OrientDbNodeRepository extends AbstractCoreOrientDbRepository<INode
 
 		// fields to document
 		document.field("title", entity.getTitle())
-				.field("titleasc", Sluggify.sluggify(entity.getTitle()))
+				.field("titleasc", Sluggify.asciify(entity.getTitle()))
 				.field("alternativeTitles", entity.getAlternativeTitles())
 				.field("description", entity.getDescription())
 				.field("descriptionMarkup", entity.getDescriptionMarkup());

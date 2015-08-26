@@ -83,7 +83,7 @@ public class OrientDbTagRepository extends AbstractSegradaOrientDbRepository<ITa
 
 		// populate with data
 		document.field("title", entity.getTitle())
-				.field("titleasc", Sluggify.sluggify(entity.getTitle()));
+				.field("titleasc", Sluggify.asciify(entity.getTitle()));
 
 		// populate with data
 		populateODocumentWithCreatedModified(document, entity);

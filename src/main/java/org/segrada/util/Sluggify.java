@@ -29,6 +29,7 @@ import static com.google.common.collect.Iterables.transform;
  * limitations under the License.
  *
  * Sluggify library - taken from https://github.com/otto-de/sluggify
+ * and adapted
  */
 public class Sluggify {
 	private static final LoadingCache<String, String> slugifyCache = CacheBuilder.<String,String> newBuilder()
@@ -47,7 +48,7 @@ public class Sluggify {
 
 	private static final Pattern SPECIAL_CHARACTERS_REGEX = Pattern.compile("\\W");
 
-	public static String removeSpecialCharactersAndConvertToLowercase(String input) {
+	public static String removeSpecialCharactersAndConvertToLowercase(String input, boolean ascii) {
 		StringBuilder result = new StringBuilder();
 		Matcher matcher = SPECIAL_CHARACTERS_REGEX.matcher(input);
 		int lastIdx = 0;
@@ -57,7 +58,7 @@ public class Sluggify {
 				result.append(input.substring(lastIdx, startIdx).toLowerCase());
 			}
 			char umlaut = matcher.group().charAt(0);
-			String replacementString = replacementStringFor(umlaut);
+			String replacementString = replacementStringFor(umlaut, ascii);
 			if (result.length() == 0 || !("-".equals(replacementString) && result.charAt(result.length() - 1) == '-')) {
 				result.append(replacementString);
 			}
@@ -69,20 +70,21 @@ public class Sluggify {
 		return result.toString();
 	}
 
-	private static String replacementStringFor(char specialChar) {
+	private static String replacementStringFor(char specialChar, boolean ascii) {
 		switch (specialChar) {
 			case 'ä':
 			case 'Ä':
+				return ascii?"a":"ae";
 			case 'æ':
 				return "ae";
 			case 'ö':
 			case 'Ö':
-				return "oe";
+				return ascii?"o":"oe";
 			case 'Ü':
 			case 'ü':
-				return "ue";
+				return ascii?"u":"ue";
 			case 'ß':
-				return "ss";
+				return ascii?"s":"ss";
 			case 'À':
 			case 'Á':
 			case 'Â':
@@ -304,6 +306,18 @@ public class Sluggify {
 		}
 	}
 
+	public static String asciify(String string) {
+		if (isEmpty(string)) {
+			return string;
+		}
+
+		try {
+			return slugifyCache.get(":::ascii:::" + string);
+		} catch (ExecutionException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
 	/**
 	 * Sluggify a path consisting of several path elements separated by a path separator.
 	 * That is, split path by separator, sluggify all the elements and then join the path back together.
@@ -324,8 +338,14 @@ public class Sluggify {
 	private static String doSlugify(String string) {
 		if (string == null) return null;
 
+		boolean ascii;
+		if (string.startsWith(":::ascii:::")) {
+			string = string.substring(11);
+			ascii = true;
+		} else ascii = false;
+
 		string = string.replaceAll("([a-z])'s([^a-z])", "$1s$2"); // WTF ?
-		string = removeSpecialCharactersAndConvertToLowercase(string);
+		string = removeSpecialCharactersAndConvertToLowercase(string, ascii);
 
 		string = string.replaceAll("-+$", "").replaceAll("^-+", "");
 		string = removeLeadingAndTrailingHyphens(string);
