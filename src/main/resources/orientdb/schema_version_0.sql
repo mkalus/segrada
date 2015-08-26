@@ -102,7 +102,7 @@ alter property Tag.titleasc MANDATORY true
 alter property Tag.created MANDATORY true
 alter property Tag.modified MANDATORY true
 create index Tag.title UNIQUE_HASH_INDEX
-create index Tag.titleasc NOTUNIQUE
+create index Tag.titleasc UNIQUE
 create index Tag.searchtitle on Tag (title) FULLTEXT ENGINE LUCENE
 
 ######################################################################################################################
