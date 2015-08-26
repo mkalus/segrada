@@ -96,7 +96,7 @@ public class FileController extends AbstractColoredController<IFile> {
 	}
 
 	/**
-	 * show files by reference
+	 * show entities by files reference
 	 * @param fileUid uid of file
 	 * @param referenceModel contain hits by this
 	 * @param errors json encoded errors
@@ -253,7 +253,7 @@ public class FileController extends AbstractColoredController<IFile> {
 	}
 
 	/**
-	 * add a reference to an entity
+	 * remove file reference from entity
 	 * @param referenceUid uid of reference
 	 * @param referenceModel reference model, e.g. "node"
 	 * @param sourceUid source uid to be removed

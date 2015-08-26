@@ -16,15 +16,40 @@
 		<div th:replace="partials/common :: taglist (tags=${entity.tags})"></div>
 		<h4 class="sg-data-header"><span class="fa fa-tag" th:title="#{Tag}"></span> <span th:text="${entity.title}">Tag</span></h4>
 
-		<div class="sg-margin-bottom sg-stop-flow" th:unless="${#lists.isEmpty(childTags)}">
-			<div th:replace="partials/common :: taglist (tags=${childTags})"></div>
+		<ul class="nav nav-tabs" role="tablist">
+			<li role="presentation" class="active"><a href="#tab1" th:href="${'#tab-1-' + entity.uid}" aria-controls="home" role="tab" data-toggle="tab" th:text="#{Hierarchy}">Hierarchy</a></li>
+			<li role="presentation"><a href="#node-ref" class="sg-replace-content" th:attr="data-url=@{/tag/by_tag/{uid}/node(uid=${entity.uid})}" th:href="${'#refs-by-tag-' + entity.uid + '-node'}" aria-controls="times" role="tab" data-toggle="tab" th:text="#{Nodes}">Nodes</a></li>
+			<li role="presentation"><a href="#relation-ref" class="sg-replace-content" th:attr="data-url=@{/tag/by_tag/{uid}/relation(uid=${entity.uid})}" th:href="${'#refs-by-tag-' + entity.uid + '-relation'}" aria-controls="times" role="tab" data-toggle="tab" th:text="#{Relations}">Relations</a></li>
+			<li role="presentation"><a href="#source-ref" class="sg-replace-content" th:attr="data-url=@{/tag/by_tag/{uid}/source(uid=${entity.uid})}" th:href="${'#refs-by-tag-' + entity.uid + '-source'}" aria-controls="times" role="tab" data-toggle="tab" th:text="#{Sources}">Sources</a></li>
+			<li role="presentation"><a href="#file-ref" class="sg-replace-content" th:attr="data-url=@{/tag/by_tag/{uid}/file(uid=${entity.uid})}" th:href="${'#refs-by-tag-' + entity.uid + '-file'}" aria-controls="times" role="tab" data-toggle="tab" th:text="#{Files}">Files</a></li>
+		</ul>
+
+		<div class="tab-content">
+			<div role="tabpanel" class="tab-pane active" id="tab1" th:id="${'tab-1-' + entity.uid}" >
+				<!--/* TODO: table of parent and child tag(s) - or graphical view? */-->
+
+				<div class="sg-margin-bottom sg-stop-flow" th:unless="${#lists.isEmpty(childTags)}">
+					<div th:replace="partials/common :: taglist (tags=${childTags})"></div>
+				</div>
+			</div>
+			<div role="tabpanel" class="tab-pane" id="node-ref" th:id="${'refs-by-tag-' + entity.uid + '-node'}">
+				<div th:replace="partials/common :: loadingicon"></div>
+			</div>
+			<div role="tabpanel" class="tab-pane" id="relation-ref" th:id="${'refs-by-tag-' + entity.uid + '-relation'}">
+				<div th:replace="partials/common :: loadingicon"></div>
+			</div>
+			<div role="tabpanel" class="tab-pane" id="source-ref" th:id="${'refs-by-tag-' + entity.uid + '-source'}">
+				<div th:replace="partials/common :: loadingicon"></div>
+			</div>
+			<div role="tabpanel" class="tab-pane" id="file-ref" th:id="${'refs-by-tag-' + entity.uid + '-file'}">
+				<div th:replace="partials/common :: loadingicon"></div>
+			</div>
 		</div>
 
+		<!--/* TODO: connect to new entity */-->
+		<!--/* TODO: connect to parent */-->
 
-		<!--TODO: connect to new entity -->
-		<!--TODO: connect to parent -->
-
-		<!--TODO: visual view of tag hierarchy -->
+		<!--/* TODO: visual view of tag hierarchy */-->
 
 		<div th:replace="partials/common :: datafooter (entity=${entity})"></div>
 	</div>

@@ -125,6 +125,15 @@ public class TagService extends AbstractRepositoryService<ITag, TagRepository> i
 		repository.removeTag(tagId, child);
 	}
 
+	/**
+	 * Remove existing tag connection
+	 * @param tagId id of tag
+	 * @param childId id of child
+	 */
+	public void removeTag(String tagId, String childId) {
+		repository.removeTag(tagId, childId);
+	}
+
 	@Override
 	public PaginationInfo<ITag> paginate(int page, int entriesPerPage, Map<String, Object> filters) {
 		return repository.paginate(page, entriesPerPage, filters);

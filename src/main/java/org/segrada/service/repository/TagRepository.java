@@ -117,6 +117,13 @@ public interface TagRepository extends CRUDRepository<ITag>, SearchTermRepositor
 	void removeTag(String tagId, SegradaTaggable child);
 
 	/**
+	 * Remove existing tag connection
+	 * @param tagId id of tag
+	 * @param childId node id that the tag is connected to
+	 */
+	void removeTag(String tagId, String childId);
+
+	/**
 	 * Checks whether node is a parent of possibleChild
 	 * @param node parent node
 	 * @param possibleChild possible child node

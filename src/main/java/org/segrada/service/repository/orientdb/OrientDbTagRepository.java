@@ -410,10 +410,15 @@ public class OrientDbTagRepository extends AbstractSegradaOrientDbRepository<ITa
 
 	@Override
 	public void removeTag(String tagId, SegradaTaggable child) {
+		removeTag(tagId, child.getId());
+	}
+
+	@Override
+	public void removeTag(String tagId, String childId) {
 		initDb();
 
 		// execute query
-		OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>("select @RID as id from IsTagOf where out.@class = 'Tag' AND out = " +  tagId + " AND in = " + child.getId() + " LIMIT 1");
+		OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>("select @RID as id from IsTagOf where out.@class = 'Tag' AND out = " +  tagId + " AND in = " + childId + " LIMIT 1");
 		List<ODocument> result = db.command(query).execute();
 
 		if (result.size() > 0) {

@@ -17,10 +17,9 @@ import org.segrada.util.Sluggify;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.*;
 
 /**
  * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]
@@ -81,6 +80,56 @@ public class TagController extends AbstractBaseController<ITag> {
 
 		// handle pagination
 		return handlePaginatedIndex(service, page, entriesPerPage, filters);
+	}
+
+	/**
+	 * show entities by tag reference
+	 * @param tagUid uid of tag
+	 * @param referenceModel contain hits by this
+	 * @param errors json encoded errors
+	 * @return view
+	 */
+	@GET
+	@Path("/by_tag/{uid}/{model}")
+	@Produces(MediaType.TEXT_HTML)
+	public Viewable byFile(
+			@PathParam("uid") String tagUid,
+			@PathParam("model") String referenceModel,
+			@QueryParam("errors") String errors // json object of errors
+	) {
+		ITag tag = service.findById(service.convertUidToId(tagUid));
+
+		// null, if empty
+		if (referenceModel != null && referenceModel.isEmpty()) referenceModel = null;
+		String modelName = referenceModel.substring(0, 1).toUpperCase() + referenceModel.substring(1);
+
+		List<SegradaTaggable> entities = service.findByTag(tag.getId(), false, new String[] { modelName });
+
+		// create model map
+		Map<String, Object> model = new HashMap<>();
+		model.put("uid", tagUid);
+		model.put("model", referenceModel);
+		model.put("modelName", modelName);
+		model.put("tag", tag);
+		model.put("entities", entities);
+		model.put("targetId", "#refs-by-tag-" + tagUid + "-" + referenceModel);
+
+		if (errors != null) {
+			try {
+				JSONObject errorData = new JSONObject(errors);
+				Map<String, String> errorMessages = new HashMap<>();
+				Iterator it = errorData.keys();
+				while (it.hasNext()) {
+					String key = (String) it.next();
+					errorMessages.put(key, errorData.getString(key));
+				}
+				model.put("errors", errorMessages);
+			} catch (Exception e) {
+				//TODO: log
+			}
+		}
+
+		return new Viewable("tag/by_tag", model);
 	}
 
 	@GET
@@ -156,6 +205,33 @@ public class TagController extends AbstractBaseController<ITag> {
 		}
 	}
 
+	/**
+	 * remove tag from entity
+	 * @param referenceUid uid of reference
+	 * @param referenceModel reference model, e.g. "node"
+	 * @param tagUid source uid to be removed
+	 * @return response
+	 */
+	@GET
+	@Path("/remove_tag/{model}/{uid}/{source}")
+	@Produces(MediaType.TEXT_HTML)
+	public Response removeTag(@PathParam("uid") String referenceUid, @PathParam("model") String referenceModel, @PathParam("source") String tagUid) {
+		ITag tag = service.findById(service.convertUidToId(tagUid));
+
+		// null, if empty
+		if (referenceModel != null && referenceModel.isEmpty()) referenceModel = null;
+
+		// do removal
+		if (tagUid != null && referenceModel != null && referenceUid != null) {
+			service.removeTag(tag.getId(), service.convertUidToId(referenceUid));
+		}
+
+		try {
+			return Response.seeOther(new URI(getBasePath() + "by_tag/" + tagUid + "/" + referenceModel)).build();
+		} catch (URISyntaxException e) {
+			return Response.ok(new Viewable("error", e.getMessage())).build();
+		}
+	}
 
 	@GET
 	@Path("/delete/{uid}/{empty}")

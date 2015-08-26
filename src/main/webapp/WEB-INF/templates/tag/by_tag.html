@@ -1,0 +1,66 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" th:lang="${#locale.language}">
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<title th:text="#{list.tag}">Tag</title>
+	<div th:include="partials/common :: head" th:remove="tag"></div>
+</head>
+
+<body>
+<div th:replace="partials/common :: browser"></div>
+
+<div class="container">
+	<div class="sg-control-content sg-file">
+		<h4 class="sg-control-header"><span th:replace="partials/common :: faIcon (modelName=${modelName})"></span> <span th:text="#{${modelName}}">References to tag</span></h4>
+
+		<p th:text="${#messages.msg('showEntities', entities.size())}">Size</p>
+
+		<table class="table table-hover table-striped table-condensed">
+			<tr>
+				<th class="text-center"><i class="fa fs-file"></i></th>
+				<th th:text="#{field.title}">Title</th>
+				<th class="col-xs-1" th:text="#{field.tags}">Tags</th>
+				<th></th>
+			</tr>
+			<tr th:each="entity : ${entities}" th:attr="data-data-dblclick=@{/{model}/show/{uid}(model=${model},uid=${entity.uid})}">
+				<td class="text-center">
+					<span class="sg-color-icon" th:style="'background-color: ' + ${entity.colorCode}" th:if="${entity.color}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+					<img src="#" th:src="@{/pictogram/file/{uid}(uid=${entity.pictogram.uid})}" th:alt-title="${entity.pictogram.title}" alt="" width="24" height="24" th:if="${entity.pictogram}"/>
+				</td>
+				<td th:text="${entity.title}">Title</td>
+				<td class="sg-taglist-contract">
+					<div th:replace="partials/common :: taglist (tags=${entity.tags})"></div>
+				</td>
+				<td class="text-right">
+					<div class="sg-data-icon-bar" role="group" aria-label="Actions">
+						<a class="sg-data-icon sg-data-add" href="#" th:title="#{Show}" th:href="@{/{model}/show/{uid}(model=${model},uid=${entity.uid})}"><i class="fa fa-eye"></i></a>
+						<a class="sg-data-icon sg-data-add" href="#" th:title="#{Edit}" th:href="@{/{model}/edit/{uid}(model=${model},uid=${entity.uid})}"><i class="fa fa-pencil"></i></a>
+						<a class="sg-data-icon" href="#" th:title="#{Unlink}" th:href="@{/tag/remove_tag/{model}/{source}/{uid}(model=${model},uid=${uid},source=${entity.uid})}" th:attr="data-confirm=${#messages.msg('ReallyUnlink', tag.title, entity.title)}"><i class="fa fa-unlink"></i></a>
+					</div>
+				</td>
+			</tr>
+		</table>
+
+		<!--/*<div class="sg-margin-bottom sg-stop-flow">
+			<h4 th:text="#{add.file_reference}">New File Reference</h4>
+
+			<form th:id="${'add-file-ref-' + uid}" action="#" th:action="${baseUrl}?${baseUrl}:@{/file/add_reference/{model}/{uid}(model=${model},uid=${uid})}" class="sg-control-form" th:attr="data-target-id=${targetId}">
+				<div class="form-group" th:classappend="${errors}?(${#maps.containsKey(errors, 'source')}?'has-error has-feedback')">
+					<label class="col-sm-2 control-label" th:for="${'ref-source-' + uid}"><span th:text="#{File}"></span><span class="text-danger"> *</span></label>
+					<div class="col-sm-10">
+						<input type="text" th:id="${'ref-source-' + uid + '-select'}" name="sourceName" class="form-control sg-file-search" th:placeholder="#{Source}" th:attr="data-id=${'ref-source-' + uid},data-select-id=${selectReference}" />
+						<input type="hidden" th:id="${'ref-source-' + uid}" name="source" />
+						<span class="help-block" th:text="${errors}?(${errors['source']}?${#messages.msg(errors['source'])})">Error</span>
+					</div>
+				</div>
+
+				<div th:replace="partials/form :: submit (isNewEntity=true)"></div>
+			</form>
+		</div>*/-->
+	</div>
+</div>
+
+<div th:replace="partials/common :: footer"></div>
+</body>
+</html>
