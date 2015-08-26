@@ -234,6 +234,12 @@ public class OrientDbSourceRepositoryTest {
 	}
 
 	@Test
+	public void testGetDefaultOrder() throws Exception {
+		assertEquals(" ORDER BY shortTitleAsc", repository.getDefaultOrder(true));
+		assertEquals(" shortTitleAsc", repository.getDefaultOrder(false));
+	}
+
+	@Test
 	public void testFindBySearchTerm() throws Exception {
 		ISource source = new Source();
 		source.setShortTitle("This is the short title");

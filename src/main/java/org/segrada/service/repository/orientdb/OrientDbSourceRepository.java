@@ -16,10 +16,7 @@ import org.segrada.service.util.PaginationInfo;
 import org.segrada.util.OrientStringEscape;
 import org.segrada.util.Sluggify;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]
@@ -101,6 +98,11 @@ public class OrientDbSourceRepository extends AbstractAnnotatedOrientDbRepositor
 	}
 
 	@Override
+	protected String getDefaultOrder(boolean addOrderBy) {
+		return (addOrderBy?" ORDER BY":"").concat(" shortTitleAsc");
+	}
+
+	@Override
 	public ISource findByRef(String ref) {
 		if (ref == null || "".equals(ref)) return null;
 
@@ -179,6 +181,11 @@ public class OrientDbSourceRepository extends AbstractAnnotatedOrientDbRepositor
 		return hits;
 	}
 
+	/**
+	 * keep allowed sorting fields here
+	 */
+	private static final Set<String> allowedSorts = new HashSet<>(Arrays.asList(new String[]{"shortTitleAsc", "shortRef"}));
+
 	@Override
 	public PaginationInfo<ISource> paginate(int page, int entriesPerPage, Map<String, Object> filters) {
 		// avoid NPEs
@@ -206,8 +213,18 @@ public class OrientDbSourceRepository extends AbstractAnnotatedOrientDbRepositor
 			constraints.add(sb.append("]").toString());
 		}
 
+		// sorting
+		String customOrder = null;
+		if (filters.get("sort") != null) {
+			String field = (String) filters.get("sort");
+			if (allowedSorts.contains(field)) { // sanity check
+				String dir = getDirectionFromString(filters.get("dir"));
+				if (dir != null) customOrder = field.concat(dir);
+			}
+		}
+
 		// let helper do most of the work
-		return super.paginate(page, entriesPerPage, constraints, null);
+		return super.paginate(page, entriesPerPage, constraints, customOrder);
 	}
 
 	/**

@@ -56,7 +56,7 @@ public class NodeController extends AbstractColoredController<INode> {
 			@QueryParam("minEntry") String minEntry,
 			@QueryParam("maxEntry") String maxEntry,
 			@QueryParam("tags") List<String> tags,
-			@QueryParam("sort") String sortBy, // title, minJD, maxJD
+			@QueryParam("sort") String sortBy, // titleasc, minJD, maxJD
 			@QueryParam("dir") String sortOrder // asc, desc, none
 	) {
 		// filters:

@@ -296,8 +296,18 @@ public class OrientDbFileRepository extends AbstractAnnotatedOrientDbRepository<
 			constraints.add(sb.append("]").toString());
 		}
 
+		// sorting
+		String customOrder = null;
+		if (filters.get("sort") != null) {
+			String field = (String) filters.get("sort");
+			if (field.equalsIgnoreCase("title")) { // sanity check
+				String dir = getDirectionFromString(filters.get("dir"));
+				if (dir != null) customOrder = "title".concat(dir);
+			}
+		}
+
 		// let helper do most of the work
-		return super.paginate(page, entriesPerPage, constraints, null);
+		return super.paginate(page, entriesPerPage, constraints, customOrder);
 	}
 
 	/**

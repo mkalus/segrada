@@ -70,7 +70,9 @@ public class FileController extends AbstractColoredController<IFile> {
 			@QueryParam("entriesPerPage") int entriesPerPage,
 			@QueryParam("reset") int reset,
 			@QueryParam("search") String search,
-			@QueryParam("tags") List<String> tags
+			@QueryParam("tags") List<String> tags,
+			@QueryParam("sort") String sortBy, // titleasc
+			@QueryParam("dir") String sortOrder // asc, desc, none
 	) {
 		// filters:
 		Map<String, Object> filters = new HashMap<>();
@@ -83,6 +85,11 @@ public class FileController extends AbstractColoredController<IFile> {
 				tags.toArray(tagArray);
 				filters.put("tags", tagArray);
 			}
+		}
+		// sorting
+		if (sortBy != null && sortOrder != null) {
+			filters.put("sort", sortBy);
+			filters.put("dir", sortOrder);
 		}
 
 		return handlePaginatedIndex(service, page, entriesPerPage, filters);

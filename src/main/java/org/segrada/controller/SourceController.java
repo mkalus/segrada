@@ -55,7 +55,9 @@ public class SourceController extends AbstractColoredController<ISource> {
 			@QueryParam("reset") int reset,
 			@QueryParam("search") String search,
 			@QueryParam("short_ref") String shortRef,
-			@QueryParam("tags") List<String> tags
+			@QueryParam("tags") List<String> tags,
+			@QueryParam("sort") String sortBy, // shortRef, shortTitleasc
+			@QueryParam("dir") String sortOrder // asc, desc, none
 	) {
 		// filters:
 		Map<String, Object> filters = new HashMap<>();
@@ -70,6 +72,13 @@ public class SourceController extends AbstractColoredController<ISource> {
 				filters.put("tags", tagArray);
 			}
 		}
+		// sorting
+		if (sortBy != null && sortOrder != null) {
+			filters.put("sort", sortBy);
+			filters.put("dir", sortOrder);
+		}
+
+		// handle pagination
 		return handlePaginatedIndex(service, page, entriesPerPage, filters);
 	}
 
