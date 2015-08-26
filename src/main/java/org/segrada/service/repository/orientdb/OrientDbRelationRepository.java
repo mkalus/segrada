@@ -28,10 +28,7 @@ import org.slf4j.LoggerFactory;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.annotation.Nullable;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]
@@ -329,6 +326,11 @@ public class OrientDbRelationRepository extends AbstractCoreOrientDbRepository<I
 		}
 	}
 
+	/**
+	 * keep allowed sorting fields here
+	 */
+	private static final Set<String> allowedSorts = new HashSet<>(Arrays.asList(new String[]{"minJD", "maxJD"}));
+
 	@Override
 	public PaginationInfo<IRelation> paginate(int page, int entriesPerPage, Map<String, Object> filters) {
 		// avoid NPEs
@@ -396,7 +398,17 @@ public class OrientDbRelationRepository extends AbstractCoreOrientDbRepository<I
 			//TODO: test
 		}
 
+		// sorting
+		String customOrder = null;
+		if (filters.get("sort") != null) {
+			String field = (String) filters.get("sort");
+			if (allowedSorts.contains(field)) { // sanity check
+				String dir = getDirectionFromString(filters.get("dir"));
+				if (dir != null) customOrder = field.concat(dir);
+			}
+		}
+
 		// let helper do most of the work
-		return super.paginate(page, entriesPerPage, constraints, null);
+		return super.paginate(page, entriesPerPage, constraints, customOrder);
 	}
 }

@@ -176,7 +176,7 @@ public class OrientDbRelationTypeRepository extends AbstractColoredOrientDbRepos
 
 	@Override
 	protected String getDefaultOrder(boolean addOrderBy) {
-		return (addOrderBy?" ORDER BY":"").concat(" fromTitle ASC, toTitle ASC");
+		return (addOrderBy?" ORDER BY":"").concat(" fromTitleAsc ASC, toTitleAsc ASC");
 	}
 
 	@Override
@@ -233,8 +233,18 @@ public class OrientDbRelationTypeRepository extends AbstractColoredOrientDbRepos
 			constraints.add(sb.append("]").toString());
 		}
 
+		// sorting
+		String customOrder = null;
+		if (filters.get("sort") != null) {
+			String field = (String) filters.get("sort");
+			if (field.equalsIgnoreCase("fromToTitle")) { // sanity check
+				String dir = getDirectionFromString(filters.get("dir"));
+				if (dir != null) customOrder = "fromTitleAsc".concat(dir).concat(", toTitleAsc").concat(dir);
+			}
+		}
+
 		// let helper do most of the work
-		return super.paginate(page, entriesPerPage, constraints, null);
+		return super.paginate(page, entriesPerPage, constraints, customOrder);
 	}
 
 	/**

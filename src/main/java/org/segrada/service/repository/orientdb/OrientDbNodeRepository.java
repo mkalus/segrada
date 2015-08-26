@@ -217,8 +217,7 @@ public class OrientDbNodeRepository extends AbstractCoreOrientDbRepository<INode
 			if (maxJD < Long.MAX_VALUE) constraints.add("maxJD <= " + maxJD);
 		}
 
-
-			// tags
+		// tags
 		if (filters.containsKey("tags")) {
 			StringBuilder sb = new StringBuilder(" in('IsTagOf').title IN [ ");
 			boolean first = true;

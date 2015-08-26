@@ -11,7 +11,7 @@
 <div th:replace="partials/common :: browser"></div>
 
 <div class="container">
-	<div class="sg-control-content sg-relation-type">
+	<div class="sg-control-content sg-relation-type" th:with="myurl=@{${baseUrl}?${baseUrl}:'/relation_type'}">
 		<div class="pull-right">
 			<a href="#" th:href="@{/relation_type/add}" th:title="#{add.relation_type}" class="btn btn-success btn-sm sg-data-add"><i class="fa fa-plus"></i></a>
 		</div>
@@ -20,16 +20,16 @@
 
 		<p th:text="${#messages.msg('pagination', paginationInfo.page, paginationInfo.pages)}">Pages</p>
 
-		<form method="get" action="#" th:action="@{${baseUrl}?${baseUrl}:'/relation_type'}" class="sg-control-form" th:attr="data-target-id=${targetId}">
+		<form method="get" action="#" th:action="${myurl}" class="sg-control-form" th:attr="data-target-id=${targetId}">
 			<table class="table table-hover table-striped table-condensed">
 				<tr>
 					<th class="text-center"><i class="fa fa-paperclip"></i></th>
-					<th th:text="#{field.title}">Short Title</th>
+					<th th:with="sortHelper=${@org.segrada.rendering.thymeleaf.util.TableSortPreprocessor@createSortLink(myurl, 'fromToTitle', 'fromToTitle', 'asc', filters)}"><a href="#" class="sg-control-set" th:href="${sortHelper.url}" th:utext="|#{field.title}${sortHelper.icon}|">Title</a></th>
 					<th class="col-xs-1" th:text="#{field.tags}">Tags</th>
 					<th></th>
 				</tr>
 				<tr>
-					<td class="text-center"><a class="sg-control-set btn btn-sm btn-link" href="#" th:href="@{${baseUrl}?${baseUrl}:'/relation_type'(reset=1)}" th:title="#{reset}" th:attr="data-target-id=${targetId}"><i class="fa fa-eraser"></i></a></td>
+					<td class="text-center"><a class="sg-control-set btn btn-sm btn-link" href="#" th:href="@{${myurl}(reset=1)}" th:title="#{reset}" th:attr="data-target-id=${targetId}"><i class="fa fa-eraser"></i></a></td>
 					<td><input type="text" class="form-control" th:value="${filters.search}" name="search" th:placeholder="#{field.filter_title}" title="#{field.filter_title}" /></td>
 					<td>
 						<select multiple="multiple" type="text" name="tags" class="sg-tags">

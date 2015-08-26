@@ -60,7 +60,9 @@ public class RelationController extends AbstractColoredController<IRelation> {
 			//@QueryParam("search") String search,
 			@QueryParam("minEntry") String minEntry,
 			@QueryParam("maxEntry") String maxEntry,
-			@QueryParam("tags") List<String> tags
+			@QueryParam("tags") List<String> tags,
+			@QueryParam("sort") String sortBy, // minJD, maxJD
+			@QueryParam("dir") String sortOrder // asc, desc, none
 	) {
 		// filters:
 		Map<String, Object> filters = new HashMap<>();
@@ -75,6 +77,11 @@ public class RelationController extends AbstractColoredController<IRelation> {
 				tags.toArray(tagArray);
 				filters.put("tags", tagArray);
 			}
+		}
+		// sorting
+		if (sortBy != null && sortOrder != null) {
+			filters.put("sort", sortBy);
+			filters.put("dir", sortOrder);
 		}
 
 		// handle pagination

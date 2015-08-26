@@ -50,7 +50,9 @@ public class RelationTypeController extends AbstractColoredController<IRelationT
 			@QueryParam("entriesPerPage") int entriesPerPage,
 			@QueryParam("reset") int reset,
 			@QueryParam("search") String search,
-			@QueryParam("tags") List<String> tags
+			@QueryParam("tags") List<String> tags,
+			@QueryParam("sort") String sortBy, // fromToTitle
+			@QueryParam("dir") String sortOrder // asc, desc, none
 	) {
 		// filters:
 		Map<String, Object> filters = new HashMap<>();
@@ -64,7 +66,13 @@ public class RelationTypeController extends AbstractColoredController<IRelationT
 				filters.put("tags", tagArray);
 			}
 		}
+		// sorting
+		if (sortBy != null && sortOrder != null) {
+			filters.put("sort", sortBy);
+			filters.put("dir", sortOrder);
+		}
 
+		// handle pagination
 		return handlePaginatedIndex(service, page, entriesPerPage, filters);
 	}
 

@@ -137,8 +137,8 @@ public class OrientDbRelationTypeRepositoryTest {
 
 	@Test
 	public void testGetDefaultOrder() throws Exception {
-		assertEquals(" ORDER BY fromTitle ASC, toTitle ASC", repository.getDefaultOrder(true));
-		assertEquals(" fromTitle ASC, toTitle ASC", repository.getDefaultOrder(false));
+		assertEquals(" ORDER BY fromTitleAsc ASC, toTitleAsc ASC", repository.getDefaultOrder(true));
+		assertEquals(" fromTitleAsc ASC, toTitleAsc ASC", repository.getDefaultOrder(false));
 	}
 
 	@Test
