@@ -78,6 +78,7 @@ public class OrientDbRelationTypeRepositoryTest {
 		// now create an entity
 		ODocument document = new ODocument("RelationType")
 				.field("fromTitle", "fromTitle").field("toTitle", "toTitle")
+				.field("fromTitleAsc", "fromTitle").field("toTitleAsc", "toTitle")
 				.field("description", "Description")
 				.field("descriptionMarkup", "default")
 				.field("color", 0x123456)
@@ -187,7 +188,7 @@ public class OrientDbRelationTypeRepositoryTest {
 
 	@Test
 	public void testDelete() throws Exception {
-		ODocument node1 = new ODocument("Node").field("title", "title 1")
+		ODocument node1 = new ODocument("Node").field("title", "title 1").field("titleasc", "title-1")
 				.field("alternativeTitles", "alternativeTitles")
 				.field("description", "Description")
 				.field("descriptionMarkup", "default")
@@ -195,7 +196,7 @@ public class OrientDbRelationTypeRepositoryTest {
 				.field("created", 1L)
 				.field("modified", 2L).save();
 
-		ODocument node2 = new ODocument("Node").field("title", "title 2")
+		ODocument node2 = new ODocument("Node").field("title", "title 2").field("titleasc", "title-1")
 				.field("alternativeTitles", "alternativeTitles")
 				.field("description", "Description")
 				.field("descriptionMarkup", "default")
@@ -206,6 +207,7 @@ public class OrientDbRelationTypeRepositoryTest {
 		// now create an entity
 		ODocument relationType = new ODocument("RelationType")
 				.field("fromTitle", "fromTitle").field("toTitle", "toTitle")
+				.field("fromTitleAsc", "fromTitle").field("toTitleAsc", "toTitle")
 				.field("description", "Description")
 				.field("descriptionMarkup", "default")
 				.field("color", 0x123456)

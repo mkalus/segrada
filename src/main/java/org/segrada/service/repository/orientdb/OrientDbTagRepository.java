@@ -1,6 +1,7 @@
 package org.segrada.service.repository.orientdb;
 
 import com.google.inject.Inject;
+import com.orientechnologies.orient.core.db.ODatabaseRecordThreadLocal;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.orientechnologies.orient.core.sql.OCommandSQL;
 import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
@@ -354,6 +355,8 @@ public class OrientDbTagRepository extends AbstractSegradaOrientDbRepository<ITa
 		if (entity == null || entity.getId() == null) return new String[0];
 
 		initDb();
+		// workaround for testing TODO: remove?
+		ODatabaseRecordThreadLocal.INSTANCE.set(db);
 
 		// only directly connected tags?
 		List<ODocument> result;

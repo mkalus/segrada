@@ -267,7 +267,7 @@ public class AbstractSegradaOrientDbRepositoryTest {
 
 	@Test
 	public void testConvertToPictogram() throws Exception {
-		ODocument document = new ODocument("Pictogram").field("title", "title")
+		ODocument document = new ODocument("Pictogram").field("title", "title").field("titleasc", "title")
 				.field("fileIdentifier", "test.txt")
 				.field("created", 1L).field("modified", 2L);
 		// persist to database to create id
@@ -285,7 +285,7 @@ public class AbstractSegradaOrientDbRepositoryTest {
 	@Test
 	public void testLazyLoadUser() throws Exception {
 		ODocument document = new ODocument("User").field("login", "login")
-				.field("password", "password").field("name", "name")
+				.field("password", "password").field("name", "name").field("nameasc", "name")
 				.field("role", "USER").field("created", 1L).field("modified", 2L)
 				.field("lastLogin", 3L).field("active", true);
 		document.save();
@@ -300,7 +300,7 @@ public class AbstractSegradaOrientDbRepositoryTest {
 	@Test
 	public void testLazyLoadTags() throws Exception {
 		// create a node
-		ODocument node = new ODocument("Node").field("title", "title 1")
+		ODocument node = new ODocument("Node").field("title", "title 1").field("titleasc", "title-1")
 				.field("alternativeTitles", "alternativeTitles")
 				.field("description", "Description")
 				.field("descriptionMarkup", "default")
@@ -309,7 +309,7 @@ public class AbstractSegradaOrientDbRepositoryTest {
 				.field("modified", 2L)
 				.save();
 		// create tag
-		ODocument tag = new ODocument("Tag").field("title", "title").field("created", 1L).field("modified", 2L).save();
+		ODocument tag = new ODocument("Tag").field("title", "title").field("titleasc", "title").field("created", 1L).field("modified", 2L).save();
 		// connect
 		orientDBTestInstance.getDatabase().command(new OCommandSQL("create edge IsTagOf from " + tag.getIdentity().toString() + " to " + node.getIdentity().toString())).execute();
 

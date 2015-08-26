@@ -357,6 +357,7 @@ abstract public class AbstractOrientDbRepository<T extends SegradaEntity> implem
 
 			// first, do a count of the entities
 			String sql = "select count(*) as count".concat(constraint);
+			if (logger.isTraceEnabled()) logger.trace(sql);
 			int total = ((ODocument) db.query(new OSQLSynchQuery<ODocument>(sql)).get(0)).field("count", Integer.class);
 
 			if (total == 0)
@@ -386,7 +387,8 @@ abstract public class AbstractOrientDbRepository<T extends SegradaEntity> implem
 			else customOrder = getDefaultOrder(); // no, just use default order
 
 			// create query itself and fetch entities
-			sql = "select *".concat(constraint).concat(skipLimit).concat(customOrder);
+			sql = "select *".concat(constraint).concat(customOrder).concat(skipLimit);
+			if (logger.isTraceEnabled()) logger.trace(sql);
 
 			// execute query
 			List<ODocument> list = db.command(new OSQLSynchQuery<>(sql)).execute();

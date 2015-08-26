@@ -67,7 +67,7 @@ public class OrientDbPictogramRepositoryTest {
 
 	@Test
 	public void testConvertToEntity() throws Exception {
-		ODocument document = new ODocument("Pictogram").field("title", "title")
+		ODocument document = new ODocument("Pictogram").field("title", "title").field("titleasc", "title")
 				.field("fileIdentifier", "test.txt")
 				.field("created", 1L).field("modified", 2L);
 		// persist to database to create id

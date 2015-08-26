@@ -165,7 +165,7 @@ public class OrientDbSourceReferenceRepository extends AbstractSegradaOrientDbRe
 				.concat(" LIMIT ").concat(Integer.toString(entriesPerPage));
 
 		// create query itself and fetch entities
-		query = new OSQLSynchQuery<>("select * from SourceReference where " + direction + " = ?" + skipLimit + getDefaultOrder());
+		query = new OSQLSynchQuery<>("select * from SourceReference where " + direction + " = ?" + getDefaultOrder() + skipLimit);
 		result = db.command(query).execute(new ORecordId(id));
 
 		for (ODocument document : result) {

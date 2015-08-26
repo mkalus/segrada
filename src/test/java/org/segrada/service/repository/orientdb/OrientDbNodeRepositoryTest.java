@@ -86,7 +86,7 @@ public class OrientDbNodeRepositoryTest {
 		//TODO: test pictogram, tags
 
 		// now create an entity
-		ODocument document = new ODocument("Node").field("title", "title")
+		ODocument document = new ODocument("Node").field("title", "title").field("titleasc", "title")
 				.field("alternativeTitles", "alternativeTitles")
 				.field("description", "Description")
 				.field("descriptionMarkup", "default")
@@ -390,6 +390,7 @@ public class OrientDbNodeRepositoryTest {
 
 		// connect nodes
 		ODocument node2 = new ODocument("Node").field("title", "title 2")
+				.field("titleasc", "title-2")
 				.field("alternativeTitles", "alternativeTitles")
 				.field("description", "Description")
 				.field("descriptionMarkup", "default")
@@ -400,6 +401,7 @@ public class OrientDbNodeRepositoryTest {
 		// now create an entity
 		ODocument relationType = new ODocument("RelationType")
 				.field("fromTitle", "fromTitle").field("toTitle", "toTitle")
+				.field("fromTitleAsc", "fromTitle").field("toTitleAsc", "toTitle")
 				.field("description", "Description")
 				.field("descriptionMarkup", "default")
 				.field("color", 0x123456)

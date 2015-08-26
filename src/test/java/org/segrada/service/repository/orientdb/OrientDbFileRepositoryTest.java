@@ -78,6 +78,7 @@ public class OrientDbFileRepositoryTest {
 		// create an entity
 		ODocument document = new ODocument("File")
 				.field("title", "title")
+				.field("titleasc", "title")
 				.field("filename", "filename.txt")
 				.field("copyright", "copyright")
 				.field("mimeType", "mimeType")
@@ -288,6 +289,7 @@ public class OrientDbFileRepositoryTest {
 		// create an entity
 		ODocument document = new ODocument("File")
 				.field("title", "title")
+				.field("titleasc", "title")
 				.field("filename", "filename.txt")
 				.field("copyright", "copyright")
 				.field("mimeType", "mimeType")
@@ -330,6 +332,7 @@ public class OrientDbFileRepositoryTest {
 		// create an entity
 		ODocument document = new ODocument("File")
 				.field("title", "title")
+				.field("titleasc", "title")
 				.field("filename", "filename.txt")
 				.field("copyright", "copyright")
 				.field("mimeType", "mimeType")

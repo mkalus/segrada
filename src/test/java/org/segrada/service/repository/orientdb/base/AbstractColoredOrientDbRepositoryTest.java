@@ -82,7 +82,7 @@ public class AbstractColoredOrientDbRepositoryTest {
 		assertNull(document1.field("pictogram"));
 
 		// ok, now we add some data
-		ODocument document = new ODocument("Pictogram").field("title", "title")
+		ODocument document = new ODocument("Pictogram").field("title", "title").field("titleasc", "title")
 				.field("fileIdentifier", "test.txt")
 				.field("created", 1L).field("modified", 2L);
 		// persist to database to create id
@@ -105,7 +105,7 @@ public class AbstractColoredOrientDbRepositoryTest {
 
 	@Test
 	public void testPopulateEntityWithColored() throws Exception {
-		ODocument pictogram = new ODocument("Pictogram").field("title", "title").field("fileIdentifier", "test.txt")
+		ODocument pictogram = new ODocument("Pictogram").field("title", "title").field("titleasc", "title").field("titleasc", "title").field("fileIdentifier", "test.txt")
 				.field("created", 1L).field("modified", 2L);
 		pictogram.save();
 

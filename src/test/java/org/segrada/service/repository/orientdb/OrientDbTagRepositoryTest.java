@@ -73,7 +73,7 @@ public class OrientDbTagRepositoryTest {
 
 	@Test
 	public void testConvertToEntity() throws Exception {
-		ODocument document = new ODocument("Tag").field("title", "title").field("created", 1L).field("modified", 2L);
+		ODocument document = new ODocument("Tag").field("title", "title").field("titleasc", "title").field("created", 1L).field("modified", 2L);
 		document.save();
 
 		ITag tag = repository.convertToEntity(document);
@@ -401,7 +401,7 @@ public class OrientDbTagRepositoryTest {
 		repository.save(child);
 
 		// now create an entity
-		ODocument document1 = new ODocument("Node").field("title", "title 1")
+		ODocument document1 = new ODocument("Node").field("title", "title 1").field("titleasc", "title-1")
 				.field("alternativeTitles", "alternativeTitles")
 				.field("description", "Description")
 				.field("descriptionMarkup", "default")
@@ -414,7 +414,7 @@ public class OrientDbTagRepositoryTest {
 		node1.setId(document1.getIdentity().toString());
 
 		// now create an entity
-		ODocument document2 = new ODocument("Node").field("title", "title 2")
+		ODocument document2 = new ODocument("Node").field("title", "title 2").field("titleasc", "title-1")
 				.field("alternativeTitles", "alternativeTitles")
 				.field("description", "Description")
 				.field("descriptionMarkup", "default")
@@ -509,7 +509,7 @@ public class OrientDbTagRepositoryTest {
 		repository.save(child2);
 
 		// now create an entity
-		ODocument document1 = new ODocument("Node").field("title", "title 1")
+		ODocument document1 = new ODocument("Node").field("title", "title 1").field("titleasc", "title-1")
 				.field("alternativeTitles", "alternativeTitles")
 				.field("description", "Description")
 				.field("descriptionMarkup", "default")
@@ -522,7 +522,7 @@ public class OrientDbTagRepositoryTest {
 		node1.setId(document1.getIdentity().toString());
 
 		// now create an entity
-		ODocument document2 = new ODocument("Node").field("title", "title 2")
+		ODocument document2 = new ODocument("Node").field("title", "title 2").field("titleasc", "title-2")
 				.field("alternativeTitles", "alternativeTitles")
 				.field("description", "Description")
 				.field("descriptionMarkup", "default")
@@ -567,7 +567,7 @@ public class OrientDbTagRepositoryTest {
 		repository.save(child2);
 
 		// now create an entity
-		ODocument document1 = new ODocument("Node").field("title", "title 1")
+		ODocument document1 = new ODocument("Node").field("title", "title 1").field("titleasc", "title-1")
 				.field("alternativeTitles", "alternativeTitles")
 				.field("description", "Description")
 				.field("descriptionMarkup", "default")
@@ -580,7 +580,7 @@ public class OrientDbTagRepositoryTest {
 		node1.setId(document1.getIdentity().toString());
 
 		// now create an entity
-		ODocument document2 = new ODocument("Node").field("title", "title 2")
+		ODocument document2 = new ODocument("Node").field("title", "title 2").field("titleasc", "title-2")
 				.field("alternativeTitles", "alternativeTitles")
 				.field("description", "Description")
 				.field("descriptionMarkup", "default")

@@ -98,13 +98,13 @@ public class AbstractAnnotatedOrientDbRepositoryTest {
 		document.save();
 
 		// create tag
-		ODocument tag = new ODocument("Tag").field("title", "title").field("created", 1L).field("modified", 2L);
+		ODocument tag = new ODocument("Tag").field("title", "title").field("titleasc", "title").field("created", 1L).field("modified", 2L);
 		tag.save();
 		// ... and connect
 		factory.getDb().command(new OCommandSQL("create edge IsTagOf from " + tag.getIdentity().toString() + " to " + document.getIdentity().toString())).execute();
 
 		// create source
-		ODocument source = new ODocument("Source").field("shortTitle", "shortTitle").field("shortRef", "shortRef")
+		ODocument source = new ODocument("Source").field("shortTitle", "shortTitle").field("shortTitleasc", "shortTitle").field("shortRef", "shortRef")
 				.field("created", 1L).field("modified", 2L);
 		source.save();
 
@@ -122,6 +122,7 @@ public class AbstractAnnotatedOrientDbRepositoryTest {
 
 		// create a file
 		ODocument file = new ODocument("File").field("filename", "filename.txt").field("mimeType", "mimeType")
+				.field("title", "title").field("titleasc", "title")
 				.field("indexFullText", true).field("containFile", false).field("fileIdentifier", "fileIdentifier.txt")
 				.field("descriptionMarkup", "default").field("created", 1L).field("modified", 2L);
 		file.save();
@@ -163,7 +164,7 @@ public class AbstractAnnotatedOrientDbRepositoryTest {
 		assertTrue(list.isEmpty());
 
 		// create source
-		ODocument source = new ODocument("Source").field("shortTitle", "shortTitle").field("shortRef", "shortRef")
+		ODocument source = new ODocument("Source").field("shortTitle", "shortTitle").field("shortTitleasc", "shortTitle").field("shortTitleasc", "shortTitle").field("shortRef", "shortRef")
 				.field("created", 1L).field("modified", 2L);
 		source.save();
 
@@ -212,6 +213,7 @@ public class AbstractAnnotatedOrientDbRepositoryTest {
 
 		// create a file
 		ODocument file = new ODocument("File").field("filename", "filename.txt").field("mimeType", "mimeType")
+				.field("title", "title").field("titleasc", "title")
 				.field("indexFullText", true).field("containFile", false).field("fileIdentifier", "fileIdentifier.txt")
 				.field("descriptionMarkup", "default").field("created", 1L).field("modified", 2L);
 		file.save();
@@ -312,13 +314,13 @@ public class AbstractAnnotatedOrientDbRepositoryTest {
 		document.save();
 
 		// create tag
-		ODocument tag = new ODocument("Tag").field("title", "title").field("created", 1L).field("modified", 2L);
+		ODocument tag = new ODocument("Tag").field("title", "title").field("titleasc", "title").field("created", 1L).field("modified", 2L);
 		tag.save();
 		// ... and connect
 		factory.getDb().command(new OCommandSQL("create edge IsTagOf from " + tag.getIdentity().toString() + " to " + document.getIdentity().toString())).execute();
 
 		// create source
-		ODocument source = new ODocument("Source").field("shortTitle", "shortTitle").field("shortRef", "shortRef")
+		ODocument source = new ODocument("Source").field("shortTitle", "shortTitle").field("shortTitleasc", "shortTitle").field("shortRef", "shortRef")
 				.field("created", 1L).field("modified", 2L);
 		source.save();
 
@@ -336,6 +338,7 @@ public class AbstractAnnotatedOrientDbRepositoryTest {
 
 		// create a file
 		ODocument file = new ODocument("File").field("filename", "filename.txt").field("mimeType", "mimeType")
+				.field("title", "title").field("titleasc", "title")
 				.field("indexFullText", true).field("containFile", false).field("fileIdentifier", "fileIdentifier.txt")
 				.field("descriptionMarkup", "default").field("created", 1L).field("modified", 2L);
 		file.save();

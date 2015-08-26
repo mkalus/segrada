@@ -80,6 +80,7 @@ public class OrientDbSourceRepositoryTest {
 		// now create an entity
 		ODocument document = new ODocument("Source")
 				.field("shortTitle", "shortTitle")
+				.field("shortTitleasc", "shortTitle")
 				.field("shortRef", "shortRef")
 				.field("url", "url")
 				.field("productCode", "productCode")

@@ -173,7 +173,7 @@ public class OrientDbSchemaUpdater {
 				if (!line.equals("") && !line.startsWith("#"))
 					try {
 						db.command(new OCommandSQL(line)).execute();
-						logger.info(line);
+						//logger.info(line);
 					} catch (Exception e) {
 						logger.warn("Exception in schema update while executing \"" + line + "\"", e);
 					} catch (Error e) {

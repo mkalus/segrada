@@ -72,7 +72,7 @@ public class OrientDbPeriodRepositoryTest {
 
 	@Test
 	public void testConvertToEntity() throws Exception {
-		ODocument parent = new ODocument("Node").field("title", "ref1").field("description", "desc")
+		ODocument parent = new ODocument("Node").field("title", "ref1").field("titleasc", "ref1").field("description", "desc")
 				.field("descriptionMarkup", "default").field("created", 1L).field("modified", 2L);
 		parent.save();
 
@@ -103,7 +103,7 @@ public class OrientDbPeriodRepositoryTest {
 
 	@Test
 	public void testConvertToDocument() throws Exception {
-		ODocument parent = new ODocument("Node").field("title", "ref1").field("description", "desc")
+		ODocument parent = new ODocument("Node").field("title", "ref1").field("titleasc", "ref1").field("description", "desc")
 				.field("descriptionMarkup", "default").field("created", 1L).field("modified", 2L);
 		parent.save();
 
@@ -143,10 +143,10 @@ public class OrientDbPeriodRepositoryTest {
 
 	@Test
 	public void testFindByParent() throws Exception {
-		ODocument parent1 = new ODocument("Node").field("title", "ref1").field("description", "desc")
+		ODocument parent1 = new ODocument("Node").field("title", "ref1").field("titleasc", "ref1").field("description", "desc")
 				.field("descriptionMarkup", "default").field("created", 1L).field("modified", 2L);
 		parent1.save();
-		ODocument parent2 = new ODocument("Node").field("title", "ref2").field("description", "desc")
+		ODocument parent2 = new ODocument("Node").field("title", "ref2").field("titleasc", "ref2").field("description", "desc")
 				.field("descriptionMarkup", "default").field("created", 1L).field("modified", 2L);
 		parent2.save();
 
@@ -187,10 +187,10 @@ public class OrientDbPeriodRepositoryTest {
 
 	@Test
 	public void testFindWithin() throws Exception {
-		ODocument parent1 = new ODocument("Node").field("title", "ref1").field("description", "desc")
+		ODocument parent1 = new ODocument("Node").field("title", "ref1").field("titleasc", "ref1").field("titleasc", "ref1").field("description", "desc")
 				.field("descriptionMarkup", "default").field("created", 1L).field("modified", 2L);
 		parent1.save();
-		ODocument parent2 = new ODocument("Node").field("title", "ref2").field("description", "desc")
+		ODocument parent2 = new ODocument("Node").field("title", "ref2").field("titleasc", "ref2").field("titleasc", "ref2").field("description", "desc")
 				.field("descriptionMarkup", "default").field("created", 1L).field("modified", 2L);
 		parent2.save();
 
@@ -285,10 +285,10 @@ public class OrientDbPeriodRepositoryTest {
 
 	@Test
 	public void testFindWithin1() throws Exception {
-		ODocument parent1 = new ODocument("Node").field("title", "ref1").field("description", "desc")
+		ODocument parent1 = new ODocument("Node").field("title", "ref1").field("titleasc", "ref1").field("description", "desc")
 				.field("descriptionMarkup", "default").field("created", 1L).field("modified", 2L);
 		parent1.save();
-		ODocument parent2 = new ODocument("Node").field("title", "ref2").field("description", "desc")
+		ODocument parent2 = new ODocument("Node").field("title", "ref2").field("titleasc", "ref2").field("description", "desc")
 				.field("descriptionMarkup", "default").field("created", 1L).field("modified", 2L);
 		parent2.save();
 

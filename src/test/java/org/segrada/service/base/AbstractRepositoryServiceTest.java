@@ -66,7 +66,7 @@ public class AbstractRepositoryServiceTest {
 
 	@Test
 	public void testFindById() throws Exception {
-		ODocument document = new ODocument("Color").field("title", "title")
+		ODocument document = new ODocument("Color").field("title", "title").field("titleasc", "title")
 				.field("color", 123456).field("created", 1L).field("modified", 2L);
 		// persist to database to create id
 		document.save();
