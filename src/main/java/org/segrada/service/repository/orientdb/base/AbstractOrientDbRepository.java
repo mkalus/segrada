@@ -334,9 +334,10 @@ abstract public class AbstractOrientDbRepository<T extends SegradaEntity> implem
 	 * @param page to show
 	 * @param entriesPerPage maximum entries per page
 	 * @param constraints constraint list to concatenate
+	 * @param customOrder custom order string or null for default
 	 * @return PaginationInfo containing hits
 	 */
-	protected PaginationInfo<T> paginate(int page, int entriesPerPage, List<String> constraints) {
+	protected PaginationInfo<T> paginate(int page, int entriesPerPage, List<String> constraints, String customOrder) {
 		// create constraint string
 		StringBuilder sb = new StringBuilder();
 		if (constraints.size() > 0) {
@@ -380,8 +381,12 @@ abstract public class AbstractOrientDbRepository<T extends SegradaEntity> implem
 			String skipLimit = (skip>0?" SKIP ".concat(Integer.toString(skip)).concat(" "):"")
 					.concat(" LIMIT ").concat(Integer.toString(entriesPerPage));
 
+			// custom order?
+			if (customOrder != null && !customOrder.isEmpty()) customOrder = " ORDER BY ".concat(customOrder);
+			else customOrder = getDefaultOrder(); // no, just use default order
+
 			// create query itself and fetch entities
-			sql = "select *".concat(constraint).concat(skipLimit).concat(getDefaultOrder());
+			sql = "select *".concat(constraint).concat(skipLimit).concat(customOrder);
 
 			// execute query
 			List<ODocument> list = db.command(new OSQLSynchQuery<>(sql)).execute();
@@ -408,5 +413,21 @@ abstract public class AbstractOrientDbRepository<T extends SegradaEntity> implem
 	@Override
 	public String convertUidToId(String uid) {
 		return AbstractSegradaEntity.convertUidToOrientId(uid);
+	}
+
+	/**
+	 * Helper method to get direction from string object
+	 * @param dir object in filter cache (should be string)
+	 * @return direction or null, if not valid
+	 */
+	protected String getDirectionFromString(Object dir) {
+		if (dir == null) return null;
+
+		String testDir = dir.toString();
+
+		if (testDir.equalsIgnoreCase("asc")) return " ASC";
+		if (testDir.equalsIgnoreCase("desc")) return " DESC";
+
+		return null;
 	}
 }

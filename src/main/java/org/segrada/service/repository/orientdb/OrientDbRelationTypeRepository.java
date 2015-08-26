@@ -234,7 +234,7 @@ public class OrientDbRelationTypeRepository extends AbstractColoredOrientDbRepos
 		}
 
 		// let helper do most of the work
-		return super.paginate(page, entriesPerPage, constraints);
+		return super.paginate(page, entriesPerPage, constraints, null);
 	}
 
 	/**

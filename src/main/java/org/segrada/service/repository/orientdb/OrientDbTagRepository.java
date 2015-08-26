@@ -83,7 +83,7 @@ public class OrientDbTagRepository extends AbstractSegradaOrientDbRepository<ITa
 
 		// populate with data
 		document.field("title", entity.getTitle())
-				.field("titleasc", Sluggify.asciify(entity.getTitle()));
+				.field("titleasc", Sluggify.sluggify(entity.getTitle())); // sluggify correct!!
 
 		// populate with data
 		populateODocumentWithCreatedModified(document, entity);
@@ -465,7 +465,17 @@ public class OrientDbTagRepository extends AbstractSegradaOrientDbRepository<ITa
 			constraints.add(sb.append("]").toString());
 		}
 
+		// sorting
+		String customOrder = null;
+		if (filters.get("sort") != null) {
+			String field = (String) filters.get("sort");
+			if (field.equalsIgnoreCase("title")) { // sanity check
+				String dir = getDirectionFromString(filters.get("dir"));
+				if (dir != null) customOrder = "title".concat(dir);
+			}
+		}
+
 		// let helper do most of the work
-		return super.paginate(page, entriesPerPage, constraints);
+		return super.paginate(page, entriesPerPage, constraints, customOrder);
 	}
 }

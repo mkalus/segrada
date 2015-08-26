@@ -230,7 +230,7 @@ public class OrientDbNodeRepository extends AbstractCoreOrientDbRepository<INode
 		}
 
 		// let helper do most of the work
-		return super.paginate(page, entriesPerPage, constraints);
+		return super.paginate(page, entriesPerPage, constraints, null);
 	}
 
 	/**

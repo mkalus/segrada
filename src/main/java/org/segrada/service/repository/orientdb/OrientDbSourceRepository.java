@@ -207,7 +207,7 @@ public class OrientDbSourceRepository extends AbstractAnnotatedOrientDbRepositor
 		}
 
 		// let helper do most of the work
-		return super.paginate(page, entriesPerPage, constraints);
+		return super.paginate(page, entriesPerPage, constraints, null);
 	}
 
 	/**

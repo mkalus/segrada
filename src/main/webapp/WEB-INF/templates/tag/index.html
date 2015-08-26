@@ -24,7 +24,7 @@
 			<table class="table table-hover table-striped table-condensed">
 				<tr>
 					<th></th>
-					<th th:text="#{field.title}">Title</th>
+					<th><a href="#" class="sg-control-set" th:href="@{${baseUrl}?${baseUrl}:'/tag'(sort=title,dir=desc)}" th:text="#{field.title}">Title</a></th>
 					<th th:text="#{field.tags}">Tags</th>
 					<th></th>
 				</tr>

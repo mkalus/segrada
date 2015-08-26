@@ -57,7 +57,9 @@ public class TagController extends AbstractBaseController<ITag> {
 			@QueryParam("entriesPerPage") int entriesPerPage,
 			@QueryParam("reset") int reset,
 			@QueryParam("search") String search,
-			@QueryParam("tags") List<String> tags
+			@QueryParam("tags") List<String> tags,
+			@QueryParam("sort") String sortBy, // title
+			@QueryParam("dir") String sortOrder // asc, desc, none
 	) {
 		// filters:
 		Map<String, Object> filters = new HashMap<>();
@@ -70,6 +72,10 @@ public class TagController extends AbstractBaseController<ITag> {
 				tags.toArray(tagArray);
 				filters.put("tags", tagArray);
 			}
+		}
+		if (sortBy != null && sortOrder != null) {
+			filters.put("sort", sortBy);
+			filters.put("dir", sortOrder);
 		}
 
 		// handle pagination

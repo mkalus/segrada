@@ -132,7 +132,7 @@ public class OrientDbTagRepositoryTest {
 		ITag testTag2 = repository.findByTitle(tag.getTitle(), true);
 		assertNull(testTag2);
 
-		testTag2 = repository.findByTitle(Sluggify.asciify(tag.getTitle()), true);
+		testTag2 = repository.findByTitle(Sluggify.sluggify(tag.getTitle()), true);
 		assertEquals(tag.getId(), testTag2.getId());
 
 		// return null for non-existing entities

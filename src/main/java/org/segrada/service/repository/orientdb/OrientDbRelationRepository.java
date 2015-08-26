@@ -397,6 +397,6 @@ public class OrientDbRelationRepository extends AbstractCoreOrientDbRepository<I
 		}
 
 		// let helper do most of the work
-		return super.paginate(page, entriesPerPage, constraints);
+		return super.paginate(page, entriesPerPage, constraints, null);
 	}
 }
