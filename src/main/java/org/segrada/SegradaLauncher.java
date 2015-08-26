@@ -7,6 +7,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.File;
 import java.net.URI;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -36,6 +37,10 @@ public class SegradaLauncher extends JFrame implements ApplicationStatusChangedL
 	private final JButton startStopButton;
 	private final JButton browserButton;
 
+	// directory chooser
+	private final JLabel directoryText;
+	private final JButton changeDirectoryButton;
+
 	/**
 	 * resource bundle
 	 */
@@ -49,7 +54,7 @@ public class SegradaLauncher extends JFrame implements ApplicationStatusChangedL
 
 		initI18N();
 
-		setSize(400, 150);
+		setSize(400, 200);
 		addWindowListener(new WindowListener() {
 			@Override
 			public void windowOpened(WindowEvent windowEvent) {
@@ -66,6 +71,7 @@ public class SegradaLauncher extends JFrame implements ApplicationStatusChangedL
 								System.exit(0);
 							} catch (Exception e) {
 								showError(e.getMessage());
+								e.printStackTrace();
 							}
 						}
 					}.start();
@@ -125,11 +131,30 @@ public class SegradaLauncher extends JFrame implements ApplicationStatusChangedL
 		browserButton.setEnabled(false);
 		browserButton.setFont(fatFont);
 
+		// create directory chooser
+		String directory = System.getProperty("savePath");
+		if (directory == null || directory.isEmpty()) directory = messages.getString("defaultDirectoryLabel");
+		directoryText = new JLabel(directory);
+		directoryText.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+		changeDirectoryButton = new JButton(messages.getString("changeDirectory"));
+		changeDirectoryButton.addActionListener(this::changeDirectory);
+
+		JPanel directoryChooser = new JPanel(new GridLayout(1,2));
+		directoryChooser.add(directoryText);
+		directoryChooser.add(changeDirectoryButton);
+
+		// bottom panel for bottom stuff
+		JPanel bottomPanel = new JPanel();
+		bottomPanel.setLayout(new GridLayout(0,1));
+		bottomPanel.add(directoryChooser);
+		bottomPanel.add(browserButton);
+
 		// add elements
 		Container pane = getContentPane();
 		pane.add(statusText, BorderLayout.NORTH);
 		pane.add(startStopButton, BorderLayout.CENTER);
-		pane.add(browserButton, BorderLayout.SOUTH);
+		pane.add(bottomPanel, BorderLayout.SOUTH);
 
 		setVisible(true);
 	}
@@ -155,6 +180,7 @@ public class SegradaLauncher extends JFrame implements ApplicationStatusChangedL
 							SegradaApplication.startServer();
 						} catch (Exception e) {
 							showError(e.getMessage());
+							e.printStackTrace();
 						}
 					}
 				}.start();
@@ -166,6 +192,7 @@ public class SegradaLauncher extends JFrame implements ApplicationStatusChangedL
 							SegradaApplication.stopServer();
 						} catch (Exception e) {
 							showError(e.getMessage());
+							e.printStackTrace();
 						}
 					}
 				}.start();
@@ -185,6 +212,30 @@ public class SegradaLauncher extends JFrame implements ApplicationStatusChangedL
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+		}
+	}
+
+	/**
+	 * open browser window
+	 * @param actionEvent triggered
+	 */
+	private void changeDirectory(ActionEvent actionEvent) {
+		JFileChooser chooser = new JFileChooser();
+		chooser.setCurrentDirectory(new java.io.File("."));
+		chooser.setDialogTitle(messages.getString("directoryChooserTitle"));
+		chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		chooser.setAcceptAllFileFilterUsed(false);
+
+		if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+			// get chosen file
+			String directory = chooser.getSelectedFile().toString();
+
+			// set label
+			directoryText.setText(directory);
+
+			// set environment variables
+			System.setProperty("savePath", directory);
+			System.setProperty("orientDB.url", "plocal:" + directory + File.separator + "db");
 		}
 	}
 
@@ -210,31 +261,36 @@ public class SegradaLauncher extends JFrame implements ApplicationStatusChangedL
 	public void onApplicationStatusChanged(int newStatus, int oldStatus) {
 		switch (newStatus) {
 			case SegradaApplication.STATUS_OFF:
-				statusText.setText(messages.getString("stopped"));
-				startStopButton.setText(messages.getString("start"));
-				startStopButton.setEnabled(true);
+				statusText.setText(messages.getString("stoppedFinal"));
+				startStopButton.setText(messages.getString("stopped"));
+				startStopButton.setEnabled(false);
 				browserButton.setEnabled(false);
+				changeDirectoryButton.setEnabled(false);
 				break;
 			case SegradaApplication.STATUS_STARTING:
 				statusText.setText(messages.getString("starting"));
 				startStopButton.setEnabled(false);
 				browserButton.setEnabled(false);
+				changeDirectoryButton.setEnabled(false);
 				break;
 			case SegradaApplication.STATUS_UPDATING_DATABASE:
 				statusText.setText(messages.getString("updatingDb"));
 				startStopButton.setEnabled(false);
 				browserButton.setEnabled(false);
+				changeDirectoryButton.setEnabled(false);
 				break;
 			case SegradaApplication.STATUS_RUNNING:
 				statusText.setText(messages.getString("running"));
 				startStopButton.setText(messages.getString("stop"));
 				startStopButton.setEnabled(true);
 				browserButton.setEnabled(true);
+				changeDirectoryButton.setEnabled(false);
 				break;
 			case SegradaApplication.STATUS_STOPPING:
 				statusText.setText(messages.getString("stopping"));
 				startStopButton.setEnabled(false);
 				browserButton.setEnabled(false);
+				changeDirectoryButton.setEnabled(false);
 				break;
 		}
 

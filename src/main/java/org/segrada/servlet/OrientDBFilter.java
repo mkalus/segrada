@@ -176,6 +176,9 @@ public class OrientDBFilter implements Filter {
 			logger.warn("Could not shut down LuceneSearchEngine properly.", e);
 		}
 
+		// remove injector
+		injector = null;
+
 		// set server status
 		SegradaApplication.setServerStatus(SegradaApplication.STATUS_OFF);
 	}
