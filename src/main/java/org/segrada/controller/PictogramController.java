@@ -77,16 +77,20 @@ public class PictogramController extends AbstractBaseController<IPictogram> {
 
 			// set streaming output
 			StreamingOutput output = outputStream -> {
-				byte[] buffer = new byte[4096];
-				int bytesRead = -1;
+				try {
+					byte[] buffer = new byte[4096];
+					int bytesRead = -1;
 
-				// write bytes read from the input stream into the output stream
-				while ((bytesRead = in.read(buffer)) != -1) {
-					outputStream.write(buffer, 0, bytesRead);
+					// write bytes read from the input stream into the output stream
+					while ((bytesRead = in.read(buffer)) != -1) {
+						outputStream.write(buffer, 0, bytesRead);
+					}
+
+					in.close();
+					outputStream.close();
+				} catch (Exception e) {
+					//TODO log
 				}
-
-				in.close();
-				outputStream.close();
 			};
 
 			return Response.ok(output, "image/png").build();
