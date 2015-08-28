@@ -192,11 +192,7 @@ abstract public class AbstractBaseController<BEAN extends SegradaEntity> {
 			String showUrl = getBasePath() + "show/" + entity.getUid();
 
 			if (service.save(entity)) {
-				// delete caches
-				Ehcache cache = CacheManager.getInstance().getEhcache("SimplePageCachingFilter");
-				if (cache != null) {
-					cache.removeAll(); // flush whole cache
-				}
+				clearCache(); // delete caches
 
 				//OK - redirect to show
 				try {
@@ -231,6 +227,8 @@ abstract public class AbstractBaseController<BEAN extends SegradaEntity> {
 		if (!service.delete(entity)) {
 			return Response.ok(new Viewable("error", "DELETE failed.")).build();
 		}
+
+		clearCache(); // delete caches
 
 		// empty response
 		if (!emptyValue)
@@ -282,5 +280,16 @@ abstract public class AbstractBaseController<BEAN extends SegradaEntity> {
 	 */
 	protected void enrichModelForEditingAndSaving(Map<String, Object> model) {
 		//Do nothing by default
+	}
+
+	/**
+	 * clear page caches
+	 */
+	protected void clearCache() {
+		// delete caches
+		Ehcache cache = CacheManager.getInstance().getEhcache("SimplePageCachingFilter");
+		if (cache != null) {
+			cache.removeAll(); // flush whole cache
+		}
 	}
 }

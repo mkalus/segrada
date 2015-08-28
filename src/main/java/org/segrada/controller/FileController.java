@@ -232,6 +232,8 @@ public class FileController extends AbstractColoredController<IFile> {
 		if (referenceEntity != null && source != null)
 			service.connectFileToEntity(source, referenceEntity);
 
+		clearCache(); // delete caches
+
 		String add = "";
 		if (errors.size() > 0) {
 			try {
@@ -278,6 +280,8 @@ public class FileController extends AbstractColoredController<IFile> {
 
 		// do removal
 		if (referenceEntity != null && source != null) {
+			clearCache(); // delete caches
+
 			service.removeFileFromEntity(source, referenceEntity);
 
 			// also delete other direction, if file
@@ -450,6 +454,8 @@ public class FileController extends AbstractColoredController<IFile> {
 		// no validation errors: save entity
 		if (errors.isEmpty()) {
 			if (service.save(entity)) {
+				clearCache(); // delete caches
+
 				//OK - redirect to show
 				try {
 					return Response.seeOther(new URI(getBasePath() + "show/" + entity.getUid())).build();

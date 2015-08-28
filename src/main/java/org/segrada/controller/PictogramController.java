@@ -203,6 +203,8 @@ public class PictogramController extends AbstractBaseController<IPictogram> {
 		// no validation errors: save entity
 		if (errors.isEmpty()) {
 			if (service.save(entity)) {
+				clearCache(); // delete caches
+
 				//OK - redirect to show
 				try {
 					return Response.seeOther(new URI(getBasePath() + "show/" + entity.getUid())).build();

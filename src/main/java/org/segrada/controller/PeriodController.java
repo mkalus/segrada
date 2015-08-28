@@ -116,6 +116,8 @@ public class PeriodController extends AbstractBaseController<IPeriod> {
 
 			// save parent service in order to save from/to date
 			parentService.save(parent);
+
+			clearCache(); // delete caches
 		} else {
 			model.put("entity", entity);
 			model.put("errors", errors);
@@ -156,6 +158,8 @@ public class PeriodController extends AbstractBaseController<IPeriod> {
 			if (!parentService.save(parentService.findById(parentId)))
 				return Response.ok(new Viewable("error", "Parent update failed.")).build();
 		}
+
+		clearCache(); // delete caches
 
 		// empty response
 		return Response.ok().build();

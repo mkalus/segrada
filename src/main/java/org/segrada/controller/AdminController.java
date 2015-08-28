@@ -2,6 +2,8 @@ package org.segrada.controller;
 
 import com.google.inject.Inject;
 import com.google.inject.servlet.RequestScoped;
+import net.sf.ehcache.CacheManager;
+import net.sf.ehcache.Ehcache;
 import org.segrada.search.SearchEngine;
 import org.segrada.service.base.AbstractFullTextService;
 import org.slf4j.Logger;
@@ -54,6 +56,8 @@ public class AdminController {
 	@Path("/reindex")
 	@Produces(MediaType.TEXT_HTML)
 	public String reindex() {
+		clearCache(); // delete caches
+
 		// clear index
 		searchEngine.clearAllIndexes();
 
@@ -79,5 +83,18 @@ public class AdminController {
 		}
 
 		return "Fertig.";
+	}
+
+	@GET
+	@Path("/clear_cache")
+	@Produces(MediaType.TEXT_HTML)
+	public String clearCache() {
+		// delete caches
+		Ehcache cache = CacheManager.getInstance().getEhcache("SimplePageCachingFilter");
+		if (cache != null) {
+			cache.removeAll(); // flush whole cache
+		}
+
+		return "Cache gelöscht.";
 	}
 }

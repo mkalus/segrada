@@ -223,6 +223,8 @@ public class TagController extends AbstractBaseController<ITag> {
 
 		// do removal
 		if (tagUid != null && referenceModel != null && referenceUid != null) {
+			clearCache(); // delete caches
+
 			service.removeTag(tag.getId(), service.convertUidToId(referenceUid));
 		}
 

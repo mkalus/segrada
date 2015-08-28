@@ -107,6 +107,7 @@ public class LocationController extends AbstractBaseController<ILocation> {
 
 			// try to save
 			if (!service.save(location)) error = true;
+			else clearCache(); // delete caches
 		}
 
 		Map<String, Object> model = new HashMap<>();
@@ -138,6 +139,7 @@ public class LocationController extends AbstractBaseController<ILocation> {
 
 			// try to delete element
 			if (!service.delete(location)) error = true;
+			else clearCache(); // delete caches
 
 			// try to find parent model
 			if (parentService != null) {
