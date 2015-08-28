@@ -43,7 +43,7 @@ public class SegradaSimplePageCachingFilter extends SimplePageCachingFilter {
 	/**
 	 * excluded patterns
 	 */
-	private static final Pattern excludePatterns = Pattern.compile("/(add|edit/|search|locale/)"); //TODO does it hurt to cache these?
+	private static final Pattern excludePatterns = Pattern.compile("/(clear_cache|add|edit/|search|locale/)"); //TODO does it hurt to cache these?
 
 	@Override
 	protected void doFilter(HttpServletRequest servletRequest, HttpServletResponse servletResponse, FilterChain filterChain) throws AlreadyGzippedException, AlreadyCommittedException, FilterNonReentrantException, LockTimeoutException, Exception {

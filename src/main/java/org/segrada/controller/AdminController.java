@@ -82,7 +82,7 @@ public class AdminController {
 				logger.debug("Reindexed " + entry + ": " + done + "/" + total);
 		}
 
-		return "Fertig.";
+		return "Fertig."; //TODO i18n
 	}
 
 	@GET
@@ -95,6 +95,6 @@ public class AdminController {
 			cache.removeAll(); // flush whole cache
 		}
 
-		return "Cache gelöscht.";
+		return "Cache gelöscht."; //TODO i18n
 	}
 }
