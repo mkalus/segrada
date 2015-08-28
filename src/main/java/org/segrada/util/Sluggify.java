@@ -1,5 +1,6 @@
 package org.segrada.util;
 
+//TODO: change this to use ehcache instead
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.google.common.cache.CacheBuilder;

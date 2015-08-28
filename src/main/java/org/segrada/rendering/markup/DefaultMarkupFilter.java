@@ -46,6 +46,7 @@ public class DefaultMarkupFilter extends MarkupFilter {
 
 	/**
 	 * cache for source reference links
+	 * TODO: use different cache, because otherwise this might fill up memory eventually, rather unlikely, but there is no deletion of old keys here
 	 */
 	private static final Map<String, String> sourceReferenceCache = new HashMap<>();
 
