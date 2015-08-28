@@ -124,14 +124,15 @@ public class ThymeleafViewProcessor implements ViewProcessor<String> {
 		// only render content fragment in AJAX calls
 		if (fragmentSpec == null && "XMLHttpRequest".equals(context.getHttpServletRequest().getHeader("X-Requested-With")) && !templateName.startsWith("redirect:")) {
 			fragmentSpec = new ElementAndAttributeNameFragmentSpec(null, "class", "container", true);
-			// set content type by hand
-			context.getHttpServletResponse().setContentType("text/html; charset=utf-8");
 		}
 
 		///TODO: handle redirects?
 
 		// update locale
 		updateLocale(context);
+
+		// set charset type by hand
+		context.getHttpServletResponse().setContentType("text/html; charset=utf-8");
 
 		templateEngine.process(templateName, context, fragmentSpec, responseInvoker
 				.get().getWriter());

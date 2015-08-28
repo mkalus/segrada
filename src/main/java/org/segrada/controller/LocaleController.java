@@ -1,5 +1,8 @@
 package org.segrada.controller;
 
+import net.sf.ehcache.CacheManager;
+import net.sf.ehcache.Ehcache;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.GET;

@@ -5,7 +5,6 @@ import com.google.inject.Injector;
 import com.google.inject.servlet.GuiceServletContextListener;
 import com.google.inject.servlet.ServletModule;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
-import net.sf.ehcache.constructs.web.filter.SimplePageCachingFilter;
 import org.segrada.config.ServiceModule;
 import org.segrada.config.TemplateModule;
 import org.segrada.controller.*;
@@ -66,8 +65,8 @@ public class SegradaGuiceServletContextListener extends GuiceServletContextListe
 
 
 						// cache filter
-						bind(SimplePageCachingFilter.class).asEagerSingleton();
-						filter("/*").through(SimplePageCachingFilter.class);
+						bind(SegradaSimplePageCachingFilter.class).asEagerSingleton();
+						filter("/*").through(SegradaSimplePageCachingFilter.class);
 
 						String filterPattern = "/.*\\.(jpg|ico|png|gif|html|txt|css|js|xml|otf|svg|ttf|woff|woff2|eot)";
 

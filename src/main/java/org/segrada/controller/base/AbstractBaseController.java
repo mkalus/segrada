@@ -2,6 +2,9 @@ package org.segrada.controller.base;
 
 import com.google.inject.Inject;
 import com.sun.jersey.api.view.Viewable;
+import net.sf.ehcache.Cache;
+import net.sf.ehcache.CacheManager;
+import net.sf.ehcache.Ehcache;
 import org.segrada.model.prototype.SegradaEntity;
 import org.segrada.service.ColorService;
 import org.segrada.service.base.AbstractRepositoryService;
@@ -182,14 +185,22 @@ abstract public class AbstractBaseController<BEAN extends SegradaEntity> {
 		// create model map
 		Map<String, Object> model = new HashMap<>();
 
-		model.put("isNewEntity", entity.getId()==null|| entity.getId().isEmpty());
+		model.put("isNewEntity", entity.getId() == null || entity.getId().isEmpty());
 
 		// no validation errors: save entity
 		if (errors.isEmpty()) {
+			String showUrl = getBasePath() + "show/" + entity.getUid();
+
 			if (service.save(entity)) {
+				// delete caches
+				Ehcache cache = CacheManager.getInstance().getEhcache("SimplePageCachingFilter");
+				if (cache != null) {
+					cache.removeAll(); // flush whole cache
+				}
+
 				//OK - redirect to show
 				try {
-					return Response.seeOther(new URI(getBasePath() + "show/" + entity.getUid())).build();
+					return Response.seeOther(new URI(showUrl)).build();
 				} catch (URISyntaxException e) {
 					return Response.ok(new Viewable("error", e.getMessage())).build();
 				}
