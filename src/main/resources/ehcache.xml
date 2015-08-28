@@ -10,4 +10,14 @@
 			memoryStoreEvictionPolicy="LRU">
 		<persistence strategy="localTempSwap"/>
 	</defaultCache>
+
+	<cache name="SimplePageCachingFilter"
+	       maxEntriesLocalHeap="10000"
+	       maxEntriesLocalDisk="1000"
+	       eternal="false"
+	       overflowToDisk="true"
+	       timeToIdleSeconds="300"
+	       timeToLiveSeconds="600"
+	       memoryStoreEvictionPolicy="LFU"
+			/>
 </ehcache>

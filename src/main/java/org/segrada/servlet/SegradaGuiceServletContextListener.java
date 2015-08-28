@@ -5,6 +5,7 @@ import com.google.inject.Injector;
 import com.google.inject.servlet.GuiceServletContextListener;
 import com.google.inject.servlet.ServletModule;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
+import net.sf.ehcache.constructs.web.filter.SimplePageCachingFilter;
 import org.segrada.config.ServiceModule;
 import org.segrada.config.TemplateModule;
 import org.segrada.controller.*;
@@ -63,6 +64,11 @@ public class SegradaGuiceServletContextListener extends GuiceServletContextListe
 						bind(AdminController.class);
 						bind(LocaleController.class);
 
+
+						// cache filter
+						bind(SimplePageCachingFilter.class).asEagerSingleton();
+						filter("/*").through(SimplePageCachingFilter.class);
+
 						String filterPattern = "/.*\\.(jpg|ico|png|gif|html|txt|css|js|xml|otf|svg|ttf|woff|woff2|eot)";
 
 						Map<String, String> initParams = new TreeMap<String, String>();
@@ -70,6 +76,7 @@ public class SegradaGuiceServletContextListener extends GuiceServletContextListe
 						//TODO: implement client side of this, in order to make it work
 						//initParams.put("com.sun.jersey.spi.container.ContainerRequestFilters", "com.sun.jersey.api.container.filter.CsrfProtectionFilter");
 
+						// guice container filter
 						filter("/*").through(GuiceContainer.class, initParams);
 
 						initParams = new TreeMap<String, String>();
