@@ -190,7 +190,12 @@
 			var $this = $(this);
 
 			var target = $this.attr('data-target-id');
-			if (typeof target == "undefined" || target == null || target.length == 0) target = '#sg-control';
+			if (typeof target == "undefined" || target == null || target.length == 0) {
+				target = '#sg-control';
+
+				// hide graph
+				graphHide();
+			}
 
 			// define container and set waiting icon
 			var container = $(target);
@@ -708,6 +713,31 @@
 		//console.log(segradaMapMarkers);
 	}
 
+	// *******************************************************
+	// Graph functions
+
+	// Hide graph and show control
+	function graphHide() {
+		var link = $('#sg-toggle-graph');
+		if (link.hasClass('active')) {
+			link.removeClass('active');
+			$('.fa-share-alt-square', link).addClass('fa-share-alt').removeClass('fa-share-alt-square');
+			$('#sg-graph-container').hide();
+			$('#sg-control').show();
+		}
+	}
+
+	// Show graph and hide control
+	function graphShow() {
+		var link = $('#sg-toggle-graph');
+		if (!link.hasClass('active')) {
+			link.addClass('active');
+			$('.fa-share-alt', link).addClass('fa-share-alt-square').removeClass('fa-share-alt');
+			$('#sg-control').hide();
+			$('#sg-graph-container').show();
+		}
+	}
+
 	// add destroyed events when elements are destroyed
 	$.event.special.destroyed = {
 		remove: function(o) {
@@ -743,6 +773,44 @@
 		// initialize tokenizers
 		tagsTokenizer.initialize();
 
+		// *******************************************************
+		// Do graph toggle
+		$('#sg-graph-container').hide();
+		$('#sg-toggle-graph').click(function(e) {
+			if ($(this).hasClass('active')) graphHide();
+			else graphShow();
+			e.preventDefault();
+		});
+
+/*
+		// create an array with nodes
+		var nodes = new vis.DataSet([
+			{id: 1, label: 'Node 1'},
+			{id: 2, label: 'Node 2'},
+			{id: 3, label: 'Node 3'},
+			{id: 4, label: 'Node 4'},
+			{id: 5, label: 'Node 5'}
+		]);
+
+		// create an array with edges
+		var edges = new vis.DataSet([
+			{from: 1, to: 3},
+			{from: 1, to: 2},
+			{from: 2, to: 4},
+			{from: 2, to: 5}
+		]);
+
+		// create a network
+		var container = document.getElementById('sg-graph');
+		var data = {
+			nodes: nodes,
+			edges: edges
+		};
+		var options = {};
+		var network = new vis.Network(container, data, options);
+
+		nodes.update({id: 6, label: 'Node 6'});
+		edges.update({from: 5, to: 6});*/
 
 		// init defaults
 		afterAjax($('body'));

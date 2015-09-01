@@ -12,7 +12,7 @@
 
 <div id="sg-page" class="container-fluid">
 	<div class="row">
-		<div class="col-sm-6 col-sm-push-6">
+		<div class="col-sm-7 col-sm-push-5">
 			<div id="sg-nav" th:replace="partials/navigation :: navigation">
 				<!--/*###segrada-nav###*/-->
 			</div>
@@ -23,8 +23,11 @@
 					<span class="text-muted" style="margin-left: 1ex;"><samp>v0.0.3</samp></span>
 				</p>
 			</div>
+			<div id="sg-graph-container">
+				<div id="sg-graph"><!--/*###segrada-graph###*/--></div>
+			</div>
 		</div>
-		<div class="col-sm-6 col-sm-pull-6" th:fragment="content">
+		<div class="col-sm-5 col-sm-pull-7" th:fragment="content">
 			<div id="sg-data">
 				<!--/*###segrada-data###*/-->
 			</div>
