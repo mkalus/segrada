@@ -43,20 +43,27 @@ public class SegradaSimplePageCachingFilter extends SimplePageCachingFilter {
 	/**
 	 * excluded patterns
 	 */
-	private static final Pattern excludePatterns = Pattern.compile("/(clear_cache|locale/)");
+	private static final Pattern excludePatterns = Pattern.compile("/(clear_cache|reindex|locale/)");
 
 	@Override
 	protected void doFilter(HttpServletRequest servletRequest, HttpServletResponse servletResponse, FilterChain filterChain) throws AlreadyGzippedException, AlreadyCommittedException, FilterNonReentrantException, LockTimeoutException, Exception {
 		// exclude?
-		String url = ((Request) servletRequest).getRequestURL().toString();
+		String url = servletRequest.getRequestURL().toString();
 
 		// only get request and matched urls
 		if (servletRequest.getMethod().equals("POST") || excludePatterns.matcher(url).find()) {
-			// excluded: normal filter chain called
-			filterChain.doFilter(servletRequest, servletResponse);
-
 			if (logger.isDebugEnabled())
 				logger.debug("Not caching url " + url);
+
+			// build page info and return gzipped if needed
+			PageInfo pageInfo = this.buildPage(servletRequest, servletResponse, filterChain);
+			if(pageInfo.isOk()) {
+				if(servletResponse.isCommitted()) {
+					throw new AlreadyCommittedException("Response already committed after doing buildPage but before writing response from PageInfo.");
+				}
+
+				this.writeResponse(servletRequest, servletResponse, pageInfo);
+			}
 		} else {
 			// included cached filter chain loaded
 			super.doFilter(servletRequest, servletResponse, filterChain);
