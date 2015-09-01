@@ -654,7 +654,15 @@
 				}
 			});
 		});
-	}
+
+		// *******************************************************
+		// Graph: load remote data and update graph view
+		$('a.sg-graph-update', part).click(function(e) {
+			// update graph by remotely getting updated data
+			graphLoadRemote($(this).attr('href'));
+			e.preventDefault();
+		});
+	} // afterAJAX end
 
 	// keeps markers
 	var segradaMapMarkers = [];
@@ -768,6 +776,20 @@
 		}
 	}
 
+	// load remote data, show graph and update it
+	function graphLoadRemote(url) {
+		// show graph
+		graphShow();
+
+		//TODO AJAX
+
+		// add new node
+		graphNodes.update({id: 1, label: 'Node 1'});
+
+		// TODO: updated node into center?
+	}
+
+	// *******************************************************
 	// add destroyed events when elements are destroyed
 	$.event.special.destroyed = {
 		remove: function(o) {

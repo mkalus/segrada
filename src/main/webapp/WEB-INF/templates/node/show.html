@@ -12,7 +12,7 @@
 
 <div class="container">
 	<div class="sg-data sg-node" th:id="${'node-' + entity.uid}">
-		<div th:replace="partials/common :: headerboxright (type=#{Node},base='node',uid=${entity.uid})"></div>
+		<div th:replace="partials/common :: headerboxright (type=#{Node},base='node',uid=${entity.uid},graphUrl=@{/node/graph/{uid}(uid=${entity.uid})})"></div>
 		<div th:replace="partials/common :: taglist (tags=${entity.tags})"></div>
 		<h4 class="sg-data-header">
 			<span class="fa fa-dot-circle-o" th:title="#{Node}"></span>

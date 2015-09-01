@@ -40,6 +40,7 @@ Common fragments.
 <div th:fragment="headerboxright (type,base,uid)" class="sg-headbox-right">
 	<a href="#" type="button" class="close sg-data-close" aria-label="Close" th:title="#{Close}" th:attr="aria-label=#{Close}"><i class="fa fa-times"></i></a>
 	<a href="#" th:href="@{/{base}/edit/{uid}(base=${base},uid=${uid})}" type="button" class="sg-data-add sg-data-icon" aria-label="Edit" th:title="#{Edit}" th:attr="aria-label=#{Edit}"><i class="fa fa-pencil"></i></a>
+	<a th:if="${graphUrl}" href="#" th:href="${graphUrl}" type="button" class="sg-graph-update sg-data-icon" aria-label="Graph" th:title="#{AddToGraph}" th:attr="aria-label=#{AddToGraph}"><i class="fa fa-share"></i></a>
 	<span class="sg-headbox-info" th:text="${type}">Type</span>
 </div>
 
