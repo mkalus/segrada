@@ -71,6 +71,13 @@
 	// geocoding object
 	var geocoder = (typeof google === 'object' && typeof google.maps === 'object')?new google.maps.Geocoder():null;
 
+	// is graph initialized?
+	var graphInitialized = false;
+	// global graph data
+	var graphNodes = new vis.DataSet([]);
+	var graphEdges = new vis.DataSet([]);
+	var graphNetwork = null; // reference to graph network
+
 	/**
 	 * on enter pressed event
 	 * @param func
@@ -716,6 +723,26 @@
 	// *******************************************************
 	// Graph functions
 
+	// Initialize graph
+	function graphInitialize() {
+		if (!graphInitialized) {
+			graphInitialized = true;
+
+			// create a network
+			var container = document.getElementById('sg-graph');
+			var data = {
+				nodes: graphNodes,
+				edges: graphEdges
+			};
+			var options = {};
+			graphNetwork = new vis.Network(container, data, options);
+
+			if (typeof console != "undefined") {
+				console.log("Graph Network was initialized.");
+			}
+		}
+	}
+
 	// Hide graph and show control
 	function graphHide() {
 		var link = $('#sg-toggle-graph');
@@ -735,6 +762,9 @@
 			$('.fa-share-alt', link).addClass('fa-share-alt-square').removeClass('fa-share-alt');
 			$('#sg-control').hide();
 			$('#sg-graph-container').show();
+
+			// init graph, if needed
+			graphInitialize();
 		}
 	}
 
@@ -781,36 +811,6 @@
 			else graphShow();
 			e.preventDefault();
 		});
-
-/*
-		// create an array with nodes
-		var nodes = new vis.DataSet([
-			{id: 1, label: 'Node 1'},
-			{id: 2, label: 'Node 2'},
-			{id: 3, label: 'Node 3'},
-			{id: 4, label: 'Node 4'},
-			{id: 5, label: 'Node 5'}
-		]);
-
-		// create an array with edges
-		var edges = new vis.DataSet([
-			{from: 1, to: 3},
-			{from: 1, to: 2},
-			{from: 2, to: 4},
-			{from: 2, to: 5}
-		]);
-
-		// create a network
-		var container = document.getElementById('sg-graph');
-		var data = {
-			nodes: nodes,
-			edges: edges
-		};
-		var options = {};
-		var network = new vis.Network(container, data, options);
-
-		nodes.update({id: 6, label: 'Node 6'});
-		edges.update({from: 5, to: 6});*/
 
 		// init defaults
 		afterAjax($('body'));
