@@ -189,14 +189,12 @@ abstract public class AbstractBaseController<BEAN extends SegradaEntity> {
 
 		// no validation errors: save entity
 		if (errors.isEmpty()) {
-			String showUrl = getBasePath() + "show/" + entity.getUid();
-
 			if (service.save(entity)) {
 				clearCache(); // delete caches
 
 				//OK - redirect to show
 				try {
-					return Response.seeOther(new URI(showUrl)).build();
+					return Response.seeOther(new URI(getBasePath() + "show/" + entity.getUid())).build();
 				} catch (URISyntaxException e) {
 					return Response.ok(new Viewable("error", e.getMessage())).build();
 				}
