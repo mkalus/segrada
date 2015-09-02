@@ -36,6 +36,7 @@ public class SegradaDialect extends AbstractDialect {
 		processors.add(new MarkupProcessor());
 		processors.add(new NumberFormatProcessor());
 		processors.add(new DateTimeFormatProcessor());
+		processors.add(new StripWhitespaceProcessor());
 		return processors;
 	}
 }

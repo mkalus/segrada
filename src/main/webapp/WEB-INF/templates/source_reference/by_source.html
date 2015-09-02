@@ -30,7 +30,7 @@
 				<td th:text="${entity.reference.title}">Title</td>
 				<td th:text="${entity.referenceText}">Text</td>
 				<td class="text-right">
-					<div class="sg-data-icon-bar" role="group" aria-label="Actions">
+					<div class="sg-data-icon-bar" role="group" aria-label="Actions" th:strip-whitespace="shallow">
 						<a class="sg-data-icon sg-source-ref-editor" href="#" th:href="@{/source_reference/edit/{uid}(uid=${entity.uid},backUrl=@{/source_reference/by_source/{uid}(uid=${uid})})}" th:title="#{Edit}" th:attr="data-id=${'edit-source-ref-' + uid}"><i class="fa fa-pencil"></i></a>
 						<a class="sg-data-icon" href="#" th:title="#{Unlink}" th:href="@{/source_reference/delete/{uid}(uid=${entity.uid},backUrl=@{/source_reference/by_source/{uid}(uid=${uid})})}" th:attr="data-confirm=${#messages.msg('ReallyUnlink', entity.title, source.title)}"><i class="fa fa-unlink"></i></a>
 					</div>

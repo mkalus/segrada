@@ -30,7 +30,7 @@
 				<td th:text="${entity.title}">Name</td>
 				<td class="text-center"><img src="#" th:src="@{/pictogram/file/{uid}(uid=${entity.uid})}" th:alt-title="${entity.title}" alt="" width="24" height="24" /></td>
 				<td class="text-right">
-					<div class="sg-data-icon-bar" role="group" aria-label="Actions">
+					<div class="sg-data-icon-bar" role="group" aria-label="Actions" th:strip-whitespace="shallow">
 						<a class="sg-data-icon sg-data-add" href="#" th:title="#{Show}" th:href="@{/pictogram/show/{uid}(uid=${entity.uid})}"><i class="fa fa-eye"></i></a>
 						<a class="sg-data-icon sg-data-add" href="#" th:title="#{Edit}" th:href="@{/pictogram/edit/{uid}(uid=${entity.uid})}"><i class="fa fa-pencil"></i></a>
 						<a class="sg-data-icon sg-control-confirm" href="#" th:title="#{Delete}" th:href="@{/pictogram/delete/{uid}/0(uid=${entity.uid})}" th:attr="data-confirm=${#messages.msg('ReallyDelete', entity.title)}"><i class="fa fa-times-circle-o"></i></a>
