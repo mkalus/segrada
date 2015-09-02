@@ -941,14 +941,19 @@
 			if (selection.nodes.length > 0) graphNodes.remove(selection.nodes);
 			e.preventDefault();
 		});
-		$('#sg-graph-action-fit').click(function(e) {
-			graphNetwork.fit();
+		$('#sg-graph-action-restart').click(function(e) {
+			graphEdges.clear();
+			graphNodes.clear();
 			e.preventDefault();
 		});
 		$('#sg-graph-action-reload').click(function(e) {
 			graphNetwork.destroy();
 			graphInitialized = false;
 			graphInitialize();
+			e.preventDefault();
+		});
+		$('#sg-graph-action-fit').click(function(e) {
+			graphNetwork.fit();
 			e.preventDefault();
 		});
 		$('#sg-graph-close').click(function(e) {
