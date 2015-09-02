@@ -747,12 +747,35 @@
 				nodes: graphNodes,
 				edges: graphEdges
 			};
-			var options = {};
+			var options = {
+				nodes: {
+					color: {
+						border: '#000',
+						background: '#fff'
+					},
+					labelHighlightBold: false
+				},
+				edges: {
+					font: {
+						size: 6
+					},
+					labelHighlightBold: false,
+					selectionWidth: 0,
+					arrows: {
+						to: true
+					}
+				},
+				groups: {
+					node: {
+						shape: 'box'
+					}
+				}
+			};
 			graphNetwork = new vis.Network(container, data, options);
 
-			if (typeof console != "undefined") {
+			/*if (typeof console != "undefined") {
 				console.log("Graph Network was initialized.");
-			}
+			}*/
 		}
 	}
 
@@ -787,15 +810,55 @@
 
 	// load remote data, show graph and update it
 	function graphLoadRemote(url) {
+		// error handling
+		if (url == null) {
+			alert("Null url!");
+			return;
+		}
+
 		// show graph
 		graphShow();
 
-		//TODO AJAX
+		// prepare data
+		var nodeIds = [];
+		var edgeIds = [];
 
-		// add new node
-		graphNodes.update({id: 1, label: 'Node 1', shape: 'box'});
+		var temp = graphNodes.get({fields: ['id']});
+		for (var i = 0; i < temp.length; i++)
+			nodeIds.push(temp[i].id);
+		temp = graphEdges.get({fields: ['id']});
+		for (var i = 0; i < temp.length; i++)
+			edgeIds.push(temp[i].id);
 
-		// TODO: updated node into center?
+		// post AJAX data
+		$.ajax({
+			url: url,
+			type: "POST",
+			dataType: 'json',
+			data: JSON.stringify({ "nodes": nodeIds, "edges": edgeIds }),
+			success: function(data, textStatus, jqXHR) {
+				// error handling TODO: make this nicer!
+				if (data == null) {
+					alert("NULL data");
+					return;
+				}
+				if (data.error != null) {
+					alert(data.error);
+					return;
+				}
+				// no errors: update graph
+				if (data.nodes != null && data.nodes.length > 0) graphNodes.update(data.nodes);
+				if (data.edges != null && data.edges.length > 0) graphEdges.update(data.edges);
+
+				// TODO: remove edges/nodes
+
+				// select node, if needed
+				if (data.highlightNode != null) {
+					graphNetwork.unselectAll();
+					graphNetwork.selectNodes([ data.highlightNode ], false);
+				}
+			}
+		});
 	}
 
 	// *******************************************************

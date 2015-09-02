@@ -9,14 +9,15 @@ import org.codehaus.jettison.json.JSONObject;
 import org.segrada.controller.base.AbstractColoredController;
 import org.segrada.model.Node;
 import org.segrada.model.prototype.INode;
+import org.segrada.model.prototype.IRelation;
+import org.segrada.rendering.json.JSONConverter;
 import org.segrada.service.NodeService;
+import org.segrada.service.RelationService;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]
@@ -40,6 +41,9 @@ import java.util.Map;
 public class NodeController extends AbstractColoredController<INode> {
 	@Inject
 	private NodeService service;
+
+	@Inject
+	private RelationService relationService;
 
 	@Override
 	protected String getBasePath() {
@@ -146,5 +150,91 @@ public class NodeController extends AbstractColoredController<INode> {
 	@Produces(MediaType.TEXT_HTML)
 	public Response delete(@PathParam("uid") String uid, @PathParam("empty") String empty) {
 		return handleDelete(empty, service.findById(service.convertUidToId(uid)), service);
+	}
+
+	@POST
+	@Path("/graph/{uid}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String postGraph(@PathParam("uid") String uid, String jsonData) {
+		return graph(uid, jsonData);
+	}
+
+	@GET
+	@Path("/graph/{uid}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String getGraph(@PathParam("uid") String uid, @QueryParam("data") String jsonData) {
+		return graph(uid, jsonData);
+	}
+
+	/**
+	 * Handle graph creation
+	 * @param uid of node
+	 * @param jsonData optional json data (can be null)
+	 * @return
+	 */
+	private String graph(String uid, String jsonData) {
+		try {
+			// get node
+			INode node = service.findById(service.convertUidToId(uid));
+			if (node == null)
+				throw new Exception("Entity " + uid + " not found.");
+
+			// get posted json data
+			JSONObject data;
+			if (jsonData != null && !jsonData.isEmpty()) data = new JSONObject(jsonData);
+			else data = null;
+
+			// create node list
+			JSONArray nodes = new JSONArray(1);
+			nodes.put(JSONConverter.convertNodeToJSON(node)); // add node
+
+			// add edges between nodes that are on the canvas already
+			JSONArray edges = new JSONArray();
+			//TODO: create a service method that does this query on a db level
+			if (data != null) {
+				JSONArray nodeIds = data.getJSONArray("nodes");
+				if (nodeIds != null && nodeIds.length() > 0) {
+					// only if there are other elements on the canvas already
+
+					// -> create set for faster finding of ids
+					Set<String> nodeIdSet = new HashSet<>(nodeIds.length());
+					for (int i = 0; i < nodeIds.length(); i++)
+						nodeIdSet.add(nodeIds.getString(i));
+
+					// -> create set for edges, too
+					JSONArray edgeIds = data.getJSONArray("edges");
+					Set<String> edgeIdSet = new HashSet<>();
+					if (edgeIds != null)
+						for (int i = 0; i < edgeIds.length(); i++)
+							edgeIdSet.add(edgeIds.getString(i));
+
+					// -> find my edges
+					for (IRelation relation : relationService.findByRelation(node)) {
+						// edge not on canvas?
+						if (!edgeIdSet.contains(relation.getId())) {
+							INode otherNode = relation.getToEntity().getId().equals(node.getId())?relation.getFromEntity():relation.getToEntity();
+							// node on canvas?
+							if (nodeIdSet.contains(otherNode.getId())) {
+								// -> add edge
+								edges.put(JSONConverter.convertRelationToJSON(relation));
+							}
+						}
+					}
+				}
+			}
+
+			// create response object
+			JSONObject response = new JSONObject();
+
+			response.put("nodes", nodes);
+			response.put("edges", edges);
+			response.put("removeNodes", new JSONArray());
+			response.put("removeEdges", new JSONArray());
+			response.put("highlightNode", node.getId());
+
+			return response.toString();
+		} catch (Exception e) {
+			return "{\"error\": \"" + JSONObject.quote(e.getMessage()) + "\"}";
+		}
 	}
 }
