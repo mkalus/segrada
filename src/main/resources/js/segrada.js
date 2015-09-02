@@ -770,6 +770,9 @@
 					selectionWidth: 0,
 					arrows: {
 						to: true
+					},
+					smooth: {
+						type: 'cubicBezier'
 					}
 				},
 				groups: {
@@ -874,7 +877,9 @@
 				if (data.nodes != null && data.nodes.length > 0) graphNodes.update(data.nodes);
 				if (data.edges != null && data.edges.length > 0) graphEdges.update(data.edges);
 
-				// TODO: remove edges/nodes
+				//remove edges/nodes
+				if (data.removeNodes != null && data.removeNodes.length > 0) graphNodes.remove(data.removeNodes);
+				if (data.removeEdges != null && data.removeEdges.length > 0) graphEdges.remove(data.removeEdges);
 
 				// select node, if needed
 				if (data.highlightNode != null) {
