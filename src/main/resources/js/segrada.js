@@ -886,6 +886,8 @@
 					graphNetwork.unselectAll();
 					graphNetwork.selectNodes([ data.highlightNode ], false);
 				}
+
+				graphNetwork.fit();
 			}
 		});
 	}
@@ -928,10 +930,29 @@
 
 		// *******************************************************
 		// Do graph toggle
-		$('#sg-graph-container').hide();
 		$('#sg-toggle-graph').click(function(e) {
 			if ($(this).hasClass('active')) graphHide();
 			else graphShow();
+			e.preventDefault();
+		});
+		$('#sg-graph-action-remove').click(function(e) {
+			var selection = graphNetwork.getSelection();
+			if (selection.edges.length > 0) graphEdges.remove(selection.edges);
+			if (selection.nodes.length > 0) graphNodes.remove(selection.nodes);
+			e.preventDefault();
+		});
+		$('#sg-graph-action-fit').click(function(e) {
+			graphNetwork.fit();
+			e.preventDefault();
+		});
+		$('#sg-graph-action-reload').click(function(e) {
+			graphNetwork.destroy();
+			graphInitialized = false;
+			graphInitialize();
+			e.preventDefault();
+		});
+		$('#sg-graph-close').click(function(e) {
+			graphHide();
 			e.preventDefault();
 		});
 
