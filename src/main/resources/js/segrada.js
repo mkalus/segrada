@@ -174,7 +174,12 @@
 			beforeSubmit: function(arr, $form, options) {
 				// dynamic target?
 				var target = $form.attr('data-target-id');
-				if (typeof target == "undefined" || target == null || target.length == 0) target = '#sg-control';
+				if (typeof target == "undefined" || target == null || target.length == 0) {
+					target = '#sg-control';
+
+					// hide graph
+					graphHide();
+				}
 				var container = $(target);
 				// disable container
 				container.wrapInner("<div class='sg-disabled'></div>")
@@ -759,6 +764,10 @@
 			$('.fa-share-alt-square', link).addClass('fa-share-alt').removeClass('fa-share-alt-square');
 			$('#sg-graph-container').hide();
 			$('#sg-control').show();
+
+			// brute force: TODO make this work more nicely
+			graphNetwork.destroy();
+			graphInitialized = false;
 		}
 	}
 
@@ -784,7 +793,7 @@
 		//TODO AJAX
 
 		// add new node
-		graphNodes.update({id: 1, label: 'Node 1'});
+		graphNodes.update({id: 1, label: 'Node 1', shape: 'box'});
 
 		// TODO: updated node into center?
 	}
