@@ -172,7 +172,7 @@ public class NodeController extends AbstractColoredController<INode> {
 	 * @param jsonData optional json data (can be null)
 	 * @return
 	 */
-	private String graph(String uid, String jsonData) {
+	protected String graph(String uid, String jsonData) {
 		try {
 			// get node
 			INode node = service.findById(service.convertUidToId(uid));
@@ -231,6 +231,7 @@ public class NodeController extends AbstractColoredController<INode> {
 			response.put("removeNodes", new JSONArray());
 			response.put("removeEdges", new JSONArray());
 			response.put("highlightNode", node.getId());
+			//response.put("highlightEdge", null);
 
 			return response.toString();
 		} catch (Exception e) {

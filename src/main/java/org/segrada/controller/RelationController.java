@@ -3,9 +3,12 @@ package org.segrada.controller;
 import com.google.inject.Inject;
 import com.google.inject.servlet.RequestScoped;
 import com.sun.jersey.api.view.Viewable;
+import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONObject;
 import org.segrada.controller.base.AbstractColoredController;
 import org.segrada.model.Relation;
 import org.segrada.model.prototype.IRelation;
+import org.segrada.rendering.json.JSONConverter;
 import org.segrada.service.NodeService;
 import org.segrada.service.RelationService;
 import org.segrada.service.RelationTypeService;
@@ -182,5 +185,62 @@ public class RelationController extends AbstractColoredController<IRelation> {
 		super.enrichModelForEditingAndSaving(model);
 
 		model.put("relationTypes", relationTypeService.findAll());
+	}
+
+	@POST
+	@Path("/graph/{uid}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String postGraph(@PathParam("uid") String uid, String jsonData) {
+		return graph(uid, jsonData);
+	}
+
+	@GET
+	@Path("/graph/{uid}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String getGraph(@PathParam("uid") String uid, @QueryParam("data") String jsonData) {
+		return graph(uid, jsonData);
+	}
+
+	/**
+	 * Handle graph creation
+	 * @param uid of relation
+	 * @param jsonData optional json data (can be null)
+	 * @return
+	 */
+	protected String graph(String uid, String jsonData) {
+		try {
+			// get node
+			IRelation relation = service.findById(service.convertUidToId(uid));
+			if (relation == null)
+				throw new Exception("Entity " + uid + " not found.");
+
+			// get posted json data
+			JSONObject data;
+			if (jsonData != null && !jsonData.isEmpty()) data = new JSONObject(jsonData);
+			else data = null;
+
+			// create node list
+			JSONArray nodes = new JSONArray(2);
+			nodes.put(JSONConverter.convertNodeToJSON(relation.getFromEntity())); // add node 1
+			nodes.put(JSONConverter.convertNodeToJSON(relation.getToEntity())); // add node 2
+
+			// create edge list
+			JSONArray edges = new JSONArray();
+			edges.put(JSONConverter.convertRelationToJSON(relation)); // add relation
+
+			// create response object
+			JSONObject response = new JSONObject();
+
+			response.put("nodes", nodes);
+			response.put("edges", edges);
+			response.put("removeNodes", new JSONArray());
+			response.put("removeEdges", new JSONArray());
+			//response.put("highlightNode", null);
+			response.put("highlightEdge", relation.getId());
+
+			return response.toString();
+		} catch (Exception e) {
+			return "{\"error\": \"" + JSONObject.quote(e.getMessage()) + "\"}";
+		}
 	}
 }
