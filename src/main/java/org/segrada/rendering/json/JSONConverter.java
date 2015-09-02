@@ -35,6 +35,7 @@ public class JSONConverter {
 		o.put("id", node.getId());
 		o.put("label", node.getTitle());
 		o.put("group", "node");
+		o.put("url", "/node/show/" + node.getUid());
 
 		return o;
 	}
@@ -53,6 +54,7 @@ public class JSONConverter {
 		o.put("group", "relation");
 		o.put("from", relation.getFromEntity().getId());
 		o.put("to", relation.getToEntity().getId());
+		o.put("url", "/relation/show/" + relation.getUid());
 
 		return o;
 	}

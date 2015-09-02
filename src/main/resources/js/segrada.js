@@ -126,6 +126,31 @@
 	}
 
 	/**
+	 * load url and show in data add area of page
+	 * @param url
+	 */
+	function loadDataAddUrl(url) {
+		$.get(url, function (data) {
+			// find id and hide duplicate elements
+			var matches = data.match(idRegex);
+			if (matches!=null&&matches.length >= 2) {
+				$('#' + matches[2]).remove();
+			}
+
+			var container = $('#sg-data');
+			container.prepend(data);
+
+			var addedChild = container.children(":first");
+			// call after AJAX event
+			afterAjax(addedChild);
+			// scroll to element
+			$('html, body').animate({
+				scrollTop: addedChild.offset().top
+			}, 500);
+		});
+	}
+
+	/**
 	 * called after ajax calls to update a specific part of the document
 	 * @param part
 	 */
@@ -146,25 +171,7 @@
 		// *******************************************************
 		// data add links - add data at top of data container
 		$('.sg-data-add', part).click(function (e) {
-			// AJAX call
-			$.get($(this).attr('href'), function (data) {
-				// find id and hide duplicate elements
-				var matches = data.match(idRegex);
-				if (matches!=null&&matches.length >= 2) {
-					$('#' + matches[2]).remove();
-				}
-
-				var container = $('#sg-data');
-				container.prepend(data);
-
-				var addedChild = container.children(":first");
-				// call after AJAX event
-				afterAjax(addedChild);
-				// scroll to element
-				$('html, body').animate({
-					scrollTop: addedChild.offset().top
-				}, 500);
-			});
+			loadDataAddUrl($(this).attr('href'));
 			e.preventDefault();
 		});
 
@@ -772,6 +779,23 @@
 				}
 			};
 			graphNetwork = new vis.Network(container, data, options);
+
+			// handle double click
+			graphNetwork.on("doubleClick", function(params) {
+				var url = null;
+				// node double clicked
+				if (params.nodes.length > 0) {
+					var node = graphNodes.get(params.nodes[0]);
+					if (node != null && node.url != null) url = node.url;
+				} else if (params.edges.length > 0) {
+					var edge = graphEdges.get(params.edges[0]);
+					if (edge != null && edge.url != null) url = edge.url;
+				}
+
+				// call loader
+				if (url != null)
+					loadDataAddUrl(url);
+			});
 
 			/*if (typeof console != "undefined") {
 				console.log("Graph Network was initialized.");
