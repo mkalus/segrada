@@ -180,6 +180,6 @@ public class OrientDBFilter implements Filter {
 		injector = null;
 
 		// set server status
-		SegradaApplication.setServerStatus(SegradaApplication.STATUS_OFF);
+		SegradaApplication.setServerStatus(SegradaApplication.STATUS_STOPPED);
 	}
 }

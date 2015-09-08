@@ -38,6 +38,7 @@ public class SegradaApplication {
 	public static final int STATUS_UPDATING_DATABASE = 2;
 	public static final int STATUS_RUNNING = 3;
 	public static final int STATUS_STOPPING = 4;
+	public static final int STATUS_STOPPED = 5;
 
 	/**
 	 * current server status

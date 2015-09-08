@@ -9,6 +9,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.File;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -63,7 +64,10 @@ public class SegradaLauncher extends JFrame implements ApplicationStatusChangedL
 			@Override
 			public void windowClosing(WindowEvent windowEvent) {
 				// stop if running
-				if (SegradaApplication.getServerStatus() != SegradaApplication.STATUS_OFF)
+				int status = SegradaApplication.getServerStatus();
+				if (status == SegradaApplication.STATUS_OFF || status == SegradaApplication.STATUS_STOPPED) {
+					System.exit(0);
+				} else {
 					new Thread(){
 						public void run(){
 							try {
@@ -75,7 +79,7 @@ public class SegradaLauncher extends JFrame implements ApplicationStatusChangedL
 							}
 						}
 					}.start();
-				else System.exit(0);
+				}
 			}
 
 			@Override
@@ -197,6 +201,33 @@ public class SegradaLauncher extends JFrame implements ApplicationStatusChangedL
 					}
 				}.start();
 				break;
+			case SegradaApplication.STATUS_STOPPED:
+				restartApplication();
+				break;
+		}
+	}
+
+	public void restartApplication()
+	{
+		try {
+			final String javaBin = System.getProperty("java.home") + File.separator + "bin" + File.separator + "java";
+			final File currentJar = new File(SegradaLauncher.class.getProtectionDomain().getCodeSource().getLocation().toURI());
+
+			/* is it a jar file? */
+			if(!currentJar.getName().endsWith(".jar"))
+				return;
+
+			/* Build command: java -jar application.jar */
+			final ArrayList<String> command = new ArrayList<String>();
+			command.add(javaBin);
+			command.add("-jar");
+			command.add(currentJar.getPath());
+
+			final ProcessBuilder builder = new ProcessBuilder(command);
+			builder.start();
+			System.exit(0);
+		} catch (Exception e) {
+			statusText.setText("Error: " + e.getMessage());
 		}
 	}
 
@@ -260,10 +291,10 @@ public class SegradaLauncher extends JFrame implements ApplicationStatusChangedL
 	@Override
 	public void onApplicationStatusChanged(int newStatus, int oldStatus) {
 		switch (newStatus) {
-			case SegradaApplication.STATUS_OFF:
-				statusText.setText(messages.getString("stoppedFinal"));
-				startStopButton.setText(messages.getString("stopped"));
-				startStopButton.setEnabled(false);
+			case SegradaApplication.STATUS_STOPPED:
+				statusText.setText(messages.getString("stopped"));
+				startStopButton.setText(messages.getString("restart"));
+				startStopButton.setEnabled(true);
 				browserButton.setEnabled(false);
 				changeDirectoryButton.setEnabled(false);
 				break;
