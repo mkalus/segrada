@@ -284,8 +284,15 @@ public class SegradaLauncher extends JFrame implements ApplicationStatusChangedL
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		// start instance
-		new SegradaLauncher();
+		// start headless instance?
+		if (args.length > 0 && args[0].equalsIgnoreCase("headless"))
+			try {
+				SegradaApplication.main(args);
+			} catch (Exception e) {
+
+			}
+		else // start launcher instance
+			new SegradaLauncher();
 	}
 
 	@Override

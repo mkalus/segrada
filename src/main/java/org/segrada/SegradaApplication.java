@@ -11,6 +11,7 @@ import javax.servlet.DispatcherType;
 import java.util.EnumSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Properties;
 
 /**
  * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]
@@ -98,14 +99,28 @@ public class SegradaApplication {
 		if (server != null)
 			throw new Exception("Server instance already created.");
 
+		// define properties
+		Properties env = System.getProperties();
+		int port = 8080;
+		if (env.getProperty("server.port") != null) {
+			try {
+				String propPort = env.getProperty("server.port");
+				port = Integer.parseInt(propPort);
+			} catch (Exception e) {}
+		}
+		String contextRoot = "/";
+		if (env.getProperty("server.context") != null) {
+			contextRoot = env.getProperty("server.context");
+		}
+
 		// set server starting
 		setServerStatus(STATUS_STARTING);
 
 		// create server
-		server = new Server(8080);
+		server = new Server(port);
 
 		// Create a servlet context
-		ServletContextHandler sch = new ServletContextHandler(server, "/", ServletContextHandler.SESSIONS);
+		ServletContextHandler sch = new ServletContextHandler(server, contextRoot, ServletContextHandler.SESSIONS);
 
 		// set source main path
 		sch.setResourceBase("src/main/webapp");
