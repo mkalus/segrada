@@ -119,7 +119,7 @@ public class SegradaLauncher extends JFrame implements ApplicationStatusChangedL
 
 		Font fatFont = new Font("sans-serif", Font.BOLD, 16);
 
-		setTitle(messages.getString("segrada").concat(" v0.0.4"));
+		setTitle(messages.getString("segrada").concat(" v0.0.5"));
 
 		// create elements
 		statusText = new JLabel(messages.getString("stopped"));
