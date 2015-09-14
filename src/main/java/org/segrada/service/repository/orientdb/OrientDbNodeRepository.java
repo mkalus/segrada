@@ -250,19 +250,18 @@ public class OrientDbNodeRepository extends AbstractCoreOrientDbRepository<INode
 	 */
 	private String createSearchTermFullText(String term) {
 		// create query term for lucene full text search
-		StringBuilder sb = new StringBuilder(" [title, alternativeTitles] LUCENE ");
+		StringBuilder sb = new StringBuilder(" [title, alternativeTitles] LUCENE '");
 		boolean first = true;
 		for (String termPart : term.toLowerCase().split("\\s+")) {
 			if (termPart.contains(":")) termPart = "\"" + termPart + "\"";
 			else termPart = QueryParserUtil.escape(termPart);
 			if (termPart.contains(".")) termPart = "\"" + termPart + "\"";
 			else if (!termPart.startsWith("\"") || !termPart.endsWith("\"")) termPart += "*";
-			TermQuery termQuery1 = new TermQuery(new Term("title", termPart));
-			TermQuery termQuery2 = new TermQuery(new Term("alternativeTitles", termPart));
 			if (first) first = false;
-			else sb.append(" AND [title, alternativeTitles] LUCENE ");
-			sb.append("(").append(termQuery1.toString()).append(" OR ").append(termQuery2.toString()).append(")");
+			else sb.append(" ");
+			sb.append(termPart);
 		}
+		sb.append("'");
 
 		return sb.toString();
 	}

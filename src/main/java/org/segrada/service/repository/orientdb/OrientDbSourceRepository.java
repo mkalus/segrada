@@ -233,23 +233,19 @@ public class OrientDbSourceRepository extends AbstractAnnotatedOrientDbRepositor
 	 * @return search term part
 	 */
 	private String createSearchTermFullText(String term) {
-		StringBuilder sb = new StringBuilder(" [longTitle,shortRef,shortTitle] LUCENE ");
+		StringBuilder sb = new StringBuilder(" [longTitle,shortRef,shortTitle] LUCENE '");
 		boolean first = true;
 		for (String termPart : term.toLowerCase().split("\\s+")) {
 			if (termPart.contains(":")) termPart = "\"" + termPart + "\"";
 			else termPart = QueryParserUtil.escape(termPart);
 			if (termPart.contains(".")) termPart = "\"" + termPart + "\"";
 			else if (!termPart.startsWith("\"") || !termPart.endsWith("\"")) termPart += "*";
-			TermQuery termQuery1 = new TermQuery(new Term("longTitle", termPart));
-			TermQuery termQuery2 = new TermQuery(new Term("shortRef", termPart));
-			TermQuery termQuery3 = new TermQuery(new Term("shortTitle", termPart));
 			if (first) first = false;
-			else sb.append(" AND [longTitle,shortRef,shortTitle] LUCENE ");
-			sb.append("(").append(termQuery1.toString()).append(" OR (")
-					.append(termQuery2.toString()).append(" OR ")
-					.append(termQuery3.toString()).append("))");
+			else sb.append(" ");
+			sb.append(termPart);
 		}
-		//System.out.println(sb.toString());
+		sb.append("'");
+
 		return sb.toString();
 	}
 }
