@@ -755,6 +755,56 @@
 				edges: graphEdges
 			};
 			var options = {
+				locale: $('html').attr('lang'),
+				locales: {
+					de: {
+						edit: 'Änderungsmodus',
+						del: 'Lösche Auswahl',
+						back: 'Zurück',
+						addNode: 'Knoten hinzufügen',
+						addEdge: 'Verknüpfung hinzufügen',
+						editNode: 'Knoten editieren',
+						editEdge: 'Verknüpfung editieren',
+						addDescription: 'Klicke auf eine freie Stelle, um einen neuen Knoten zu plazieren.',
+						edgeDescription: 'Klicke auf einen Knoten und ziehe die Verknüpfung zu einem anderen Knoten, um diese zu verbinden.',
+						editEdgeDescription: 'Klicke auf die Verbindungspunkte und ziehe diese auf einen Knoten, um sie zu verbinden.',
+						createEdgeError: 'Es ist nicht möglich, Verknüpfungen mit Clustern zu verbinden.',
+						deleteClusterError: 'Cluster können nicht gelöscht werden.',
+						editClusterError: 'Cluster können nicht editiert werden.'
+					},
+					en: {
+						edit: 'Toggle edit',
+						del: 'Delete selected',
+						back: 'Back',
+						addNode: 'Add Node',
+						addEdge: 'Add Relation',
+						editNode: 'Edit Node',
+						editEdge: 'Edit Relation',
+						addDescription: 'Click in an empty space to place a new node.',
+						edgeDescription: 'Click on a node and drag the relation to another node to connect them.',
+						editEdgeDescription: 'Click on the control points and drag them to a node to connect to it.',
+						createEdgeError: 'Cannot link relations to a cluster.',
+						deleteClusterError: 'Clusters cannot be deleted.',
+						editClusterError: 'Clusters cannot be edited.'
+					}
+				},
+				manipulation: {
+					enabled: true,
+					addNode: false,
+					addEdge: function(data, callback) {
+						// get relation add url
+						var url = urlSegradaRelationAdd
+							.replace("XFROMX", data.from.replace(/#([0-9]+):([0-9]+)/, "$1-$2"))
+							.replace("XTOX", data.to.replace(/#([0-9]+):([0-9]+)/, "$1-$2"))
+							.replace("&amp;", "&");
+						loadDataAddUrl(url);
+						return false;
+					},
+					editNode: false,
+					editEdge: false,
+					deleteNode: false,
+					deleteEdge: false
+				},
 				nodes: {
 					shape: 'icon',
 					color: {

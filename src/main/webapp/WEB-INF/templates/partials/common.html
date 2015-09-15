@@ -11,6 +11,7 @@
 	<link rel="stylesheet" href="../../../css/fileinput.min.css" th:href="@{/css/fileinput.min.css}" />
 	<link rel="stylesheet" href="../../../css/bootstrap-tagsinput.css" th:href="@{/css/bootstrap-tagsinput.css}" />
 	<link rel="stylesheet" href="../../../css/jquery.simplepicker.css" th:href="@{/css/jquery.simplepicker.css}" />
+	<link rel="stylesheet" href="../../../css/vis.css" th:href="@{/css/vis.css}" />
 	<link rel="stylesheet" href="../../../css/segrada.css" th:href="@{/css/segrada.css}" />
 
 	<!--/* HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries */-->
@@ -185,6 +186,8 @@ Common fragments.
 		var urlSegradaNodeSearch = [[@{/node/search?s=}]];
 		var urlSegradaFileSearch = [[@{/file/search?s=}]];
 		var urlSegradaSourceSearch = [[@{/source/search?s=}]];
+
+		var urlSegradaRelationAdd = [[@{/relation/add?fromEntityUid=XFROMX&amp;toEntityUid=XTOX}]];
 		/*]]>*/
 	</script>
 	<script src="../../../js/vendor/jquery-1.11.2.min.js" th:src="@{/js/vendor/jquery-1.11.2.min.js}"></script>
