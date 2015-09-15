@@ -83,15 +83,15 @@
 			<div class="col-sm-3">
 				<a href="#" class="btn btn-default btn-sm sg-pictogram-chooser" th:attr="data-id=${name + '-' + id}" th:text="#{field.select_pictogram}">Select Pictogram</a>
 			</div>
-			<div class="col-sm-6">
-				<div th:id="${'preview-' + name + '-' + id}">
+			<div class="col-sm-5">
+				<div th:id="${'preview-' + name + '-' + id}" class="small">
 								<span th:if="${field}" th:inline="text">
 									<img src="#" th:src="@{/pictogram/file/{id}(id=${field.uid})}" alt="" th:alt-title="${field.title}" width="24" height="24" />
 									[[${field.title}]]
 								</span>
 				</div>
 			</div>
-			<div class="col-sm-3">
+			<div class="col-sm-4 text-right">
 				<a href="#" class="btn btn-danger btn-sm sg-pictogram-clearer" th:classappend="${field}?'':'sg-dynamic-hide'" th:id="${'clear-' + name + '-' + id}" th:attr="data-id=${name + '-' + id}" th:text="#{field.clear_pictogram}">Clear Pictogram</a>
 			</div>
 		</div>
