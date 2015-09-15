@@ -84,14 +84,14 @@ public class Color extends AbstractSegradaEntity implements IColor {
 
 	@Override
 	public int getR() {
-		return color==null?0:(int) (color >> 16) & 0x000000FF;
+		return color==null?0:(color >> 16) & 0x000000FF;
 	}
 	@Override
 	public int getG() {
-		return color==null?0:(int) (color >> 8) & 0x000000FF;
+		return color==null?0:(color >> 8) & 0x000000FF;
 	}
 	@Override
 	public int getB() {
-		return color==null?0:(int) (color & 0x000000FF);
+		return color==null?0:(color & 0x000000FF);
 	}
 }

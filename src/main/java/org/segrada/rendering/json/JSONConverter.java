@@ -37,6 +37,27 @@ public class JSONConverter {
 		o.put("group", "node");
 		o.put("url", "/node/show/" + node.getUid());
 
+		// picture?
+		if (node.getPictogram() != null) {
+			o.put("image", "/pictogram/file/" + node.getPictogram().getUid());
+			o.put("shape", "image");
+
+			// additional color?
+			if (node.getColor() != null) {
+				JSONObject font = new JSONObject();
+				// color according to brightness
+				font.put("color", calculateBrightness(node.getColor())<130?"#ffffff":"#000000");
+				font.put("background", node.getColorCode());
+				o.put("font", font);
+			}
+		}
+		// no picture, but color
+		else if (node.getColor() != null) {
+			JSONObject icon = new JSONObject();
+			icon.put("color", node.getColorCode());
+			o.put("icon", icon);
+		}
+
 		return o;
 	}
 
@@ -56,6 +77,28 @@ public class JSONConverter {
 		o.put("to", relation.getToEntity().getId());
 		o.put("url", "/relation/show/" + relation.getUid());
 
+		if (relation.getColor() != null) {
+			JSONObject color = new JSONObject();
+			color.put("color", relation.getColorCode());
+			o.put("color", color);
+		}
+
 		return o;
+	}
+
+	/**
+	 * calculate brightness from color (brightness  =  sqrt(.299 R² + .587 G² + .114 B² ))
+	 * inspired by http://themergency.com/calculate-text-color-based-on-background-color-brightness/
+	 * @param color input color
+	 * @return brightness 0-255
+	 */
+	private static int calculateBrightness(int color) {
+		double red = (double) ((color >> 16) & 0x000000FF);
+		double green = (double) ((color >> 8) & 0x000000FF);
+		double blue = (double) (color & 0x000000FF);
+
+		return (int) Math.sqrt(
+				red * red * .241 + green * green * .691 + blue * blue + 0.68
+		);
 	}
 }

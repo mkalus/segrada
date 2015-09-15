@@ -756,15 +756,15 @@
 			};
 			var options = {
 				nodes: {
+					shape: 'icon',
 					color: {
 						border: '#000',
 						background: '#fff'
-					},
-					labelHighlightBold: false
+					}
 				},
 				edges: {
 					font: {
-						size: 6
+						size: 10
 					},
 					labelHighlightBold: false,
 					selectionWidth: 0,
@@ -777,7 +777,10 @@
 				},
 				groups: {
 					node: {
-						shape: 'box'
+						icon: {
+							code: '\uf192',
+							color: '#000000'
+						}
 					}
 				}
 			};
