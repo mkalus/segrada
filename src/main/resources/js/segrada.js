@@ -832,6 +832,11 @@
 							color: '#000000'
 						}
 					}
+				},
+				physics: {
+					barnesHut: {
+						springLength: 120
+					}
 				}
 			};
 			graphNetwork = new vis.Network(container, data, options);
