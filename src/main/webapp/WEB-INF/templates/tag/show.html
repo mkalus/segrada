@@ -29,6 +29,8 @@
 				<!--/* TODO: table of parent and child tag(s) - or graphical view? */-->
 
 				<div class="sg-margin-bottom sg-stop-flow" th:unless="${#lists.isEmpty(childTags)}">
+					<div class="sg-margin-top" th:text="#{field.childTags}">Child tags:</div>
+
 					<div th:replace="partials/common :: taglist (tags=${childTags})"></div>
 				</div>
 			</div>
