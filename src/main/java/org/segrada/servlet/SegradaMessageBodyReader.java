@@ -6,6 +6,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.tika.io.IOUtils;
 import org.segrada.model.prototype.SegradaEntity;
+import org.segrada.model.prototype.SegradaTaggable;
 import org.segrada.service.base.AbstractRepositoryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -99,10 +100,30 @@ public class SegradaMessageBodyReader implements MessageBodyReader<SegradaEntity
 			}
 		}
 
+		// keep aggregated array values from form
+		Map<String, String[]> arrayValues = new HashMap<>();
+
 		// get each form key and value
 		for (NameValuePair nameValuePair : parameters) {
 			// do not update id
 			if (nameValuePair.getName().equals("id")) continue;
+			// clear tags before setting new ones: make sure to clear tags if empty
+			if (nameValuePair.getName().equals("clearTags")) {
+				Method setter = setters.get(nameValuePair.getValue());
+				if (setter != null) {
+					try {
+						// setTags method?
+						if (setter.getName().equals("setTags"))
+							((SegradaTaggable)entity).setTags(new String[]{});
+						else // other set tags method
+							setter.invoke(entity, null);
+					} catch (Exception e) {
+						logger.error("Could not set entity of type " + aClass.getSimpleName() + ", method " + setter.getName() + " to clear its tags", e);
+					}
+				}
+
+				continue;
+			}
 
 			Method setter = setters.get(nameValuePair.getName());
 			if (setter != null) {
@@ -136,25 +157,21 @@ public class SegradaMessageBodyReader implements MessageBodyReader<SegradaEntity
 				}
 				// handle arrays
 				if (String[].class.isAssignableFrom(setterType)) {
-					// get current property value
-					String getterName = "g" + setter.getName().substring(1);
-					try {
-						Method getter = entity.getClass().getMethod(getterName);
-						String[] currentValues = (String[]) getter.invoke(entity);
-						if (currentValues == null) {
-							value = new String[] { (String) value };
-						} else {
-							// add to string
-							String[] newValues = new String[currentValues.length+1];
-							for (int i = 0; i < currentValues.length; i++)
-								newValues[i] = currentValues[i];
-							newValues[currentValues.length] = (String)value;
-							value = newValues;
-						}
-					} catch (Exception e) {
-						logger.error("Could not get getter for " + aClass.getSimpleName() + ", method " + setter.getName() + " in order to assign array values", e);
-						value = null;
+					// get aggregated list from arrayvalues
+					String[] currentValues = arrayValues.get(nameValuePair.getName());
+					if (currentValues == null) {
+						currentValues = new String[] { (String) value };
+					} else  {
+						// add to string
+						String[] newValues = new String[currentValues.length+1];
+						for (int i = 0; i < currentValues.length; i++)
+							newValues[i] = currentValues[i];
+						newValues[currentValues.length] = (String)value;
+						currentValues = newValues;
 					}
+					// save to arrayValues
+					arrayValues.put(nameValuePair.getName(), currentValues);
+					value = currentValues;
 				}
 
 				// try to set value

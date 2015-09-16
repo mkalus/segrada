@@ -198,7 +198,7 @@ abstract public class AbstractBaseController<BEAN extends SegradaEntity> {
 				} catch (URISyntaxException e) {
 					return Response.ok(new Viewable("error", e.getMessage())).build();
 				}
-			} else return Response.ok(new Viewable("error", "SAVE failed.")).build();
+			} else return displayUpdateError(entity, service);
 		}
 
 		// fill model map
@@ -209,6 +209,17 @@ abstract public class AbstractBaseController<BEAN extends SegradaEntity> {
 
 		// return viewable
 		return Response.ok(new Viewable(getBasePath() + "form", model)).build();
+	}
+
+	/**
+	 * Error response on save - can be overwritten
+	 * @param entity to be saved
+	 * @param service to save
+	 * @param <E> type of repository
+	 * @return response failed view
+	 */
+	protected <E extends CRUDRepository<BEAN>> Response displayUpdateError(BEAN entity, AbstractRepositoryService<BEAN, E> service) {
+		return Response.ok(new Viewable("error", "SAVE failed.")).build();
 	}
 
 	/**

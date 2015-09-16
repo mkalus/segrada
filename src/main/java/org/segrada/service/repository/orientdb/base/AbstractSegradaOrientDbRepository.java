@@ -141,8 +141,8 @@ abstract public class AbstractSegradaOrientDbRepository<T extends SegradaEntity>
 	 * @param entity to update tags from
 	 */
 	protected void updateEntityTags(SegradaTaggable entity) {
-		// return, of not tags set
-		if (entity.getTags() == null || entity.getTags().length == 0) return;
+		// avoid NPEs
+		if (entity.getTags() == null) entity.setTags(new String[] {});
 
 		TagRepository tagRepository = repositoryFactory.produceRepository(OrientDbTagRepository.class);
 		if (tagRepository == null) return;

@@ -8,10 +8,12 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.segrada.controller.base.AbstractBaseController;
 import org.segrada.model.Tag;
-import org.segrada.model.prototype.ISource;
 import org.segrada.model.prototype.ITag;
 import org.segrada.model.prototype.SegradaTaggable;
 import org.segrada.service.TagService;
+import org.segrada.service.base.AbstractRepositoryService;
+import org.segrada.service.repository.orientdb.exception.CircularConnectionException;
+import org.segrada.service.repository.prototype.CRUDRepository;
 import org.segrada.util.Sluggify;
 
 import javax.ws.rs.*;
@@ -150,6 +152,11 @@ public class TagController extends AbstractBaseController<ITag> {
 		return reallyShow(service.findByTitle(title, true));
 	}
 
+	/**
+	 * show action called by methods above
+	 * @param tag to show
+	 * @return viewable
+	 */
 	private Viewable reallyShow(ITag tag) {
 		// create model map
 		Map<String, Object> model = new HashMap<>();
@@ -185,6 +192,26 @@ public class TagController extends AbstractBaseController<ITag> {
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public Response update(Tag entity) {
 		return handleUpdate(entity, service);
+	}
+
+	@Override
+	protected <E extends CRUDRepository<ITag>> Response displayUpdateError(ITag entity, AbstractRepositoryService<ITag, E> service) {
+		// custom update error
+
+		// create model map
+		Map<String, Object> model = new HashMap<>();
+		// create errors
+		Map<String, String> errors = new HashMap<>();
+		errors.put("tags", "error.circularTags");
+
+		// fill model map
+		model.put("entity", entity);
+		model.put("errors", errors);
+
+		enrichModelForEditingAndSaving(model);
+
+		// return viewable
+		return Response.ok(new Viewable(getBasePath() + "form", model)).build();
 	}
 
 	@Override

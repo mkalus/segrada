@@ -414,15 +414,23 @@
 
 		// *******************************************************
 		// Tags fields
-		$("select.sg-tags", part).tagsinput({
-			trimValue: true,
-			confirmKeys: [13], //enter only
-			typeaheadjs: {
-				name: 'tags',
-				displayKey: 'title',
-				valueKey: 'title',
-				source: tagsTokenizer.ttAdapter()
-			}
+		$("select.sg-tags", part).each(function() {
+			var elem = $(this);
+			elem.tagsinput({
+				trimValue: true,
+				confirmKeys: [13], //enter only
+				typeaheadjs: {
+					name: 'tags',
+					displayKey: 'title',
+					valueKey: 'title',
+					source: tagsTokenizer.ttAdapter()
+				}
+			});
+
+			elem.on('itemRemoved', function(event) {
+				// really delete tag - fix bug in tagsinput
+				elem.find('option[value="' + event.item + '"]').remove();
+			});
 		});
 
 		// *******************************************************

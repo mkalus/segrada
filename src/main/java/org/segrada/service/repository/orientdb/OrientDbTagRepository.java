@@ -14,6 +14,7 @@ import org.segrada.model.prototype.SegradaTaggable;
 import org.segrada.service.repository.TagRepository;
 import org.segrada.service.repository.orientdb.base.AbstractOrientDbRepository;
 import org.segrada.service.repository.orientdb.base.AbstractSegradaOrientDbRepository;
+import org.segrada.service.repository.orientdb.exception.CircularConnectionException;
 import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory;
 import org.segrada.service.util.PaginationInfo;
 import org.segrada.util.OrientStringEscape;
@@ -90,6 +91,16 @@ public class OrientDbTagRepository extends AbstractSegradaOrientDbRepository<ITa
 		populateODocumentWithCreatedModified(document, entity);
 
 		return document;
+	}
+
+	@Override
+	protected ITag processAfterSaving(ODocument updated, ITag entity) {
+		entity = super.processAfterSaving(updated, entity);
+
+		// connect tags
+		updateEntityTags(entity);
+
+		return entity;
 	}
 
 	@Override
@@ -392,7 +403,7 @@ public class OrientDbTagRepository extends AbstractSegradaOrientDbRepository<ITa
 		if (child instanceof ITag) {
 			ITag testChild = (ITag) child;
 			if (isParentOf(testChild, parent))
-				throw new RuntimeException("Circular connection of tags: " + parent + "=>" + child);
+				throw new CircularConnectionException("Circular connection of tags: " + parent + "=>" + child);
 		}
 
 		// no doubly connected tags:
@@ -402,7 +413,7 @@ public class OrientDbTagRepository extends AbstractSegradaOrientDbRepository<ITa
 		ODocument sp = spath.iterator().next();
 		List path = sp.field("shortestPath");
 
-		if (!path.isEmpty()) return;
+		if (!path.isEmpty() && path.size() <= 2) return;
 
 		// add edge
 		db.command(new OCommandSQL("create edge IsTagOf from " + parent.getId() + " to " + child.getId())).execute();
