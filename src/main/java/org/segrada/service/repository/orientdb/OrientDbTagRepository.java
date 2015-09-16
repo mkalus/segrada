@@ -23,10 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]
@@ -99,8 +96,43 @@ public class OrientDbTagRepository extends AbstractSegradaOrientDbRepository<ITa
 
 		// connect tags
 		updateEntityTags(entity);
+		// connect child tags, if needed
+		updateChildTags(entity);
 
 		return entity;
+	}
+
+	/**
+	 * Connect child tags
+	 * @param entity to update
+	 */
+	private void updateChildTags(ITag entity) {
+		//TODO: test this method!
+
+		// if null, then ignore
+		if (entity.getChildTags() == null) return;
+
+		// create new tags, if needed
+		createNewTagsByTitles(entity.getChildTags());
+
+		// find all tags by title
+		List<ITag> tags = findTagsByTitles(entity.getChildTags());
+
+		// keeps added ids
+		Set<String> addedIds = new HashSet<>();
+
+		// add all tags as child of entity
+		for (ITag tag : tags) {
+			connectTag(entity, tag);
+			addedIds.add(tag.getId());
+		}
+
+		// now find all tag ids and see if there are some that have been deleted
+		List<SegradaTaggable> children = findByTag(entity.getId(), false, new String[]{"Tag"});
+		for (SegradaTaggable child : children) {
+			if (!addedIds.contains(child.getId())) // not in set connected - delete
+				removeTag(entity.getId(), child);
+		}
 	}
 
 	@Override

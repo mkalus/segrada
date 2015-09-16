@@ -5,6 +5,7 @@ import com.google.inject.Injector;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.tika.io.IOUtils;
+import org.segrada.model.prototype.ITag;
 import org.segrada.model.prototype.SegradaEntity;
 import org.segrada.model.prototype.SegradaTaggable;
 import org.segrada.service.base.AbstractRepositoryService;
@@ -115,8 +116,8 @@ public class SegradaMessageBodyReader implements MessageBodyReader<SegradaEntity
 						// setTags method?
 						if (setter.getName().equals("setTags"))
 							((SegradaTaggable)entity).setTags(new String[]{});
-						else // other set tags method
-							setter.invoke(entity, null);
+						else if (setter.getName().equals("setChildTags"))
+							((ITag)entity).setChildTags(new String[]{});
 					} catch (Exception e) {
 						logger.error("Could not set entity of type " + aClass.getSimpleName() + ", method " + setter.getName() + " to clear its tags", e);
 					}

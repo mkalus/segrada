@@ -232,6 +232,26 @@ public class TagController extends AbstractBaseController<ITag> {
 		}
 	}
 
+	@Override
+	protected void enrichModelForEditingAndSaving(Map<String, Object> model) {
+		super.enrichModelForEditingAndSaving(model);
+
+		ITag entity = (ITag) model.get("entity");
+
+		// get child tags
+		List<String> childTags = new LinkedList<>();
+		for (SegradaTaggable taggable : service.findByTag(entity.getId(), false, new String[]{"Tag"})) {
+			childTags.add(((ITag) taggable).getTitle());
+		}
+
+		// tags to list
+		String[] tags = new String[childTags.size()];
+		tags = childTags.toArray(tags);
+
+		// enrich model with child tags
+		entity.setChildTags(tags);
+	}
+
 	/**
 	 * remove tag from entity
 	 * @param referenceUid uid of reference

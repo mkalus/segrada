@@ -37,9 +37,14 @@ public class Tag extends AbstractSegradaEntity implements ITag {
 	private String title;
 
 	/**
-	 * Tag list
+	 * Tag list - parents
 	 */
 	private transient String[] tags;
+
+	/**
+	 * Tag list - children
+	 */
+	private transient String[] childTags;
 
 
 	@Override
@@ -62,13 +67,21 @@ public class Tag extends AbstractSegradaEntity implements ITag {
 		this.tags = tags;
 	}
 
+	public String[] getChildTags() {
+		return childTags;
+	}
+
+	public void setChildTags(String[] childTags) {
+		this.childTags = childTags;
+	}
+
 	@Override
 	public boolean equals(Object that) {
-		return that != null && this.getClass() == that.getClass() && EqualsBuilder.reflectionEquals(this, that, "tags", "created", "modified", "creator", "modifier");
+		return that != null && this.getClass() == that.getClass() && EqualsBuilder.reflectionEquals(this, that, "tags", "childTags", "created", "modified", "creator", "modifier");
 	}
 
 	@Override
 	public int hashCode() {
-		return HashCodeBuilder.reflectionHashCode(this, "tags", "created", "modified", "creator", "modifier");
+		return HashCodeBuilder.reflectionHashCode(this, "tags", "childTags", "created", "modified", "creator", "modifier");
 	}
 }
