@@ -1,0 +1,30 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" th:lang="${#locale.language}">
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<title>Segrada</title>
+	<div th:include="partials/common :: head" th:remove="tag"></div>
+</head>
+
+<body>
+<h1>Search within file partial</h1>
+
+<div th:fragment="withinFile (file, uid)" th:unless="${#strings.isEmpty(file.fullText)}" class="sg-search-within-file">
+	<form class="sg-margin-top sg-simple-form" action="#" method="get" th:action="@{/search/in_document}" th:attr="data-id=${'s-' + uid + '-' + file.uid + '-content'}">
+		<div class="form-group">
+			<label for="s" th:for="${'s-' + uid + '-' + file.uid}" th:text="#{field.searchWithinDocument}">Search within full text of document</label>
+			<input type="text" class="form-control" id="s" th:id="${'s-' + uid + '-' + file.uid}" name="s" />
+		</div>
+
+		<input type="hidden" name="id" th:value="${file.uid}" />
+		<div class="sg-margin-top-sm">
+			<button type="submit" class="btn btn-default" th:text="#{Search}">Search</button>
+		</div>
+	</form>
+
+	<div id="s-x" th:id="${'s-' + uid + '-' + file.uid + '-content'}"></div>
+</div>
+
+</body>
+</html>

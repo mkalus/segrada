@@ -58,19 +58,7 @@
 					</div>
 				</div>
 
-				<form class="sg-margin-top sg-simple-form" action="#" method="get" th:unless="${#strings.isEmpty(entity.fullText)}" th:action="@{/search/in_document}" th:attr="data-id=${'s-' + entity.uid + '-content'}">
-					<div class="form-group">
-						<label for="s" th:for="${'s-' + entity.uid}" th:text="#{field.searchWithinDocument}">Search within full text of document</label>
-						<input type="text" class="form-control" id="s" th:id="${'s-' + entity.uid}" name="s" />
-					</div>
-
-					<input type="hidden" name="id" th:value="${entity.uid}" />
-					<div class="sg-margin-top-sm">
-						<button type="submit" class="btn btn-default" th:text="#{Search}">Search</button>
-					</div>
-				</form>
-
-				<div id="s-x" th:id="${'s-' + entity.uid + '-content'}"></div>
+				<div th:replace="partials/search :: withinFile (file=${entity}, uid=${entity.uid})"></div>
 
 				<div th:if="${entity.fileIdentifier}" class="sg-margin-top sg-margin-bottom">
 					<div th:if="${#strings.startsWith(entity.mimeType,'image/')}">
