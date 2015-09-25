@@ -1,9 +1,13 @@
 package org.segrada.rendering.json;
 
+import com.google.inject.Inject;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.segrada.model.prototype.INode;
 import org.segrada.model.prototype.IRelation;
+
+import javax.servlet.ServletContext;
+import javax.ws.rs.core.Context;
 
 /**
  * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]
@@ -23,23 +27,31 @@ import org.segrada.model.prototype.IRelation;
  * Static JSON converter for classes
  */
 public class JSONConverter {
+	@Inject
+	private ServletContext servletContext;
+
+	/**
+	 * cached base path
+	 */
+	private String base;
+
 	/**
 	 * convert node to json object
 	 * @param node to be converted
 	 * @return json object
 	 * @throws JSONException
 	 */
-	public static JSONObject convertNodeToJSON(INode node) throws JSONException {
+	public JSONObject convertNodeToJSON(INode node) throws JSONException {
 		JSONObject o = new JSONObject();
 
 		o.put("id", node.getId());
 		o.put("label", node.getTitle());
 		o.put("group", "node");
-		o.put("url", "/node/show/" + node.getUid());
+		o.put("url", getBase() + "node/show/" + node.getUid());
 
 		// picture?
 		if (node.getPictogram() != null) {
-			o.put("image", "/pictogram/file/" + node.getPictogram().getUid());
+			o.put("image", base + "pictogram/file/" + node.getPictogram().getUid());
 			o.put("shape", "image");
 
 			// additional color?
@@ -67,7 +79,7 @@ public class JSONConverter {
 	 * @return json object
 	 * @throws JSONException
 	 */
-	public static JSONObject convertRelationToJSON(IRelation relation) throws JSONException {
+	public JSONObject convertRelationToJSON(IRelation relation) throws JSONException {
 		JSONObject o = new JSONObject();
 
 		o.put("id", relation.getId());
@@ -75,7 +87,7 @@ public class JSONConverter {
 		o.put("group", "relation");
 		o.put("from", relation.getFromEntity().getId());
 		o.put("to", relation.getToEntity().getId());
-		o.put("url", "/relation/show/" + relation.getUid());
+		o.put("url", getBase() + "relation/show/" + relation.getUid());
 
 		if (relation.getColor() != null) {
 			JSONObject color = new JSONObject();
@@ -92,7 +104,7 @@ public class JSONConverter {
 	 * @param color input color
 	 * @return brightness 0-255
 	 */
-	private static int calculateBrightness(int color) {
+	private int calculateBrightness(int color) {
 		double red = (double) ((color >> 16) & 0x000000FF);
 		double green = (double) ((color >> 8) & 0x000000FF);
 		double blue = (double) (color & 0x000000FF);
@@ -100,5 +112,22 @@ public class JSONConverter {
 		return (int) Math.sqrt(
 				red * red * .241 + green * green * .691 + blue * blue + 0.68
 		);
+	}
+
+	/**
+	 * get base path
+	 * @return cached base path
+	 */
+	private String getBase() {
+		// create base, if not exist
+		if (base == null) {
+			// soft fail servletContext
+			if (servletContext != null) {
+				base = servletContext.getContextPath();
+				if (!base.endsWith("/")) base = base + "/";
+			} else base = "/";
+		}
+
+		return base;
 	}
 }
