@@ -49,6 +49,9 @@ public class RelationController extends AbstractColoredController<IRelation> {
 	@Inject
 	private NodeService nodeService;
 
+	@Inject
+	private JSONConverter jsonConverter;
+
 	@Override
 	protected String getBasePath() {
 		return "/relation/";
@@ -222,12 +225,12 @@ public class RelationController extends AbstractColoredController<IRelation> {
 			// create node list
 			JSONArray nodes = new JSONArray(2);
 			// we load the whole data of the entities to include pictograms etc.
-			nodes.put(JSONConverter.convertNodeToJSON(nodeService.findById(relation.getFromEntity().getId()))); // add node 1
-			nodes.put(JSONConverter.convertNodeToJSON(nodeService.findById(relation.getToEntity().getId()))); // add node 2
+			nodes.put(jsonConverter.convertNodeToJSON(nodeService.findById(relation.getFromEntity().getId()))); // add node 1
+			nodes.put(jsonConverter.convertNodeToJSON(nodeService.findById(relation.getToEntity().getId()))); // add node 2
 
 			// create edge list
 			JSONArray edges = new JSONArray();
-			edges.put(JSONConverter.convertRelationToJSON(relation)); // add relation
+			edges.put(jsonConverter.convertRelationToJSON(relation)); // add relation
 
 			// create response object
 			JSONObject response = new JSONObject();

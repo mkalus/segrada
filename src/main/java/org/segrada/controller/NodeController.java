@@ -45,6 +45,9 @@ public class NodeController extends AbstractColoredController<INode> {
 	@Inject
 	private RelationService relationService;
 
+	@Inject
+	private JSONConverter jsonConverter;
+
 	@Override
 	protected String getBasePath() {
 		return "/node/";
@@ -186,7 +189,7 @@ public class NodeController extends AbstractColoredController<INode> {
 
 			// create node list
 			JSONArray nodes = new JSONArray(1);
-			nodes.put(JSONConverter.convertNodeToJSON(node)); // add node
+			nodes.put(jsonConverter.convertNodeToJSON(node)); // add node
 
 			// add edges between nodes that are on the canvas already
 			JSONArray edges = new JSONArray();
@@ -216,7 +219,7 @@ public class NodeController extends AbstractColoredController<INode> {
 							// node on canvas?
 							if (nodeIdSet.contains(otherNode.getId())) {
 								// -> add edge
-								edges.put(JSONConverter.convertRelationToJSON(relation));
+								edges.put(jsonConverter.convertRelationToJSON(relation));
 							}
 						}
 					}
