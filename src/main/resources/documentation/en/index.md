@@ -2,4 +2,4 @@
 
 Help sections:
 
-* [Installation](installation)
+* [Installation](installation.md)

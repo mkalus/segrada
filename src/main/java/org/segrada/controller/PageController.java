@@ -135,6 +135,8 @@ public class PageController {
 		public Rendering render(ExpLinkNode node, String text) {
 			// add context path to url
 			String url = contextPath + "/page/" + node.url;
+			// cut away .md suffix if needed
+			if (url.endsWith(".md")) url = url.substring(0, url.length() - 3);
 
 			LinkRenderer.Rendering rendering = new LinkRenderer.Rendering(url, text);
 			rendering = rendering.withAttribute("class", "sg-data-add");

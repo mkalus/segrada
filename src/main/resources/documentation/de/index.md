@@ -2,5 +2,5 @@
 
 Hilfebereiche:
 
-* [Installation](installation)
+* [Installation](installation.md)
 

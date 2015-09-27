@@ -1,4 +1,4 @@
 # Segrada Documentation
 
-* [English](en/index)
-* [Deutsch](de/index)
+* [English](en/index.md)
+* [Deutsch](de/index.md)
