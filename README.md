@@ -20,7 +20,7 @@ Features:
 **Note:** A few features are still missing from the current release.
 
 
-Running Segrada:
+## Running Segrada
 
 Download from: [www.segrada.org](http://www.segrada.org/ "Segrada Homepage")
 
@@ -28,3 +28,7 @@ In order to try out Segrada, download the program and unpack it to a folder of y
 On Windows, start the application with Segrada.exe. On Linux, Unix, and Apple Mac OS, run start.sh (you might have to make this file executable).  
 A window should appear which can start the actual application. Press "Start" and wait for the button "Open Application" to become active.  
 The application runs in your browser. You can stop the application by clicking "Stop" in the control window or by closing it.
+
+## Documentation
+
+[Documentation on GitHub](https://github.com/mkalus/segrada/blob/master/src/main/resources/documentation/index.md)

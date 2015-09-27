@@ -2,5 +2,5 @@
 
 Hilfebereiche:
 
-* [Installation](installation.md)
+* [Segrada starten](run.md)
 

@@ -2,4 +2,4 @@
 
 Help sections:
 
-* [Installation](installation.md)
+* [Start Segrada](run.md)

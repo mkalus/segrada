@@ -6,6 +6,7 @@ import org.parboiled.common.StringUtils;
 import org.pegdown.FastEncoder;
 import org.pegdown.LinkRenderer;
 import org.pegdown.PegDownProcessor;
+import org.pegdown.ast.ExpImageNode;
 import org.pegdown.ast.ExpLinkNode;
 
 import javax.servlet.http.HttpServletRequest;
@@ -16,6 +17,8 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.StreamingOutput;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -48,6 +51,42 @@ public class PageController {
 	@Produces(MediaType.TEXT_HTML)
 	public Viewable index(@Context HttpServletRequest request) {
 		return getPage("index", request);
+	}
+
+	@GET
+	@Path("/img/{image}")
+	public Response getImage(@PathParam("image") String image, @Context HttpServletRequest request) {
+		HttpSession session = request.getSession();
+
+		// get language from session
+		Object lObject = session.getAttribute("language");
+		String language = lObject==null?Locale.getDefault().getLanguage():(String) lObject;
+
+		try {
+			final InputStream in = getClass().getResourceAsStream("/documentation/" + language + "/" + image + ".png");
+
+			// set streaming output
+			StreamingOutput output = outputStream -> {
+				try {
+					byte[] buffer = new byte[4096];
+					int bytesRead = -1;
+
+					// write bytes read from the input stream into the output stream
+					while ((bytesRead = in.read(buffer)) != -1) {
+						outputStream.write(buffer, 0, bytesRead);
+					}
+
+					in.close();
+					outputStream.close();
+				} catch (Exception e) {
+					//TODO log
+				}
+			};
+
+			return Response.ok(output, "image/png").build();
+		} catch (Exception e) {
+			return Response.ok(new Viewable("error", e.getMessage())).build();
+		}
 	}
 
 	@GET
@@ -133,6 +172,10 @@ public class PageController {
 
 		@Override
 		public Rendering render(ExpLinkNode node, String text) {
+			// do not change links starting with http
+			//TODO: change this to load external links in new tab (using JS)
+			if (node.url.startsWith("http")) return super.render(node, text);
+
 			// add context path to url
 			String url = contextPath + "/page/" + node.url;
 			// cut away .md suffix if needed
@@ -140,6 +183,20 @@ public class PageController {
 
 			LinkRenderer.Rendering rendering = new LinkRenderer.Rendering(url, text);
 			rendering = rendering.withAttribute("class", "sg-data-add");
+			return StringUtils.isEmpty(node.title)?rendering:rendering.withAttribute("title", FastEncoder.encode(node.title));
+		}
+
+		@Override
+		public Rendering render(ExpImageNode node, String text) {
+			// do not change links starting with http
+			if (node.url.startsWith("http")) return super.render(node, text);
+
+			// add context path to url
+			String url = contextPath + "/page/img/" + node.url;
+			// cut away .png suffix if needed //TODO: make this work nicely
+			if (url.endsWith(".png")) url = url.substring(0, url.length() - 4);
+
+			LinkRenderer.Rendering rendering = new LinkRenderer.Rendering(url, text);
 			return StringUtils.isEmpty(node.title)?rendering:rendering.withAttribute("title", FastEncoder.encode(node.title));
 		}
 	}
