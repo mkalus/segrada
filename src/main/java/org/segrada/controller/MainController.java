@@ -35,7 +35,7 @@ import javax.ws.rs.core.MediaType;
 public class MainController {
 	@GET
 	@Produces(MediaType.TEXT_HTML)
-	public Viewable sayHello() {
+	public Viewable index() {
 		return new Viewable("home");
 	}
 }
