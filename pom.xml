@@ -133,6 +133,12 @@
 			<artifactId>thymeleaf</artifactId>
 			<version>2.1.4.RELEASE</version>
 		</dependency>
+		<!-- Pegdown markdown parser -->
+		<dependency>
+			<groupId>org.pegdown</groupId>
+			<artifactId>pegdown</artifactId>
+			<version>1.5.0</version>
+		</dependency>
 
 		<!-- OrientDB -->
 		<dependency>

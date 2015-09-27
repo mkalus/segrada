@@ -1,0 +1,25 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" th:lang="${#locale.language}">
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<title th:text="${pageId}">Page</title>
+	<div th:include="partials/common :: head" th:remove="tag"></div>
+</head>
+
+<body>
+<div th:replace="partials/common :: browser"></div>
+
+<div class="container">
+	<div class="sg-data" id="view-page-content">
+		<div th:fragment="headerboxright (type,base,uid)" class="sg-headbox-right">
+			<a href="#" type="button" class="close sg-data-close" aria-label="Close" th:title="#{Close}" th:attr="aria-label=#{Close}"><i class="fa fa-times"></i></a>
+		</div>
+
+		<div th:utext="${page}">Page Content</div>
+	</div>
+</div>
+
+<div th:replace="partials/common :: footer"></div>
+</body>
+</html>

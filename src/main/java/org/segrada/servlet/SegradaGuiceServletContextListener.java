@@ -62,7 +62,7 @@ public class SegradaGuiceServletContextListener extends GuiceServletContextListe
 						bind(SearchController.class);
 						bind(AdminController.class);
 						bind(LocaleController.class);
-
+						bind(PageController.class);
 
 						// cache filter
 						bind(SegradaSimplePageCachingFilter.class).asEagerSingleton();
