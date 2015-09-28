@@ -38,3 +38,20 @@ Der Starter is eine einfache Möglichkeit, Segrada auf dem lokalen Rechner laufe
 * Öffnen Sie ihren Browser unter [http://localhost:8080/](http://localhost:8080/).
 
 Geplant: Mac-Start-Programm.
+
+
+## Segrada als Server starten
+
+Um Segrada als eigenständigen Server zu starten, kann man die headless-Option verwenden:
+
+    java -jar segrada-1.0-SNAPSHOT.jar headless
+
+Mehr Optionen unter [Kommandozeilenoptionen](command_line_options.md).
+
+
+## Segrada im Servlet-Kontext
+
+Sie können Segrada als WAR in einem Servlet-Container starten. Diese Funktion ist bislang nicht besonders intensiv
+getestet. Erfahrungen und Feedback sind daher erwünscht. 
+
+Kompilieren Sie Segrada mit folgender Änderung: Ändern Sie das `packaging` Tag in der Datei pom.xml nach WAR.

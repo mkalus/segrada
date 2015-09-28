@@ -8,7 +8,8 @@ Example:
 
 * `headless` Run in headless mode, starting the server right away.
 
-## Command line parameters via java properties (added before the JAR with -D parameter)
+
+## Command line parameters via Java properties (added before the JAR with -D parameter)
 
 Example:
 

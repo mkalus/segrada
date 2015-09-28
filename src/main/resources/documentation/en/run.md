@@ -32,3 +32,20 @@ Segrada Launcher is a convenient way to start Segrada on your local machine.
 * Open your browser and to to [http://localhost:8080/](http://localhost:8080/).
 
 Planned: Simpler Mac launcher.
+
+
+## Starting Segrada as Standalone Server
+
+In order to run Segrada as a server, start the server with the headless option:
+
+    java -jar segrada-1.0-SNAPSHOT.jar headless
+
+See [Command Line Options](command_line_options.md) for more options.
+
+
+## Deploying Segrada as Servlet
+
+You can deploy Segrada as WAR in a servlet container. This has not been tested thoroughly, yet, so help and feedback
+is welcome.
+
+Compile Segrada as WAR by chaning the `packaging` Tag in pom.xml to WAR.
