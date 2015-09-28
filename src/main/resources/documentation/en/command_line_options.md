@@ -13,7 +13,8 @@ Example:
 
 Example:
 
-    java -jar -DsavePath="/home/myhome/devel/Segrada/segrada_data" -DorientDB.url="plocal:/home/myhome/Segrada/Java/segrada_data/db" segrada-1.0-SNAPSHOT.jar
+    java -jar -DsavePath="/home/myhome/devel/Segrada/segrada_data" \
+      -DorientDB.url="plocal:/home/myhome/Segrada/Java/segrada_data/db" segrada-1.0-SNAPSHOT.jar
 
 * `server.port` Port of embedded Jetty server (default: 8080)
 * `server.context` Server context (default: "/")
