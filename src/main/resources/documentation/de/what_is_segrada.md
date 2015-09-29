@@ -1,8 +1,11 @@
 # Was ist Segrada?
 
-Segrada ist eine semantische Graphdatenbank für Forschung und Dokumentation
+Segrada ist eine semantische Graphdatenbank für Forschung, Dokumentation und private Daten. Mit ihrer Hilfe lassen
+sich (fast) beliebige Informationen miteinander verknüpfen.
 
-TODO: Beschreibung + Grafik
+![Historisches Semantisches Netzwerk](SemanticNetwork.png "Historisches Semantisches Netzwerk")
+
+TODO: Beschreibung
 
 Features:
 

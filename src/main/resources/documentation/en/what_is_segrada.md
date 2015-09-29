@@ -2,7 +2,9 @@
 
 Segrada is a semantic graph database for research and documentation.
 
-TODO: more description here + semantic network graphic
+![Historical Semantic Network](SemanticNetwork.png "Historical Semantic Network")
+
+TODO: more description here
 
 Features:
 
