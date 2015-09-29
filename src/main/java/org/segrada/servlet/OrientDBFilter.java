@@ -88,6 +88,10 @@ public class OrientDBFilter implements Filter {
 
 		// set server status
 		SegradaApplication.setServerStatus(SegradaApplication.STATUS_RUNNING);
+
+		// check for update of segrada
+		SegradaUpdateChecker updateChecker = new SegradaUpdateChecker(injector.getInstance(OrientGraphFactory.class));
+		updateChecker.checkForUpdate();
 	}
 
 	@Override
