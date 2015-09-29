@@ -68,8 +68,23 @@
 		}
 	});
 
-	// geocoding object
-	var geocoder = (typeof google === 'object' && typeof google.maps === 'object')?new google.maps.Geocoder():null;
+	// load google maps dynamically - taken from http://stackoverflow.com/questions/3922764/load-google-maps-v3-dynamically-with-ajax
+	var gMapsLoaded = false;
+	//var geocoder = null;
+	window.gMapsCallback = function(){
+		gMapsLoaded = true;
+		//$(window).trigger('gMapsLoaded');
+	};
+	window.loadGoogleMaps = function(){
+		if(gMapsLoaded) return window.gMapsCallback();
+		var script_tag = document.createElement('script');
+		script_tag.setAttribute("type","text/javascript");
+		script_tag.setAttribute("src","http://maps.google.com/maps/api/js?sensor=false&callback=gMapsCallback&libraries=places&language=" + $('html').attr('lang'));
+		(document.getElementsByTagName("head")[0] || document.documentElement).appendChild(script_tag);
+
+		// also set geocoder
+		//geocoder = (typeof google === 'object' && typeof google.maps === 'object')?new google.maps.Geocoder():null;
+	};
 
 	// is graph initialized?
 	var graphInitialized = false;
@@ -1029,5 +1044,9 @@
 
 		// init defaults
 		afterAjax($('body'));
+
+		// load Google Maps
+		//$(window).bind('gMapsLoaded', initialize);
+		window.loadGoogleMaps();
 	});
 })(jQuery);

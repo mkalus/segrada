@@ -200,7 +200,7 @@ Common fragments.
 	<script src="../../../js/vendor/bootstrap-tagsinput.min.js" th:src="@{/js/vendor/bootstrap-tagsinput.min.js}"></script>
 	<script src="../../../js/jquery.simplepicker.min.js" th:src="@{/js/jquery.simplepicker.min.js}"></script>
 	<!--/* Google Geocode API */-->
-	<script src="https://maps.google.com/maps/api/js?sensor=false&amp;libraries=places&amp;language=de" th:src="${'https://maps.google.com/maps/api/js?sensor=false&amp;libraries=places&amp;language=' + #locale.language}"></script>
+	<!--/* loaded dynamically using AJAX: <script src="https://maps.google.com/maps/api/js?sensor=false&amp;libraries=places&amp;language=de" th:src="${'https://maps.google.com/maps/api/js?sensor=false&amp;libraries=places&amp;language=' + #locale.language}"></script>*/-->
 	<script src="../../../js/vendor/jquery.geocomplete.min.js" th:src="@{/js/vendor/jquery.geocomplete.min.js}"></script>
 	<!--/* Vis Graph system */-->
 	<script src="../../../js/vendor/vis.min.js" th:src="@{/js/vendor/vis.min.js}"></script>
