@@ -70,6 +70,7 @@ public class ServiceModule extends AbstractModule {
 		// bind all services
 		bind(ColorService.class);
 		bind(CommentService.class);
+		bind(ConfigService.class);
 		bind(FileService.class);
 		bind(LocationService.class);
 		bind(NodeService.class);

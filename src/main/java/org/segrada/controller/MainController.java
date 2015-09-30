@@ -1,17 +1,16 @@
 package org.segrada.controller;
 
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
 import com.google.inject.servlet.RequestScoped;
 import com.sun.jersey.api.view.Viewable;
-import org.segrada.controller.base.AbstractBaseController;
-import org.segrada.service.ColorService;
+import org.segrada.service.ConfigService;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]
@@ -31,11 +30,22 @@ import javax.ws.rs.core.MediaType;
  * Base controller (root)
  */
 @Path("/")
-@Singleton
+@RequestScoped
 public class MainController {
+	@Inject
+	private ConfigService service;
+
 	@GET
 	@Produces(MediaType.TEXT_HTML)
 	public Viewable index() {
-		return new Viewable("home");
+		// get version update variable
+		String versionUpdate = service.getValue("versionUpdate");
+		if (versionUpdate == null) versionUpdate = "";
+
+		// create model map
+		Map<String, Object> model = new HashMap<>();
+		model.put("versionUpdate", versionUpdate);
+
+		return new Viewable("home", model);
 	}
 }
