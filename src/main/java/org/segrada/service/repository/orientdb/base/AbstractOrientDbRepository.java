@@ -36,26 +36,15 @@ import java.util.stream.Collectors;
  *
  * Abstract OrientDb Repository
  */
-abstract public class AbstractOrientDbRepository<T extends SegradaEntity> implements CRUDRepository<T> {
+abstract public class AbstractOrientDbRepository<T extends SegradaEntity> extends AbstractOrientDbBaseRepository implements CRUDRepository<T> {
 	private static final Logger logger = LoggerFactory.getLogger(AbstractOrientDbRepository.class);
-
-	/**
-	 * Injected repository factory
-	 */
-	protected final OrientDbRepositoryFactory repositoryFactory;
-
-	/**
-	 * database instance
-	 */
-	protected final ODatabaseDocumentTx db;
 
 	/**
 	 * Constructor
 	 * @param repositoryFactory injected
 	 */
 	public AbstractOrientDbRepository(OrientDbRepositoryFactory repositoryFactory) {
-		this.repositoryFactory = repositoryFactory;
-		this.db = repositoryFactory.getDb();
+		super(repositoryFactory);
 	}
 
 	/**

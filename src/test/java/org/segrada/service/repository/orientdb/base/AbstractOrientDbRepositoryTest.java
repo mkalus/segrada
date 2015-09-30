@@ -64,25 +64,6 @@ public class AbstractOrientDbRepositoryTest {
 	}
 
 	@Test
-	public void testInitDb() throws Exception {
-		if (!mockOrientDbRepository.db.isClosed()) mockOrientDbRepository.db.close();
-
-		mockOrientDbRepository.initDb();
-
-		assertFalse(mockOrientDbRepository.db.isClosed());
-
-		// force exception
-		//TODO: with final, it does not work anymore - think of another exception to produce...
-		/*mockOrientDbRepository.db = null;
-		try {
-			mockOrientDbRepository.initDb();
-			fail("Exception expected");
-		} catch (Exception e) {
-			// do nothing
-		}*/
-	}
-
-	@Test
 	public void testCreateOrLoadDocument() throws Exception {
 		// create new entity
 		MockEntity mockEntity1 = new MockEntity();
