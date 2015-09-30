@@ -173,8 +173,8 @@ public class PageController {
 		@Override
 		public Rendering render(ExpLinkNode node, String text) {
 			// do not change links starting with http
-			//TODO: change this to load external links in new tab (using JS)
-			if (node.url.startsWith("http")) return super.render(node, text);
+			if (node.url.startsWith("http")) // add external class
+				return super.render(node, text).withAttribute("class", "sg-link-external");
 
 			// add context path to url
 			String url = contextPath + "/page/" + node.url;

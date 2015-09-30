@@ -517,7 +517,7 @@
 		});
 
 		// bind external links
-		$(".sg-link-external").click(function(e) {
+		$(".sg-link-external", part).click(function(e) {
 			var url = $(this).attr('href');
 			var win = window.open(url, '_blank');
 			win.focus();
