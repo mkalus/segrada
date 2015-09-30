@@ -3,8 +3,10 @@ package org.segrada.servlet;
 import com.google.inject.Inject;
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 import com.orientechnologies.orient.core.record.impl.ODocument;
+import com.orientechnologies.orient.core.sql.OCommandSQL;
 import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
 import com.tinkerpop.blueprints.impls.orient.OrientGraphFactory;
+import org.segrada.util.OrientStringEscape;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -108,10 +110,7 @@ public class SegradaUpdateChecker {
 							logger.error("Could not load new version status from http://segrada.org/fileadmin/downloads/version.txt. Skipping update check.");
 
 							// clear version update - just to make sure we have no strange artifacts
-							ODocument versionUpdateDoc = new ODocument("Config");
-							versionUpdateDoc.field("value", "");
-							versionUpdateDoc.field("key", "versionUpdate");
-							versionUpdateDoc.save();
+							db.command(new OCommandSQL("DELETE FROM Config WHERE key = 'versionUpdate'")).execute();
 						}
 
 						if (version != null) {
@@ -125,17 +124,17 @@ public class SegradaUpdateChecker {
 								versionUpdate = "";
 							}
 
-							// update last check
-							ODocument lastUpdateDoc = new ODocument("Config");
-							lastUpdateDoc.field("value", Long.toString((System.currentTimeMillis()/1000)));
-							lastUpdateDoc.field("key", "lastUpdateCheck");
-							lastUpdateDoc.save();
+							// upsert last check
+							String update = "UPDATE Config SET key = 'lastUpdateCheck', value = '" + Long.toString((System.currentTimeMillis() / 1000)) + "' UPSERT WHERE key = 'lastUpdateCheck'";
+							db.command(new OCommandSQL(update)).execute();
 
-							// update version update
-							ODocument versionUpdateDoc = new ODocument("Config");
-							versionUpdateDoc.field("value", versionUpdate);
-							versionUpdateDoc.field("key", "versionUpdate");
-							versionUpdateDoc.save();
+							// upsert version update
+							if (versionUpdate == null || versionUpdate.isEmpty()) {
+								db.command(new OCommandSQL("DELETE FROM Config WHERE key = 'versionUpdate'")).execute();
+							} else {
+								update = "UPDATE Config SET key = 'versionUpdate', value = '" + OrientStringEscape.escapeOrientSql(versionUpdate) + "' UPSERT WHERE key = 'versionUpdate'";
+								db.command(new OCommandSQL(update)).execute();
+							}
 						}
 					}
 				} else logger.info("No configuration yet, no update check.");
