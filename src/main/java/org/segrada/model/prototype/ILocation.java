@@ -30,6 +30,9 @@ public interface ILocation extends SegradaEntity {
 	Double getLongitude();
 	void setLongitude(Double longitude);
 
+	String getComment();
+	void setComment(String comment);
+
 	/**
 	 * transient methods for distance lists
 	 */

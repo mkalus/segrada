@@ -33,6 +33,7 @@ public class LocationTest {
 		location.setParentModel("Mock");
 		location.setLatitude(23.0);
 		location.setLongitude(21.0);
+		location.setComment(null);
 		Set<ConstraintViolation<Location>> constraintViolations = validator.validate(location);
 		assertTrue("Location not valid", constraintViolations.size() == 0);
 	}

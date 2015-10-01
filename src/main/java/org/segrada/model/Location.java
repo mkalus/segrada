@@ -42,6 +42,8 @@ public class Location extends AbstractSegradaEntity implements ILocation {
 	@Range(min = -180, max = 180, message = "error.rangeLonCoordinate")
 	private Double longitude;
 
+	private String comment = "";
+
 	/**
 	 * transient value
 	 */
@@ -95,6 +97,16 @@ public class Location extends AbstractSegradaEntity implements ILocation {
 	@Override
 	public void setDistance(Double distance) {
 		this.distance = distance;
+	}
+
+	@Override
+	public String getComment() {
+		return comment;
+	}
+
+	@Override
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 
 	@Override
