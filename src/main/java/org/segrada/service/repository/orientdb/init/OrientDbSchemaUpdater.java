@@ -6,6 +6,7 @@ import com.orientechnologies.orient.core.sql.OCommandSQL;
 import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 import com.tinkerpop.blueprints.impls.orient.OrientGraphFactory;
+import org.segrada.util.OrientStringEscape;
 import org.segrada.util.PasswordEncoder;
 import org.segrada.util.Sluggify;
 import org.slf4j.Logger;
@@ -41,7 +42,7 @@ public class OrientDbSchemaUpdater {
 	/**
 	 * current version of db
 	 */
-	private static final int CURRENT_VERSION = 1;
+	private static final int CURRENT_VERSION = 2;
 
 	/**
 	 * graph factory instance
@@ -243,11 +244,14 @@ public class OrientDbSchemaUpdater {
 			logger.info("Schema data updated to version 1.");
 		}
 
+		// no database population here, just update
+		if (version <= 1) {
+			version = 2;
+		}
 
-		// create config defaults
-		db.save(new ODocument("Config")
-				.field("key", "version")
-				.field("value", Integer.toString(version)));
+		// upsert config defaults
+		String query = "UPDATE Config SET key = 'version', value = '" + Integer.toString(version) + "' UPSERT WHERE key = 'version'";
+		db.command(new OCommandSQL(query)).execute();
 
 		// copy local version to instance version
 		this.version = version;
