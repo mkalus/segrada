@@ -60,7 +60,7 @@ public class SegradaUpdateChecker {
 
 		// create update thread and run it
 		UpdateThread updateThread = new UpdateThread();
-		updateThread.run();
+		updateThread.start();
 	}
 
 	private class UpdateThread extends Thread {
@@ -155,6 +155,9 @@ public class SegradaUpdateChecker {
 			URL url = new URL("http://segrada.org/fileadmin/downloads/version.txt");
 			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 			conn.setRequestMethod("GET");
+			// relatively short timeouts
+			conn.setConnectTimeout(5000);
+			conn.setReadTimeout(5000);
 			BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 			String line;
 			while ((line = rd.readLine()) != null) {
