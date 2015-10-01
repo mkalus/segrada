@@ -26,12 +26,18 @@
 
 		<div class="tab-content">
 			<div role="tabpanel" class="tab-pane active" id="tab1" th:id="${'tab-1-' + entity.uid}" >
-				<!--/* TODO: table of parent and child tag(s) - or graphical view? */-->
+				<div class="sg-tag-hierarchy">
+					<div class="sg-margin-bottom sg-stop-flow sg-child-tags" th:unless="${#lists.isEmpty(childTags)}">
+						<div class="sg-margin-top" th:text="#{field.childTags}">Child tags:</div>
 
-				<div class="sg-margin-bottom sg-stop-flow" th:unless="${#lists.isEmpty(childTags)}">
-					<div class="sg-margin-top" th:text="#{field.childTags}">Child tags:</div>
-
-					<div th:replace="partials/common :: taglist (tags=${childTags})"></div>
+						<div th:replace="partials/common :: taglist (tags=${childTags})"></div>
+					</div>
+					<div class="hidden sg-tag-hierarchy-data" th:attr="data-center=${entity.uid}"><!--/*List for JS hierarchy*/-->
+						<div th:text="${entity.title}" data-level="1" th:attr="data-id=${entity.uid},data-url=@{/tag/show/{uid}(uid=${entity.uid})}">Myself</div>
+						<div th:unless="${#arrays.isEmpty(entity.tags)}" th:each="tag : ${entity.tags}" th:text="${tag}" data-level="0" th:with="slug=${@org.segrada.util.Sluggify@sluggify(tag)}" th:attr="data-id=${slug},data-url=@{/tag/by_title/{title}(title=${slug})}">Tag Title</div>
+						<div th:unless="${#arrays.isEmpty(childTags)}" th:each="tag : ${childTags}" th:text="${tag}" data-level="2" th:with="slug=${@org.segrada.util.Sluggify@sluggify(tag)}" th:attr="data-id=${slug},data-url=@{/tag/by_title/{title}(title=${slug})}">Tag Title</div>
+					</div>
+					<div class="sg-tag-hierarchy-graph"></div>
 				</div>
 			</div>
 			<div role="tabpanel" class="tab-pane" id="node-ref" th:id="${'refs-by-tag-' + entity.uid + '-node'}">

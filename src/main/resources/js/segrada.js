@@ -697,6 +697,86 @@
 			graphLoadRemote($(this).attr('href'));
 			e.preventDefault();
 		});
+
+		// Tag hierarchy graph
+		$('div.sg-tag-hierarchy', part).each(function() {
+			var me = $(this);
+			var container = $('.sg-tag-hierarchy-graph', me);
+			// hide/show stuff
+			$('.sg-child-tags', me).hide();
+			container.addClass('sg-margin-top sg-margin-bottom');
+
+			// create new nodes/edges
+			var hierarchy = $('.sg-tag-hierarchy-data', me);
+
+			// center node
+			var centerId = hierarchy.attr('data-center');
+			var countParents = 0;
+			var countChildren = 0;
+
+			// cycle through dub divs
+			var tagNodes = [];
+			var tagEdges = [];
+
+			$('div', hierarchy).each(function() {
+				var n = $(this);
+				var myId = n.attr('data-id');
+				var myLevel = n.attr('data-level');
+				tagNodes.push({id: myId, label: n.html(), level: myLevel, url: n.attr('data-url')});
+				if (myLevel == '0') {
+					tagEdges.push({from: myId, to: centerId });
+					countParents++;
+				} else if (myLevel == '2') {
+					tagEdges.push({from: centerId, to: myId });
+					countChildren++;
+				}
+			});
+
+			// dynamic height of container box
+			var countNodes = countParents>countChildren?(countParents==0?1:countParents):countChildren;
+			container.css({width: '100%', height: (countNodes*50) + 'px', border: '1px solid #ccc'});
+
+			// create a network
+			var data = {
+				nodes: new vis.DataSet(tagNodes),
+				edges: new vis.DataSet(tagEdges)
+			};
+			tagNodes = null; tagEdges = null;
+
+			var options = {
+				edges: {
+					smooth: {
+						type:'cubicBezier',
+						forceDirection: 'horizontal',
+						roundness: 0.6
+					}
+				},
+				nodes: {
+					shape: 'box',
+				},
+				layout: {
+					hierarchical:{
+						direction: 'LR'
+					}
+				}
+			};
+
+			var tagNetwork = new vis.Network(container.get(0), data, options);
+
+			// handle double click
+			tagNetwork.on("doubleClick", function(params) {
+				var url = null;
+				// node double clicked
+				if (params.nodes.length > 0) {
+					var tagNode = data.nodes.get(params.nodes[0]);
+					if (tagNode != null && tagNode.url != null) url = tagNode.url;
+				}
+
+				// call loader
+				if (url != null)
+					loadDataAddUrl(url);
+			});
+		});
 	} // afterAJAX end
 
 	// keeps markers
