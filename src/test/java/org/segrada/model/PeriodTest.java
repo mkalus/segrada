@@ -9,8 +9,7 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.segrada.test.PropertyAsserter.assertBasicGetterSetterBehavior;
 
 public class PeriodTest {
@@ -187,5 +186,87 @@ public class PeriodTest {
 
 		constraintViolations = validator.validateValue(Period.class, "toEntryCalendar", "");
 		assertTrue("toEntryCalendar settings", constraintViolations.size() == 1);
+	}
+
+	@Test
+	public void testAddFuzzyFromFlag() throws Exception {
+		Period period = new Period();
+
+		assertFalse(period.hasFuzzyFromFlag('c'));
+		assertFalse(period.hasFuzzyFromFlag('x'));
+
+		period.addFuzzyFromFlag('x');
+		period.addFuzzyFromFlag('c');
+
+		assertTrue(period.hasFuzzyFromFlag('c'));
+		assertFalse(period.hasFuzzyFromFlag('x'));
+	}
+
+	@Test
+	public void testDeleteFuzzyFromFlag() throws Exception {
+		Period period = new Period();
+
+		assertFalse(period.hasFuzzyFromFlag('c'));
+		period.addFuzzyFromFlag('c');
+
+		assertTrue(period.hasFuzzyFromFlag('c'));
+
+		period.deleteFuzzyFromFlag('c');
+		assertFalse(period.hasFuzzyFromFlag('c'));
+	}
+
+	/*Essentially tested in other methods @Test
+	public void testHasFuzzyFromFlag() throws Exception {
+	}*/
+
+	@Test
+	public void testGetFuzzyFromFlag() throws Exception {
+		Period period = new Period();
+
+		assertArrayEquals(new char[]{}, period.getFuzzyFromFlags());
+		period.addFuzzyFromFlag('c');
+
+		assertArrayEquals(new char[]{'c'}, period.getFuzzyFromFlags());
+	}
+
+	@Test
+	public void testAddFuzzyToFlag() throws Exception {
+		Period period = new Period();
+
+		assertFalse(period.hasFuzzyToFlag('c'));
+		assertFalse(period.hasFuzzyToFlag('x'));
+
+		period.addFuzzyToFlag('x');
+		period.addFuzzyToFlag('c');
+
+		assertTrue(period.hasFuzzyToFlag('c'));
+		assertFalse(period.hasFuzzyToFlag('x'));
+	}
+
+	@Test
+	public void testDeleteFuzzyToFlag() throws Exception {
+		Period period = new Period();
+
+		assertFalse(period.hasFuzzyToFlag('c'));
+		period.addFuzzyToFlag('c');
+
+		assertTrue(period.hasFuzzyToFlag('c'));
+
+		period.deleteFuzzyToFlag('c');
+		assertFalse(period.hasFuzzyToFlag('c'));
+	}
+
+	/*Essentially tested in other methods @Test
+	public void testHasFuzzyToFlag() throws Exception {
+	}*/
+
+	@Test
+	public void testGetFuzzyToFlag() throws Exception {
+		Period period = new Period();
+
+		assertArrayEquals(new char[]{}, period.getFuzzyToFlags());
+		period.addFuzzyToFlag('c');
+
+		assertArrayEquals(new char[]{'c'}, period.getFuzzyToFlags());
 	}
 }

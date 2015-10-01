@@ -46,4 +46,17 @@ public interface SegradaCoreEntity extends SegradaAnnotatedEntity {
 
 	Long getMaxJD();
 	void setMaxJD(Long maxJD);
+
+	/**
+	 * fuzzy flag handlers
+	 */
+	void addFuzzyMinFlag(char flag);
+	void deleteFuzzyMinFlag(char flag);
+	boolean hasFuzzyMinFlag(char flag);
+	char[] getFuzzyMinFlags();
+
+	void addFuzzyMaxFlag(char flag);
+	void deleteFuzzyMaxFlag(char flag);
+	boolean hasFuzzyMaxFlag(char flag);
+	char[] getFuzzyMaxFlags();
 }

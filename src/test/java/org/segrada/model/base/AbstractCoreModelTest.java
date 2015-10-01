@@ -126,6 +126,88 @@ public class AbstractCoreModelTest {
 		assertNotEquals(entity1.hashCode(), entity2.hashCode());
 	}
 
+	@Test
+	public void testAddFuzzyMinFlag() throws Exception {
+		MockEntity mockEntity = new MockEntity();
+
+		assertFalse(mockEntity.hasFuzzyMinFlag('c'));
+		assertFalse(mockEntity.hasFuzzyMinFlag('x'));
+
+		mockEntity.addFuzzyMinFlag('x');
+		mockEntity.addFuzzyMinFlag('c');
+
+		assertTrue(mockEntity.hasFuzzyMinFlag('c'));
+		assertFalse(mockEntity.hasFuzzyMinFlag('x'));
+	}
+
+	@Test
+	public void testDeleteFuzzyMinFlag() throws Exception {
+		MockEntity mockEntity = new MockEntity();
+
+		assertFalse(mockEntity.hasFuzzyMinFlag('c'));
+		mockEntity.addFuzzyMinFlag('c');
+
+		assertTrue(mockEntity.hasFuzzyMinFlag('c'));
+
+		mockEntity.deleteFuzzyMinFlag('c');
+		assertFalse(mockEntity.hasFuzzyMinFlag('c'));
+	}
+
+	/*Essentially tested in other methods @Test
+	public void testHasFuzzyMinFlag() throws Exception {
+	}*/
+
+	@Test
+	public void testGetFuzzyMinFlag() throws Exception {
+		MockEntity mockEntity = new MockEntity();
+
+		assertArrayEquals(new char[]{}, mockEntity.getFuzzyMinFlags());
+		mockEntity.addFuzzyMinFlag('c');
+
+		assertArrayEquals(new char[]{'c'}, mockEntity.getFuzzyMinFlags());
+	}
+
+	@Test
+	public void testAddFuzzyMaxFlag() throws Exception {
+		MockEntity mockEntity = new MockEntity();
+
+		assertFalse(mockEntity.hasFuzzyMaxFlag('c'));
+		assertFalse(mockEntity.hasFuzzyMaxFlag('x'));
+
+		mockEntity.addFuzzyMaxFlag('x');
+		mockEntity.addFuzzyMaxFlag('c');
+
+		assertTrue(mockEntity.hasFuzzyMaxFlag('c'));
+		assertFalse(mockEntity.hasFuzzyMaxFlag('x'));
+	}
+
+	@Test
+	public void testDeleteFuzzyMaxFlag() throws Exception {
+		MockEntity mockEntity = new MockEntity();
+
+		assertFalse(mockEntity.hasFuzzyMaxFlag('c'));
+		mockEntity.addFuzzyMaxFlag('c');
+
+		assertTrue(mockEntity.hasFuzzyMaxFlag('c'));
+
+		mockEntity.deleteFuzzyMaxFlag('c');
+		assertFalse(mockEntity.hasFuzzyMaxFlag('c'));
+	}
+
+	/*Essentially tested in other methods @Test
+	public void testHasFuzzyMaxFlag() throws Exception {
+	}*/
+
+	@Test
+	public void testGetFuzzyMaxFlag() throws Exception {
+		MockEntity mockEntity = new MockEntity();
+
+		assertArrayEquals(new char[]{}, mockEntity.getFuzzyMaxFlags());
+		mockEntity.addFuzzyMaxFlag('c');
+
+		assertArrayEquals(new char[]{'c'}, mockEntity.getFuzzyMaxFlags());
+	}
+
 	private class MockEntity extends AbstractCoreModel {
 		/**
 		 * load for testing equality

@@ -2,11 +2,15 @@ package org.segrada.model;
 
 import org.segrada.model.base.AbstractSegradaEntity;
 import org.segrada.model.prototype.IPeriod;
+import org.segrada.model.util.FuzzyFlag;
 import org.segrada.util.FlexibleDateParser;
 
 import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import java.util.EnumSet;
+
+import static org.segrada.model.util.FuzzyFlag.hasFuzzyFlag;
 
 /**
  * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]
@@ -51,6 +55,12 @@ public class Period extends AbstractSegradaEntity implements IPeriod {
 	@NotNull(message = "error.notNull")
 	@Pattern(regexp = "[GJ]", message = "error.calendar")
 	private String toEntryCalendar = "G";
+
+	private String comment = "";
+
+	private EnumSet<FuzzyFlag> fromFuzzyFlags;
+
+	private EnumSet<FuzzyFlag> toFuzzyFlags;
 
 	/**
 	 * dummy check to make sure that from is lower or equal to to
@@ -163,6 +173,56 @@ public class Period extends AbstractSegradaEntity implements IPeriod {
 	@Override
 	public void setToJD(Long toJD) {
 		this.toJD = toJD;
+	}
+
+	@Override
+	public String getComment() {
+		return comment;
+	}
+
+	@Override
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
+
+	@Override
+	public void addFuzzyFromFlag(char flag) {
+		fromFuzzyFlags = FuzzyFlag.addFuzzyFlag(flag, fromFuzzyFlags);
+	}
+
+	@Override
+	public void deleteFuzzyFromFlag(char flag) {
+		fromFuzzyFlags = FuzzyFlag.deleteFuzzyFlag(flag, fromFuzzyFlags);
+	}
+
+	@Override
+	public boolean hasFuzzyFromFlag(char flag) {
+		return hasFuzzyFlag(flag, fromFuzzyFlags);
+	}
+
+	@Override
+	public char[] getFuzzyFromFlags() {
+		return FuzzyFlag.getFuzzyFlags(fromFuzzyFlags);
+	}
+
+	@Override
+	public void addFuzzyToFlag(char flag) {
+		toFuzzyFlags = FuzzyFlag.addFuzzyFlag(flag, toFuzzyFlags);
+	}
+
+	@Override
+	public void deleteFuzzyToFlag(char flag) {
+		toFuzzyFlags = FuzzyFlag.deleteFuzzyFlag(flag, toFuzzyFlags);
+	}
+
+	@Override
+	public boolean hasFuzzyToFlag(char flag) {
+		return hasFuzzyFlag(flag, toFuzzyFlags);
+	}
+
+	@Override
+	public char[] getFuzzyToFlags() {
+		return FuzzyFlag.getFuzzyFlags(toFuzzyFlags);
 	}
 
 	/**

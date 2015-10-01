@@ -5,9 +5,13 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.segrada.model.prototype.ILocation;
 import org.segrada.model.prototype.IPeriod;
 import org.segrada.model.prototype.SegradaCoreEntity;
+import org.segrada.model.util.FuzzyFlag;
 
 import javax.annotation.Nullable;
+import java.util.EnumSet;
 import java.util.List;
+
+import static org.segrada.model.util.FuzzyFlag.*;
 
 /**
  * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]
@@ -66,6 +70,10 @@ abstract public class AbstractCoreModel extends AbstractAnnotatedModel implement
 	 * maximum JD date of periods above
 	 */
 	private Long maxJD = Long.MAX_VALUE;
+
+	private EnumSet<FuzzyFlag> minFuzzyFlags;
+
+	private EnumSet<FuzzyFlag> maxFuzzyFlags;
 
 	@Override
 	public @Nullable List<ILocation> getLocations() {
@@ -148,12 +156,52 @@ abstract public class AbstractCoreModel extends AbstractAnnotatedModel implement
 	}
 
 	@Override
+	public void addFuzzyMinFlag(char flag) {
+		minFuzzyFlags = addFuzzyFlag(flag, minFuzzyFlags);
+	}
+
+	@Override
+	public void deleteFuzzyMinFlag(char flag) {
+		minFuzzyFlags = deleteFuzzyFlag(flag, minFuzzyFlags);
+	}
+
+	@Override
+	public boolean hasFuzzyMinFlag(char flag) {
+		return hasFuzzyFlag(flag, minFuzzyFlags);
+	}
+
+	@Override
+	public char[] getFuzzyMinFlags() {
+		return getFuzzyFlags(minFuzzyFlags);
+	}
+
+	@Override
+	public void addFuzzyMaxFlag(char flag) {
+		maxFuzzyFlags = addFuzzyFlag(flag, maxFuzzyFlags);
+	}
+
+	@Override
+	public void deleteFuzzyMaxFlag(char flag) {
+		maxFuzzyFlags = deleteFuzzyFlag(flag, maxFuzzyFlags);
+	}
+
+	@Override
+	public boolean hasFuzzyMaxFlag(char flag) {
+		return hasFuzzyFlag(flag, maxFuzzyFlags);
+	}
+
+	@Override
+	public char[] getFuzzyMaxFlags() {
+		return getFuzzyFlags(maxFuzzyFlags);
+	}
+
+	@Override
 	public boolean equals(Object that) {
-		return that != null && this.getClass() == that.getClass() && EqualsBuilder.reflectionEquals(this, that, "created", "modified", "creator", "modifier", "tags", "comments", "files", "sourceReferences", "locations", "periods");
+		return that != null && this.getClass() == that.getClass() && EqualsBuilder.reflectionEquals(this, that, "created", "modified", "creator", "modifier", "tags", "comments", "files", "sourceReferences", "locations", "periods", "minFuzzyFlags", "maxFuzzyFlags");
 	}
 
 	@Override
 	public int hashCode() {
-		return HashCodeBuilder.reflectionHashCode(this, "created", "modified", "creator", "modifier", "tags", "comments", "files", "sourceReferences", "locations", "periods");
+		return HashCodeBuilder.reflectionHashCode(this, "created", "modified", "creator", "modifier", "tags", "comments", "files", "sourceReferences", "locations", "periods", "minFuzzyFlags", "maxFuzzyFlags");
 	}
 }

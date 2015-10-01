@@ -43,4 +43,20 @@ public interface IPeriod extends SegradaEntity {
 
 	String getToEntryCalendar();
 	void setToEntryCalendar(String toEntryCalendar);
+
+	String getComment();
+	void setComment(String comment);
+
+	/**
+	 * fuzzy flag handlers
+	 */
+	void addFuzzyFromFlag(char flag);
+	void deleteFuzzyFromFlag(char flag);
+	boolean hasFuzzyFromFlag(char flag);
+	char[] getFuzzyFromFlags();
+
+	void addFuzzyToFlag(char flag);
+	void deleteFuzzyToFlag(char flag);
+	boolean hasFuzzyToFlag(char flag);
+	char[] getFuzzyToFlags();
 }
