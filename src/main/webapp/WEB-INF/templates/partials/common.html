@@ -79,8 +79,8 @@ Common fragments.
 			<th></th>
 		</tr>
 		<tr th:each="myPeriod : ${entity.periods}">
-			<td th:text="${!#strings.isEmpty(myPeriod.fromEntry)}?${myPeriod.fromEntry}:'---'">Start</td>
-			<td th:text="${!#strings.isEmpty(myPeriod.toEntry)}?${myPeriod.toEntry}:'---'">Stop</td>
+			<td th:utext="${@org.segrada.util.FuzzyDateRenderer@renderOrEmpty(myPeriod.fromJD,myPeriod.fromEntry,myPeriod.fromEntryCalendar,myPeriod.fuzzyFromFlags)}">Start</td>
+			<td th:utext="${@org.segrada.util.FuzzyDateRenderer@renderOrEmpty(myPeriod.toJD,myPeriod.toEntry,myPeriod.toEntryCalendar,myPeriod.fuzzyToFlags)}">Stop</td>
 			<td class="text-right">
 				<div class="sg-data-icon-bar" role="group" aria-label="Actions">
 					<a class="sg-data-icon" href="#" th:title="#{Delete}" th:href="@{/period/delete/{uid}(uid=${myPeriod.uid})}" th:attr="data-confirm=${#messages.msg('ReallyDelete', myPeriod.title)}"><i class="fa fa-times-circle-o"></i></a>
