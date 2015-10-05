@@ -831,11 +831,14 @@
 				var link = $('#' + dataId + '-delete');
 				link.unbind("click");
 				link.click(function(e) {
-					// call ajax
-					$.get($(this).attr('href'), function (responseText) {
-						markerContainer.replaceWith(responseText);
-						updateGeocompleteMap(id, $(id + '-markers'), input);
-					});
+					// call confirm
+					var deleteConfirmText = $(id + '-delete-confirm').html().replace('{0}', $this.attr('data-lat') + ',' + $this.attr('data-lng'));
+					if (confirm(deleteConfirmText))
+						// call ajax
+						$.get($(this).attr('href'), function (responseText) {
+							markerContainer.replaceWith(responseText);
+							updateGeocompleteMap(id, $(id + '-markers'), input);
+						});
 					e.preventDefault();
 				});
 			});

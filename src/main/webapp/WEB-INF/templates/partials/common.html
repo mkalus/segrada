@@ -128,6 +128,7 @@ Common fragments.
 	</div>
 	<div class="hidden" th:replace="partials/common :: listlocationmarkers (entity=${entity})">Markers</div>
 	<div class="hidden" th:id="${'locations-' + entity.uid + '-delete'}" th:text="#{Delete}">Delete</div>
+	<div class="hidden" th:id="${'locations-' + entity.uid + '-delete-confirm'}" th:text="#{ReallyDelete}">Really delete?</div>
 
 	<div class="sg-margin-top-sm"><a href="#" class="btn btn-success sg-map-add-marker"><i class="fa fa-plus"></i> <span th:text="#{add.location}">Add location</span></a></div>
 
