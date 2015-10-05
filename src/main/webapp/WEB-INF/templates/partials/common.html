@@ -151,11 +151,16 @@ Common fragments.
 				<input type="submit" value="Add location" class="btn btn-primary" th:value="#{add.location}" style="display: none;" />
 			</div>
 		</div>
+		<div class="row sg-margin-top-sm">
+			<div class="col-md-8">
+				<input class="form-control" name="comment" type="text" value="" placeholder="Comment" th:placeholder="#{field.comment}" />
+			</div>
+		</div>
 	</form>
 </div>
 
 <div th:fragment="listlocationmarkers (entity)" class="hidden" th:if="${entity != null}" th:id="${'locations-' + entity.uid + '-markers'}">
-	<div class="sg-location-marker" th:each="location : ${entity.locations}" th:text="${location.id}" th:attr="data-lng=${location.longitude},data-lat=${location.latitude},data-delete=@{/location/delete/{uid}(uid=${location.uid})},data-id=${'locations-marker-' + location.uid + '-delete'}"></div>
+	<div class="sg-location-marker" th:each="location : ${entity.locations}" th:text="${location.id}" th:attr="data-lng=${location.longitude},data-lat=${location.latitude},data-comment=${location.comment},data-delete=@{/location/delete/{uid}(uid=${location.uid})},data-id=${'locations-marker-' + location.uid + '-delete'}"></div>
 </div>
 
 

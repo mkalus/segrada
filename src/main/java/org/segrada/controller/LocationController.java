@@ -66,7 +66,8 @@ public class LocationController extends AbstractBaseController<ILocation> {
 			@PathParam("model") String parentModel,
 			@PathParam("uid") String parentUid,
 			@FormParam("lat") String latitudeValue,
-			@FormParam("lng") String longitudeValue
+			@FormParam("lng") String longitudeValue,
+			@FormParam("comment") String comment
 	) {
 		boolean error = false;
 
@@ -104,6 +105,7 @@ public class LocationController extends AbstractBaseController<ILocation> {
 			location.setParentModel(parentModel);
 			location.setLongitude(longitude);
 			location.setLatitude(latitude);
+			location.setComment(comment);
 
 			// try to save
 			if (!service.save(location)) error = true;

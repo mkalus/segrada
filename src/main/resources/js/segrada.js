@@ -1,4 +1,8 @@
 (function ($) {
+	function escapeHTML(myString) {
+		return myString.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+	}
+
 	/**
 	 * tags tokenizer
 	 */
@@ -806,8 +810,11 @@
 			var myLatlng = new google.maps.LatLng($(this).attr('data-lat'),$(this).attr('data-lng'));
 			bounds.extend(myLatlng);
 			var dataId = $(this).attr('data-id');
+			var comment = $(this).attr('data-comment');
+			if (comment != null && comment != '') comment = '<p>' + escapeHTML(comment) + '</p>';
 			var infowindow = new google.maps.InfoWindow({
 				content: '<p>' + $(this).attr('data-lat') + ',' + $(this).attr('data-lng') + '</p>'
+					+ comment
 					+ '<p><a href="' + $(this).attr('data-delete') + '" id="' + dataId + '">' + deleteText + '</a></p>'
 			});
 			var marker = new google.maps.Marker({
