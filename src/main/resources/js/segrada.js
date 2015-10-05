@@ -1,6 +1,7 @@
 (function ($) {
 	function escapeHTML(myString) {
-		return myString.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+		if (typeof myString == 'string') return myString.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+		return '';
 	}
 
 	/**
@@ -807,15 +808,17 @@
 		var bounds = new google.maps.LatLngBounds();
 
 		$('.sg-location-marker', markerContainer).each(function() {
-			var myLatlng = new google.maps.LatLng($(this).attr('data-lat'),$(this).attr('data-lng'));
+			var $this = $(this);
+			var myLatlng = new google.maps.LatLng($this.attr('data-lat'),$this.attr('data-lng'));
 			bounds.extend(myLatlng);
-			var dataId = $(this).attr('data-id');
-			var comment = $(this).attr('data-comment');
-			if (comment != null && comment != '') comment = '<p>' + escapeHTML(comment) + '</p>';
+			var dataId = $this.attr('data-id');
+			var comment = $this.attr('data-comment');
+			if (typeof comment != 'undefined' && comment != '') comment = '<p>' + escapeHTML(comment) + '</p>';
+			else comment = '';
 			var infowindow = new google.maps.InfoWindow({
-				content: '<p>' + $(this).attr('data-lat') + ',' + $(this).attr('data-lng') + '</p>'
+				content: '<p>' + $this.attr('data-lat') + ',' + $this.attr('data-lng') + '</p>'
 					+ comment
-					+ '<p><a href="' + $(this).attr('data-delete') + '" id="' + dataId + '">' + deleteText + '</a></p>'
+					+ '<p><a href="' + $this.attr('data-delete') + '" id="' + dataId + '-delete">' + deleteText + '</a></p>'
 			});
 			var marker = new google.maps.Marker({
 				position: myLatlng,
@@ -824,7 +827,8 @@
 			});
 			google.maps.event.addListener(marker, 'click', function() {
 				infowindow.open(map,marker);
-				var link = $('#' + dataId);
+				// delete marker
+				var link = $('#' + dataId + '-delete');
 				link.unbind("click");
 				link.click(function(e) {
 					// call ajax
@@ -845,6 +849,8 @@
 		} else {
 			// zoom in onto the markers
 			map.fitBounds(bounds);
+			if (segradaMapMarkers[id].length == 1)
+				setTimeout(function(){ map.setZoom(12); }, 250); // small delay before zooming out
 		}
 
 		//console.log(segradaMapMarkers);

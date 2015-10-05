@@ -160,7 +160,7 @@ Common fragments.
 </div>
 
 <div th:fragment="listlocationmarkers (entity)" class="hidden" th:if="${entity != null}" th:id="${'locations-' + entity.uid + '-markers'}">
-	<div class="sg-location-marker" th:each="location : ${entity.locations}" th:text="${location.id}" th:attr="data-lng=${location.longitude},data-lat=${location.latitude},data-comment=${location.comment},data-delete=@{/location/delete/{uid}(uid=${location.uid})},data-id=${'locations-marker-' + location.uid + '-delete'}"></div>
+	<div class="sg-location-marker" th:each="location : ${entity.locations}" th:text="${location.id}" th:attr="data-lng=${location.longitude},data-lat=${location.latitude},data-comment=${location.comment},data-delete=@{/location/delete/{uid}(uid=${location.uid})},data-id=${'locations-marker-' + location.uid}"></div>
 </div>
 
 
