@@ -85,6 +85,11 @@ public class File extends AbstractAnnotatedModel implements IFile {
 	private String fileIdentifier;
 
 	/**
+	 * reference to thumbnail
+	 */
+	private String thumbFileIdentifier;
+
+	/**
 	 * Reference to data - on upload
 	 */
 	transient private byte[] data;
@@ -207,6 +212,14 @@ public class File extends AbstractAnnotatedModel implements IFile {
 	@Override
 	public void setFileIdentifier(String fileIdentifier) {
 		this.fileIdentifier = fileIdentifier;
+	}
+
+	public String getThumbFileIdentifier() {
+		return thumbFileIdentifier;
+	}
+
+	public void setThumbFileIdentifier(String thumbFileIdentifier) {
+		this.thumbFileIdentifier = thumbFileIdentifier;
 	}
 
 	public byte[] getData() {

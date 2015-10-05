@@ -75,6 +75,7 @@ public class OrientDbFileRepository extends AbstractAnnotatedOrientDbRepository<
 		file.setContainFile(document.field("containFile", Boolean.class));
 		file.setFileSize(document.field("fileSize", Long.class));
 		file.setFileIdentifier(document.field("fileIdentifier", String.class));
+		file.setThumbFileIdentifier(document.field("thumbFileIdentifier", String.class));
 
 		// populate with data
 		populateEntityWithBaseData(document, file);
@@ -101,7 +102,8 @@ public class OrientDbFileRepository extends AbstractAnnotatedOrientDbRepository<
 				.field("indexFullText", entity.getIndexFullText())
 				.field("containFile", entity.getContainFile())
 				.field("fileSize", entity.getFileSize())
-				.field("fileIdentifier", entity.getFileIdentifier());
+				.field("fileIdentifier", entity.getFileIdentifier())
+				.field("thumbFileIdentifier", entity.getThumbFileIdentifier());
 
 		// populate with data
 		populateODocumentWithCreatedModified(document, entity);

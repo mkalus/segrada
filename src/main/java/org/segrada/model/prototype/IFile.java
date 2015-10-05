@@ -62,4 +62,7 @@ public interface IFile extends SegradaAnnotatedEntity {
 
 	String getFileIdentifier();
 	void setFileIdentifier(String fileIdentifier);
+
+	String getThumbFileIdentifier();
+	void setThumbFileIdentifier(String thumbnailIdentifier);
 }

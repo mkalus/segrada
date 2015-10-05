@@ -88,6 +88,7 @@ public class OrientDbFileRepositoryTest {
 				.field("indexFullText", true)
 				.field("containFile", false)
 				.field("fileIdentifier", "fileIdentifier.txt")
+				.field("thumbFileIdentifier", "thumbFileIdentifier.txt")
 				.field("description", "Description")
 				.field("descriptionMarkup", "default")
 				.field("color", 0x123456)
@@ -108,6 +109,7 @@ public class OrientDbFileRepositoryTest {
 		assertEquals(true, file.getIndexFullText());
 		assertEquals(false, file.getContainFile());
 		assertEquals("fileIdentifier.txt", file.getFileIdentifier());
+		assertEquals("thumbFileIdentifier.txt", file.getThumbFileIdentifier());
 		assertEquals("Description", file.getDescription());
 		assertEquals("default", file.getDescriptionMarkup());
 		assertEquals(new Integer(0x123456), file.getColor());
@@ -132,6 +134,7 @@ public class OrientDbFileRepositoryTest {
 		file.setIndexFullText(true);
 		file.setContainFile(false);
 		file.setFileIdentifier("fileIdentifier.txt");
+		file.setThumbFileIdentifier("thumbFileIdentifier.txt");
 		file.setDescription("Description");
 		file.setDescriptionMarkup("default");
 		file.setColor(0x123456);
@@ -151,6 +154,7 @@ public class OrientDbFileRepositoryTest {
 		assertEquals(true, document.field("indexFullText"));
 		assertEquals(false, document.field("containFile"));
 		assertEquals("fileIdentifier.txt", document.field("fileIdentifier"));
+		assertEquals("thumbFileIdentifier.txt", document.field("thumbFileIdentifier"));
 		assertEquals("Description", document.field("description"));
 		assertEquals("default", document.field("descriptionMarkup"));
 		assertEquals(new Integer(0x123456), document.field("color", Integer.class));
