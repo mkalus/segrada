@@ -116,6 +116,8 @@ public class AbstractCoreOrientDbRepositoryTest {
 		IPeriod period2 = new Period();
 		period2.setFromEntry("1929");
 		period2.setToEntry("1930");
+		period2.addFuzzyFromFlag('c');
+		period2.addFuzzyToFlag('?');
 		period2.setCreated(1L);
 		period2.setModified(2L);
 		list.add(period2);
@@ -130,6 +132,7 @@ public class AbstractCoreOrientDbRepositoryTest {
 		IPeriod period4 = new Period();
 		period4.setFromEntry(null);
 		period4.setToEntry("1596");
+		period4.addFuzzyToFlag('c');
 		period4.setCreated(1L);
 		period4.setModified(2L);
 		list.add(period4);
@@ -137,6 +140,7 @@ public class AbstractCoreOrientDbRepositoryTest {
 		IPeriod period5 = new Period();
 		period5.setFromEntry("5.1.901");
 		period5.setToEntry(null);
+		period5.addFuzzyFromFlag('?');
 		period5.setCreated(1L);
 		period5.setModified(2L);
 		list.add(period5);
@@ -161,6 +165,8 @@ public class AbstractCoreOrientDbRepositoryTest {
 		assertEquals(period2.getToEntry(), document.field("maxEntry"));
 		assertEquals(period5.getFromEntryCalendar(), document.field("minEntryCalendar"));
 		assertEquals(period2.getToEntryCalendar(), document.field("maxEntryCalendar"));
+		assertEquals("?", document.field("minFuzzyFlags"));
+		assertEquals("?", document.field("maxFuzzyFlags"));
 	}
 
 	@Test
@@ -178,7 +184,8 @@ public class AbstractCoreOrientDbRepositoryTest {
 				.field("fromEntryCalendar", "G").field("toEntryCalendar", "G")
 				.field("fromEntry", "1.1585").field("toEntry", "2.1585")
 				.field("from", 2299970L).field("to", 2300028L)
-				.field("type", "period")
+				.field("type", "period").field("comment", "comment")
+				.field("minFuzzyFlags", "c?").field("maxFuzzyFlags", "?")
 				.field("parent", document).field("created", 1L).field("modified", 2L);
 		period.save();
 

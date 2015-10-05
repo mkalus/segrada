@@ -4,7 +4,6 @@ import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.orientechnologies.orient.core.sql.OCommandSQL;
 import org.segrada.model.base.AbstractCoreModel;
 import org.segrada.model.prototype.ILocation;
-import org.segrada.model.prototype.INode;
 import org.segrada.model.prototype.IPeriod;
 import org.segrada.model.prototype.SegradaCoreEntity;
 import org.segrada.service.repository.LocationRepository;
@@ -59,6 +58,8 @@ abstract public class AbstractCoreOrientDbRepository<T extends SegradaCoreEntity
 			String maxEntry = null;
 			String minCalendar = null;
 			String maxCalendar = null;
+			char[] minFuzzyFlags = null;
+			char[] maxFuzzyFlags = null;
 
 			for (IPeriod period : entity.getPeriods()) {
 				// calculate from/to extent
@@ -67,6 +68,7 @@ abstract public class AbstractCoreOrientDbRepository<T extends SegradaCoreEntity
 					min = from;
 					minEntry = period.getFromEntry();
 					minCalendar = period.getFromEntryCalendar();
+					minFuzzyFlags = period.getFuzzyFromFlags();
 				}
 
 				Long to = period.getToJD();
@@ -74,6 +76,7 @@ abstract public class AbstractCoreOrientDbRepository<T extends SegradaCoreEntity
 					max = to;
 					maxEntry = period.getToEntry();
 					maxCalendar = period.getToEntryCalendar();
+					maxFuzzyFlags = period.getFuzzyToFlags();
 				}
 			}
 			document.field("minJD", min);
@@ -82,6 +85,8 @@ abstract public class AbstractCoreOrientDbRepository<T extends SegradaCoreEntity
 			document.field("maxEntry", maxEntry);
 			document.field("minEntryCalendar", minCalendar);
 			document.field("maxEntryCalendar", maxCalendar);
+			document.field("minFuzzyFlags", new String(minFuzzyFlags==null?new char[0]:minFuzzyFlags));
+			document.field("maxFuzzyFlags", new String(maxFuzzyFlags==null?new char[0]:maxFuzzyFlags));
 		} else {
 			// reset fields
 			document.field("minJD", Long.MIN_VALUE);
@@ -90,6 +95,8 @@ abstract public class AbstractCoreOrientDbRepository<T extends SegradaCoreEntity
 			document.removeField("maxEntry");
 			document.removeField("minEntryCalendar");
 			document.removeField("maxEntryCalendar");
+			document.removeField("minFuzzyFlags");
+			document.removeField("maxFuzzyFlags");
 		}
 
 		// periods and locations are not saved here, because they have their own repositories
@@ -113,6 +120,18 @@ abstract public class AbstractCoreOrientDbRepository<T extends SegradaCoreEntity
 		entity.setMaxEntry(document.field("maxEntry", String.class));
 		entity.setMinEntryCalendar(document.field("minEntryCalendar", String.class));
 		entity.setMaxEntryCalendar(document.field("maxEntryCalendar", String.class));
+
+		// set fuzzy flags
+		String flags = document.field("minFuzzyFlags", String.class);
+		if (flags != null && !flags.isEmpty()) {
+			for (char flag : flags.toCharArray())
+				entity.addFuzzyMinFlag(flag);
+		}
+		flags = document.field("maxFuzzyFlags", String.class);
+		if (flags != null && !flags.isEmpty()) {
+			for (char flag : flags.toCharArray())
+				entity.addFuzzyMaxFlag(flag);
+		}
 	}
 
 	/**

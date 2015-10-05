@@ -54,7 +54,20 @@ public class OrientDbPeriodRepository extends AbstractSegradaOrientDbRepository<
 		period.setFromEntry(document.field("fromEntry", String.class));
 		period.setToEntry(document.field("toEntry", String.class));
 		period.setParentId(document.field("parentId", String.class));
+		period.setComment(document.field("comment", String.class));
 		//type/from/to set automatically
+
+		// set fuzzy flags
+		String flags = document.field("fromFuzzyFlags", String.class);
+		if (flags != null && !flags.isEmpty()) {
+			for (char flag : flags.toCharArray())
+				period.addFuzzyFromFlag(flag);
+		}
+		flags = document.field("toFuzzyFlags", String.class);
+		if (flags != null && !flags.isEmpty()) {
+			for (char flag : flags.toCharArray())
+				period.addFuzzyToFlag(flag);
+		}
 
 		// populate with data
 		populateEntityWithBaseData(document, period);
@@ -86,6 +99,9 @@ public class OrientDbPeriodRepository extends AbstractSegradaOrientDbRepository<
 				.field("fromJD", entity.getFromJD())
 				.field("toJD", entity.getToJD())
 				.field("type", entity.getType())
+				.field("comment", entity.getComment())
+				.field("fromFuzzyFlags", new String(entity.getFuzzyFromFlags()))
+				.field("toFuzzyFlags", new String(entity.getFuzzyToFlags()))
 				.field("parent", new ORecordId(entity.getParentId()));
 
 		// populate with created/modified stuff

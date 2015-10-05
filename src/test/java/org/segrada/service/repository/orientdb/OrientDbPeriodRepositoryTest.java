@@ -17,6 +17,7 @@ import org.segrada.test.OrientDbTestApplicationSettings;
 
 import java.util.List;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -81,6 +82,8 @@ public class OrientDbPeriodRepositoryTest {
 				.field("fromEntry", "1.1585").field("toEntry", "2.1585")
 				.field("from", 2299970L).field("to", 2300028L)
 				.field("type", "period")
+				.field("comment", "comment")
+				.field("fromFuzzyFlags", "x?").field("toFuzzyFlags", "c?")
 				.field("parent", parent).field("created", 1L).field("modified", 2L);
 		// persist to database to create id
 		document.save();
@@ -94,6 +97,9 @@ public class OrientDbPeriodRepositoryTest {
 		assertEquals("period", period.getType());
 		assertEquals(new Long(2299970L), period.getFromJD());
 		assertEquals(new Long(2300028L), period.getToJD());
+		assertEquals("comment", period.getComment());
+		assertArrayEquals(new char[]{'?'}, period.getFuzzyFromFlags());
+		assertArrayEquals(new char[]{'c', '?'}, period.getFuzzyToFlags());
 		assertEquals(new Long(1L), period.getCreated());
 		assertEquals(new Long(2L), period.getModified());
 		assertEquals(parent.getIdentity().toString(), period.getParentId());
@@ -110,6 +116,9 @@ public class OrientDbPeriodRepositoryTest {
 		IPeriod period = new Period();
 		period.setFromEntry("1.1585");
 		period.setToEntry("2.1585");
+		period.setComment("comment");
+		period.addFuzzyFromFlag('c');
+		period.addFuzzyToFlag('?');
 		period.setCreated(1L);
 		period.setModified(2L);
 		period.setParentId(parent.getIdentity().toString());
@@ -122,8 +131,11 @@ public class OrientDbPeriodRepositoryTest {
 		assertEquals("2.1585", document.field("toEntry"));
 		assertEquals("G", document.field("fromEntryCalendar"));
 		assertEquals("G", document.field("toEntryCalendar"));
+		assertEquals("c", document.field("fromFuzzyFlags"));
+		assertEquals("?", document.field("toFuzzyFlags"));
 		assertEquals(new Long(2299970L), document.field("fromJD", Long.class));
 		assertEquals(new Long(2300028L), document.field("toJD", Long.class));
+		assertEquals("comment", document.field("comment"));
 		assertEquals(new Long(1L), document.field("created", Long.class));
 		assertEquals(new Long(2L), document.field("modified", Long.class));
 		assertEquals(parent.getIdentity().toString(), document.field("parent", String.class));
