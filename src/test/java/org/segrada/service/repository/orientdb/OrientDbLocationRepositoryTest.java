@@ -77,6 +77,7 @@ public class OrientDbLocationRepositoryTest {
 
 		ODocument document = new ODocument("Location")
 				.field("longitude", 123.0).field("latitude", -23.0)
+				.field("comment", "comment")
 				.field("parent", parent).field("created", 1L).field("modified", 2L);
 		// persist to database to create id
 		document.save();
@@ -85,6 +86,7 @@ public class OrientDbLocationRepositoryTest {
 
 		assertEquals(new Double(123.0), location.getLongitude());
 		assertEquals(new Double(-23.0), location.getLatitude());
+		assertEquals("comment", location.getComment());
 		assertEquals(new Long(1L), location.getCreated());
 		assertEquals(new Long(2L), location.getModified());
 		assertEquals(parent.getIdentity().toString(), location.getParentId());
@@ -101,6 +103,7 @@ public class OrientDbLocationRepositoryTest {
 		ILocation location = new Location();
 		location.setLatitude(1.0);
 		location.setLongitude(-1.0);
+		location.setComment("comment");
 		location.setCreated(1L);
 		location.setModified(2L);
 		location.setParentId(parent.getIdentity().toString());
@@ -110,6 +113,7 @@ public class OrientDbLocationRepositoryTest {
 		ODocument document = repository.convertToDocument(location);
 		assertEquals(new Double(1), document.field("latitude"));
 		assertEquals(new Double(-1), document.field("longitude"));
+		assertEquals("comment", document.field("comment"));
 		assertEquals(new Long(1L), document.field("created", Long.class));
 		assertEquals(new Long(2L), document.field("modified", Long.class));
 		assertEquals(parent.getIdentity().toString(), document.field("parent", String.class));

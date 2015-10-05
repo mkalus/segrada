@@ -54,6 +54,7 @@ public class OrientDbLocationRepository extends AbstractSegradaOrientDbRepositor
 		Location location = new Location();
 		location.setLongitude(document.field("longitude", Double.class));
 		location.setLatitude(document.field("latitude", Double.class));
+		location.setComment(document.field("comment", String.class));
 
 		// populate with data
 		populateEntityWithBaseData(document, location);
@@ -84,6 +85,7 @@ public class OrientDbLocationRepository extends AbstractSegradaOrientDbRepositor
 		// populate with data
 		document.field("latitude", entity.getLatitude())
 				.field("longitude", entity.getLongitude())
+				.field("comment", entity.getComment())
 				.field("parent", new ORecordId(entity.getParentId()));
 
 		// populate with created/modified stuff
