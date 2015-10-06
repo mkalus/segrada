@@ -183,6 +183,7 @@ public class File extends AbstractAnnotatedModel implements IFile {
 			case "jpeg":
 			case "svg":
 			case "psd":
+			case "png":
 				return "image";
 			case "mp4":
 			case "mov":
