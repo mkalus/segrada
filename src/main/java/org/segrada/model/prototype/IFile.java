@@ -39,6 +39,11 @@ public interface IFile extends SegradaAnnotatedEntity {
 	String getMimeType();
 	void setMimeType(String mimeType);
 
+	/**
+	 * @return file type, typically suffix of file
+	 */
+	String getFileType();
+
 	String getLocation();
 	void setLocation(String location);
 

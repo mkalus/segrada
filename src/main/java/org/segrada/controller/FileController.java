@@ -335,12 +335,28 @@ public class FileController extends AbstractColoredController<IFile> {
 	@GET
 	@Path("/file/{uid}")
 	public Response download(@PathParam("uid") String uid) {
+		return getImage(uid, false);
+	}
+
+	@GET
+	@Path("/thumbnail/{uid}")
+	public Response getThumbnail(@PathParam("uid") String uid) {
+		return getImage(uid, true);
+	}
+
+	/**
+	 * actual worker function for download and getThumbnail
+	 * @param uid of image
+	 * @param thumbnail get thumbnail image?
+	 * @return reponse containing image or error
+	 */
+	private Response getImage(String uid, boolean thumbnail) {
 		try {
 			IFile entity = service.findById(service.convertUidToId(uid));
 			final InputStream in = (entity == null)?
 					getClass().getResourceAsStream("/img/no_image.png"):
-					service.getBinaryDataAsStream(entity);
-			String mime = (entity == null)?
+					service.getBinaryDataAsStream(thumbnail?entity.getThumbFileIdentifier():entity.getFileIdentifier());
+			String mime = (thumbnail || entity == null)?
 					"image/png":entity.getMimeType();
 
 			// set streaming output
@@ -357,7 +373,10 @@ public class FileController extends AbstractColoredController<IFile> {
 				outputStream.close();
 			};
 
-			return Response.ok(output, mime).header("Content-Disposition", "attachment; filename=" + entity.getFilename()).build();
+			// create file name
+			String filename = entity==null?"no_image.png":(thumbnail?"thumb_" + entity.getFilename():entity.getFilename());
+
+			return Response.ok(output, mime).header("Content-Disposition", "attachment; filename=\"" + filename + "\"").build();
 		} catch (Exception e) {
 			return Response.ok(new Viewable("error", e.getMessage())).build();
 		}

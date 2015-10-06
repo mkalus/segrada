@@ -16,6 +16,7 @@ import org.segrada.service.repository.TagRepository;
 import org.segrada.service.repository.factory.RepositoryFactory;
 import org.segrada.service.repository.prototype.PaginatingRepositoryOrService;
 import org.segrada.service.util.PaginationInfo;
+import org.segrada.util.ImageManipulator;
 import org.segrada.util.TextExtractor;
 
 import javax.annotation.Nullable;
@@ -170,12 +171,39 @@ public class FileService extends AbstractFullTextService<IFile, FileRepository> 
 		if (file.getData() == null) return;
 
 		// save and/or replace data
-		String identifier = binaryDataService.saveNewReference(entity, entity.getFilename(), entity.getMimeType(),
-				file.getData(), entity.getFileIdentifier());
+		String identifier = binaryDataService.saveNewReference(file, file.getFilename(), file.getMimeType(),
+				file.getData(), file.getFileIdentifier());
 
 		// issue identifier, remove data
 		if (identifier != null) {
-			entity.setFileIdentifier(identifier);
+			file.setFileIdentifier(identifier);
+
+			// is this an image?
+			if (file.getMimeType().startsWith("image/")) {
+				try {
+					// create thumbnail via image manipulator
+					ImageManipulator manipulator = new ImageManipulator(file.getData(), file.getMimeType());
+
+					// crop image to square
+					manipulator.cropImageToSquare();
+					// create thumbnail
+					manipulator.createThumbnail(48, true);
+
+					// change file ending, if necessary
+					if (!file.getFilename().endsWith(".png"))
+						file.setFilename(file.getFilename().substring(0, file.getFilename().lastIndexOf(".")) + ".png");
+
+					// save and/or replace data
+					String thumbIdentifier = binaryDataService.saveNewReference(file, "thumb_" + file.getFilename(), manipulator.getContentType(),
+							manipulator.getImageBytes(), file.getThumbFileIdentifier());
+
+					if (thumbIdentifier != null)
+						file.setThumbFileIdentifier(thumbIdentifier);
+				} catch (Exception e) {
+					//TODO logger
+				}
+			}
+
 			file.setData(null); // reset data
 		}
 	}
@@ -183,23 +211,21 @@ public class FileService extends AbstractFullTextService<IFile, FileRepository> 
 	@Override
 	public void removeBinaryDataFromService(IFile entity) {
 		binaryDataService.removeReference(entity.getFileIdentifier());
+
+		// also remove thumbnail, if needed
+		binaryDataService.removeReference(entity.getThumbFileIdentifier());
 	}
 
 	@Override
 	public InputStream getBinaryDataAsStream(IFile entity) {
-		if (entity == null || entity.getFileIdentifier() == null || entity.getFileIdentifier().isEmpty())
-			return null;
+		if (entity == null) return null; // no NPEs
 
-		try {
-			return binaryDataService.getBinaryDataAsStream(entity.getFileIdentifier());
-		} catch (IOException e) {
-			return null;
-		}
+		return getBinaryDataAsStream(entity.getFileIdentifier());
 	}
 
 	@Override
 	public InputStream getBinaryDataAsStream(String fileIdentifier) {
-		if (fileIdentifier == null) return null;
+		if (fileIdentifier == null || fileIdentifier.isEmpty()) return null;
 
 		try {
 			return binaryDataService.getBinaryDataAsStream(fileIdentifier);

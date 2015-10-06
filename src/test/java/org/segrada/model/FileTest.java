@@ -9,6 +9,7 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import java.util.Set;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.segrada.test.PropertyAsserter.assertBasicGetterSetterBehavior;
 
@@ -80,5 +81,25 @@ public class FileTest {
 	public void testDescriptionMarkupEmpty() throws Exception {
 		Set<ConstraintViolation<File>> constraintViolations = validator.validateValue(File.class, "descriptionMarkup", null);
 		assertTrue("Description markup empty", constraintViolations.size() == 1);
+	}
+
+	@Test
+	public void testGetMimeType() throws Exception {
+		final File file = new File();
+
+		file.setFilename("filename");
+		assertEquals("", file.getFileType());
+
+		file.setFilename("filename.pdf");
+		assertEquals("pdf", file.getFileType());
+
+		file.setFilename("filename.PDF");
+		assertEquals("pdf", file.getFileType());
+
+		file.setFilename("filename.");
+		assertEquals("", file.getFileType());
+
+		file.setFilename("filename.png");
+		assertEquals("png", file.getFileType());
 	}
 }

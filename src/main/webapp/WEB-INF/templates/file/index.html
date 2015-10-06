@@ -24,12 +24,14 @@
 			<table class="table table-hover table-striped table-condensed">
 				<tr>
 					<th class="text-center"><i class="fa fs-file"></i></th>
+					<th></th>
 					<th th:with="sortHelper=${@org.segrada.rendering.thymeleaf.util.TableSortPreprocessor@createSortLink(myurl, 'title', 'title', 'asc', filters)}"><a href="#" class="sg-control-set" th:href="${sortHelper.url}" th:utext="|#{field.title}${sortHelper.icon}|">Title</a></th>
 					<th class="col-xs-1" th:text="#{field.tags}">Tags</th>
 					<th></th>
 				</tr>
 				<tr>
 					<td class="text-center"><a class="sg-control-set btn btn-sm btn-link" href="#" th:href="@{${myurl}(reset=1)}" th:title="#{reset}" th:attr="data-target-id=${targetId}"><i class="fa fa-eraser"></i></a></td>
+					<td></td>
 					<td><input type="text" class="form-control" th:value="${filters.search}" name="search" th:placeholder="#{field.filter_title}" title="#{field.filter_title}" /></td>
 					<td>
 						<select multiple="multiple" type="text" name="tags" class="sg-tags">
@@ -42,6 +44,10 @@
 					<td class="text-center">
 						<span class="sg-color-icon" th:style="'background-color: ' + ${entity.colorCode}" th:if="${entity.color}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
 						<img src="#" th:src="@{/pictogram/file/{uid}(uid=${entity.pictogram.uid})}" th:alt-title="${entity.pictogram.title}" alt="" width="24" height="24" th:if="${entity.pictogram}"/>
+					</td>
+					<td th:if="${entity.thumbFileIdentifier}"><img src="#" th:src="@{/file/thumbnail/{uid}(uid=${entity.uid})}" th:alt-title="${entity.title}" alt="" width="48" height="48" /></td>
+					<td th:unless="${entity.thumbFileIdentifier}" th:with="fileType=${entity.fileType}">
+						<span th:unless="${#strings.isEmpty(fileType)}" class="fa fa-file-o fa-2x" th:class="${'fa fa-file-' + entity.fileType + '-o fa-2x'}"></span><span th:if="${#strings.isEmpty(fileType)}" class="fa fa-file-o fa-2x"></span>
 					</td>
 					<td th:text="${entity.title}">Title</td>
 					<td class="sg-taglist-contract">

@@ -155,6 +155,50 @@ public class File extends AbstractAnnotatedModel implements IFile {
 	}
 
 	@Override
+	public String getFileType() {
+		int index = filename.lastIndexOf(".");
+		if (index<0)return "";
+		String suffix = filename.substring(index+1).toLowerCase();
+
+		switch (suffix) {
+			case "pdf":
+				return suffix;
+			case "doc":
+			case "docx":
+				return "word";
+			case "xls":
+			case "xlsx":
+				return "excel";
+			case "ppt":
+			case "pptx":
+				return "powerpoint";
+			case "zip":
+			case "gz":
+			case "tgz":
+			case "7z":
+			case "rar":
+				return "archive";
+			case "gif":
+			case "jpg":
+			case "jpeg":
+			case "svg":
+			case "psd":
+				return "image";
+			case "mp4":
+			case "mov":
+			case "flv":
+			case "wmv":
+				return "video";
+			case "mp3":
+			case "wav":
+			case "flac":
+				return "audio";
+		}
+
+		return "";
+	}
+
+	@Override
 	public String getLocation() {
 		return location;
 	}
