@@ -618,7 +618,7 @@
 				},
 				success: function (responseText, statusText, xhr, $form) {
 					container.replaceWith(responseText);
-					afterAjax(container);
+					afterAjax($('#' + id));
 				}
 			});
 		});
