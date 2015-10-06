@@ -100,6 +100,6 @@ public class FileTest {
 		assertEquals("", file.getFileType());
 
 		file.setFilename("filename.png");
-		assertEquals("png", file.getFileType());
+		assertEquals("image", file.getFileType());
 	}
 }
