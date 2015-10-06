@@ -94,75 +94,92 @@ Common fragments.
 	<div class="sg-margin-top-sm" th:unless="${period}"><a href="#" class="btn btn-success sg-period-add"><i class="fa fa-plus"></i> <span th:text="#{add.period}">Add period</span></a></div>
 
 	<form action="#" th:action="@{/period/add/{model}/{uid}(model=${entity.modelName},uid=${entity.uid})}" method="post" class="sg-margin-top-sm sg-period-form sg-period-form-add" style="display: none;" th:style="${period and isNewEntity}?'':'display:none;'">
-		<div class="row">
-			<div class="col-md-3" th:classappend="${errors} and (${errors['fromLowerEqualThanTo']} or ${errors['fromJD']})?'has-error has-feedback'">
-				<input name="fromEntry" class="form-control" type="text" placeholder="Start" th:placeholder="#{field.fromEntry}" th:value="${period}?${period.fromEntry}" />
-				<span class="help-block" th:if="${errors} and ${errors['fromLowerEqualThanTo']}" th:text="${errors}?(${errors['fromLowerEqualThanTo']}?${#messages.msg(errors['fromLowerEqualThanTo'])})">Error</span>
-				<span class="help-block" th:if="${errors} and ${errors['fromJD']}" th:text="${errors}?(${errors['fromJD']}?#{error.calendar.incorrect})">Error</span>
-			</div>
-			<div class="col-md-2">
-				<div class="checkbox">
-					<label>
-						<input type="checkbox" name="isPeriod" value="1" checked="checked" class="sg-period-form-period" th:checked="${hidePeriod}?false:true" />
-						<span th:text="#{field.isPeriod}">Period?</span>
-					</label>
-				</div>
-			</div>
-			<div class="col-md-3" th:classappend="${errors} and ${errors['toJD']}?'has-error has-feedback'">
-				<div class="sg-period-toggle" th:style="${hidePeriod}?'display: none;'">
-					<input name="toEntry" class="form-control" type="text" placeholder="End" th:placeholder="#{field.toEntry}" th:value="${period}?${period.fromEntry}" />
-					<span class="help-block" th:if="${errors} and ${errors['toJD']}" th:text="${errors}?(${errors['toJD']}?#{error.calendar.incorrect})">Error</span>
-				</div>
-			</div>
-			<div class="col-md-4"><small th:text="#{period.format}" class="text-muted">(Note)</small></div>
-		</div>
-		<div class="row sg-margin-top-sm">
-			<div class="col-md-3">
-				<select class="form-control" name="fromEntryCalendar">
-					<option value="G" th:text="#{period.calAuto}">Automatic calendar</option>
-					<option value="J" th:text="#{period.calJulian}" th:selected="${period} and ${period.fromEntryCalendar} == 'J'">Use Julian calendar</option>
-				</select>
-			</div>
-			<div class="col-md-2"></div>
-			<div class="col-md-3">
-				<select class="form-control sg-period-toggle" name="toEntryCalendar">
-					<option value="G" th:text="#{period.calAuto}">Automatic calendar</option>
-					<option value="J" th:text="#{period.calJulian}" th:selected="${period} and ${period.toEntryCalendar} == 'J'">Use Julian calendar</option>
-				</select>
-			</div>
-			<div class="col-md-4"><small th:text="#{period.calendarInfo}" class="text-muted">(Calendar System)</small></div>
-		</div>
-		<div class="row sg-margin-top-sm">
-			<div class="col-md-3">
-				<label class="checkbox-inline">
-					<input type="checkbox" name="fromFuzzyFlagsCa" value="c" th:checked="${period} and ${period.hasFuzzyFromFlag('c')}" /> <span th:text="#{period.fuzzyCa}">ca.</span>
-				</label>
-				<label class="checkbox-inline">
-					<input type="checkbox" name="fromFuzzyFlagsUncertain" value="?" th:checked="${period} and ${period.hasFuzzyFromFlag('?')}" /> <span th:text="#{period.fuzzyUncertain}">ca.</span>
-				</label>
-			</div>
-			<div class="col-md-2"></div>
-			<div class="col-md-3">
-				<label class="checkbox-inline">
-					<input type="checkbox" name="toFuzzyFlagsCa" value="c" th:checked="${period} and ${period.hasFuzzyToFlag('c')}" /> <span th:text="#{period.fuzzyCa}">ca.</span>
-				</label>
-				<label class="checkbox-inline">
-					<input type="checkbox" name="toFuzzyFlagsUncertain" value="?" th:checked="${period} and ${period.hasFuzzyToFlag('?')}" /> <span th:text="#{period.fuzzyUncertain}">ca.</span>
-				</label>
-			</div>
-			<div class="col-md-4"><small th:text="#{period.fuzzyInfo}" class="text-muted">(Fuzzy date)</small></div>
-		</div>
-		<div class="row sg-margin-top-sm">
-			<div class="col-lg-8">
-				<input class="form-control" name="comment" type="text" value="" placeholder="Comment" th:placeholder="#{field.comment}" th:value="${period}?${period.comment}" />
-			</div>
-		</div>
+		<div th:replace="partials/common :: periodform (entity=${entity},errors=${errors},period=${period},hidePeriod=${hidePeriod})"></div>
 		<div class="row sg-margin-top-sm">
 			<div class="col-lg-12">
-				<input type="submit" value="Add location" class="btn btn-primary" th:value="#{add.period}" />
+				<input type="submit" value="Add period" class="btn btn-primary" th:value="#{add.period}" />
 			</div>
 		</div>
 	</form>
+
+	<!--/*TODO for later
+	<form action="#" th:action="@{/period/update/{model}/{uid}(model=${entity.modelName},uid=${entity.uid})}" method="post" class="sg-margin-top-sm sg-period-form sg-period-form-edit" style="display: none;" th:style="${period and !isNewEntity}?'':'display:none;'">
+		<div th:replace="partials/common :: periodform (entity=${entity},errors=${errors},period=${period},hidePeriod=${hidePeriod})"></div>
+		<div class="row sg-margin-top-sm">
+			<div class="col-lg-12">
+				<input type="submit" value="Update period" class="btn btn-primary" th:value="#{update.period}" />
+			</div>
+		</div>
+	</form>*/-->
+</div>
+
+
+<h4>Period form</h4>
+
+<div th:fragment="periodform">
+	<div class="row">
+		<div class="col-md-3" th:classappend="${errors} and (${errors['fromLowerEqualThanTo']} or ${errors['fromJD']})?'has-error has-feedback'">
+			<input name="fromEntry" class="form-control" type="text" placeholder="Start" th:placeholder="#{field.fromEntry}" th:value="${period}?${period.fromEntry}" />
+			<span class="help-block" th:if="${errors} and ${errors['fromLowerEqualThanTo']}" th:text="${errors}?(${errors['fromLowerEqualThanTo']}?${#messages.msg(errors['fromLowerEqualThanTo'])})">Error</span>
+			<span class="help-block" th:if="${errors} and ${errors['fromJD']}" th:text="${errors}?(${errors['fromJD']}?#{error.calendar.incorrect})">Error</span>
+		</div>
+		<div class="col-md-2">
+			<div class="checkbox">
+				<label>
+					<input type="checkbox" name="isPeriod" value="1" checked="checked" class="sg-period-form-period" th:checked="${hidePeriod}?false:true" />
+					<span th:text="#{field.isPeriod}">Period?</span>
+				</label>
+			</div>
+		</div>
+		<div class="col-md-3" th:classappend="${errors} and ${errors['toJD']}?'has-error has-feedback'">
+			<div class="sg-period-toggle" th:style="${hidePeriod}?'display: none;'">
+				<input name="toEntry" class="form-control" type="text" placeholder="End" th:placeholder="#{field.toEntry}" th:value="${period}?${period.fromEntry}" />
+				<span class="help-block" th:if="${errors} and ${errors['toJD']}" th:text="${errors}?(${errors['toJD']}?#{error.calendar.incorrect})">Error</span>
+			</div>
+		</div>
+		<div class="col-md-4"><small th:text="#{period.format}" class="text-muted">(Note)</small></div>
+	</div>
+	<div class="row sg-margin-top-sm">
+		<div class="col-md-3">
+			<select class="form-control" name="fromEntryCalendar">
+				<option value="G" th:text="#{period.calAuto}">Automatic calendar</option>
+				<option value="J" th:text="#{period.calJulian}" th:selected="${period} and ${period.fromEntryCalendar} == 'J'">Use Julian calendar</option>
+			</select>
+		</div>
+		<div class="col-md-2"></div>
+		<div class="col-md-3">
+			<select class="form-control sg-period-toggle" name="toEntryCalendar">
+				<option value="G" th:text="#{period.calAuto}">Automatic calendar</option>
+				<option value="J" th:text="#{period.calJulian}" th:selected="${period} and ${period.toEntryCalendar} == 'J'">Use Julian calendar</option>
+			</select>
+		</div>
+		<div class="col-md-4"><small th:text="#{period.calendarInfo}" class="text-muted">(Calendar System)</small></div>
+	</div>
+	<div class="row sg-margin-top-sm">
+		<div class="col-md-3">
+			<label class="checkbox-inline">
+				<input type="checkbox" name="fromFuzzyFlagsCa" value="c" th:checked="${period} and ${period.hasFuzzyFromFlag('c')}" /> <span th:text="#{period.fuzzyCa}">ca.</span>
+			</label>
+			<label class="checkbox-inline">
+				<input type="checkbox" name="fromFuzzyFlagsUncertain" value="?" th:checked="${period} and ${period.hasFuzzyFromFlag('?')}" /> <span th:text="#{period.fuzzyUncertain}">ca.</span>
+			</label>
+		</div>
+		<div class="col-md-2"></div>
+		<div class="col-md-3">
+			<label class="checkbox-inline">
+				<input type="checkbox" name="toFuzzyFlagsCa" value="c" th:checked="${period} and ${period.hasFuzzyToFlag('c')}" /> <span th:text="#{period.fuzzyCa}">ca.</span>
+			</label>
+			<label class="checkbox-inline">
+				<input type="checkbox" name="toFuzzyFlagsUncertain" value="?" th:checked="${period} and ${period.hasFuzzyToFlag('?')}" /> <span th:text="#{period.fuzzyUncertain}">ca.</span>
+			</label>
+		</div>
+		<div class="col-md-4"><small th:text="#{period.fuzzyInfo}" class="text-muted">(Fuzzy date)</small></div>
+	</div>
+	<div class="row sg-margin-top-sm">
+		<div class="col-lg-8">
+			<input class="form-control" name="comment" type="text" value="" placeholder="Comment" th:placeholder="#{field.comment}" th:value="${period}?${period.comment}" />
+		</div>
+	</div>
 </div>
 
 
