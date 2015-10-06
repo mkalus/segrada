@@ -589,17 +589,24 @@
 
 			var form = $('.sg-period-form', container);
 
-			// show add form
+			// show forms
 			$('.sg-period-add', container).click(function(e) {
 				$(this).hide();
-				form.show();
+				var myForm = $('.sg-period-form-add', container);
+				myForm.show();
+
+				// show/hide period field
+				$('.sg-period-form-period', myForm).change(function(e) {
+					if ($(this).is(':checked')) $('.sg-period-toggle', myForm).show();
+					else $('.sg-period-toggle', myForm).hide();
+				});
+
 				e.preventDefault();
 			});
-
-			// show/hide period field
-			$('.sg-period-form-period', container).change(function(e) {
-				if ($(this).is(':checked')) $('.sg-period-toggle', container).show();
-				else $('.sg-period-toggle', container).hide();
+			$('.sg-period-edit', container).click(function(e) {
+				$(this).hide();
+				$('.sg-period-form-edit', container).show();
+				e.preventDefault();
 			});
 
 			// form submit

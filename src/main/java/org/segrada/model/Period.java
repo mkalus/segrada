@@ -233,7 +233,10 @@ public class Period extends AbstractSegradaEntity implements IPeriod {
 		else {
 			// parse time to jd
 			FlexibleDateParser parser = new FlexibleDateParser();
-			setFromJD(parser.inputToJd(getFromEntry(), getFromEntryCalendar(), false));
+			long jd = parser.inputToJd(getFromEntry(), getFromEntryCalendar(), false);
+			setFromJD(jd);
+			// autoconvert calendar
+			if (jd > 0 && jd < 2299161 && this.fromEntryCalendar.equals("G")) this.fromEntryCalendar = "J";
 		}
 	}
 
@@ -245,7 +248,10 @@ public class Period extends AbstractSegradaEntity implements IPeriod {
 		else {
 			// parse time to jd
 			FlexibleDateParser parser = new FlexibleDateParser();
-			setToJD(parser.inputToJd(getToEntry(), getToEntryCalendar(), true));
+			long jd = parser.inputToJd(getToEntry(), getToEntryCalendar(), true);
+			setToJD(jd);
+			// autoconvert calendar
+			if (jd > 0 && jd < 2299161 && this.toEntryCalendar.equals("G")) this.toEntryCalendar = "J";
 		}
 	}
 

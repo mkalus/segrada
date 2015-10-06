@@ -74,13 +74,15 @@ Common fragments.
 <div th:fragment="listperiods (entity)" th:id="${'periods-' + entity.uid}" class="sg-periods">
 	<table class="table table-hover table-striped table-condensed sg-margin-top">
 		<tr>
-			<th class="col-xs-5" th:text="#{field.fromEntry}">Start</th>
-			<th class="col-xs-5" th:text="#{field.toEntry}">Stop</th>
+			<th class="col-xs-3" th:text="#{field.fromEntry}">Start</th>
+			<th class="col-xs-3" th:text="#{field.toEntry}">Stop</th>
+			<th class="col-xs-5" th:text="#{field.comment}">Comment</th>
 			<th></th>
 		</tr>
 		<tr th:each="myPeriod : ${entity.periods}">
 			<td th:utext="${@org.segrada.util.FuzzyDateRenderer@renderOrEmpty(myPeriod.fromJD,myPeriod.fromEntry,myPeriod.fromEntryCalendar,myPeriod.fuzzyFromFlags)}">Start</td>
 			<td th:utext="${@org.segrada.util.FuzzyDateRenderer@renderOrEmpty(myPeriod.toJD,myPeriod.toEntry,myPeriod.toEntryCalendar,myPeriod.fuzzyToFlags)}">Stop</td>
+			<td th:text="${myPeriod.comment}">Comment</td>
 			<td class="text-right">
 				<div class="sg-data-icon-bar" role="group" aria-label="Actions">
 					<a class="sg-data-icon" href="#" th:title="#{Delete}" th:href="@{/period/delete/{uid}(uid=${myPeriod.uid})}" th:attr="data-confirm=${#messages.msg('ReallyDelete', myPeriod.title)}"><i class="fa fa-times-circle-o"></i></a>
@@ -91,7 +93,7 @@ Common fragments.
 
 	<div class="sg-margin-top-sm" th:unless="${period}"><a href="#" class="btn btn-success sg-period-add"><i class="fa fa-plus"></i> <span th:text="#{add.period}">Add period</span></a></div>
 
-	<form action="#" th:action="@{/period/add/{model}/{uid}(model=${entity.modelName},uid=${entity.uid})}" method="post" class="sg-margin-top-sm sg-period-form" style="display: none;" th:style="${period}?'':'display:none;'">
+	<form action="#" th:action="@{/period/add/{model}/{uid}(model=${entity.modelName},uid=${entity.uid})}" method="post" class="sg-margin-top-sm sg-period-form sg-period-form-add" style="display: none;" th:style="${period and isNewEntity}?'':'display:none;'">
 		<div class="row">
 			<div class="col-md-3" th:classappend="${errors} and (${errors['fromLowerEqualThanTo']} or ${errors['fromJD']})?'has-error has-feedback'">
 				<input name="fromEntry" class="form-control" type="text" placeholder="Start" th:placeholder="#{field.fromEntry}" th:value="${period}?${period.fromEntry}" />
@@ -112,7 +114,51 @@ Common fragments.
 					<span class="help-block" th:if="${errors} and ${errors['toJD']}" th:text="${errors}?(${errors['toJD']}?#{error.calendar.incorrect})">Error</span>
 				</div>
 			</div>
-			<div class="col-md-4">
+			<div class="col-md-4"><small th:text="#{period.format}" class="text-muted">(Note)</small></div>
+		</div>
+		<div class="row sg-margin-top-sm">
+			<div class="col-md-3">
+				<select class="form-control" name="fromEntryCalendar">
+					<option value="G" th:text="#{period.calAuto}">Automatic calendar</option>
+					<option value="J" th:text="#{period.calJulian}" th:selected="${period} and ${period.fromEntryCalendar} == 'J'">Use Julian calendar</option>
+				</select>
+			</div>
+			<div class="col-md-2"></div>
+			<div class="col-md-3">
+				<select class="form-control sg-period-toggle" name="toEntryCalendar">
+					<option value="G" th:text="#{period.calAuto}">Automatic calendar</option>
+					<option value="J" th:text="#{period.calJulian}" th:selected="${period} and ${period.toEntryCalendar} == 'J'">Use Julian calendar</option>
+				</select>
+			</div>
+			<div class="col-md-4"><small th:text="#{period.calendarInfo}" class="text-muted">(Calendar System)</small></div>
+		</div>
+		<div class="row sg-margin-top-sm">
+			<div class="col-md-3">
+				<label class="checkbox-inline">
+					<input type="checkbox" name="fromFuzzyFlagsCa" value="c" th:checked="${period} and ${period.hasFuzzyFromFlag('c')}" /> <span th:text="#{period.fuzzyCa}">ca.</span>
+				</label>
+				<label class="checkbox-inline">
+					<input type="checkbox" name="fromFuzzyFlagsUncertain" value="?" th:checked="${period} and ${period.hasFuzzyFromFlag('?')}" /> <span th:text="#{period.fuzzyUncertain}">ca.</span>
+				</label>
+			</div>
+			<div class="col-md-2"></div>
+			<div class="col-md-3">
+				<label class="checkbox-inline">
+					<input type="checkbox" name="toFuzzyFlagsCa" value="c" th:checked="${period} and ${period.hasFuzzyToFlag('c')}" /> <span th:text="#{period.fuzzyCa}">ca.</span>
+				</label>
+				<label class="checkbox-inline">
+					<input type="checkbox" name="toFuzzyFlagsUncertain" value="?" th:checked="${period} and ${period.hasFuzzyToFlag('?')}" /> <span th:text="#{period.fuzzyUncertain}">ca.</span>
+				</label>
+			</div>
+			<div class="col-md-4"><small th:text="#{period.fuzzyInfo}" class="text-muted">(Fuzzy date)</small></div>
+		</div>
+		<div class="row sg-margin-top-sm">
+			<div class="col-lg-8">
+				<input class="form-control" name="comment" type="text" value="" placeholder="Comment" th:placeholder="#{field.comment}" th:value="${period}?${period.comment}" />
+			</div>
+		</div>
+		<div class="row sg-margin-top-sm">
+			<div class="col-lg-12">
 				<input type="submit" value="Add location" class="btn btn-primary" th:value="#{add.period}" />
 			</div>
 		</div>
@@ -153,7 +199,7 @@ Common fragments.
 			</div>
 		</div>
 		<div class="row sg-margin-top-sm">
-			<div class="col-md-8">
+			<div class="col-lg-8">
 				<input class="form-control" name="comment" type="text" value="" placeholder="Comment" th:placeholder="#{field.comment}" />
 			</div>
 		</div>
