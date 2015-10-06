@@ -20,7 +20,7 @@
 				<!--/*###segrada-control###*/-->
 				<p style="margin: 3em 0 0 3em;">
 					<img src="../../img/logo_small.png" th:src="@{/img/logo_small.png}" width="194" height="53" alt="Segrada" />
-					<span class="text-muted" style="margin-left: 1ex;"><samp>v0.0.6</samp></span>
+					<span class="text-muted" style="margin-left: 1ex;"><samp th:text="${version}">v0.0.0</samp></span>
 				</p>
 				<!--/*###Upate check###*/-->
 				<div class="alert alert-danger sg-margin-top" role="alert" th:unless="${#strings.isEmpty(versionUpdate)}"><span th:text="#{UpdateAlert}">Update:</span> <a href="http://segrada.org/" class="sg-link-external">segrada.org</a> (Version: <span th:text="${versionUpdate}">v0.0.0</span>)</div>

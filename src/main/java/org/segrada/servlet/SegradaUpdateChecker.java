@@ -39,7 +39,7 @@ public class SegradaUpdateChecker {
 	/**
 	 * current version
 	 */
-	private static final String currentVersion = "v0.0.6";
+	public static final String currentVersion = "v0.0.7";
 
 	private final OrientGraphFactory graph;
 

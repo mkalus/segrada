@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import com.google.inject.servlet.RequestScoped;
 import com.sun.jersey.api.view.Viewable;
 import org.segrada.service.ConfigService;
+import org.segrada.servlet.SegradaUpdateChecker;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -44,6 +45,7 @@ public class MainController {
 
 		// create model map
 		Map<String, Object> model = new HashMap<>();
+		model.put("version", SegradaUpdateChecker.currentVersion);
 		model.put("versionUpdate", versionUpdate);
 
 		return new Viewable("home", model);
