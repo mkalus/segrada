@@ -117,7 +117,10 @@ abstract public class AbstractBaseController<BEAN extends SegradaEntity> {
 		Map<String, Object> cleanedFilter = new HashMap<>();
 		for (String filterKey : filters.keySet()) {
 			Object o = filters.get(filterKey);
-			if (o != null && !(o instanceof String && ((String)o).isEmpty())) cleanedFilter.put(filterKey, o);
+			if (o != null) {
+				if (o instanceof String && !((String)o).isEmpty()) cleanedFilter.put(filterKey, o);
+				else if (o instanceof String[] && ((String[])o).length != 0) cleanedFilter.put(filterKey, o);
+			}
 		}
 		// get page and per page settings
 		if (page > 0) cleanedFilter.put("page", page); // set page

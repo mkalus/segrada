@@ -120,12 +120,8 @@ public class SegradaSimplePageCachingFilter extends SimplePageCachingFilter {
 		}
 
 		// get query data and add it to list (overwrite session, if needed)
-		Enumeration<String> parameters = httpRequest.getParameterNames();
-		while (parameters.hasMoreElements()) {
-			String parameter = parameters.nextElement();
-			String value = httpRequest.getParameter(parameter);
-
-			queryData.put(parameter, value);
+		for (Map.Entry<String, String[]> parameter : httpRequest.getParameterMap().entrySet()) {
+			queryData.put(parameter.getKey(), String.join(",", parameter.getValue()));
 		}
 
 		// create query string as key
@@ -147,13 +143,13 @@ public class SegradaSimplePageCachingFilter extends SimplePageCachingFilter {
 
 		// convert query string to md5
 		String qs = queryString.toString();
-		if (!qs.isEmpty())
+		/*if (!qs.isEmpty())
 			try {
 				MessageDigest md = MessageDigest.getInstance("MD5");
 				qs = Hex.encodeHexString(md.digest(qs.getBytes("UTF-8")));
 			} catch (Exception e) {
 				// do nothing - just use query string as it is
-			}
+			}*/
 
 		// create key
 		return httpRequest.getMethod() + language + urlPart + qs;
