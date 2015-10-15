@@ -63,7 +63,7 @@ public class RelationController extends AbstractColoredController<IRelation> {
 			@QueryParam("page") int page,
 			@QueryParam("entriesPerPage") int entriesPerPage,
 			@QueryParam("reset") int reset,
-			//@QueryParam("search") String search,
+			@QueryParam("search") String search, // empty dummy value to know when we have submitted form
 			@QueryParam("minEntry") String minEntry,
 			@QueryParam("maxEntry") String maxEntry,
 			@QueryParam("tags") List<String> tags,
@@ -77,8 +77,8 @@ public class RelationController extends AbstractColoredController<IRelation> {
 		if (minEntry != null) filters.put("minEntry", minEntry);
 		if (maxEntry != null) filters.put("maxEntry", maxEntry);
 		if (tags != null) {
-			if (tags.size() == 0) filters.put("tags", null);
-			else {
+			if (tags.size() == 0 && search != null) filters.put("tags", null);
+			else if (tags.size() > 0) {
 				String[] tagArray = new String[tags.size()];
 				tags.toArray(tagArray);
 				filters.put("tags", tagArray);

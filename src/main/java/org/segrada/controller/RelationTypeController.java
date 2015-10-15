@@ -59,8 +59,8 @@ public class RelationTypeController extends AbstractColoredController<IRelationT
 		if (reset > 0) filters.put("reset", true);
 		if (search != null) filters.put("search", search);
 		if (tags != null) {
-			if (tags.size() == 0) filters.put("tags", null);
-			else {
+			if (tags.size() == 0 && search != null) filters.put("tags", null);
+			else if (tags.size() > 0) {
 				String[] tagArray = new String[tags.size()];
 				tags.toArray(tagArray);
 				filters.put("tags", tagArray);

@@ -140,9 +140,9 @@ public class NodeController extends AbstractColoredController<INode> {
 		if (search != null) filters.put("search", search);
 		if (minEntry != null) filters.put("minEntry", minEntry);
 		if (maxEntry != null) filters.put("maxEntry", maxEntry);
-		if (search != null && tags != null) {
-			if (tags.size() == 0) filters.put("tags", null);
-			else {
+		if (tags != null) {
+			if (tags.size() == 0 && search != null) filters.put("tags", null);
+			else if (tags.size() > 0) {
 				String[] tagArray = new String[tags.size()];
 				tags.toArray(tagArray);
 				filters.put("tags", tagArray);
