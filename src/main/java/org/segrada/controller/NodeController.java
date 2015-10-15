@@ -11,6 +11,7 @@ import org.segrada.model.Node;
 import org.segrada.model.prototype.INode;
 import org.segrada.model.prototype.IRelation;
 import org.segrada.model.prototype.ITag;
+import org.segrada.model.prototype.SegradaTaggable;
 import org.segrada.rendering.json.JSONConverter;
 import org.segrada.service.NodeService;
 import org.segrada.service.RelationService;
@@ -72,7 +73,7 @@ public class NodeController extends AbstractColoredController<INode> {
 			@QueryParam("sort") String sortBy, // titleasc, minJD, maxJD
 			@QueryParam("dir") String sortOrder // asc, desc, none
 	) {
-		return doPaginatedView(page, entriesPerPage, reset, search, minEntry, maxEntry, tags, sortBy, sortOrder, null, null, null);
+		return doPaginatedView(page, entriesPerPage, reset, search, minEntry, maxEntry, tags, sortBy, sortOrder, null, null, null, null);
 	}
 
 	@GET
@@ -86,13 +87,20 @@ public class NodeController extends AbstractColoredController<INode> {
 			@QueryParam("minEntry") String minEntry,
 			@QueryParam("maxEntry") String maxEntry,
 			@PathParam("tagUid") String tagUid,
+			@QueryParam("withSubTags") String withSubTags,
 			@QueryParam("sort") String sortBy, // titleasc, minJD, maxJD
 			@QueryParam("dir") String sortOrder // asc, desc, none
 	) {
+		// get tag
 		ITag tag = tagService.findById(tagService.convertUidToId(tagUid));
 		if (tag == null) return null; // TODO create error notice
 
-		// create tag list
+		// predefine filters
+		Map<String, Object> filters = new HashMap<>();
+		filters.put("key", "NodeServiceByTag" + tagUid);
+		if (withSubTags != null) filters.put("withSubTags", withSubTags.equals("1"));
+
+		// tags to contain
 		List<String> tags = new ArrayList<>(1);
 		tags.add(tag.getTitle());
 
@@ -105,7 +113,7 @@ public class NodeController extends AbstractColoredController<INode> {
 		// reset keep
 		String[] resetKeep = new String[]{"tags"};
 
-		return doPaginatedView(page, entriesPerPage, reset, search, minEntry, maxEntry, tags, sortBy, sortOrder, "by_tag", model, resetKeep);
+		return doPaginatedView(page, entriesPerPage, reset, search, minEntry, maxEntry, tags, sortBy, sortOrder, "by_tag", model, resetKeep, filters);
 	}
 
 	/**
@@ -123,10 +131,11 @@ public class NodeController extends AbstractColoredController<INode> {
 			String sortOrder, // asc, desc, none
 			@Nullable String viewName,
 			@Nullable Map<String, Object> model,
-			@Nullable String[] resetKeep
+			@Nullable String[] resetKeep,
+			@Nullable Map<String, Object> filters
 	) {
 		// filters:
-		Map<String, Object> filters = new HashMap<>();
+		if (filters == null) filters = new HashMap<>();
 		if (reset > 0) filters.put("reset", true);
 		if (search != null) filters.put("search", search);
 		if (minEntry != null) filters.put("minEntry", minEntry);

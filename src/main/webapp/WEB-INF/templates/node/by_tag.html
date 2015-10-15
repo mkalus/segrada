@@ -35,7 +35,10 @@
 					<td><input type="text" class="form-control" th:value="${filters.search}" name="search" th:placeholder="#{field.filter_title}" title="#{field.filter_title}" /></td>
 					<td><input type="text" class="form-control" th:value="${filters.minEntry}" name="minEntry" title="Start" th:title="#{field.fromEntry}" /></td>
 					<td><input type="text" class="form-control" th:value="${filters.maxEntry}" name="maxEntry" title="Stop" th:title="#{field.toEntry}" /></td>
-					<td></td>
+					<td>
+						<input type="checkbox" name="withSubTags" value="1" th:checked="${filters.withSubTags}" />
+						<input type="hidden" name="withSubTags" value="0" class="hidden" /> <small th:text="#{field.subTags}">subtags?</small>
+					</td>
 					<td class="text-right"><button type="submit" class="btn btn-info btn-sm" th:text="#{SubmitFilter}">Filter</button></td>
 				</tr>
 				<tr th:each="entity : ${paginationInfo.entities}" th:attr="data-data-dblclick=@{/node/show/{uid}(uid=${entity.uid})}">

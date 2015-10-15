@@ -218,15 +218,45 @@ public class OrientDbNodeRepository extends AbstractCoreOrientDbRepository<INode
 
 		// tags
 		if (filters.containsKey("tags")) {
-			StringBuilder sb = new StringBuilder(" in('IsTagOf').title IN [ ");
+			// create search for titles
+			StringBuilder sb = new StringBuilder("title IN [ ");
 			boolean first = true;
 			for (String tag : (String[]) filters.get("tags")) {
 				if (first) first = false;
 				else sb.append(",");
 				sb.append("'").append(OrientStringEscape.escapeOrientSql(tag)).append("'");
 			}
+			sb.append("]");
 
-			constraints.add(sb.append("]").toString());
+			// with sub tags?
+			if (filters.containsKey("withSubTags") && filters.get("withSubTags").equals(true)) {
+				//TODO: add test
+				// keeps tag ids
+				Set<String> subTagIds = new HashSet<>();
+
+				// get ids of tag
+				OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>("select @rid from Tag where " + sb.toString());
+				List<ODocument> tagIdsDocs = db.command(query).execute();
+				for (ODocument tagDoc : tagIdsDocs) {
+					// traverse sub tags
+					OSQLSynchQuery<ODocument> query2 = new OSQLSynchQuery<>("SELECT @rid FROM (traverse out('IsTagOf') from " + tagDoc.field("rid", String.class) + " WHILE @class = 'Tag')");
+					List<ODocument> subTagDocs = db.command(query2).execute();
+					for (ODocument subTagDoc : subTagDocs) // add ids to set
+						subTagIds.add(subTagDoc.field("rid", String.class));
+				}
+
+				sb = new StringBuilder(" in('IsTagOf') IN [ ");
+				first = true;
+				for (String tagId : subTagIds) {
+					if (first) first = false;
+					else sb.append(",");
+					sb.append(tagId);
+				}
+
+				constraints.add(sb.append("] ").toString());
+			} else { //"normal" search
+				constraints.add(" in('IsTagOf')." + sb.toString());
+			}
 		}
 
 		// sorting
