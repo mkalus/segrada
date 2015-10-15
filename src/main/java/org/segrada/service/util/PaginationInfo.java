@@ -93,4 +93,16 @@ public class PaginationInfo<BEAN extends SegradaEntity> {
 	public boolean showLastPage() {
 		return getMaxPage()!=pages;
 	}
+
+	/**
+	 * @return translation key handling singular and plural forms
+	 */
+	public String key() {
+		switch (total) {
+			case 0: return "paginationNone";
+			case 1: return "paginationOne";
+		}
+
+		return "pagination";
+	}
 }

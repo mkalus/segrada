@@ -86,7 +86,7 @@
 	</form>
 
 
-	<p th:text="${#messages.msg('pagination', paginationInfo.page, paginationInfo.pages)}">Pages</p>
+	<p th:text="${#messages.msg(paginationInfo.key(), paginationInfo.page, paginationInfo.pages, paginationInfo.total)}">Pages</p>
 
 	<table class="table table-hover table-striped table-condensed sg-search-list">
 		<tr th:each="hit : ${paginationInfo.entities}" th:attr="data-data-dblclick=@{/{model}/show/{uid}(model=${#strings.toLowerCase(hit.className)},uid=${hit.id})}">

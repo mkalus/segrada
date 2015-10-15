@@ -14,7 +14,7 @@
 	<div class="sg-control-content sg-file">
 		<h4 class="sg-control-header"><i class="fa fa-bookmark"></i> <span th:text="#{list.source_references}">References to entity</span></h4>
 
-		<p th:text="${#messages.msg('pagination', paginationInfo.page, paginationInfo.pages)}">Pages</p>
+		<p th:text="${#messages.msg(paginationInfo.key(), paginationInfo.page, paginationInfo.pages, paginationInfo.total)}">Pages</p>
 
 		<table class="table table-hover table-striped table-condensed">
 			<tr>

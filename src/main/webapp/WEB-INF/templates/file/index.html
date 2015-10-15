@@ -18,7 +18,7 @@
 
 		<h4 class="sg-control-header"><i class="fa fa-file"></i> <span th:text="#{list.file}">List</span></h4>
 
-		<p th:text="${#messages.msg('pagination', paginationInfo.page, paginationInfo.pages)}">Pages</p>
+		<p th:text="${#messages.msg(paginationInfo.key(), paginationInfo.page, paginationInfo.pages, paginationInfo.total)}">Pages</p>
 
 		<form method="get" action="#" th:action="${myurl}" class="sg-control-form" th:attr="data-target-id=${targetId}">
 			<table class="table table-hover table-striped table-condensed">

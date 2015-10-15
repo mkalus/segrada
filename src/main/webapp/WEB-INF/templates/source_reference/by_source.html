@@ -16,7 +16,7 @@
 
 		<div th:if="${error}" th:text="#{${error}}" class="alert alert-danger">Error</div>
 
-		<p th:text="${#messages.msg('pagination', paginationInfo.page, paginationInfo.pages)}">Pages</p>
+		<p th:text="${#messages.msg(paginationInfo.key(), paginationInfo.page, paginationInfo.pages, paginationInfo.total)}">Pages</p>
 
 		<table class="table table-hover table-striped table-condensed">
 			<tr>
