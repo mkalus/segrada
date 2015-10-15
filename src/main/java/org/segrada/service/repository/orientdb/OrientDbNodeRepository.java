@@ -239,7 +239,7 @@ public class OrientDbNodeRepository extends AbstractCoreOrientDbRepository<INode
 				List<ODocument> tagIdsDocs = db.command(query).execute();
 				for (ODocument tagDoc : tagIdsDocs) {
 					// traverse sub tags
-					OSQLSynchQuery<ODocument> query2 = new OSQLSynchQuery<>("SELECT @rid FROM (traverse out('IsTagOf') from " + tagDoc.field("rid", String.class) + " WHILE @class = 'Tag')");
+					OSQLSynchQuery<ODocument> query2 = new OSQLSynchQuery<>("SELECT @rid FROM (traverse out('IsTagOf') from " + tagDoc.field("rid", String.class) + " MAXDEPTH 1 WHILE @class = 'Tag')");
 					List<ODocument> subTagDocs = db.command(query2).execute();
 					for (ODocument subTagDoc : subTagDocs) // add ids to set
 						subTagIds.add(subTagDoc.field("rid", String.class));
