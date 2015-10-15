@@ -97,7 +97,7 @@ public class NodeController extends AbstractColoredController<INode> {
 
 		// predefine filters
 		Map<String, Object> filters = new HashMap<>();
-		filters.put("key", "NodeServiceByTag" + tagUid);
+		filters.put("key", "Node/by_tag/" + tagUid + "Service"); // has to be named like this in order to make cache work properly
 		if (withSubTags != null) filters.put("withSubTags", withSubTags.equals("1"));
 
 		// tags to contain

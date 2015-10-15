@@ -1,12 +1,9 @@
 package org.segrada.servlet;
 
-import net.sf.ehcache.constructs.blocking.LockTimeoutException;
 import net.sf.ehcache.constructs.web.AlreadyCommittedException;
-import net.sf.ehcache.constructs.web.AlreadyGzippedException;
 import net.sf.ehcache.constructs.web.PageInfo;
-import net.sf.ehcache.constructs.web.filter.FilterNonReentrantException;
 import net.sf.ehcache.constructs.web.filter.SimplePageCachingFilter;
-import org.apache.http.client.utils.URLEncodedUtils;
+import org.apache.commons.codec.binary.Hex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.net.URLEncoder;
+import java.security.MessageDigest;
 import java.util.Enumeration;
 import java.util.Map;
 import java.util.SortedMap;
@@ -51,10 +49,10 @@ public class SegradaSimplePageCachingFilter extends SimplePageCachingFilter {
 	/**
 	 * url parts that add a session key to the cache key in order to function properly
 	 */
-	private static final Pattern addSessionToCacheKey = Pattern.compile("^/(node|source|file|relation|relation_type|pictogram|tag|color)$");
+	private static final Pattern addSessionToCacheKey = Pattern.compile("^/(node(/by_tag/[0-9\\-]+)?|source|file|relation|relation_type|pictogram|tag|color)$");
 
 	@Override
-	protected void doFilter(HttpServletRequest servletRequest, HttpServletResponse servletResponse, FilterChain filterChain) throws AlreadyGzippedException, AlreadyCommittedException, FilterNonReentrantException, LockTimeoutException, Exception {
+	protected void doFilter(HttpServletRequest servletRequest, HttpServletResponse servletResponse, FilterChain filterChain) throws Exception {
 		// exclude?
 		String url = servletRequest.getRequestURL().toString();
 
@@ -100,15 +98,23 @@ public class SegradaSimplePageCachingFilter extends SimplePageCachingFilter {
 		// match with urls that require session key addition to cache in order to function properly?
 		MatchResult matchResult = addSessionToCacheKey.matcher(urlPart).toMatchResult();
 		if (((Matcher) matchResult).find()) {
+			// this is the same as the session key
 			String controller = matchResult.group().substring(1, 2).toUpperCase() + matchResult.group().substring(2) + "Service";
 			// get session data
 			Object controllerData = session.getAttribute(controller);
 
 			// create sorted map
 			if (controllerData != null && controllerData instanceof Map) {
-				Map<String, String> d = (Map<String, String>)controllerData;
+				@SuppressWarnings("unchecked")
+				Map<String, Object> d = (Map<String, Object>)controllerData;
 				for (String parameter : d.keySet()) {
-					queryData.put(parameter, d.get(parameter));
+					Object o = d.get(parameter);
+					String value;
+					// concatenate string array in order to make caching work
+					if (o instanceof String[]) value = String.join(",", (String[]) o);
+					else // all other cases: convert to string
+						value = d.get(parameter).toString();
+					queryData.put(parameter, value);
 				}
 			}
 		}
@@ -139,7 +145,17 @@ public class SegradaSimplePageCachingFilter extends SimplePageCachingFilter {
 			}
 		}
 
+		// convert query string to md5
+		String qs = queryString.toString();
+		if (!qs.isEmpty())
+			try {
+				MessageDigest md = MessageDigest.getInstance("MD5");
+				qs = Hex.encodeHexString(md.digest(qs.getBytes("UTF-8")));
+			} catch (Exception e) {
+				// do nothing - just use query string as it is
+			}
+
 		// create key
-		return httpRequest.getMethod() + language + urlPart + queryString.toString();
+		return httpRequest.getMethod() + language + urlPart + qs;
 	}
 }
