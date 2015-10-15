@@ -1,0 +1,70 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" th:lang="${#locale.language}">
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<title th:text="#{list.node}">Node</title>
+	<div th:include="partials/common :: head" th:remove="tag"></div>
+</head>
+
+<body>
+<div th:replace="partials/common :: browser"></div>
+
+<div class="container">
+	<div class="sg-control-content sg-node" th:with="myurl=@{${baseUrl}?${baseUrl}:'/node'}">
+		<div class="pull-right">
+			<a href="#" th:href="@{/node/add}" th:title="#{add.node}" class="btn btn-success btn-sm sg-data-add"><i class="fa fa-plus"></i></a>
+		</div>
+
+		<h4 class="sg-control-header"><i class="fa fa-dot-circle-o"></i> <span th:text="#{Node}">List</span></h4>
+
+		<p th:text="${#messages.msg('pagination', paginationInfo.page, paginationInfo.pages)}">Pages</p>
+
+		<form method="get" action="#" th:action="${myurl}" class="sg-control-form" th:attr="data-target-id=${targetId}">
+			<table class="table table-hover table-striped table-condensed">
+				<tr>
+					<th class="text-center col-xs-1"><i class="fa fa-dot-circle-o"></i></th>
+					<th th:with="sortHelper=${@org.segrada.rendering.thymeleaf.util.TableSortPreprocessor@createSortLink(myurl, 'titleasc', 'titleasc', 'asc', filters)}"><a href="#" class="sg-control-set" th:href="${sortHelper.url}" th:utext="|#{field.title}${sortHelper.icon}|">Title</a></th>
+					<th class="col-xs-1" th:with="sortHelper=${@org.segrada.rendering.thymeleaf.util.TableSortPreprocessor@createSortLink(myurl, 'minJD', 'title', 'asc', filters)}"><a href="#" class="sg-control-set" th:href="${sortHelper.url}" th:utext="|#{field.fromEntryShort}${sortHelper.icon}|">Start</a></th>
+					<th class="col-xs-1" th:with="sortHelper=${@org.segrada.rendering.thymeleaf.util.TableSortPreprocessor@createSortLink(myurl, 'maxJD', 'title', 'asc', filters)}"><a href="#" class="sg-control-set" th:href="${sortHelper.url}" th:utext="|#{field.toEntry}${sortHelper.icon}|">Stop</a></th>
+					<th class="col-xs-1" th:text="#{field.tags}">Tags</th>
+					<th></th>
+				</tr>
+				<tr>
+					<td class="text-center"><a class="sg-control-set btn btn-sm btn-link" href="#" th:href="@{${myurl}(reset=1)}" th:title="#{reset}" th:attr="data-target-id=${targetId}"><i class="fa fa-eraser"></i></a></td>
+					<td><input type="text" class="form-control" th:value="${filters.search}" name="search" th:placeholder="#{field.filter_title}" title="#{field.filter_title}" /></td>
+					<td><input type="text" class="form-control" th:value="${filters.minEntry}" name="minEntry" title="Start" th:title="#{field.fromEntry}" /></td>
+					<td><input type="text" class="form-control" th:value="${filters.maxEntry}" name="maxEntry" title="Stop" th:title="#{field.toEntry}" /></td>
+					<td></td>
+					<td class="text-right"><button type="submit" class="btn btn-info btn-sm" th:text="#{SubmitFilter}">Filter</button></td>
+				</tr>
+				<tr th:each="entity : ${paginationInfo.entities}" th:attr="data-data-dblclick=@{/node/show/{uid}(uid=${entity.uid})}">
+					<td class="text-center">
+						<span class="sg-color-icon" th:style="'background-color: ' + ${entity.colorCode}" th:if="${entity.color}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+						<img src="#" th:src="@{/pictogram/file/{uid}(uid=${entity.pictogram.uid})}" th:alt-title="${entity.pictogram.title}" alt="" width="24" height="24" th:if="${entity.pictogram}"/>
+					</td>
+					<td th:text="${entity.title}">Title</td>
+					<td th:utext="${@org.segrada.util.FuzzyDateRenderer@renderOrEmpty(entity.minJD,entity.minEntry,entity.minEntryCalendar,entity.fuzzyMinFlags)}">Start</td>
+					<td th:utext="${@org.segrada.util.FuzzyDateRenderer@renderOrEmpty(entity.maxJD,entity.maxEntry,entity.maxEntryCalendar,entity.fuzzyMaxFlags)}">Stop</td>
+					<td class="sg-taglist-contract">
+						<div th:replace="partials/common :: taglist (tags=${entity.tags})"></div>
+					</td>
+					<td class="text-right">
+						<div class="sg-data-icon-bar" role="group" aria-label="Actions" th:strip-whitespace="shallow">
+							<a href="#" th:href="@{/node/graph/{uid}(uid=${entity.uid})}" type="button" class="sg-graph-update sg-data-icon" aria-label="Graph" th:title="#{AddToGraph}" th:attr="aria-label=#{AddToGraph}"><i class="fa fa-share"></i></a>
+							<a class="sg-data-icon sg-data-add" href="#" th:title="#{Show}" th:href="@{/node/show/{uid}(uid=${entity.uid})}"><i class="fa fa-eye"></i></a>
+							<a class="sg-data-icon sg-data-add" href="#" th:title="#{Edit}" th:href="@{/node/edit/{uid}(uid=${entity.uid})}"><i class="fa fa-pencil"></i></a>
+							<a class="sg-data-icon" href="#" th:title="#{Delete}" th:href="@{/node/delete/{uid}/0(uid=${entity.uid})}" th:attr="data-confirm=${#messages.msg('ReallyDelete', entity.title)}"><i class="fa fa-times-circle-o"></i></a>
+						</div>
+					</td>
+				</tr>
+			</table>
+
+			<div th:replace="partials/pagination :: pagination (paginationInfo=${paginationInfo},base=${baseUrl}?${baseUrl}:'/node',targetId=${targetId})"></div>
+		</form>
+	</div>
+</div>
+
+<div th:replace="partials/common :: footer"></div>
+</body>
+</html>

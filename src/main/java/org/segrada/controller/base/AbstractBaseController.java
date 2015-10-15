@@ -78,6 +78,7 @@ abstract public class AbstractBaseController<BEAN extends SegradaEntity> {
 	 * @param entriesPerPage entries per page
 	 * @param filters filter options
 	 * @param viewName name of view, e.g. "index"
+	 * @param model model to fill in (can be null to create new model object)
 	 * @return view with paginationInfo set
 	 */
 	protected Viewable handlePaginatedIndex(PaginatingRepositoryOrService<BEAN> service, int page, int entriesPerPage, Map<String, Object> filters, @Nullable String viewName, @Nullable Map<String, Object> model) {

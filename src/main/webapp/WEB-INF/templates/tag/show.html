@@ -18,7 +18,7 @@
 
 		<ul class="nav nav-tabs" role="tablist">
 			<li role="presentation" class="active"><a href="#tab1" th:href="${'#tab-1-' + entity.uid}" aria-controls="home" role="tab" data-toggle="tab" th:text="#{Hierarchy}">Hierarchy</a></li>
-			<li role="presentation"><a href="#node-ref" class="sg-replace-content" th:attr="data-url=@{/tag/by_tag/{uid}/node(uid=${entity.uid})}" th:href="${'#refs-by-tag-' + entity.uid + '-node'}" aria-controls="times" role="tab" data-toggle="tab" th:text="#{Nodes}">Nodes</a></li>
+			<li role="presentation"><a href="#node-ref" class="sg-replace-content" th:attr="data-url=@{/node/by_tag/{uid}(uid=${entity.uid})}" th:href="${'#refs-by-tag-' + entity.uid + '-node'}" aria-controls="times" role="tab" data-toggle="tab" th:text="#{Nodes}">Nodes</a></li>
 			<li role="presentation"><a href="#relation-ref" class="sg-replace-content" th:attr="data-url=@{/tag/by_tag/{uid}/relation(uid=${entity.uid})}" th:href="${'#refs-by-tag-' + entity.uid + '-relation'}" aria-controls="times" role="tab" data-toggle="tab" th:text="#{Relations}">Relations</a></li>
 			<li role="presentation"><a href="#source-ref" class="sg-replace-content" th:attr="data-url=@{/tag/by_tag/{uid}/source(uid=${entity.uid})}" th:href="${'#refs-by-tag-' + entity.uid + '-source'}" aria-controls="times" role="tab" data-toggle="tab" th:text="#{Sources}">Sources</a></li>
 			<li role="presentation"><a href="#file-ref" class="sg-replace-content" th:attr="data-url=@{/tag/by_tag/{uid}/file(uid=${entity.uid})}" th:href="${'#refs-by-tag-' + entity.uid + '-file'}" aria-controls="times" role="tab" data-toggle="tab" th:text="#{Files}">Files</a></li>

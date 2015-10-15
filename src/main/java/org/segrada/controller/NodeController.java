@@ -10,10 +10,13 @@ import org.segrada.controller.base.AbstractColoredController;
 import org.segrada.model.Node;
 import org.segrada.model.prototype.INode;
 import org.segrada.model.prototype.IRelation;
+import org.segrada.model.prototype.ITag;
 import org.segrada.rendering.json.JSONConverter;
 import org.segrada.service.NodeService;
 import org.segrada.service.RelationService;
+import org.segrada.service.TagService;
 
+import javax.annotation.Nullable;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -46,6 +49,9 @@ public class NodeController extends AbstractColoredController<INode> {
 	private RelationService relationService;
 
 	@Inject
+	private TagService tagService;
+
+	@Inject
 	private JSONConverter jsonConverter;
 
 	@Override
@@ -66,6 +72,59 @@ public class NodeController extends AbstractColoredController<INode> {
 			@QueryParam("sort") String sortBy, // titleasc, minJD, maxJD
 			@QueryParam("dir") String sortOrder // asc, desc, none
 	) {
+		return doPaginatedView(page, entriesPerPage, reset, search, minEntry, maxEntry, tags, sortBy, sortOrder, null, null, null);
+	}
+
+	@GET
+	@Path("/by_tag/{tagUid}")
+	@Produces(MediaType.TEXT_HTML)
+	public Viewable byTag(
+			@QueryParam("page") int page,
+			@QueryParam("entriesPerPage") int entriesPerPage,
+			@QueryParam("reset") int reset,
+			@QueryParam("search") String search,
+			@QueryParam("minEntry") String minEntry,
+			@QueryParam("maxEntry") String maxEntry,
+			@PathParam("tagUid") String tagUid,
+			@QueryParam("sort") String sortBy, // titleasc, minJD, maxJD
+			@QueryParam("dir") String sortOrder // asc, desc, none
+	) {
+		ITag tag = tagService.findById(tagService.convertUidToId(tagUid));
+		if (tag == null) return null; // TODO create error notice
+
+		// create tag list
+		List<String> tags = new ArrayList<>(1);
+		tags.add(tag.getTitle());
+
+		// create model
+		Map<String, Object> model = new HashMap<>();
+		model.put("tag", tag);
+		model.put("targetId", "#refs-by-tag-" + tag.getUid() + "-node");
+		model.put("baseUrl", "/node/by_tag/" + tag.getUid());
+
+		// reset keep
+		String[] resetKeep = new String[]{"tags"};
+
+		return doPaginatedView(page, entriesPerPage, reset, search, minEntry, maxEntry, tags, sortBy, sortOrder, "by_tag", model, resetKeep);
+	}
+
+	/**
+	 * create paginated view
+	 */
+	protected Viewable doPaginatedView(
+			int page,
+			int entriesPerPage,
+			int reset,
+			String search,
+			String minEntry,
+			String maxEntry,
+			List<String> tags,
+			String sortBy, // titleasc, minJD, maxJD
+			String sortOrder, // asc, desc, none
+			@Nullable String viewName,
+			@Nullable Map<String, Object> model,
+			@Nullable String[] resetKeep
+	) {
 		// filters:
 		Map<String, Object> filters = new HashMap<>();
 		if (reset > 0) filters.put("reset", true);
@@ -85,9 +144,12 @@ public class NodeController extends AbstractColoredController<INode> {
 			filters.put("sort", sortBy);
 			filters.put("dir", sortOrder);
 		}
+		// keep reset
+		if (resetKeep != null)
+			filters.put("resetKeep", resetKeep);
 
 		// handle pagination
-		return handlePaginatedIndex(service, page, entriesPerPage, filters);
+		return handlePaginatedIndex(service, page, entriesPerPage, filters, viewName, model);
 	}
 
 	@GET
