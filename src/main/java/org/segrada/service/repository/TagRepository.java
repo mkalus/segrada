@@ -138,4 +138,12 @@ public interface TagRepository extends CRUDRepository<ITag>, SearchTermRepositor
 	 * @return true if node is child of possibleParent
 	 */
 	boolean isChildOf(SegradaTaggable node, ITag possibleParent);
+
+	/**
+	 * Checks if nodeUid is tagged by tagUid
+	 * @param tagUid parent node uid
+	 * @param nodeUid possible child node uid
+	 * @return true if tag is connected to node
+	 */
+	boolean isTagConnectedTo(String tagUid, String nodeUid);
 }

@@ -134,6 +134,16 @@ public class TagService extends AbstractRepositoryService<ITag, TagRepository> i
 		repository.removeTag(tagId, childId);
 	}
 
+	/**
+	 * Checks if nodeUid is tagged by tagUid
+	 * @param tagUid parent node uid
+	 * @param nodeUid possible child node uid
+	 * @return true if tag is connected to node
+	 */
+	public boolean isTagConnectedTo(String tagUid, String nodeUid) {
+		return repository.isTagConnectedTo(tagUid, nodeUid);
+	}
+
 	@Override
 	public PaginationInfo<ITag> paginate(int page, int entriesPerPage, Map<String, Object> filters) {
 		return repository.paginate(page, entriesPerPage, filters);

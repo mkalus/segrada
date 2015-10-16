@@ -5,6 +5,7 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.segrada.model.prototype.INode;
 import org.segrada.model.prototype.IRelation;
+import org.segrada.model.prototype.ITag;
 
 import javax.servlet.ServletContext;
 import javax.ws.rs.core.Context;
@@ -94,6 +95,41 @@ public class JSONConverter {
 			color.put("color", relation.getColorCode());
 			o.put("color", color);
 		}
+
+		return o;
+	}
+
+	/**
+	 * convert tag to json object
+	 * @param tag to be converted
+	 * @return json object
+	 * @throws JSONException
+	 */
+	public JSONObject convertTagToJSON(ITag tag) throws JSONException {
+		JSONObject o = new JSONObject();
+
+		o.put("id", tag.getId());
+		o.put("label", tag.getTitle());
+		o.put("group", "tag");
+		o.put("url", getBase() + "tag/show/" + tag.getUid());
+
+		return o;
+	}
+
+	/**
+	 * return JSON object representing an edge between a tag and a target
+	 * @param tagId as source
+	 * @param targetId as target
+	 * @return json object
+	 * @throws JSONException
+	 */
+	public JSONObject createTagEntityConnection(String tagId, String targetId) throws JSONException {
+		JSONObject o = new JSONObject();
+
+		o.put("id", tagId + '-' + targetId);
+		o.put("group", "tagEdge");
+		o.put("from", tagId);
+		o.put("to", targetId);
 
 		return o;
 	}

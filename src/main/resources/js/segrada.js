@@ -963,6 +963,20 @@
 							code: '\uf192',
 							color: '#000000'
 						}
+					},
+					tag: {
+						shape: 'box',
+						color: {
+							border: '#5bc0de',
+							background: '#5bc0de',
+							highlight: {
+								background: '#2B7CE9'
+							}
+						},
+						font: {
+							color: '#ffffff',
+							size: 12
+						}
 					}
 				},
 				physics: {

@@ -10,6 +10,7 @@ import org.segrada.controller.base.AbstractBaseController;
 import org.segrada.model.Tag;
 import org.segrada.model.prototype.ITag;
 import org.segrada.model.prototype.SegradaTaggable;
+import org.segrada.rendering.json.JSONConverter;
 import org.segrada.service.TagService;
 import org.segrada.service.base.AbstractRepositoryService;
 import org.segrada.service.repository.orientdb.exception.CircularConnectionException;
@@ -45,6 +46,9 @@ import java.util.*;
 public class TagController extends AbstractBaseController<ITag> {
 	@Inject
 	private TagService service;
+
+	@Inject
+	private JSONConverter jsonConverter;
 
 	@Override
 	protected String getBasePath() {
@@ -260,5 +264,75 @@ public class TagController extends AbstractBaseController<ITag> {
 		}
 
 		return jsonArray.toString();
+	}
+
+	@POST
+	@Path("/graph/{uid}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String postGraph(@PathParam("uid") String uid, String jsonData) {
+		return graph(uid, jsonData);
+	}
+
+	@GET
+	@Path("/graph/{uid}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String getGraph(@PathParam("uid") String uid, @QueryParam("data") String jsonData) {
+		return graph(uid, jsonData);
+	}
+
+	/**
+	 * Handle graph creation
+	 * @param uid of node
+	 * @param jsonData optional json data (can be null)
+	 * @return json string to/add remove data
+	 */
+	protected String graph(String uid, String jsonData) {
+		try {
+			// get tag
+			ITag tag = service.findById(service.convertUidToId(uid));
+			if (tag == null)
+				throw new Exception("Tag " + uid + " not found.");
+
+			// get posted json data
+			JSONObject data;
+			if (jsonData != null && !jsonData.isEmpty()) data = new JSONObject(jsonData);
+			else data = null;
+
+			// create node list
+			JSONArray nodes = new JSONArray(1);
+			nodes.put(jsonConverter.convertTagToJSON(tag)); // add node
+
+			// add edges between nodes that are on the canvas already
+			JSONArray edges = new JSONArray();
+			//TODO: create a service method that does this query on a db level
+			if (data != null) {
+				JSONArray nodeIds = data.getJSONArray("nodes");
+				if (nodeIds != null && nodeIds.length() > 0) {
+					for (int i = 0; i < nodeIds.length(); i++) {
+						String nodeId = nodeIds.getString(i);
+						// connected? -> add edge
+						if (service.isTagConnectedTo(tag.getId(), nodeId))
+							edges.put(jsonConverter.createTagEntityConnection(tag.getId(), nodeId));
+						else if (service.isTagConnectedTo(nodeId, tag.getId())) // vice versa?
+							edges.put(jsonConverter.createTagEntityConnection(nodeId, tag.getId()));
+						//TODO: make this work on other elements, too, i.e. when a node or relation is added, check for tag links
+					}
+				}
+			}
+
+			// create response object
+			JSONObject response = new JSONObject();
+
+			response.put("nodes", nodes);
+			response.put("edges", edges);
+			//response.put("removeNodes", new JSONArray());
+			//response.put("removeEdges", new JSONArray());
+			response.put("highlightNode", tag.getId());
+			//response.put("highlightEdge", null);
+
+			return response.toString();
+		} catch (Exception e) {
+			return "{\"error\": \"" + JSONObject.quote(e.getMessage()) + "\"}";
+		}
 	}
 }

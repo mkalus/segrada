@@ -493,6 +493,23 @@ public class OrientDbTagRepository extends AbstractSegradaOrientDbRepository<ITa
 	}
 
 	@Override
+	public boolean isTagConnectedTo(String tagUid, String nodeUid) {
+		//TODO: Test!
+
+		// sanity assertion
+		if (tagUid == null || nodeUid == null) return false;
+		if (tagUid.equals(nodeUid)) return false;
+
+		// check shortest path
+		Iterable<ODocument> spath = db.command(new OSQLSynchQuery<>(
+				"select count(*) from IsTagOf where in = " + nodeUid + " and out = " + tagUid)).execute();
+		ODocument sp = spath.iterator().next();
+		Long count = sp.field("count");
+
+		return count==1;
+	}
+
+	@Override
 	public PaginationInfo<ITag> paginate(int page, int entriesPerPage, Map<String, Object> filters) {
 		// avoid NPEs
 		if (filters == null) filters = new HashMap<>();

@@ -303,6 +303,8 @@ public class RelationController extends AbstractColoredController<IRelation> {
 			JSONArray edges = new JSONArray();
 			edges.put(jsonConverter.convertRelationToJSON(relation)); // add relation
 
+			// TODO: check for tag links of this relation
+
 			// create response object
 			JSONObject response = new JSONObject();
 

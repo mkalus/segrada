@@ -46,6 +46,7 @@
 					</td>
 					<td class="text-right">
 						<div class="sg-data-icon-bar" role="group" aria-label="Actions" th:strip-whitespace="shallow">
+							<a href="#" th:href="@{/tag/graph/{uid}(uid=${entity.uid})}" type="button" class="sg-graph-update sg-data-icon" aria-label="Graph" th:title="#{AddToGraph}" th:attr="aria-label=#{AddToGraph}"><i class="fa fa-share"></i></a>
 							<a class="sg-data-icon sg-data-add" href="#" th:title="#{Show}" th:href="@{/tag/show/{uid}(uid=${entity.uid})}"><i class="fa fa-eye"></i></a>
 							<a class="sg-data-icon sg-data-add" href="#" th:title="#{Edit}" th:href="@{/tag/edit/{uid}(uid=${entity.uid})}"><i class="fa fa-pencil"></i></a>
 							<a class="sg-data-icon" href="#" th:title="#{Delete}" th:href="@{/tag/delete/{uid}/0(uid=${entity.uid})}" th:attr="data-confirm=${#messages.msg('ReallyDelete', entity.title)}"><i class="fa fa-times-circle-o"></i></a>

@@ -244,7 +244,7 @@ public class NodeController extends AbstractColoredController<INode> {
 	 * Handle graph creation
 	 * @param uid of node
 	 * @param jsonData optional json data (can be null)
-	 * @return
+	 * @return json string to/add remove data
 	 */
 	protected String graph(String uid, String jsonData) {
 		try {
@@ -294,6 +294,7 @@ public class NodeController extends AbstractColoredController<INode> {
 							}
 						}
 					}
+					// TODO: check for tag links of this node
 				}
 			}
 
