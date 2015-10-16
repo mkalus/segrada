@@ -73,7 +73,7 @@ public class NodeController extends AbstractColoredController<INode> {
 			@QueryParam("sort") String sortBy, // titleasc, minJD, maxJD
 			@QueryParam("dir") String sortOrder // asc, desc, none
 	) {
-		return doPaginatedView(page, entriesPerPage, reset, search, minEntry, maxEntry, tags, sortBy, sortOrder, null, null, null, null);
+		return getPaginatedView(page, entriesPerPage, reset, search, minEntry, maxEntry, tags, sortBy, sortOrder, null, null, null, null);
 	}
 
 	@GET
@@ -113,13 +113,13 @@ public class NodeController extends AbstractColoredController<INode> {
 		// reset keep
 		String[] resetKeep = new String[]{"tags"};
 
-		return doPaginatedView(page, entriesPerPage, reset, search, minEntry, maxEntry, tags, sortBy, sortOrder, "by_tag", model, resetKeep, filters);
+		return getPaginatedView(page, entriesPerPage, reset, search, minEntry, maxEntry, tags, sortBy, sortOrder, resetKeep, "by_tag", model, filters);
 	}
 
 	/**
 	 * create paginated view
 	 */
-	protected Viewable doPaginatedView(
+	protected Viewable getPaginatedView(
 			int page,
 			int entriesPerPage,
 			int reset,
@@ -129,9 +129,9 @@ public class NodeController extends AbstractColoredController<INode> {
 			List<String> tags,
 			String sortBy, // titleasc, minJD, maxJD
 			String sortOrder, // asc, desc, none
+			@Nullable String[] resetKeep,
 			@Nullable String viewName,
 			@Nullable Map<String, Object> model,
-			@Nullable String[] resetKeep,
 			@Nullable Map<String, Object> filters
 	) {
 		// filters:
