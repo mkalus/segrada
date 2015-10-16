@@ -51,6 +51,11 @@ public class SegradaSimplePageCachingFilter extends SimplePageCachingFilter {
 	 */
 	private static final Pattern addSessionToCacheKey = Pattern.compile("^/(node(/by_tag/[0-9\\-]+)?|source|file|relation|relation_type|pictogram|tag|color)$");
 
+	/**
+	 * pattern to filter out jsessionid-urls
+	 */
+	private static final Pattern jSessionFilter = Pattern.compile(";jsessionid=[a-zA-Z0-9]+$");
+
 	@Override
 	protected void doFilter(HttpServletRequest servletRequest, HttpServletResponse servletResponse, FilterChain filterChain) throws Exception {
 		// exclude?
@@ -91,6 +96,9 @@ public class SegradaSimplePageCachingFilter extends SimplePageCachingFilter {
 
 		// get url, context path stripped
 		String urlPart = httpRequest.getRequestURI().substring(httpRequest.getContextPath().length());
+
+		// filter out jsessionid URL addition, just in case - should not happen, because it is not clean, but nevertheless
+		urlPart = jSessionFilter.matcher(urlPart).replaceFirst("");
 
 		// query data map - later to be sorted into a key
 		SortedMap<String, String> queryData = new TreeMap<>();
