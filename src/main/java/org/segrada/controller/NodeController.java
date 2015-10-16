@@ -93,7 +93,7 @@ public class NodeController extends AbstractColoredController<INode> {
 	) {
 		// get tag
 		ITag tag = tagService.findById(tagService.convertUidToId(tagUid));
-		if (tag == null) return null; // TODO create error notice
+		if (tag == null) return new Viewable("error", "Tag not found");
 
 		// predefine filters
 		Map<String, Object> filters = new HashMap<>();
@@ -108,7 +108,7 @@ public class NodeController extends AbstractColoredController<INode> {
 		Map<String, Object> model = new HashMap<>();
 		model.put("tag", tag);
 		model.put("targetId", "#refs-by-tag-" + tag.getUid() + "-node");
-		model.put("baseUrl", "/node/by_tag/" + tag.getUid());
+		model.put("baseUrl", getBasePath() + "by_tag/" + tag.getUid());
 
 		// reset keep
 		String[] resetKeep = new String[]{"tags"};

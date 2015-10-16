@@ -200,18 +200,10 @@ public class OrientDbSourceRepository extends AbstractAnnotatedOrientDbRepositor
 		if (filters.containsKey("shortRef")) {
 			constraints.add("shortRef LIKE '%" + OrientStringEscape.escapeOrientSql((String) filters.get("shortRef")) + "%'");
 		}
-		// tags
-		if (filters.containsKey("tags")) {
-			StringBuilder sb = new StringBuilder(" in('IsTagOf').title IN [ ");
-			boolean first = true;
-			for (String tag : (String[]) filters.get("tags")) {
-				if (first) first = false;
-				else sb.append(",");
-				sb.append("'").append(OrientStringEscape.escapeOrientSql(tag)).append("'");
-			}
 
-			constraints.add(sb.append("]").toString());
-		}
+		// tags
+		String tagSQL = buildTagFilterSQL((String[]) filters.get("tags"), filters.containsKey("withSubTags") && (boolean) filters.get("withSubTags"), false);
+		if (!tagSQL.isEmpty()) constraints.add(tagSQL);
 
 		// sorting
 		String customOrder = null;

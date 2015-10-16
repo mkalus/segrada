@@ -368,17 +368,9 @@ public class OrientDbRelationRepository extends AbstractCoreOrientDbRepository<I
 
 
 		// tags
-		if (filters.containsKey("tags")) {
-			StringBuilder sb = new StringBuilder(" in('IsTagOf').title IN [ ");
-			boolean first = true;
-			for (String tag : (String[]) filters.get("tags")) {
-				if (first) first = false;
-				else sb.append(",");
-				sb.append("'").append(OrientStringEscape.escapeOrientSql(tag)).append("'");
-			}
+		String tagSQL = buildTagFilterSQL((String[]) filters.get("tags"), filters.containsKey("withSubTags") && (boolean) filters.get("withSubTags"), false);
+		if (!tagSQL.isEmpty()) constraints.add(tagSQL);
 
-			constraints.add(sb.append("]").toString());
-		}
 		// location type uid
 		if (filters.containsKey("relationTypeUid")) {
 			// convert to id

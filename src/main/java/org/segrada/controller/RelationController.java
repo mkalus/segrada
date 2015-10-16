@@ -8,14 +8,18 @@ import org.codehaus.jettison.json.JSONObject;
 import org.segrada.controller.base.AbstractColoredController;
 import org.segrada.model.Relation;
 import org.segrada.model.prototype.IRelation;
+import org.segrada.model.prototype.ITag;
 import org.segrada.rendering.json.JSONConverter;
 import org.segrada.service.NodeService;
 import org.segrada.service.RelationService;
 import org.segrada.service.RelationTypeService;
+import org.segrada.service.TagService;
 
+import javax.annotation.Nullable;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,6 +54,9 @@ public class RelationController extends AbstractColoredController<IRelation> {
 	private NodeService nodeService;
 
 	@Inject
+	private TagService tagService;
+
+	@Inject
 	private JSONConverter jsonConverter;
 
 	@Override
@@ -70,10 +77,71 @@ public class RelationController extends AbstractColoredController<IRelation> {
 			@QueryParam("sort") String sortBy, // minJD, maxJD
 			@QueryParam("dir") String sortOrder // asc, desc, none
 	) {
-		// filters:
+		return getPaginatedView(page, entriesPerPage, reset, search, minEntry, maxEntry, tags, sortBy, sortOrder, null, null, null, null);
+	}
+
+	@GET
+	@Path("/by_tag/{tagUid}")
+	@Produces(MediaType.TEXT_HTML)
+	public Viewable byTag(
+			@QueryParam("page") int page,
+			@QueryParam("entriesPerPage") int entriesPerPage,
+			@QueryParam("reset") int reset,
+			@QueryParam("search") String search,
+			@QueryParam("minEntry") String minEntry,
+			@QueryParam("maxEntry") String maxEntry,
+			@PathParam("tagUid") String tagUid,
+			@QueryParam("withSubTags") String withSubTags,
+			@QueryParam("sort") String sortBy, // titleasc, minJD, maxJD
+			@QueryParam("dir") String sortOrder // asc, desc, none
+	) {
+		// get tag
+		ITag tag = tagService.findById(tagService.convertUidToId(tagUid));
+		if (tag == null) return new Viewable("error", "Tag not found");
+
+		// predefine filters
 		Map<String, Object> filters = new HashMap<>();
+		filters.put("key", "Relation/by_tag/" + tagUid + "Service"); // has to be named like this in order to make cache work properly
+		if (withSubTags != null) filters.put("withSubTags", withSubTags.equals("1"));
+
+		// tags to contain
+		List<String> tags = new ArrayList<>(1);
+		tags.add(tag.getTitle());
+
+		// create model
+		Map<String, Object> model = new HashMap<>();
+		model.put("tag", tag);
+		model.put("targetId", "#refs-by-tag-" + tag.getUid() + "-relation");
+		model.put("baseUrl", getBasePath() + "by_tag/" + tag.getUid());
+
+		// reset keep
+		String[] resetKeep = new String[]{"tags"};
+
+		return getPaginatedView(page, entriesPerPage, reset, search, minEntry, maxEntry, tags, sortBy, sortOrder, resetKeep, "by_tag", model, filters);
+	}
+
+	/**
+	 * create paginated view
+	 */
+	protected Viewable getPaginatedView(
+			int page,
+			int entriesPerPage,
+			int reset,
+			String search,
+			String minEntry,
+			String maxEntry,
+			List<String> tags,
+			String sortBy, // titleasc, minJD, maxJD
+			String sortOrder, // asc, desc, none
+			@Nullable String[] resetKeep,
+			@Nullable String viewName,
+			@Nullable Map<String, Object> model,
+			@Nullable Map<String, Object> filters
+	) {
+		// filters:
+		if (filters == null) filters = new HashMap<>();
 		if (reset > 0) filters.put("reset", true);
-		//if (search != null) filters.put("search", search);
+		if (search != null) filters.put("search", search);
 		if (minEntry != null) filters.put("minEntry", minEntry);
 		if (maxEntry != null) filters.put("maxEntry", maxEntry);
 		if (tags != null) {
@@ -89,9 +157,12 @@ public class RelationController extends AbstractColoredController<IRelation> {
 			filters.put("sort", sortBy);
 			filters.put("dir", sortOrder);
 		}
+		// keep reset
+		if (resetKeep != null)
+			filters.put("resetKeep", resetKeep);
 
 		// handle pagination
-		return handlePaginatedIndex(service, page, entriesPerPage, filters);
+		return handlePaginatedIndex(service, page, entriesPerPage, filters, viewName, model);
 	}
 
 	@GET

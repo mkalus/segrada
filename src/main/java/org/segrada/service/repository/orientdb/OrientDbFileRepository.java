@@ -285,18 +285,10 @@ public class OrientDbFileRepository extends AbstractAnnotatedOrientDbRepository<
 		if (filters.get("search") != null) {
 			constraints.add(createSearchTermFullText((String) filters.get("search")));
 		}
-		// tags
-		if (filters.get("tags") != null) {
-			StringBuilder sb = new StringBuilder(" in('IsTagOf').title IN [ ");
-			boolean first = true;
-			for (String tag : (String[]) filters.get("tags")) {
-				if (first) first = false;
-				else sb.append(",");
-				sb.append("'").append(OrientStringEscape.escapeOrientSql(tag)).append("'");
-			}
 
-			constraints.add(sb.append("]").toString());
-		}
+		// tags
+		String tagSQL = buildTagFilterSQL((String[]) filters.get("tags"), filters.containsKey("withSubTags") && (boolean) filters.get("withSubTags"), false);
+		if (!tagSQL.isEmpty()) constraints.add(tagSQL);
 
 		// sorting
 		String customOrder = null;

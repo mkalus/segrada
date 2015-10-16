@@ -49,7 +49,7 @@ public class SegradaSimplePageCachingFilter extends SimplePageCachingFilter {
 	/**
 	 * url parts that add a session key to the cache key in order to function properly
 	 */
-	private static final Pattern addSessionToCacheKey = Pattern.compile("^/(node(/by_tag/[0-9\\-]+)?|source|file|relation|relation_type|pictogram|tag|color)$");
+	private static final Pattern addSessionToCacheKey = Pattern.compile("^/((node|source|file|relation)(/by_tag/[0-9\\-]+)?|relation_type|pictogram|tag|color)$");
 
 	/**
 	 * pattern to filter out jsessionid-urls

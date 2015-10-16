@@ -2,6 +2,7 @@ package org.segrada.service.repository.orientdb.base;
 
 import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.orientechnologies.orient.core.sql.OCommandSQL;
+import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
 import org.segrada.model.prototype.*;
 import org.segrada.service.repository.CommentRepository;
 import org.segrada.service.repository.FileRepository;
@@ -14,6 +15,7 @@ import org.segrada.service.repository.orientdb.OrientDbTagRepository;
 import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory;
 import org.segrada.service.util.AbstractLazyLoadedObject;
 import org.segrada.service.util.PaginationInfo;
+import org.segrada.util.OrientStringEscape;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -176,5 +178,61 @@ abstract public class AbstractAnnotatedOrientDbRepository<T extends SegradaAnnot
 			return true;
 		}
 		return false;
+	}
+
+	/**
+	 * create a tag filter SQL string to add to queries for tags
+	 * @param tags list of tag titles
+	 * @param withSubTags include subtags as well?
+	 * @param in direction in instead of out (default)
+	 * @return SQL string part
+	 */
+	protected String buildTagFilterSQL(String[] tags, boolean withSubTags, boolean in) {
+		//TODO test!
+
+		// tags
+		if (tags != null && tags.length > 0) {
+			// create search for titles
+			StringBuilder sb = new StringBuilder("title IN [ ");
+			boolean first = true;
+			for (String tag : tags) {
+				if (first) first = false;
+				else sb.append(",");
+				sb.append("'").append(OrientStringEscape.escapeOrientSql(tag)).append("'");
+			}
+			sb.append("]");
+
+			// with sub tags?
+			if (withSubTags) {
+				//TODO: add test
+				// keeps tag ids
+				Set<String> subTagIds = new HashSet<>();
+
+				// get ids of tag
+				OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>("select @rid from Tag where " + sb.toString());
+				List<ODocument> tagIdsDocs = db.command(query).execute();
+				for (ODocument tagDoc : tagIdsDocs) {
+					// traverse sub tags
+					OSQLSynchQuery<ODocument> query2 = new OSQLSynchQuery<>("SELECT @rid FROM (traverse " + (in?"in":"out") + "('IsTagOf') from " + tagDoc.field("rid", String.class) + " MAXDEPTH 1 WHILE @class = 'Tag') WHERE @class = 'Tag'");
+					List<ODocument> subTagDocs = db.command(query2).execute();
+					for (ODocument subTagDoc : subTagDocs) // add ids to set
+						subTagIds.add(subTagDoc.field("rid", String.class));
+				}
+
+				sb = new StringBuilder(" in('IsTagOf') IN [ ");
+				first = true;
+				for (String tagId : subTagIds) {
+					if (first) first = false;
+					else sb.append(",");
+					sb.append(tagId);
+				}
+
+				return sb.append("] ").toString();
+			} else { //"normal" search
+				return " in('IsTagOf')." + sb.toString();
+			}
+		}
+
+		return "";
 	}
 }

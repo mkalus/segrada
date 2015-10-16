@@ -223,6 +223,12 @@
 			}
 		});
 
+		// auto submit form element
+		$('.sg-submit-form', part).change(function() {
+			// find form
+			$(this).closest("form").submit();
+		});
+
 		// *******************************************************
 		// add content to control area
 		$('.sg-control-set', part).click(function (e) {

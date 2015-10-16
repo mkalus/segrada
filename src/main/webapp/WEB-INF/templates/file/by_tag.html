@@ -1,0 +1,70 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" th:lang="${#locale.language}">
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<title th:text="#{list.file}">File</title>
+	<div th:include="partials/common :: head" th:remove="tag"></div>
+</head>
+
+<body>
+<div th:replace="partials/common :: browser"></div>
+
+<div class="container">
+	<div class="sg-control-content sg-file" th:with="myurl=@{${baseUrl}?${baseUrl}:'/file'}">
+		<h4 class="sg-control-header"><i class="fa fa-file"></i> <span th:text="#{File}">List</span></h4>
+
+		<form method="get" action="#" th:action="${myurl}" class="sg-control-form" th:attr="data-target-id=${targetId}">
+			<p class="pull-right">
+				<label class="sg-subtag-label"><span th:text="#{field.subTags}">Include sobordinate tags:</span> <input type="checkbox" name="withSubTags" value="1" class="sg-submit-form" th:checked="${filters.withSubTags}" /></label>
+				<input type="hidden" name="withSubTags" value="0" class="hidden" />
+			</p>
+
+			<p th:text="${#messages.msg(paginationInfo.key(), paginationInfo.page, paginationInfo.pages, paginationInfo.total)}">Pages</p>
+
+			<table class="table table-hover table-striped table-condensed">
+				<tr>
+					<th class="text-center"><i class="fa fs-file"></i></th>
+					<th></th>
+					<th th:with="sortHelper=${@org.segrada.rendering.thymeleaf.util.TableSortPreprocessor@createSortLink(myurl, 'title', 'title', 'asc', filters)}"><a href="#" class="sg-control-set" th:href="${sortHelper.url}" th:utext="|#{field.title}${sortHelper.icon}|">Title</a></th>
+					<th class="col-xs-1" th:text="#{field.tags}">Tags</th>
+					<th></th>
+				</tr>
+				<tr>
+					<td class="text-center"><a class="sg-control-set btn btn-sm btn-link" href="#" th:href="@{${myurl}(reset=1)}" th:title="#{reset}" th:attr="data-target-id=${targetId}"><i class="fa fa-eraser"></i></a></td>
+					<td></td>
+					<td><input type="text" class="form-control" th:value="${filters.search}" name="search" th:placeholder="#{field.filter_title}" title="#{field.filter_title}" /></td>
+					<td></td>
+					<td class="text-right"><button type="submit" class="btn btn-info btn-sm" th:text="#{SubmitFilter}">Filter</button></td>
+				</tr>
+				<tr th:each="entity : ${paginationInfo.entities}" th:attr="data-data-dblclick=@{/file/show/{uid}(uid=${entity.uid})}">
+					<td class="text-center">
+						<span class="sg-color-icon" th:style="'background-color: ' + ${entity.colorCode}" th:if="${entity.color}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+						<img src="#" th:src="@{/pictogram/file/{uid}(uid=${entity.pictogram.uid})}" th:alt-title="${entity.pictogram.title}" alt="" width="24" height="24" th:if="${entity.pictogram}"/>
+					</td>
+					<td th:if="${entity.thumbFileIdentifier}"><img src="#" th:src="@{/file/thumbnail/{uid}(uid=${entity.uid})}" th:alt-title="${entity.title}" alt="" width="48" height="48" /></td>
+					<td th:unless="${entity.thumbFileIdentifier}" th:with="fileType=${entity.fileType}">
+						<span th:unless="${#strings.isEmpty(fileType)}" class="fa fa-file-o fa-2x" th:class="${'fa fa-file-' + entity.fileType + '-o fa-2x'}"></span><span th:if="${#strings.isEmpty(fileType)}" class="fa fa-file-o fa-2x"></span>
+					</td>
+					<td th:text="${entity.title}">Title</td>
+					<td class="sg-taglist-contract">
+						<div th:replace="partials/common :: taglist (tags=${entity.tags})"></div>
+					</td>
+					<td class="text-right">
+						<div class="sg-data-icon-bar" role="group" aria-label="Actions" th:strip-whitespace="shallow">
+							<a class="sg-data-icon sg-data-add" href="#" th:title="#{Show}" th:href="@{/file/show/{uid}(uid=${entity.uid})}"><i class="fa fa-eye"></i></a>
+							<a class="sg-data-icon sg-data-add" href="#" th:title="#{Edit}" th:href="@{/file/edit/{uid}(uid=${entity.uid})}"><i class="fa fa-pencil"></i></a>
+							<a class="sg-data-icon" href="#" th:title="#{Delete}" th:href="@{/file/delete/{uid}/0(uid=${entity.uid})}" th:attr="data-confirm=${#messages.msg('ReallyDelete', entity.title)}"><i class="fa fa-times-circle-o"></i></a>
+						</div>
+					</td>
+				</tr>
+			</table>
+		</form>
+
+		<div th:replace="partials/pagination :: pagination (paginationInfo=${paginationInfo},base='file')"></div>
+	</div>
+</div>
+
+<div th:replace="partials/common :: footer"></div>
+</body>
+</html>

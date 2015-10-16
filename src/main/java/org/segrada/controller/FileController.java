@@ -11,14 +11,13 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.segrada.controller.base.AbstractColoredController;
 import org.segrada.model.File;
-import org.segrada.model.prototype.IFile;
-import org.segrada.model.prototype.IPictogram;
-import org.segrada.model.prototype.SegradaAnnotatedEntity;
-import org.segrada.model.prototype.SegradaEntity;
+import org.segrada.model.prototype.*;
 import org.segrada.service.FileService;
 import org.segrada.service.PictogramService;
+import org.segrada.service.TagService;
 import org.segrada.service.base.AbstractRepositoryService;
 
+import javax.annotation.Nullable;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -56,6 +55,9 @@ public class FileController extends AbstractColoredController<IFile> {
 	private PictogramService pictogramService;
 
 	@Inject
+	private TagService tagService;
+
+	@Inject
 	private Map<String, AbstractRepositoryService> annotatedServices;
 
 	@Override
@@ -70,14 +72,79 @@ public class FileController extends AbstractColoredController<IFile> {
 			@QueryParam("entriesPerPage") int entriesPerPage,
 			@QueryParam("reset") int reset,
 			@QueryParam("search") String search,
+			@QueryParam("minEntry") String minEntry,
+			@QueryParam("maxEntry") String maxEntry,
 			@QueryParam("tags") List<String> tags,
 			@QueryParam("sort") String sortBy, // titleasc
 			@QueryParam("dir") String sortOrder // asc, desc, none
 	) {
-		// filters:
+		return getPaginatedView(page, entriesPerPage, reset, search, minEntry, maxEntry, tags, sortBy, sortOrder, null, null, null, null);
+	}
+
+	@GET
+	@Path("/by_tag/{tagUid}")
+	@Produces(MediaType.TEXT_HTML)
+	public Viewable byTag(
+			@QueryParam("page") int page,
+			@QueryParam("entriesPerPage") int entriesPerPage,
+			@QueryParam("reset") int reset,
+			@QueryParam("search") String search,
+			@QueryParam("minEntry") String minEntry,
+			@QueryParam("maxEntry") String maxEntry,
+			@PathParam("tagUid") String tagUid,
+			@QueryParam("withSubTags") String withSubTags,
+			@QueryParam("sort") String sortBy, // titleasc, minJD, maxJD
+			@QueryParam("dir") String sortOrder // asc, desc, none
+	) {
+		// get tag
+		ITag tag = tagService.findById(tagService.convertUidToId(tagUid));
+		if (tag == null) return new Viewable("error", "Tag not found");
+
+		// predefine filters
 		Map<String, Object> filters = new HashMap<>();
+		filters.put("key", "File/by_tag/" + tagUid + "Service"); // has to be named like this in order to make cache work properly
+		if (withSubTags != null) filters.put("withSubTags", withSubTags.equals("1"));
+
+		// tags to contain
+		List<String> tags = new ArrayList<>(1);
+		tags.add(tag.getTitle());
+
+		// create model
+		Map<String, Object> model = new HashMap<>();
+		model.put("tag", tag);
+		model.put("targetId", "#refs-by-tag-" + tag.getUid() + "-file");
+		model.put("baseUrl", getBasePath() + "by_tag/" + tag.getUid());
+
+		// reset keep
+		String[] resetKeep = new String[]{"tags"};
+
+		return getPaginatedView(page, entriesPerPage, reset, search, minEntry, maxEntry, tags, sortBy, sortOrder, resetKeep, "by_tag", model, filters);
+	}
+
+	/**
+	 * create paginated view
+	 */
+	protected Viewable getPaginatedView(
+			int page,
+			int entriesPerPage,
+			int reset,
+			String search,
+			String minEntry,
+			String maxEntry,
+			List<String> tags,
+			String sortBy, // titleasc, minJD, maxJD
+			String sortOrder, // asc, desc, none
+			@Nullable String[] resetKeep,
+			@Nullable String viewName,
+			@Nullable Map<String, Object> model,
+			@Nullable Map<String, Object> filters
+	) {
+		// filters:
+		if (filters == null) filters = new HashMap<>();
 		if (reset > 0) filters.put("reset", true);
 		if (search != null) filters.put("search", search);
+		if (minEntry != null) filters.put("minEntry", minEntry);
+		if (maxEntry != null) filters.put("maxEntry", maxEntry);
 		if (tags != null) {
 			if (tags.size() == 0 && search != null) filters.put("tags", null);
 			else if (tags.size() > 0) {
@@ -91,8 +158,12 @@ public class FileController extends AbstractColoredController<IFile> {
 			filters.put("sort", sortBy);
 			filters.put("dir", sortOrder);
 		}
+		// keep reset
+		if (resetKeep != null)
+			filters.put("resetKeep", resetKeep);
 
-		return handlePaginatedIndex(service, page, entriesPerPage, filters);
+		// handle pagination
+		return handlePaginatedIndex(service, page, entriesPerPage, filters, viewName, model);
 	}
 
 	/**
