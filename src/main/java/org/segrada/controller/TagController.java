@@ -84,56 +84,6 @@ public class TagController extends AbstractBaseController<ITag> {
 		return handlePaginatedIndex(service, page, entriesPerPage, filters);
 	}
 
-	/**
-	 * show entities by tag reference
-	 * @param tagUid uid of tag
-	 * @param referenceModel contain hits by this
-	 * @param errors json encoded errors
-	 * @return view
-	 */
-	@GET
-	@Path("/by_tag/{uid}/{model}")
-	@Produces(MediaType.TEXT_HTML)
-	public Viewable byFile(
-			@PathParam("uid") String tagUid,
-			@PathParam("model") String referenceModel,
-			@QueryParam("errors") String errors // json object of errors
-	) {
-		ITag tag = service.findById(service.convertUidToId(tagUid));
-
-		// null, if empty
-		if (referenceModel != null && referenceModel.isEmpty()) referenceModel = null;
-		String modelName = referenceModel.substring(0, 1).toUpperCase() + referenceModel.substring(1);
-
-		List<SegradaTaggable> entities = service.findByTag(tag.getId(), false, new String[] { modelName });
-
-		// create model map
-		Map<String, Object> model = new HashMap<>();
-		model.put("uid", tagUid);
-		model.put("model", referenceModel);
-		model.put("modelName", modelName);
-		model.put("tag", tag);
-		model.put("entities", entities);
-		model.put("targetId", "#refs-by-tag-" + tagUid + "-" + referenceModel);
-
-		if (errors != null) {
-			try {
-				JSONObject errorData = new JSONObject(errors);
-				Map<String, String> errorMessages = new HashMap<>();
-				Iterator it = errorData.keys();
-				while (it.hasNext()) {
-					String key = (String) it.next();
-					errorMessages.put(key, errorData.getString(key));
-				}
-				model.put("errors", errorMessages);
-			} catch (Exception e) {
-				//TODO: log
-			}
-		}
-
-		return new Viewable("tag/by_tag", model);
-	}
-
 	@GET
 	@Path("/show/{uid}")
 	@Produces(MediaType.TEXT_HTML)
