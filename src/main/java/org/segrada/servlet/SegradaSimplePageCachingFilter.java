@@ -98,7 +98,7 @@ public class SegradaSimplePageCachingFilter extends SimplePageCachingFilter {
 		String urlPart = httpRequest.getRequestURI().substring(httpRequest.getContextPath().length());
 
 		// filter out jsessionid URL addition, just in case - should not happen, because it is not clean, but nevertheless
-		urlPart = jSessionFilter.matcher(urlPart).replaceFirst("");
+		urlPart = jSessionFilter.matcher(urlPart).replaceFirst(""); //TODO: might be faster to use lastIndexOf and substr to replace this instead of regex
 
 		// query data map - later to be sorted into a key
 		SortedMap<String, String> queryData = new TreeMap<>();
@@ -151,13 +151,14 @@ public class SegradaSimplePageCachingFilter extends SimplePageCachingFilter {
 
 		// convert query string to md5
 		String qs = queryString.toString();
-		/*if (!qs.isEmpty())
+		// do we actually need to convert to md5? qs are not so long in general
+		if (!qs.isEmpty())
 			try {
 				MessageDigest md = MessageDigest.getInstance("MD5");
 				qs = Hex.encodeHexString(md.digest(qs.getBytes("UTF-8")));
 			} catch (Exception e) {
 				// do nothing - just use query string as it is
-			}*/
+			}
 
 		// create key
 		return httpRequest.getMethod() + language + urlPart + qs;
