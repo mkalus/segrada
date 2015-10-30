@@ -91,8 +91,6 @@ public class SegradaUpdateChecker {
 							int timePassed = now - lastCheck;
 							if (timePassed > 24*60*60) updateNeeded = true;
 							else logger.info("No update check needed. Last check " + timePassed + " seconds ago.");
-
-							updateNeeded = true; // TODO: delete
 						} catch (Throwable e) {
 							logger.warn("UpdateThread could not determine correct lastUpdateCheck although Config class exists in database", e);
 							updateNeeded = true;
@@ -120,7 +118,7 @@ public class SegradaUpdateChecker {
 									logger.info("UPDATE NEEDED: My version is " + currentVersion + ", server said newest is " + version);
 								versionUpdate = version;
 							} else {
-								logger.info("No update needed.");
+								logger.info("No update needed (version is " + currentVersion + ").");
 								versionUpdate = "";
 							}
 
