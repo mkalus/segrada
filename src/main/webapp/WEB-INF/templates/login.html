@@ -12,9 +12,9 @@
 <div th:replace="partials/common :: browser"></div>
 
 <div class="container">
-	<div class="alert alert-danger" role="alert" th:if="${error}" th:text="#{${error}}">Login failed</div>
-
 	<form class="form-signin" method="post" action="/login" th:action="@{/login}">
+		<div class="alert alert-danger" role="alert" th:if="${error}" th:text="#{${error}}">Login failed</div>
+
 		<h2 class="form-signin-heading" th:text="#{Login.title}">Please sign in</h2>
 		<label for="inputLogin" class="sr-only" th:text="#{Login.login}">Login</label>
 		<input type="text" id="inputLogin" name="login" class="form-control" placeholder="Login" th:placeholder="#{Login.login}" th:value="${login}" required="required" autofocus="autofocus" />
@@ -26,6 +26,8 @@
 			</label>
 		</div>*/-->
 		<button class="btn btn-lg btn-primary btn-block" type="submit" th:text="#{Login.btn}">Sign in</button>
+
+		<div class="alert alert-info sg-margin-top" role="alert" th:if="${defaultAdminActive}" th:utext="#{Login.note}"><strong>Note:</strong> You can login with the following credentials:<br />Login: <code>admin</code><br />Password: <code>password</code></div>
 	</form>
 </div>
 

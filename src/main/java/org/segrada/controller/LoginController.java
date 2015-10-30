@@ -66,7 +66,15 @@ public class LoginController {
 				return Response.ok(new Viewable("error", e.getMessage())).build();
 			}
 
-		return Response.ok(new Viewable("login")).build();
+		// is there a login named admin?
+		IUser user = service.findByLogin("admin");
+		boolean defaultAdminActive = user != null && passwordEncoder.matches("password", user.getPassword());
+
+		// create model map
+		Map<String, Object> model = new HashMap<>();
+		model.put("defaultAdminActive", defaultAdminActive);
+
+		return Response.ok(new Viewable("login", model)).build();
 	}
 
 	@POST
