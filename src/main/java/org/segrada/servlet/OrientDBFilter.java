@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.regex.Pattern;
 
@@ -100,7 +101,7 @@ public class OrientDBFilter implements Filter {
 	@Override
 	public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
 		// exclude?
-		String url = ((Request) servletRequest).getRequestURL().toString();
+		String url = ((Request) servletRequest).getPathInfo().toString();
 
 		if (logger.isTraceEnabled())
 			logger.trace("Filtering " + url);
@@ -119,7 +120,7 @@ public class OrientDBFilter implements Filter {
 
 		// check if an identity has been set
 		Identity identity = injector.getInstance(Identity.class);
-		if (identity.getName()==null) {
+		if (identity.getName()==null && !url.equals("/login")) {
 			// no identity set -> how do we authentificate the user?
 			ApplicationSettings applicationSettings = injector.getInstance(ApplicationSettings.class);
 			String enableLogin = applicationSettings.getSetting("enableLogin");
@@ -145,7 +146,8 @@ public class OrientDBFilter implements Filter {
 					logger.info("Autologin as " + user.getName());
 				}
 			} else {
-				//TODO
+				HttpServletResponse httpServletResponse = (HttpServletResponse) servletResponse;
+				httpServletResponse.sendRedirect("/login");
 			}
 		}
 

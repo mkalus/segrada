@@ -5,6 +5,7 @@ import com.google.inject.servlet.RequestScoped;
 import com.sun.jersey.api.view.Viewable;
 import org.segrada.service.ConfigService;
 import org.segrada.servlet.SegradaUpdateChecker;
+import org.segrada.session.ApplicationSettings;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -36,6 +37,9 @@ public class MainController {
 	@Inject
 	private ConfigService service;
 
+	@Inject
+	private ApplicationSettings applicationSettings;
+
 	@GET
 	@Produces(MediaType.TEXT_HTML)
 	public Viewable index() {
@@ -43,10 +47,15 @@ public class MainController {
 		String versionUpdate = service.getValue("versionUpdate");
 		if (versionUpdate == null) versionUpdate = "";
 
+		// test application if login is allowed
+		String enableLogin = applicationSettings.getSetting("enableLogin");
+		boolean showLogout = enableLogin != null && !enableLogin.isEmpty() && enableLogin.equalsIgnoreCase("true");
+
 		// create model map
 		Map<String, Object> model = new HashMap<>();
 		model.put("version", SegradaUpdateChecker.currentVersion);
 		model.put("versionUpdate", versionUpdate);
+		model.put("showLogout", showLogout);
 
 		return new Viewable("home", model);
 	}

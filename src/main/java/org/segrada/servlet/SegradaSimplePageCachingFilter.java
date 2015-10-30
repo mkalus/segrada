@@ -1,10 +1,12 @@
 package org.segrada.servlet;
 
+import com.google.inject.Injector;
 import com.google.inject.Singleton;
 import net.sf.ehcache.constructs.web.AlreadyCommittedException;
 import net.sf.ehcache.constructs.web.PageInfo;
 import net.sf.ehcache.constructs.web.filter.SimplePageCachingFilter;
 import org.apache.commons.codec.binary.Hex;
+import org.segrada.session.Identity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,24 +60,40 @@ public class SegradaSimplePageCachingFilter extends SimplePageCachingFilter {
 	 */
 	private static final Pattern jSessionFilter = Pattern.compile(";jsessionid=[a-zA-Z0-9]+$");
 
+	/**
+	 * reference to injector
+	 */
+	private static Injector injector;
+
+	/**
+	 * set the injector - called by Bootstrap
+	 */
+	public static void setInjector(Injector injector)
+	{
+		SegradaSimplePageCachingFilter.injector = injector;
+	}
+
 	@Override
 	protected void doFilter(HttpServletRequest servletRequest, HttpServletResponse servletResponse, FilterChain filterChain) throws Exception {
 		// exclude?
 		String url = servletRequest.getRequestURL().toString();
 
-		// only get request and matched urls
-		if (servletRequest.getMethod().equals("POST") || excludePatterns.matcher(url).find()) {
+		// session set?
+		Identity identity = injector.getInstance(Identity.class);
+		boolean loggedIn = identity.getName()!=null;
+
+		// only get request and matched urls when logged in and not on POST methods
+		if (!loggedIn || servletRequest.getMethod().equals("POST") || excludePatterns.matcher(url).find()) {
 			if (logger.isDebugEnabled())
 				logger.debug("Not caching url " + url);
 
 			// build page info and return gzipped if needed
 			PageInfo pageInfo = this.buildPage(servletRequest, servletResponse, filterChain);
 			if(pageInfo.isOk()) {
-				if(servletResponse.isCommitted()) {
-					throw new AlreadyCommittedException("Response already committed after doing buildPage but before writing response from PageInfo.");
+				if(!servletResponse.isCommitted()) {
+					//throw new AlreadyCommittedException("Response already committed after doing buildPage but before writing response from PageInfo.");
+					this.writeResponse(servletRequest, servletResponse, pageInfo);
 				}
-
-				this.writeResponse(servletRequest, servletResponse, pageInfo);
 			}
 		} else {
 			// included cached filter chain loaded
@@ -161,6 +179,11 @@ public class SegradaSimplePageCachingFilter extends SimplePageCachingFilter {
 			} catch (Exception e) {
 				// do nothing - just use query string as it is
 			}
+
+		// get session id
+		//Identity identity = injector.getInstance(Identity.class);
+		//identity.getId()
+		//TODO: add this later after we have added ACLs - not all users see the same stuff
 
 		// create key
 		return httpRequest.getMethod() + language + urlPart + qs;

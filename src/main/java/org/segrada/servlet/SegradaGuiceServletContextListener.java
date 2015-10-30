@@ -61,6 +61,7 @@ public class SegradaGuiceServletContextListener extends GuiceServletContextListe
 						bind(AdminController.class);
 						bind(LocaleController.class);
 						bind(PageController.class);
+						bind(LoginController.class);
 
 						// cache filter
 						bind(SegradaSimplePageCachingFilter.class).asEagerSingleton();
@@ -86,6 +87,7 @@ public class SegradaGuiceServletContextListener extends GuiceServletContextListe
 
 		// manually inject this injector
 		OrientDBFilter.setInjector(injector);
+		SegradaSimplePageCachingFilter.setInjector(injector);
 		DefaultMarkupFilter.setInjector(injector);
 
 		return injector;

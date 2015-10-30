@@ -1,0 +1,34 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" th:lang="${#locale.language}">
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<title th:text="#{Login}">Login</title>
+	<div th:include="partials/common :: head" th:remove="tag"></div>
+	<link rel="stylesheet" href="../../css/login.css" th:href="@{/css/login.css}" />
+</head>
+
+<body>
+<div th:replace="partials/common :: browser"></div>
+
+<div class="container">
+	<div class="alert alert-danger" role="alert" th:if="${error}" th:text="#{${error}}">Login failed</div>
+
+	<form class="form-signin" method="post" action="/login" th:action="@{/login}">
+		<h2 class="form-signin-heading" th:text="#{Login.title}">Please sign in</h2>
+		<label for="inputLogin" class="sr-only" th:text="#{Login.login}">Login</label>
+		<input type="text" id="inputLogin" name="login" class="form-control" placeholder="Login" th:placeholder="#{Login.login}" th:value="${login}" required="required" autofocus="autofocus" />
+		<label for="inputPassword" class="sr-only" th:text="#{Login.password}">Password</label>
+		<input type="password" id="inputPassword" name="password" class="form-control" placeholder="Password" th:placeholder="#{Login.password}" required="required" />
+		<!--/*<div class="checkbox"> TODO: implement
+			<label>
+				<input type="checkbox" value="1" name="rememberMe" th:checked="${rememberMe}" /> <span th:text="#{Login.rememberMe}">Remember me</span>
+			</label>
+		</div>*/-->
+		<button class="btn btn-lg btn-primary btn-block" type="submit" th:text="#{Login.btn}">Sign in</button>
+	</form>
+</div>
+
+<div th:replace="partials/common :: footer"></div>
+</body>
+</html>
