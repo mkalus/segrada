@@ -1,6 +1,7 @@
 package org.segrada.servlet;
 
 import com.google.inject.Injector;
+import com.google.inject.Singleton;
 import com.orientechnologies.orient.core.Orient;
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 import com.orientechnologies.orient.core.record.impl.ODocument;
@@ -18,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.*;
+import javax.servlet.annotation.WebFilter;
 import java.io.IOException;
 import java.util.regex.Pattern;
 
@@ -38,6 +40,7 @@ import java.util.regex.Pattern;
  *
  * Servlet filter loading and destroying orient db instance on each request
  */
+@Singleton
 public class OrientDBFilter implements Filter {
 	private final static Logger logger = LoggerFactory.getLogger(OrientDBFilter.class.getName());
 
@@ -49,7 +52,7 @@ public class OrientDBFilter implements Filter {
 	/**
 	 * reference to injector
 	 */
-	private Injector injector;
+	private static Injector injector;
 
 	/**
 	 * excluded patterns
@@ -59,9 +62,9 @@ public class OrientDBFilter implements Filter {
 	/**
 	 * set the injector - called by Bootstrap
 	 */
-	public void setInjector(Injector injector)
+	public static void setInjector(Injector injector)
 	{
-		this.injector = injector;
+		OrientDBFilter.injector = injector;
 	}
 
 	@Override
@@ -114,30 +117,37 @@ public class OrientDBFilter implements Filter {
 		if (logger.isTraceEnabled())
 			logger.trace("DB instance created");
 
-		//*************************** start delete in production **********************
-		//TODO: this is the preliminary autologin should be changed in production
 		// check if an identity has been set
 		Identity identity = injector.getInstance(Identity.class);
 		if (identity.getName()==null) {
-			ODocument document = db.browseClass("User").next();
-			if (document != null) {
-				IUser user = new User();
+			// no identity set -> how do we authentificate the user?
+			ApplicationSettings applicationSettings = injector.getInstance(ApplicationSettings.class);
+			String enableLogin = applicationSettings.getSetting("enableLogin");
+			if (enableLogin == null || enableLogin.isEmpty() || !enableLogin.equalsIgnoreCase("true")) {
+				// automatic login as first user in DB
+				ODocument document = db.browseClass("User").next();
+				if (document != null) {
+					IUser user = new User();
 
-				user.setLogin(document.field("login", String.class));
-				user.setPassword(document.field("password", String.class));
-				user.setName(document.field("name", String.class));
-				user.setRole(document.field("role", String.class));
-				user.setLastLogin(document.field("lastLogin", Long.class));
-				user.setActive(document.field("active", Boolean.class));
-				user.setId(document.getIdentity().toString());
-				user.setVersion(document.getVersion());
-				user.setCreated(document.field("created", Long.class));
-				user.setModified(document.field("modified", Long.class));
+					user.setLogin(document.field("login", String.class));
+					user.setPassword(document.field("password", String.class));
+					user.setName(document.field("name", String.class));
+					user.setRole(document.field("role", String.class));
+					user.setLastLogin(document.field("lastLogin", Long.class));
+					user.setActive(document.field("active", Boolean.class));
+					user.setId(document.getIdentity().toString());
+					user.setVersion(document.getVersion());
+					user.setCreated(document.field("created", Long.class));
+					user.setModified(document.field("modified", Long.class));
 
-				identity.setUser(user);
+					identity.setUser(user);
+
+					logger.info("Autologin as " + user.getName());
+				}
+			} else {
+				//TODO
 			}
 		}
-		//**************************** end delete in production **********************
 
 		// do whatever has to be done
 		try {

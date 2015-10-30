@@ -1,5 +1,6 @@
 package org.segrada.servlet;
 
+import com.google.inject.Singleton;
 import net.sf.ehcache.constructs.web.AlreadyCommittedException;
 import net.sf.ehcache.constructs.web.PageInfo;
 import net.sf.ehcache.constructs.web.filter.SimplePageCachingFilter;
@@ -38,6 +39,7 @@ import java.util.regex.Pattern;
  *
  * Customized cache filter that filters out certain pages which should not be cached
  */
+@Singleton
 public class SegradaSimplePageCachingFilter extends SimplePageCachingFilter {
 	private final static Logger logger = LoggerFactory.getLogger(SegradaSimplePageCachingFilter.class.getName());
 

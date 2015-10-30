@@ -35,8 +35,6 @@ import java.util.TreeMap;
 public class SegradaGuiceServletContextListener extends GuiceServletContextListener {
 	@Override
 	protected Injector getInjector() {
-		OrientDBFilter orientDBFilter = new OrientDBFilter();
-
 		Injector injector = Guice.createInjector(
 				new TemplateModule(),
 				new ServiceModule(),
@@ -70,23 +68,24 @@ public class SegradaGuiceServletContextListener extends GuiceServletContextListe
 
 						String filterPattern = "/.*\\.(jpg|ico|png|gif|html|txt|css|js|xml|otf|svg|ttf|woff|woff2|eot)";
 
-						Map<String, String> initParams = new TreeMap<String, String>();
+						bind(OrientDBFilter.class).asEagerSingleton();
+						Map<String, String> initParams = new TreeMap<>();
+						initParams.put("excludePatterns", filterPattern + "$");
+						filter("/*").through(OrientDBFilter.class, initParams);
+
+						initParams = new TreeMap<>();
 						initParams.put("com.sun.jersey.config.property.WebPageContentRegex", filterPattern);
 						//TODO: implement client side of this, in order to make it work
 						//initParams.put("com.sun.jersey.spi.container.ContainerRequestFilters", "com.sun.jersey.api.container.filter.CsrfProtectionFilter");
 
 						// guice container filter
 						filter("/*").through(GuiceContainer.class, initParams);
-
-						initParams = new TreeMap<String, String>();
-						initParams.put("excludePatterns", filterPattern + "$");
-						filter("/*").through(orientDBFilter, initParams);
 					}
 				}
 		);
 
 		// manually inject this injector
-		orientDBFilter.setInjector(injector);
+		OrientDBFilter.setInjector(injector);
 		DefaultMarkupFilter.setInjector(injector);
 
 		return injector;
