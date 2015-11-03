@@ -123,8 +123,8 @@ public class OrientDBFilter implements Filter {
 		if (identity.getName()==null && !url.equals("/login")) {
 			// no identity set -> how do we authentificate the user?
 			ApplicationSettings applicationSettings = injector.getInstance(ApplicationSettings.class);
-			String enableLogin = applicationSettings.getSetting("enableLogin");
-			if (enableLogin == null || enableLogin.isEmpty() || !enableLogin.equalsIgnoreCase("true")) {
+			String requireLogin = applicationSettings.getSetting("requireLogin");
+			if (requireLogin == null || requireLogin.isEmpty() || !requireLogin.equalsIgnoreCase("true")) {
 				// automatic login as first user in DB
 				ODocument document = db.browseClass("User").next();
 				if (document != null) {

@@ -48,8 +48,8 @@ public class MainController {
 		if (versionUpdate == null) versionUpdate = "";
 
 		// test application if login is allowed
-		String enableLogin = applicationSettings.getSetting("enableLogin");
-		boolean showLogout = enableLogin != null && !enableLogin.isEmpty() && enableLogin.equalsIgnoreCase("true");
+		String requireLogin = applicationSettings.getSetting("requireLogin");
+		boolean showLogout = requireLogin != null && !requireLogin.isEmpty() && requireLogin.equalsIgnoreCase("true");
 
 		// create model map
 		Map<String, Object> model = new HashMap<>();

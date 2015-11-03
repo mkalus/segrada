@@ -53,8 +53,8 @@ public class LoginController {
 	@Produces(MediaType.TEXT_HTML)
 	public Response login() {
 		// test application if login is allowed
-		String enableLogin = applicationSettings.getSetting("enableLogin");
-		if (enableLogin == null || enableLogin.isEmpty() || !enableLogin.equalsIgnoreCase("true")) {
+		String requireLogin = applicationSettings.getSetting("requireLogin");
+		if (requireLogin == null || requireLogin.isEmpty() || !requireLogin.equalsIgnoreCase("true")) {
 			return Response.ok(new Viewable("error", "Login not allowed")).build();
 		}
 
@@ -85,8 +85,8 @@ public class LoginController {
 			@FormParam("rememberMe") String rememberMe
 	) {
 		// test application if login is allowed
-		String enableLogin = applicationSettings.getSetting("enableLogin");
-		if (enableLogin == null || enableLogin.isEmpty() || !enableLogin.equalsIgnoreCase("true")) {
+		String requireLogin = applicationSettings.getSetting("requireLogin");
+		if (requireLogin == null || requireLogin.isEmpty() || !requireLogin.equalsIgnoreCase("true")) {
 			return Response.ok(new Viewable("error", "Login not allowed")).build();
 		}
 
@@ -149,8 +149,8 @@ public class LoginController {
 	@Produces(MediaType.TEXT_HTML)
 	public Response logout() {
 		// test application if login is allowed
-		String enableLogin = applicationSettings.getSetting("enableLogin");
-		if (enableLogin == null || enableLogin.isEmpty() || !enableLogin.equalsIgnoreCase("true")) {
+		String requireLogin = applicationSettings.getSetting("requireLogin");
+		if (requireLogin == null || requireLogin.isEmpty() || !requireLogin.equalsIgnoreCase("true")) {
 			return Response.ok(new Viewable("error", "Login not allowed")).build();
 		}
 
