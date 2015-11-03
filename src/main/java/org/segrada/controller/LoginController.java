@@ -121,6 +121,14 @@ public class LoginController {
 				}
 			}
 
+			// sleep 2 secs to avoid brute force - not quite secure because we would have to slow down by ip/user
+			// and not by request
+			try {
+				Thread.sleep(2000);
+			} catch (InterruptedException e) {
+				// Do nothing
+			}
+
 			error = "Login.err.loginError";
 		}
 
