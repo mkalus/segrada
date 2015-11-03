@@ -108,8 +108,8 @@ public class LoginController {
 			// find by login
 			IUser user = service.findByLogin(login);
 
-			// user ok and password matches?
-			if (user != null && passwordEncoder.matches(password, user.getPassword())) {
+			// user ok and active and password matches?
+			if (user != null && user.getActive() && passwordEncoder.matches(password, user.getPassword())) {
 				// update last login of user
 				user.setLastLogin(System.currentTimeMillis());
 				// save
