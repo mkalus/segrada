@@ -31,7 +31,7 @@
 			<div class="row">
 				<div class="col-xs-3"><strong th:text="#{field.active}">Active?</strong></div>
 				<div class="col-xs-9" th:if="${entity.active}"><i class="fa fa-check text-success"></i> <span th:text="#{field.userActive}">full text?</span></div>
-				<div class="col-xs-9" th:unless="${entity.active}"><i class="fa fa-check text-danger"></i> <span th:text="#{field.userInactive}">full text?</span></div>
+				<div class="col-xs-9" th:unless="${entity.active}"><i class="fa fa-times text-danger"></i> <span th:text="#{field.userInactive}">full text?</span></div>
 			</div>
 			<div class="row">
 				<div class="col-xs-3"><strong th:text="#{field.lastLogin}">Last login</strong></div>

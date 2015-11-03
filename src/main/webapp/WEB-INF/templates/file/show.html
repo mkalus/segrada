@@ -54,7 +54,7 @@
 					<div class="row">
 						<div class="col-xs-2"><strong th:text="#{field.indexFullTextShort}">Index?</strong></div>
 						<div class="col-xs-10" th:unless="${#strings.isEmpty(entity.fullText)}"><i class="fa fa-check text-success"></i> <span th:text="#{field.indexFullTextOk}">full text?</span></div>
-						<div class="col-xs-10" th:if="${#strings.isEmpty(entity.fullText)}"><i class="fa fa-check text-danger"></i> <span th:text="#{field.indexFullTextNo}">full text?</span></div>
+						<div class="col-xs-10" th:if="${#strings.isEmpty(entity.fullText)}"><i class="fa fa-times text-danger"></i> <span th:text="#{field.indexFullTextNo}">full text?</span></div>
 					</div>
 				</div>
 
