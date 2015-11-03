@@ -110,6 +110,11 @@ public class LoginController {
 
 			// user ok and password matches?
 			if (user != null && passwordEncoder.matches(password, user.getPassword())) {
+				// update last login of user
+				user.setLastLogin(System.currentTimeMillis());
+				// save
+				service.save(user);
+
 				// save identity in session
 				identity.setUser(user);
 
