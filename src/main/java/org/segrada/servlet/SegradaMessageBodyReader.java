@@ -174,6 +174,11 @@ public class SegradaMessageBodyReader implements MessageBodyReader<SegradaEntity
 					arrayValues.put(nameValuePair.getName(), currentValues);
 					value = currentValues;
 				}
+				// handle booleans
+				if (Boolean.class.isAssignableFrom(setterType)) {
+					String val = (String) value;
+					value = !(val == null || val.isEmpty() || val.equals("0") || val.equalsIgnoreCase("f") || val.equalsIgnoreCase("false"));
+				}
 
 				// try to set value
 				try {

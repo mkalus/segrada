@@ -1,0 +1,48 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" th:lang="${#locale.language}">
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<title th:text="${entity.name}">User</title>
+	<div th:include="partials/common :: head" th:remove="tag"></div>
+</head>
+
+<body>
+<div th:replace="partials/common :: browser"></div>
+
+<div class="container">
+	<div class="sg-data sg-user" th:id="${'user-' + entity.uid}">
+		<div th:replace="partials/common :: headerboxright (type=#{User},base='user',uid=${entity.uid})"></div>
+		<h4 class="sg-data-header"><span class="fa fa-user" th:title="#{User}"></span> <span th:text="${entity.name}">User</span></h4>
+
+		<div class="sg-user-data sg-margin-top sg-margin-bottom">
+			<div class="row">
+				<div class="col-xs-3"><strong th:text="#{field.login}">Login</strong></div>
+				<div class="col-xs-9"><code th:text="${entity.login}">login</code></div>
+			</div>
+			<div class="row">
+				<div class="col-xs-3"><strong th:text="#{field.name}">Name</strong></div>
+				<div class="col-xs-9" th:text="${entity.name}">Name</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-3"><strong th:text="#{field.role}">Role</strong></div>
+				<div class="col-xs-9" th:text="${entity.role}">Role</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-3"><strong th:text="#{field.active}">Active?</strong></div>
+				<div class="col-xs-9" th:if="${entity.active}"><i class="fa fa-check text-success"></i> <span th:text="#{field.userActive}">full text?</span></div>
+				<div class="col-xs-9" th:unless="${entity.active}"><i class="fa fa-check text-danger"></i> <span th:text="#{field.userInactive}">full text?</span></div>
+			</div>
+			<div class="row">
+				<div class="col-xs-3"><strong th:text="#{field.lastLogin}">Last login</strong></div>
+				<div class="col-xs-9"><th:datetimeformat millis="${entity.lastLogin}" format="#{datetime}" /></div>
+			</div>
+		</div>
+
+		<div th:replace="partials/common :: datafooter (entity=${entity})"></div>
+	</div>
+</div>
+
+<div th:replace="partials/common :: footer"></div>
+</body>
+</html>

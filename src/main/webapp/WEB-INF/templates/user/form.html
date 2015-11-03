@@ -1,0 +1,66 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" th:lang="${#locale.language}">
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<title th:text="#{add.user}">Create New Node</title>
+	<div th:include="partials/common :: head" th:remove="tag"></div>
+</head>
+
+<body>
+<div th:replace="partials/common :: browser"></div>
+
+<div class="container">
+	<div class="sg-data sg-user" th:with="tempId=${#strings.isEmpty(entity.uid)}?${#strings.randomAlphanumeric(10)}:${entity.uid}" th:id="${'user-' + tempId}">
+		<div class="sg-headbox-right">
+			<a href="#" type="button" class="close sg-data-close" aria-label="Edit"><i class="fa fa-times"></i></a>
+			<a href="#" th:unless="${isNewEntity}" th:href="@{/user/show/{uid}(uid=${entity.uid})}" type="button" class="sg-data-add sg-data-icon" aria-label="Show"><i class="fa fa-eye"></i></a>
+		</div>
+		<h4 class="sg-data-header" th:text="#{add.user}" th:if="${isNewEntity}">Create New</h4>
+		<h4 class="sg-data-header" th:text="#{ChangeTitle(#{User}, ${entity.title})}" th:unless="${isNewEntity}">Change Existing</h4>
+
+		<form method="post" action="#" th:action="@{/user/update}" th:object="${entity}" class="form-horizontal sg-data-form sg-data-content" th:attr="data-id=${'user-' + tempId}">
+
+			<div th:replace="partials/form :: formTextfield (name='login',field=${entity.login},label=#{field.login},id=${tempId},errors=${errors},required=true)"></div>
+
+			<div class="form-group" th:classappend="${errors}?(${#maps.containsKey(errors, 'password')}?'has-error has-feedback')">
+				<label class="col-sm-2 control-label" th:for="${'password-' + id}"><span th:text="#{field.password}"></span><span class="text-danger" th:if="${isNewEntity}"> *</span></label>
+				<div class="col-sm-10">
+					<input type="password" th:id="${'password-' + id}" name="password" class="form-control" th:placeholder="#{field.password}" />
+					<span class="help-block" th:text="${errors}?(${errors['password']}?${#messages.msg(errors['password'])})">Error</span>
+				</div>
+			</div>
+
+			<div class="form-group" th:classappend="${errors}?(${#maps.containsKey(errors, 'confirmPassword')}?'has-error has-feedback')">
+				<label class="col-sm-2 control-label" th:for="${'confirmPassword-' + id}"><span th:text="#{field.confirmPassword}"></span><span class="text-danger" th:if="${isNewEntity}"> *</span></label>
+				<div class="col-sm-10">
+					<input type="password" th:id="${'confirmPassword-' + id}" name="confirmPassword" class="form-control" th:placeholder="#{field.confirmPassword}" />
+					<span class="help-block" th:text="${errors}?(${errors['confirmPassword']}?${#messages.msg(errors['confirmPassword'])})">Error</span>
+				</div>
+			</div>
+
+			<div th:replace="partials/form :: formTextfield (name='name',field=${entity.name},label=#{field.name},id=${tempId},errors=${errors},required=true)"></div>
+
+			<div class="form-group" th:classappend="${errors}?(${#maps.containsKey(errors, 'role')}?'has-error has-feedback')">
+				<label class="col-sm-2 control-label" th:for="${'role-' + id}"><span th:text="#{field.role}"></span><span class="text-danger"> *</span></label>
+				<div class="col-sm-10">
+					<select th:id="${'role-' + id}" name="role" class="form-control">
+						<option value="ADMIN" th:selected="${entity.getRole()=='ADMIN'}">ADMIN</option>
+						<option value="USER" th:selected="${entity.getRole()=='USER'}">USER</option>
+					</select>
+					<span class="help-block" th:text="${errors}?(${errors['role']}?${#messages.msg(errors['role'])})">Error</span>
+				</div>
+			</div>
+
+			<div th:replace="partials/form :: formCheckbox (name='active',field=${entity.active},label=#{field.active},id=${tempId},errors=${errors},required=false)"></div>
+
+			<input type="hidden" name="id" th:value="${entity.id}" th:if="${entity.id}" />
+
+			<div th:replace="partials/form :: submit (isNewEntity=${isNewEntity})"></div>
+		</form>
+	</div>
+</div>
+
+<div th:replace="partials/common :: footer"></div>
+</body>
+</html>

@@ -31,22 +31,21 @@ public class User extends AbstractSegradaEntity implements IUser {
 	private static final long serialVersionUID = 1L;
 
 	@NotNull(message = "error.notNull")
-	@Size(min=4, max=16, message = "{user.login.size}")
-	@Pattern(regexp="(|[^\n\t\r]+)")
+	@Size(min=4, max=16, message = "error.login.size")
 	private String login;
 
 	@NotNull(message = "error.notNull")
-	@Size(min=5, max=25, message = "{user.password.size}")
+	@Size(min=5, max=25, message = "error.password.size")
 	private String password;
 
 	transient private String confirmPassword;
 
 	@NotNull(message = "error.notNull")
-	@Size(min=2, max=64, message = "{user.name.size}")
+	@Size(min=2, max=64, message = "error.name.size")
 	private String name;
 
 	@NotNull(message = "error.notNull")
-	@Pattern(regexp="^(ADMIN|USER)$", message = "{user.role.type}")
+	@Pattern(regexp="^(ADMIN|USER)$", message = "error.role.type")
 	private String role;
 
 	private Long created;

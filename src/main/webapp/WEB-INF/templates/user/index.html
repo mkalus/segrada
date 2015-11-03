@@ -1,0 +1,48 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" th:lang="${#locale.language}">
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<title th:text="#{list.user}">User</title>
+	<div th:include="partials/common :: head" th:remove="tag"></div>
+</head>
+
+<body>
+<div th:replace="partials/common :: browser"></div>
+
+<div class="container">
+	<div class="sg-control-content sg-user">
+		<div class="pull-right">
+			<a href="#" th:href="@{/user/add}" th:title="#{add.user}" class="btn btn-success btn-sm sg-data-add"><i class="fa fa-plus"></i></a>
+		</div>
+
+		<h4 class="sg-control-header"><i class="fa fa-user"></i> <span th:text="#{list.user}">List</span></h4>
+
+		<p th:text="${#messages.msg('showEntities', entities.size())}">Size</p>
+
+		<table class="table table-hover table-striped table-condensed">
+			<tr>
+				<th th:text="#{field.login}">Login</th>
+				<th th:text="#{field.name}">Name</th>
+				<th th:text="#{field.role}">Role</th>
+				<th></th>
+			</tr>
+			<tr th:each="entity : ${entities}" th:attr="data-data-dblclick=@{/user/show/{uid}(uid=${entity.uid})}">
+				<td th:text="${entity.login}">Login</td>
+				<td th:text="${entity.name}">Name</td>
+				<td th:text="${entity.role}">Role</td>
+				<td class="text-right">
+					<div class="sg-data-icon-bar" role="group" aria-label="Actions" th:strip-whitespace="shallow">
+						<a class="sg-data-icon sg-data-add" href="#" th:title="#{Show}" th:href="@{/user/show/{uid}(uid=${entity.uid})}"><i class="fa fa-eye"></i></a>
+						<a class="sg-data-icon sg-data-add" href="#" th:title="#{Edit}" th:href="@{/user/edit/{uid}(uid=${entity.uid})}"><i class="fa fa-pencil"></i></a>
+						<a class="sg-data-icon sg-control-confirm" href="#" th:title="#{Delete}" th:href="@{/user/delete/{uid}/0(uid=${entity.uid})}" th:attr="data-confirm=${#messages.msg('ReallyDelete', entity.title)}"><i class="fa fa-times-circle-o"></i></a>
+					</div>
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>
+
+<div th:replace="partials/common :: footer"></div>
+</body>
+</html>
