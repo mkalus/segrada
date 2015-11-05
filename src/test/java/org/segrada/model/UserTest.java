@@ -57,11 +57,11 @@ public class UserTest {
 		assertTrue("Login too long", constraintViolations.size() == 1);
 	}
 
-	@Test
+	/*@Test
 	public void testLoginInvalidCharacters() throws Exception {
 		Set<ConstraintViolation<User>> constraintViolations = validator.validateValue(User.class, "login", "x\t\r\n");
 		assertTrue("Login not valid", constraintViolations.size() == 1);
-	}
+	}*/
 
 	@Test
 	public void testPasswordEmpty() throws Exception {
