@@ -13,8 +13,11 @@ import org.segrada.controller.base.AbstractBaseController;
 import org.segrada.model.Pictogram;
 import org.segrada.model.prototype.IPictogram;
 import org.segrada.service.PictogramService;
+import org.segrada.session.CSRFTokenManager;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
@@ -167,11 +170,20 @@ public class PictogramController extends AbstractBaseController<IPictogram> {
 	@Path("/update")
 	@Produces(MediaType.TEXT_PLAIN)
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
-	public Response update(@FormDataParam("id") final String id,
-	                     @FormDataParam("title") final String title,
-	                     @FormDataParam("uploadedImage") final byte[] uploadedImage,
-	                     @FormDataParam("uploadedImage") final FormDataContentDisposition uploadedImageDetail,
-	                     @FormDataParam("uploadedImage") final FormDataBodyPart uploadedImagePart) {
+	public Response update(@FormDataParam("_csrf") final String csrf, // _csrf checked locally
+	                       @FormDataParam("id") final String id,
+	                       @FormDataParam("title") final String title,
+	                       @FormDataParam("uploadedImage") final byte[] uploadedImage,
+	                       @FormDataParam("uploadedImage") final FormDataContentDisposition uploadedImageDetail,
+	                       @FormDataParam("uploadedImage") final FormDataBodyPart uploadedImagePart,
+	                       @Context HttpServletRequest request) {
+		// check csrf
+		String sessionToken = CSRFTokenManager.getTokenForSession(request.getSession());
+
+		if (csrf == null || !csrf.equals(sessionToken)) {
+			return Response.serverError().build();
+		}
+
 		// new or existing entity?
 		Pictogram entity;
 		if (id == null || id.isEmpty()) entity = new Pictogram();

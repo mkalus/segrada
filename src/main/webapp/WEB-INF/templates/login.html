@@ -13,6 +13,8 @@
 
 <div class="container">
 	<form class="form-signin" method="post" action="/login" th:action="@{/login}">
+		<input type="hidden" name="_csrf" th:value="${_csrf}" />
+
 		<div class="alert alert-danger" role="alert" th:if="${error}" th:text="#{${error}}">Login failed</div>
 
 		<h2 class="form-signin-heading" th:text="#{Login.title}">Please sign in</h2>

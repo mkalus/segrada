@@ -1,5 +1,7 @@
 package org.segrada.session;
 
+import org.eclipse.jetty.util.MultiPartInputStreamParser;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.UUID;
@@ -15,7 +17,7 @@ final public class CSRFTokenManager {
 	/**
 	 * The token parameter name
 	 */
-	static final String CSRF_PARAM_NAME = "CSRFToken";
+	static final String CSRF_PARAM_NAME = "_csrf";
 
 	/**
 	 * The location on the session which stores the token
@@ -23,7 +25,7 @@ final public class CSRFTokenManager {
 	private final static String CSRF_TOKEN_FOR_SESSION_ATTR_NAME = CSRFTokenManager.class.getName() + ".tokenval";
 
 	public static String getTokenForSession(HttpSession session) {
-		String token = null;
+		String token;
 		// I cannot allow more than one token on a session - in the case of two requests trying to
 		// init the token concurrently
 		synchronized (session) {

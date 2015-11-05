@@ -16,9 +16,12 @@ import org.segrada.service.FileService;
 import org.segrada.service.PictogramService;
 import org.segrada.service.TagService;
 import org.segrada.service.base.AbstractRepositoryService;
+import org.segrada.session.CSRFTokenManager;
 
 import javax.annotation.Nullable;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
@@ -471,7 +474,8 @@ public class FileController extends AbstractColoredController<IFile> {
 	@Path("/update")
 	@Produces(MediaType.TEXT_PLAIN)
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
-	public Response update(@FormDataParam("id") final String id,
+	public Response update(@FormDataParam("_csrf") final String csrf, // _csrf checked locally
+	                       @FormDataParam("id") final String id,
 	                       @FormDataParam("title") final String title,
 	                       @FormDataParam("description") final String description,
 	                       @FormDataParam("descriptionMarkup") final String descriptionMarkup,
@@ -484,7 +488,15 @@ public class FileController extends AbstractColoredController<IFile> {
 	                       @FormDataParam("tags") final List<FormDataBodyPart> tagParts,
 	                       @FormDataParam("uploadedFile") final byte[] uploadedFile,
 	                       @FormDataParam("uploadedFile") final FormDataContentDisposition uploadedFileDetail,
-	                       @FormDataParam("uploadedFile") final FormDataBodyPart uploadedFilePart) {
+	                       @FormDataParam("uploadedFile") final FormDataBodyPart uploadedFilePart,
+	                       @Context HttpServletRequest request) {
+		// check csrf
+		String sessionToken = CSRFTokenManager.getTokenForSession(request.getSession());
+
+		if (csrf == null || !csrf.equals(sessionToken)) {
+			return Response.serverError().build();
+		}
+
 		// new or existing entity?
 		File entity;
 		if (id == null || id.isEmpty()) entity = new File();

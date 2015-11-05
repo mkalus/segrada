@@ -16,7 +16,6 @@ import org.thymeleaf.templateresolver.TemplateResolver;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.ext.Provider;
 import java.io.IOException;
@@ -101,8 +100,8 @@ public class ThymeleafViewProcessor implements ViewProcessor<String> {
 			}
 		}
 
-		//TODO: start session?
-		//context.setVariable("_csrf", CSRFTokenManager.getTokenForSession(context.getHttpSession()));
+		// Define _csrf token
+		context.setVariable("_csrf", CSRFTokenManager.getTokenForSession(context.getHttpSession()));
 
 		// set fixed variables?
 		//context.setVariable("numberFormatter", new NumberFormatter());

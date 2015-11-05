@@ -58,6 +58,8 @@
 			<div th:if="${error}" th:text="#{${error}}" class="alert alert-danger">Error</div>
 
 			<form method="post" action="#" th:action="@{${baseUrl}?${baseUrl}:'/source_reference/update'}" class="sg-control-form" th:attr="data-target-id=${targetId}">
+				<input type="hidden" name="_csrf" th:value="${_csrf}" />
+
 				<div class="form-group">
 					<label class="col-sm-2 control-label" th:for="${'sourceId-' + uid}"><span th:text="#{field.source}"></span></label>
 					<div class="col-sm-10">

@@ -13,6 +13,8 @@
 <div class="container">
 	<div class="sg-data sg-source" th:with="tempId=${#strings.isEmpty(entity.uid)}?${#strings.randomAlphanumeric(10)}:${entity.uid}" th:id="${'source-reference-' + tempId}">
 		<form method="post" action="#" th:action="@{/source_reference/update}" th:object="${entity}" class="form-horizontal sg-data-form sg-data-content" th:attr="data-id=${'source-reference-' + tempId}">
+			<input type="hidden" name="_csrf" th:value="${_csrf}" />
+
 			<div class="form-group">
 				<label class="col-sm-2 control-label" th:text="#{field.source}">Source</label>
 				<div class="col-sm-10" style="padding-top: 7px;">

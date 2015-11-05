@@ -94,6 +94,8 @@ Common fragments.
 	<div class="sg-margin-top-sm" th:unless="${period}"><a href="#" class="btn btn-success sg-period-add"><i class="fa fa-plus"></i> <span th:text="#{add.period}">Add period</span></a></div>
 
 	<form action="#" th:action="@{/period/add/{model}/{uid}(model=${entity.modelName},uid=${entity.uid})}" method="post" class="sg-margin-top-sm sg-period-form sg-period-form-add" style="display: none;" th:style="${period and isNewEntity}?'':'display:none;'">
+		<input type="hidden" name="_csrf" th:value="${_csrf}" />
+
 		<div th:replace="partials/common :: periodform (entity=${entity},errors=${errors},period=${period},hidePeriod=${hidePeriod})"></div>
 		<div class="row sg-margin-top-sm">
 			<div class="col-lg-12">
@@ -104,6 +106,7 @@ Common fragments.
 
 	<!--/*TODO for later
 	<form action="#" th:action="@{/period/update/{model}/{uid}(model=${entity.modelName},uid=${entity.uid})}" method="post" class="sg-margin-top-sm sg-period-form sg-period-form-edit" style="display: none;" th:style="${period and !isNewEntity}?'':'display:none;'">
+		<input type="hidden" name="_csrf" th:value="${_csrf}" />
 		<div th:replace="partials/common :: periodform (entity=${entity},errors=${errors},period=${period},hidePeriod=${hidePeriod})"></div>
 		<div class="row sg-margin-top-sm">
 			<div class="col-lg-12">
@@ -196,6 +199,8 @@ Common fragments.
 	<div class="sg-margin-top-sm"><a href="#" class="btn btn-success sg-map-add-marker"><i class="fa fa-plus"></i> <span th:text="#{add.location}">Add location</span></a></div>
 
 	<form action="#" th:action="@{/location/add/{model}/{uid}(model=${entity.modelName},uid=${entity.uid})}" method="post" class="sg-margin-top-sm sg-map-form" th:id="${'locations-' + entity.uid + '-form'}" style="display: none;">
+		<input type="hidden" name="_csrf" th:value="${_csrf}" />
+
 		<div class="row">
 			<div class="col-md-8">
 				<input name="formatted_address" class="sg-geocomplete form-control" type="text" placeholder="Type in an address" th:placeholder="#{field.locationAddress}" />

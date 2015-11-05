@@ -2,7 +2,6 @@ package org.segrada.servlet;
 
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
-import net.sf.ehcache.constructs.web.AlreadyCommittedException;
 import net.sf.ehcache.constructs.web.PageInfo;
 import net.sf.ehcache.constructs.web.filter.SimplePageCachingFilter;
 import org.apache.commons.codec.binary.Hex;
@@ -16,7 +15,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.net.URLEncoder;
 import java.security.MessageDigest;
-import java.util.Enumeration;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;

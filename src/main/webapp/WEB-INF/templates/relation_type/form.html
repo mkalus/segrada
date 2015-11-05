@@ -20,6 +20,7 @@
 		<h4 class="sg-data-header" th:text="#{ChangeTitle(#{Relation_Type}, ${entity.title})}" th:unless="${isNewEntity}">Change Existing</h4>
 
 		<form method="post" action="#" th:action="@{/relation_type/update}" th:object="${entity}" class="form-horizontal sg-data-form sg-data-content" th:attr="data-id=${'relation-type-' + tempId}">
+			<input type="hidden" name="_csrf" th:value="${_csrf}" />
 
 			<div th:replace="partials/form :: formTextfield (name='fromTitle',field=${entity.fromTitle},label=#{field.fromTitle},id=${tempId},errors=${errors},required=true)"></div>
 			<div th:replace="partials/form :: formTextfield (name='toTitle',field=${entity.toTitle},label=#{field.toTitle},id=${tempId},errors=${errors},required=true)"></div>

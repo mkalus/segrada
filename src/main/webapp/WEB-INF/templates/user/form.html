@@ -20,6 +20,7 @@
 		<h4 class="sg-data-header" th:text="#{ChangeTitle(#{User}, ${entity.title})}" th:unless="${isNewEntity}">Change Existing</h4>
 
 		<form method="post" action="#" th:action="@{/user/update}" th:object="${entity}" class="form-horizontal sg-data-form sg-data-content" th:attr="data-id=${'user-' + tempId}">
+			<input type="hidden" name="_csrf" th:value="${_csrf}" />
 
 			<div th:replace="partials/form :: formTextfield (name='login',field=${entity.login},label=#{field.login},id=${tempId},errors=${errors},required=true)"></div>
 

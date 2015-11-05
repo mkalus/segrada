@@ -63,6 +63,10 @@ public class SegradaGuiceServletContextListener extends GuiceServletContextListe
 						bind(PageController.class);
 						bind(LoginController.class);
 
+						// CSRF filter
+						bind(CSRFFilter.class).asEagerSingleton();
+						filter("/*").through(CSRFFilter.class);
+
 						// cache filter
 						bind(SegradaSimplePageCachingFilter.class).asEagerSingleton();
 						filter("/*").through(SegradaSimplePageCachingFilter.class);

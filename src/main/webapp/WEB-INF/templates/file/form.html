@@ -20,6 +20,7 @@
 		<h4 class="sg-data-header" th:text="#{ChangeTitle(#{File}, ${entity.title})}" th:unless="${isNewEntity}">Change Existing</h4>
 
 		<form method="post" action="#" th:action="@{/file/update}" th:object="${entity}" class="form-horizontal sg-data-form sg-data-content" th:attr="data-id=${'file-' + tempId}" enctype="multipart/form-data">
+			<input type="hidden" name="_csrf" th:value="${_csrf}" />
 
 			<div th:replace="partials/form :: formTextfield (name='title',field=${entity.title},label=#{field.title},id=${tempId},errors=${errors},required=false)"></div>
 			<div th:replace="partials/form :: formMarkupTextarea (name='description',field=${entity.description},label=#{field.description},id=${tempId},rows=5,errors=${errors},required=false,markupName='descriptionMarkup',markupField=${entity.descriptionMarkup})"></div>
