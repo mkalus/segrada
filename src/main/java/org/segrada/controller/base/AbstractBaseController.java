@@ -264,8 +264,16 @@ abstract public class AbstractBaseController<BEAN extends SegradaEntity> {
 	 * @return map containing property and one error message
 	 */
 	protected Map<String, String> validate(BEAN entity) {
-		Map<String, String> errors = new HashMap<>();
+		return validate(entity, new HashMap<>());
+	}
 
+	/**
+	 * validate bean
+	 * @param entity to validate
+	 * @param errors defined errors already added (may be overwritten)
+	 * @return map containing property and one error message
+	 */
+	protected Map<String, String> validate(BEAN entity, Map<String, String> errors) {
 		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
 		Validator validator = factory.getValidator();
 		for (ConstraintViolation<BEAN> error : validator.validate(entity)) {

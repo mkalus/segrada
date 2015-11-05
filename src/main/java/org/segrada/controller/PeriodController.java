@@ -96,6 +96,9 @@ public class PeriodController extends AbstractBaseController<IPeriod> {
 		boolean hidePeriod = isPeriodValue == null || isPeriodValue.isEmpty() || !isPeriodValue.equals("1");
 		if (hidePeriod) toEntry = fromEntry;
 
+		// pre validation errors
+		Map<String, String> preValidationErrors = new HashMap<>();
+
 		// create new entity
 		IPeriod entity = new Period();
 		if (id != null && !id.isEmpty()) entity.setId(id);
@@ -103,8 +106,18 @@ public class PeriodController extends AbstractBaseController<IPeriod> {
 		entity.setParentModel(parentModel);
 		entity.setFromEntryCalendar(fromEntryCalendar); // calendars first!
 		entity.setToEntryCalendar(toEntryCalendar);
-		entity.setFromEntry(fromEntry);
-		entity.setToEntry(toEntry);
+		try {
+			entity.setFromEntry(fromEntry);
+		} catch (Throwable e) {
+			// setting date has failed: add error
+			preValidationErrors.put("fromJD", "error.calendar.incorrect");
+		}
+		try {
+			entity.setToEntry(toEntry);
+		} catch (Throwable e) {
+			// setting date has failed: add error
+			preValidationErrors.put("toJD", "error.calendar.incorrect");
+		}
 		entity.setComment(comment);
 		// fuzzy flags
 		if (fromFuzzyFlagsCa != null) entity.addFuzzyFromFlag('c');
@@ -113,7 +126,7 @@ public class PeriodController extends AbstractBaseController<IPeriod> {
 		if (toFuzzyFlagsUncertain != null) entity.addFuzzyToFlag('?');
 
 		// validate entity
-		Map<String, String> errors = validate(entity);
+		Map<String, String> errors = validate(entity, preValidationErrors);
 
 		// create model map
 		Map<String, Object> model = new HashMap<>();
