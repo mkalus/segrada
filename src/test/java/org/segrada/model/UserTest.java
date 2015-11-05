@@ -77,7 +77,7 @@ public class UserTest {
 
 	@Test
 	public void testPasswordTooLong() throws Exception {
-		Set<ConstraintViolation<User>> constraintViolations = validator.validateValue(User.class, "password", "THISISAVERYLONGPASSWORDJUSTTOOLONG");
+		Set<ConstraintViolation<User>> constraintViolations = validator.validateValue(User.class, "password", "THISISAVERYLONGPASSWORDJUSTTOOLONGTHISISAVERYLONGPASSWORDJUSTTOOLONGTHISISAVERYLONGPASSWORDJUSTTOOLONGTHISISAVERYLONGPASSWORDJUSTTOOLONGTHISISAVERYLONGPASSWORDJUSTTOOLONGTHISISAVERYLONGPASSWORDJUSTTOOLONGTHISISAVERYLONGPASSWORDJUSTTOOLONGTHISISAVERYLONGPASSWORDJUSTTOOLONGTHISISAVERYLONGPASSWORDJUSTTOOLONG");
 		assertTrue("Password too long", constraintViolations.size() == 1);
 	}
 

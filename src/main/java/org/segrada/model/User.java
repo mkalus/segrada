@@ -35,7 +35,7 @@ public class User extends AbstractSegradaEntity implements IUser {
 	private String login;
 
 	@NotNull(message = "error.notNull")
-	@Size(min=5, max=25, message = "error.password.size")
+	@Size(min=5, max=250, message = "error.password.size")
 	private String password;
 
 	transient private String confirmPassword;
