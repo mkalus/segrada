@@ -86,6 +86,7 @@ public class PeriodController extends AbstractBaseController<IPeriod> {
 		else if (parentModel.equals("Relation")) parentService = this.relationService;
 
 		// try to find parent model
+		@SuppressWarnings("unchecked")
 		SegradaCoreEntity parent = null;
 		if (parentService != null) {
 			parent = (SegradaCoreEntity) parentService.findById(parentService.convertUidToId(parentUid));
