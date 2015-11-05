@@ -5,11 +5,16 @@ import com.google.inject.servlet.RequestScoped;
 import com.sun.jersey.api.view.Viewable;
 import org.segrada.model.prototype.IUser;
 import org.segrada.service.UserService;
+import org.segrada.service.repository.RememberMeRepository;
 import org.segrada.session.ApplicationSettings;
 import org.segrada.session.Identity;
 import org.segrada.util.PasswordEncoder;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.URI;
@@ -37,6 +42,8 @@ import java.util.Map;
 @Path("/login")
 @RequestScoped
 public class LoginController {
+	public final static String REMEMBER_ME_COOKIE_NAME = "remember-me-token";
+
 	@Inject
 	private ApplicationSettings applicationSettings;
 
@@ -49,14 +56,34 @@ public class LoginController {
 	@Inject
 	private Identity identity;
 
+	@Inject
+	private RememberMeRepository rememberMeRepository;
+
 	@GET
 	@Produces(MediaType.TEXT_HTML)
-	public Response login() {
+	public Response login(@QueryParam("logout") String logout,
+	                      @Context HttpServletRequest servletRequest,
+	                      @Context HttpServletResponse servletResponse) {
 		// test application if login is allowed
 		String requireLogin = applicationSettings.getSetting("requireLogin");
 		if (requireLogin == null || requireLogin.isEmpty() || !requireLogin.equalsIgnoreCase("true")) {
 			return Response.ok(new Viewable("error", "Login not allowed")).build();
 		}
+
+		// remove remember me cookie, if needed
+		if (logout != null && logout.equals("1")) {
+			for (Cookie c : servletRequest.getCookies()) {
+				if (c.getName().equals(REMEMBER_ME_COOKIE_NAME)) {
+					// remove cookie
+					c.setMaxAge(0);
+					c.setValue(null);
+					servletResponse.addCookie(c);
+
+					break;
+				}
+			}
+		}
+
 
 		// already logged in?
 		if (identity.getName() != null)
@@ -82,8 +109,9 @@ public class LoginController {
 	public Response workLogin(
 			@FormParam("login") String login,
 			@FormParam("password") String password,
-			@FormParam("rememberMe") String rememberMe
-	) {
+			@FormParam("rememberMe") String rememberMe,
+			@Context HttpServletResponse servletResponse
+		) {
 		// test application if login is allowed
 		String requireLogin = applicationSettings.getSetting("requireLogin");
 		if (requireLogin == null || requireLogin.isEmpty() || !requireLogin.equalsIgnoreCase("true")) {
@@ -117,6 +145,17 @@ public class LoginController {
 
 				// save identity in session
 				identity.setUser(user);
+
+				// remember me?
+				if (rememberMe != null && rememberMe.equals("1")) {
+					// create new token
+					String token = rememberMeRepository.createTokenForCookie(user.getId());
+					if (token != null && !token.isEmpty()) {
+						Cookie c = new Cookie(REMEMBER_ME_COOKIE_NAME, token);
+						c.setMaxAge(30 * 25 * 60 * 60); // 30 days
+						servletResponse.addCookie(c);
+					}
+				}
 
 				//redirect to index
 				try {
@@ -152,7 +191,7 @@ public class LoginController {
 	@GET
 	@Path("/logout")
 	@Produces(MediaType.TEXT_HTML)
-	public Response logout() {
+	public Response logout(@Context HttpServletRequest servletRequest, @Context HttpServletResponse servletResponse) {
 		// test application if login is allowed
 		String requireLogin = applicationSettings.getSetting("requireLogin");
 		if (requireLogin == null || requireLogin.isEmpty() || !requireLogin.equalsIgnoreCase("true")) {
@@ -162,9 +201,24 @@ public class LoginController {
 		// reset identity
 		identity.logout();
 
+		// remove remember me cookie, if needed
+		for (Cookie c : servletRequest.getCookies()) {
+			if (c.getName().equals(REMEMBER_ME_COOKIE_NAME)) {
+				// remove from service
+				rememberMeRepository.removeToken(c.getValue());
+
+				// remove cookie
+				c.setMaxAge(0);
+				c.setValue(null);
+				servletResponse.addCookie(c);
+
+				break;
+			}
+		}
+
 		//redirect to index
 		try {
-			return Response.seeOther(new URI("/login")).build();
+			return Response.seeOther(new URI("/login?logout=1")).build();
 		} catch (URISyntaxException e) {
 			return Response.ok(new Viewable("error", e.getMessage())).build();
 		}

@@ -329,19 +329,6 @@ create index SourceReference.source NOTUNIQUE_HASH_INDEX
 create index SourceReference.reference NOTUNIQUE_HASH_INDEX
 
 ######################################################################################################################
-# TODO: do this some time in the future
-#create class RememberMeTokens
-#create property RememberMeTokens.username String
-#create property RememberMeTokens.series String
-#create property RememberMeTokens.token String
-#create property RememberMeTokens.lastUsed Datetime
-#alter property RememberMeTokens.username MANDATORY true
-#alter property RememberMeTokens.series MANDATORY true
-#alter property RememberMeTokens.token MANDATORY true
-#alter property RememberMeTokens.lastUsed MANDATORY true
-#create index RememberMeTokens.series DICTIONARY_HASH_INDEX
-
-######################################################################################################################
 create class IsTagOf extends E
 create class IsCommentOf extends E
 create class IsFileOf extends E

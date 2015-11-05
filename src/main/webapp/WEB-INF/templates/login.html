@@ -22,11 +22,11 @@
 		<input type="text" id="inputLogin" name="login" class="form-control" placeholder="Login" th:placeholder="#{Login.login}" th:value="${login}" required="required" autofocus="autofocus" />
 		<label for="inputPassword" class="sr-only" th:text="#{Login.password}">Password</label>
 		<input type="password" id="inputPassword" name="password" class="form-control" placeholder="Password" th:placeholder="#{Login.password}" required="required" />
-		<!--/*<div class="checkbox"> TODO: implement
+		<div class="checkbox">
 			<label>
 				<input type="checkbox" value="1" name="rememberMe" th:checked="${rememberMe}" /> <span th:text="#{Login.rememberMe}">Remember me</span>
 			</label>
-		</div>*/-->
+		</div>
 		<button class="btn btn-lg btn-primary btn-block" type="submit" th:text="#{Login.btn}">Sign in</button>
 
 		<div class="alert alert-info sg-margin-top" role="alert" th:if="${defaultAdminActive}" th:utext="#{Login.note}"><strong>Note:</strong> You can login with the following credentials:<br />Login: <code>admin</code><br />Password: <code>password</code></div>

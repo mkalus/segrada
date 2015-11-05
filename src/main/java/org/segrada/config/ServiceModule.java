@@ -20,7 +20,9 @@ import org.segrada.service.base.AbstractFullTextService;
 import org.segrada.service.base.AbstractRepositoryService;
 import org.segrada.service.binarydata.BinaryDataService;
 import org.segrada.service.binarydata.BinaryDataServiceFile;
+import org.segrada.service.repository.RememberMeRepository;
 import org.segrada.service.repository.factory.RepositoryFactory;
+import org.segrada.service.repository.orientdb.OrientRememberMeRepository;
 import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory;
 import org.segrada.session.ApplicationSettings;
 import org.segrada.session.ApplicationSettingsProperties;
@@ -82,6 +84,9 @@ public class ServiceModule extends AbstractModule {
 		bind(SourceService.class);
 		bind(TagService.class);
 		bind(UserService.class);
+
+		// bind remember me service
+		bind(RememberMeRepository.class).to(OrientRememberMeRepository.class);
 
 		// create mapped binding for services which support indexing
 		MapBinder<String, AbstractFullTextService> fullTextServiceMapBinder

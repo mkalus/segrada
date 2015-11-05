@@ -4,13 +4,17 @@ import com.google.inject.Injector;
 import com.google.inject.Singleton;
 import com.orientechnologies.orient.core.Orient;
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
+import com.orientechnologies.orient.core.id.ORID;
+import com.orientechnologies.orient.core.id.ORecordId;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.tinkerpop.blueprints.impls.orient.OrientGraphFactory;
 import org.eclipse.jetty.server.Request;
 import org.segrada.SegradaApplication;
+import org.segrada.controller.LoginController;
 import org.segrada.model.User;
 import org.segrada.model.prototype.IUser;
 import org.segrada.search.lucene.LuceneSearchEngine;
+import org.segrada.service.repository.RememberMeRepository;
 import org.segrada.service.repository.orientdb.init.OrientDbSchemaUpdater;
 import org.segrada.session.ApplicationSettings;
 import org.segrada.session.Identity;
@@ -20,6 +24,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.regex.Pattern;
@@ -126,28 +131,38 @@ public class OrientDBFilter implements Filter {
 			String requireLogin = applicationSettings.getSetting("requireLogin");
 			if (requireLogin == null || requireLogin.isEmpty() || !requireLogin.equalsIgnoreCase("true")) {
 				// automatic login as first user in DB
-				ODocument document = db.browseClass("User").next();
-				if (document != null) {
-					IUser user = new User();
+				IUser user = docToUser(db.browseClass("User").next());
 
-					user.setLogin(document.field("login", String.class));
-					user.setPassword(document.field("password", String.class));
-					user.setName(document.field("name", String.class));
-					user.setRole(document.field("role", String.class));
-					user.setLastLogin(document.field("lastLogin", Long.class));
-					user.setActive(document.field("active", Boolean.class));
-					user.setId(document.getIdentity().toString());
-					user.setVersion(document.getVersion());
-					user.setCreated(document.field("created", Long.class));
-					user.setModified(document.field("modified", Long.class));
+				identity.setUser(user);
 
-					identity.setUser(user);
-
-					logger.info("Autologin as " + user.getName());
-				}
+				logger.info("Autologin as " + user.getName());
 			} else {
-				HttpServletResponse httpServletResponse = (HttpServletResponse) servletResponse;
-				httpServletResponse.sendRedirect("/login");
+				IUser user = null;
+				// get cookie - to check for remember me function
+				for (Cookie c : ((Request) servletRequest).getCookies()) {
+					if (c.getName().equals(LoginController.REMEMBER_ME_COOKIE_NAME)) {
+						RememberMeRepository rememberMeRepository = injector.getInstance(RememberMeRepository.class);
+						String id = rememberMeRepository.validateTokenAndGetUserId(c.getValue());
+						if (id != null) {
+							ORID oid = new ORecordId(id);
+							if (oid.isValid()) {
+								user = docToUser(db.getRecord(oid));
+
+								if (user != null) {
+									identity.setUser(user);
+
+									logger.info("Remember-Me-Token-Login as " + user.getName());
+								}
+							}
+						}
+						break;
+					}
+				}
+
+				if (user == null) {
+					HttpServletResponse httpServletResponse = (HttpServletResponse) servletResponse;
+					httpServletResponse.sendRedirect("/login");
+				}
 			}
 		}
 
@@ -161,6 +176,32 @@ public class OrientDBFilter implements Filter {
 			if (logger.isTraceEnabled())
 				logger.trace("DB instance destroyed");
 		}
+	}
+
+	/**
+	 * convert document to user
+	 * @param document ODocument of user
+	 * @return IUser instance or null
+	 */
+	private IUser docToUser(ODocument document) {
+		if (document != null) {
+			IUser user = new User();
+
+			user.setLogin(document.field("login", String.class));
+			user.setPassword(document.field("password", String.class));
+			user.setName(document.field("name", String.class));
+			user.setRole(document.field("role", String.class));
+			user.setLastLogin(document.field("lastLogin", Long.class));
+			user.setActive(document.field("active", Boolean.class));
+			user.setId(document.getIdentity().toString());
+			user.setVersion(document.getVersion());
+			user.setCreated(document.field("created", Long.class));
+			user.setModified(document.field("modified", Long.class));
+
+			return user;
+		}
+
+		return null;
 	}
 
 	@Override
