@@ -220,6 +220,14 @@
 				var container = $(target);
 				container.html(responseText);
 				afterAjax(container);
+			},
+			error: function (responseText, statusText, xhr, $form) {
+				// dynamic target?
+				var target = $form.attr('data-target-id');
+				if (typeof target == "undefined" || target == null || target.length == 0) target = '#sg-control';
+				var container = $(target);
+				container.html(responseText.statusText);
+				alert("Error " + responseText.status + "\n" + responseText.statusText);
 			}
 		});
 
@@ -405,6 +413,9 @@
 						target.html(responseText);
 						afterAjax(target);
 						modal.modal('hide');
+					},
+					error: function (responseText, statusText, xhr, $form) {
+						alert("Error " + responseText.status + "\n" + responseText.statusText);
 					}
 				});
 			});
@@ -557,6 +568,10 @@
 				if (matches!=null&&matches.length >= 2) {
 					afterAjax($('#' + matches[2]));
 				}
+			},
+			error: function (responseText, statusText, xhr, $form) {
+				$(":input", $form).attr("disabled", false);
+				alert("Error " + responseText.status + "\n" + responseText.statusText);
 			}
 		});
 
@@ -584,6 +599,10 @@
 				target.html(responseText);
 
 				$(":input", $form).attr("disabled", false);
+			},
+			error: function (responseText, statusText, xhr, $form) {
+				$(":input", $form).attr("disabled", false);
+				alert("Error " + responseText.status + "\n" + responseText.statusText);
 			}
 		});
 
@@ -625,6 +644,10 @@
 				success: function (responseText, statusText, xhr, $form) {
 					container.replaceWith(responseText);
 					afterAjax($('#' + id));
+				},
+				error: function (responseText, statusText, xhr, $form) {
+					container.removeClass('disabled');
+					alert("Error " + responseText.status + "\n" + responseText.statusText);
 				}
 			});
 		});
@@ -704,6 +727,10 @@
 					container.removeClass('disabled');
 					$(id + '-markers', container).replaceWith(responseText);
 					updateGeocompleteMap(id, $(id + '-markers', container), input);
+				},
+				error: function (responseText, statusText, xhr, $form) {
+					container.removeClass('disabled');
+					alert("Error " + responseText.status + "\n" + responseText.statusText);
 				}
 			});
 		});
