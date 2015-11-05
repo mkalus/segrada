@@ -29,7 +29,7 @@ Features an:
 * Dateien können in die Datenbank hochgeladen und verknüpft werden.
 * Der Volltext hochgeladener PDF, Word oder Open-/LibreOffice-Dateien kann in der Datenbank gespeichert werden.
 * Suchmöglichkeiten: Volltextsuche (auch in Dateien) und verschiedene Filterfunktionen.
-* Mehrbenutzerfähigkeit (noch im Aufbau)
+* Mehrbenutzerfähigkeit mit Gruppenrechten
 * Skalierbar: Desktop-Betrieb, einzelner oder verteilte Serverumgebung
 * Internationalisiert: im Moment Englisch und Deutsch
 

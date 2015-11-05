@@ -23,3 +23,4 @@ Beispiel:
 * `orientDB.login` OrientDB-Datenbank Login (Voreinstellung: admin)
 * `orientDB.password` OrientDB-Datenbank Passwort (Voreinstellung: admin)
 * `lucene.analyzer` Verwendeter Lucene-Analyser (Voreinstellung: org.apache.lucene.analysis.standard.StandardAnalyzer)
+* `requireLogin` Login nötig? (Voreinstellung: false = Autologin als Administrator)

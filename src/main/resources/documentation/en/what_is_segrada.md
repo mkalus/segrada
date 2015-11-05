@@ -25,7 +25,7 @@ more features:
 * Files can be uploaded to the database and linked with other data.
 * Uploaded PDF, Word or Open-/LibrerOffice files can be indexed in full text.
 * Search: Full text (files and other data) and a number of filter functions to find your data again.
-* Multiple users (work in progress)
+* Multiple users and user groups
 * Scalable: Use on desktop, run as single or distributed server.
 * Internationalized: Currently English and German
 

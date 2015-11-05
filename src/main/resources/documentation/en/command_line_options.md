@@ -23,3 +23,4 @@ Example:
 * `orientDB.login` OrientDB database login (default: admin)
 * `orientDB.password` OrientDB database password (default: admin)
 * `lucene.analyzer` Lucene analyser to use (default: org.apache.lucene.analysis.standard.StandardAnalyzer)
+* `requireLogin` Require login? (default: false, meaning autologin as admin)
