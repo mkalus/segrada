@@ -23,8 +23,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.*;
-import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.regex.Pattern;
@@ -106,7 +106,7 @@ public class OrientDBFilter implements Filter {
 	@Override
 	public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
 		// exclude?
-		String url = ((Request) servletRequest).getPathInfo().toString();
+		String url = ((HttpServletRequest) servletRequest).getPathInfo();
 
 		if (logger.isTraceEnabled())
 			logger.trace("Filtering " + url);
