@@ -1,5 +1,7 @@
 # Segrada starten
 
+[Erste Schritte >>](first_steps.md)
+
 ## Den Starter benutzer
 
 Der Starter is eine einfache Möglichkeit, Segrada auf dem lokalen Rechner laufen zu lassen.

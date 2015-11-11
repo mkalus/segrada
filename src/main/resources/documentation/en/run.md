@@ -1,5 +1,7 @@
 # Running Segrada
 
+[First Steps >>](first_steps.md)
+
 ## Using the Launcher
 
 Segrada Launcher is a convenient way to start Segrada on your local machine.
@@ -48,4 +50,4 @@ See [Command Line Options](command_line_options.md) for more options.
 You can deploy Segrada as WAR in a servlet container. This has not been tested thoroughly, yet, so help and feedback
 is welcome.
 
-Compile Segrada as WAR by chaning the `packaging` Tag in pom.xml to WAR.
+Compile Segrada as WAR by changing the `packaging` Tag in pom.xml to WAR.
