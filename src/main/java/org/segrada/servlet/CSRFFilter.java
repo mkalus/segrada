@@ -1,6 +1,9 @@
 package org.segrada.servlet;
 
+import com.google.inject.Inject;
+import com.google.inject.Injector;
 import com.google.inject.Singleton;
+import org.eclipse.jetty.server.Request;
 import org.segrada.session.CSRFTokenManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,9 +34,15 @@ import java.io.IOException;
 public class CSRFFilter implements Filter {
 	private final static Logger logger = LoggerFactory.getLogger(CSRFFilter.class.getName());
 
+	/**
+	 * get injector - not very nice, but works
+	 */
+	@Inject
+	private Injector injector;
+
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
-		//Do nothing
+		logger.info("CSRF token filter initialized");
 	}
 
 	@Override
@@ -43,9 +52,6 @@ public class CSRFFilter implements Filter {
 		// check security token - multipart/form-data has to be checked within the controllers
 		if (servletRequest.getMethod().equals("POST") && !servletRequest.getContentType().startsWith("multipart/form-data;")) {
 			// get token and session token
-			/*
-			//TODO: implement a way to not consume content here - or to buffer content for later reading
-
 			String token = CSRFTokenManager.getTokenFromRequest(servletRequest);
 			String sessionToken = CSRFTokenManager.getTokenForSession(servletRequest.getSession());
 
@@ -53,13 +59,17 @@ public class CSRFFilter implements Filter {
 				logger.error("CSRF token failed");
 				((HttpServletResponse) response).sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "CSRF token failed - please reload whole page");
 				return; // break filter chain
-			}*/
+			}
+
+			// inject request to retrieve it later in SegradaMessageBodyReader
+			injector.injectMembers(servletRequest);
+
 			filterChain.doFilter(servletRequest, response);
 		} else filterChain.doFilter(request, response);
 	}
 
 	@Override
 	public void destroy() {
-		//Do nothing
+		logger.info("CSRF token filter destroyed");
 	}
 }

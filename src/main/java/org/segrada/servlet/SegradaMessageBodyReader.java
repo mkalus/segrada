@@ -5,6 +5,7 @@ import com.google.inject.Injector;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.tika.io.IOUtils;
+import org.eclipse.jetty.server.Request;
 import org.segrada.model.prototype.ITag;
 import org.segrada.model.prototype.SegradaEntity;
 import org.segrada.model.prototype.SegradaTaggable;
@@ -13,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
@@ -48,21 +50,13 @@ public class SegradaMessageBodyReader implements MessageBodyReader<SegradaEntity
 
 	@Override
 	public SegradaEntity readFrom(Class<SegradaEntity> aClass, Type type, Annotation[] annotations, MediaType mediaType, MultivaluedMap<String, String> multivaluedMap, InputStream inputStream) throws IOException, WebApplicationException {
-		// read form data
-		StringWriter writer = new StringWriter();
-		IOUtils.copy(inputStream, writer, "UTF-8");
-		String theString = writer.toString();
+		HttpServletRequest request = injector.getInstance(HttpServletRequest.class);
 
-		// parse form data to key/value pairs
-		List<NameValuePair> parameters = URLEncodedUtils.parse(theString, Charset.forName("UTF-8"));
-		String id = null;
+		// read form data
+		Map<String, String[]> parameterMap = request.getParameterMap();
+
 		// find id
-		for (NameValuePair nameValuePair : parameters) {
-			if (nameValuePair.getName().equals("id")) {
-				id = nameValuePair.getValue();
-				break;
-			}
-		}
+		String id = parameterMap.containsKey("id")?parameterMap.get("id")[0]:null;
 
 		// create instance
 		SegradaEntity entity;
@@ -101,16 +95,13 @@ public class SegradaMessageBodyReader implements MessageBodyReader<SegradaEntity
 			}
 		}
 
-		// keep aggregated array values from form
-		Map<String, String[]> arrayValues = new HashMap<>();
-
 		// get each form key and value
-		for (NameValuePair nameValuePair : parameters) {
+		for (String key : parameterMap.keySet()) {
 			// do not update id
-			if (nameValuePair.getName().equals("id")) continue;
+			if (key.equals("id")) continue;
 			// clear tags before setting new ones: make sure to clear tags if empty
-			if (nameValuePair.getName().equals("clearTags")) {
-				Method setter = setters.get(nameValuePair.getValue());
+			if (key.equals("clearTags")) {
+				Method setter = setters.get(parameterMap.get("clearTags")[0]);
 				if (setter != null) {
 					try {
 						// setTags method?
@@ -126,18 +117,24 @@ public class SegradaMessageBodyReader implements MessageBodyReader<SegradaEntity
 				continue;
 			}
 
-			Method setter = setters.get(nameValuePair.getName());
+			Method setter = setters.get(key);
 			if (setter != null) {
 				// get first parameter of setter (type to cast)
 				Class setterType = setter.getParameterTypes()[0];
 
 				// preprocess values
-				Object value = nameValuePair.getValue();
-				if (value != null && !nameValuePair.getValue().isEmpty()) {
-					if (nameValuePair.getName().equals("color") && nameValuePair.getValue().startsWith("#")) {
+				String[] values = parameterMap.get(key);
+				// short cut first value - used in most cases
+				String firstValue = values!=null&&values.length>0?values[0]:null;
+				// object representation of value
+				Object value = firstValue;
+
+				// preprocess values
+				if (value != null && !firstValue.isEmpty()) {
+					if (key.equals("color") && firstValue.startsWith("#")) {
 						try {
-							if (nameValuePair.getValue().equals("#ffffffff")) value = null;
-							else value = Integer.decode(nameValuePair.getValue());
+							if (value.equals("#ffffffff")) value = null;
+							else value = Integer.decode(firstValue);
 						} catch (NumberFormatException e) {
 							value = null;
 							// fail silently
@@ -158,26 +155,11 @@ public class SegradaMessageBodyReader implements MessageBodyReader<SegradaEntity
 				}
 				// handle arrays
 				if (String[].class.isAssignableFrom(setterType)) {
-					// get aggregated list from arrayvalues
-					String[] currentValues = arrayValues.get(nameValuePair.getName());
-					if (currentValues == null) {
-						currentValues = new String[] { (String) value };
-					} else  {
-						// add to string
-						String[] newValues = new String[currentValues.length+1];
-						for (int i = 0; i < currentValues.length; i++)
-							newValues[i] = currentValues[i];
-						newValues[currentValues.length] = (String)value;
-						currentValues = newValues;
-					}
-					// save to arrayValues
-					arrayValues.put(nameValuePair.getName(), currentValues);
-					value = currentValues;
+					value = values;
 				}
 				// handle booleans
 				if (Boolean.class.isAssignableFrom(setterType)) {
-					String val = (String) value;
-					value = !(val == null || val.isEmpty() || val.equals("0") || val.equalsIgnoreCase("f") || val.equalsIgnoreCase("false"));
+					value = !(firstValue == null || firstValue.isEmpty() || firstValue.equals("0") || firstValue.equalsIgnoreCase("f") || firstValue.equalsIgnoreCase("false"));
 				}
 
 				// try to set value
