@@ -36,25 +36,25 @@
 
 				<div class="sg-file-data sg-margin-top">
 					<div class="row">
-						<div class="col-xs-2"><strong th:text="#{field.filename}">File name</strong></div>
-						<div class="col-xs-10"><code th:text="${entity.filename}">file.txt</code></div>
+						<div class="col-xs-3"><strong th:text="#{field.filename}">File name</strong></div>
+						<div class="col-xs-9"><code th:text="${entity.filename}">file.txt</code></div>
 					</div>
 					<div class="row">
-						<div class="col-xs-2"><strong th:text="#{field.filesize}">Filesize</strong></div>
-						<div class="col-xs-10"><th:formatnumber number="${entity.fileSize}" format="'binary'" /></div>
+						<div class="col-xs-3"><strong th:text="#{field.filesize}">Filesize</strong></div>
+						<div class="col-xs-9"><th:formatnumber number="${entity.fileSize}" format="'binary'" /></div>
 					</div>
 					<div class="row" th:unless="${#strings.isEmpty(entity.copyright)}">
-						<div class="col-xs-2"><strong th:text="#{field.copyright}">Copyright</strong></div>
-						<div class="col-xs-10" th:text="${entity.copyright}">copyright</div>
+						<div class="col-xs-3"><strong th:text="#{field.copyright}">Copyright</strong></div>
+						<div class="col-xs-9" th:text="${entity.copyright}">copyright</div>
 					</div>
 					<div class="row" th:unless="${#strings.isEmpty(entity.location)}">
-						<div class="col-xs-2"><strong th:text="#{field.location}">Location</strong></div>
-						<div class="col-xs-10" th:text="${entity.location}">location</div>
+						<div class="col-xs-3"><strong th:text="#{field.location}">Location</strong></div>
+						<div class="col-xs-9" th:text="${entity.location}">location</div>
 					</div>
 					<div class="row">
-						<div class="col-xs-2"><strong th:text="#{field.indexFullTextShort}">Index?</strong></div>
-						<div class="col-xs-10" th:unless="${#strings.isEmpty(entity.fullText)}"><i class="fa fa-check text-success"></i> <span th:text="#{field.indexFullTextOk}">full text?</span></div>
-						<div class="col-xs-10" th:if="${#strings.isEmpty(entity.fullText)}"><i class="fa fa-times text-danger"></i> <span th:text="#{field.indexFullTextNo}">full text?</span></div>
+						<div class="col-xs-3"><strong th:text="#{field.indexFullTextShort}">Index?</strong></div>
+						<div class="col-xs-9" th:unless="${#strings.isEmpty(entity.fullText)}"><i class="fa fa-check text-success"></i> <span th:text="#{field.indexFullTextOk}">full text?</span></div>
+						<div class="col-xs-9" th:if="${#strings.isEmpty(entity.fullText)}"><i class="fa fa-times text-danger"></i> <span th:text="#{field.indexFullTextNo}">full text?</span></div>
 					</div>
 				</div>
 
