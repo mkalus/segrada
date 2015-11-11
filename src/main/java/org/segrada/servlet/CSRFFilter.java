@@ -42,6 +42,10 @@ public class CSRFFilter implements Filter {
 
 		// check security token - multipart/form-data has to be checked within the controllers
 		if (servletRequest.getMethod().equals("POST") && !servletRequest.getContentType().startsWith("multipart/form-data;")) {
+			// get token and session token
+			/*
+			//TODO: implement a way to not consume content here - or to buffer content for later reading
+
 			String token = CSRFTokenManager.getTokenFromRequest(servletRequest);
 			String sessionToken = CSRFTokenManager.getTokenForSession(servletRequest.getSession());
 
@@ -49,10 +53,9 @@ public class CSRFFilter implements Filter {
 				logger.error("CSRF token failed");
 				((HttpServletResponse) response).sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "CSRF token failed - please reload whole page");
 				return; // break filter chain
-			}
-		}
-
-		filterChain.doFilter(request, response);
+			}*/
+			filterChain.doFilter(servletRequest, response);
+		} else filterChain.doFilter(request, response);
 	}
 
 	@Override
