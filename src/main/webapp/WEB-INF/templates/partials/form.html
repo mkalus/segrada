@@ -63,7 +63,7 @@
 <div th:fragment="formCheckbox (name, field, label, id, errors, required)" class="form-group" th:classappend="${errors}?(${#maps.containsKey(errors, name)}?'has-error has-feedback')">
 	<div class="col-sm-10 col-md-offset-2">
 		<label th:for="${name + '-' + id}">
-			<input th:name="${name}" type="hidden" value="0" />
+			<input th:unless="${noHiddenField}" th:name="${name}" type="hidden" value="0" />
 			<input th:id="${name + '-' + id}" th:name="${name}" type="checkbox" th:checked="${field}?true" value="1" /> <span th:text="${label}"></span><span class="text-danger" th:if="${required}"> *</span>
 		</label>
 

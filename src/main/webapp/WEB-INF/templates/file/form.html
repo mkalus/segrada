@@ -35,8 +35,8 @@
 				</div>
 			</div>
 
-			<div th:replace="partials/form :: formCheckbox (name='indexFullText',field=${entity.indexFullText},label=#{field.indexFullText},id=${tempId},errors=${errors},required=false)"></div>
-			<div th:replace="partials/form :: formCheckbox (name='containFile',field=${entity.containFile},label=#{field.containFile},id=${tempId},errors=${errors},required=false)"></div>
+			<div th:replace="partials/form :: formCheckbox (name='indexFullText',field=${entity.indexFullText},label=#{field.indexFullText},id=${tempId},errors=${errors},required=false,noHiddenField=true)"></div>
+			<div th:replace="partials/form :: formCheckbox (name='containFile',field=${entity.containFile},label=#{field.containFile},id=${tempId},errors=${errors},required=false,noHiddenField=true)"></div>
 
 			<div th:replace="partials/form :: formColorSelect (colors=${colors},name='color',field=${entity.color},label=#{field.color},id=${tempId},errors=${errors},required=false)"></div>
 			<div th:replace="partials/form :: formPictogram (name='pictogram',field=${entity.pictogram},label=#{Pictogram},id=${tempId},errors=${errors},required=false)"></div>
