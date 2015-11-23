@@ -959,10 +959,10 @@
 						loadDataAddUrl(url);
 						return false;
 					},
-					editNode: false,
-					editEdge: false,
-					deleteNode: false,
-					deleteEdge: false
+					editNode: function(data, callback) { return false },
+					editEdge: function(data, callback) { return false },
+					deleteNode: function(data, callback) { return false },
+					deleteEdge: function(data, callback) { return false },
 				},
 				nodes: {
 					shape: 'icon',
