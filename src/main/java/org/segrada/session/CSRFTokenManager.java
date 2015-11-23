@@ -44,6 +44,10 @@ final public class CSRFTokenManager {
 	 * @return
 	 */
 	public static String getTokenFromRequest(HttpServletRequest request) {
+		// JSON POST - will be in HTML header
+		if (request.getContentType().startsWith("application/json")) {
+			return request.getHeader("X-CSRF-Token");
+		}
 		return request.getParameter(CSRF_PARAM_NAME);
 	}
 

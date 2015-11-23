@@ -1088,11 +1088,17 @@
 		for (var i = 0; i < temp.length; i++)
 			edgeIds.push(temp[i].id);
 
+		var csrf = $('#sg-graph-container').attr('data-csrf');
+
 		// post AJAX data
 		$.ajax({
 			url: url,
 			type: "POST",
 			dataType: 'json',
+			headers: {
+				'Content-Type': 'application/json',
+				'X-CSRF-Token': csrf
+			},
 			data: JSON.stringify({ "nodes": nodeIds, "edges": edgeIds }),
 			success: function(data, textStatus, jqXHR) {
 				// error handling TODO: make this nicer!
