@@ -8,6 +8,7 @@ Starting and running Segrada:
 
 * [Running Segrada](run.md)
 * [First steps](tutorial01.md)
+* [Adding files and source references](tutorial02.md)
 
 Reference
 

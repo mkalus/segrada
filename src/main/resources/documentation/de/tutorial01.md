@@ -1,6 +1,6 @@
 ## Erste Schritte
 
-[<< Segrada starten](run.md)
+[<< Segrada starten](run.md) [Dateien und Quellenangaben hinzufügen >>](tutorial02.md)
 
 Segrada läuft auf Ihren Rechner &ndash; was nun? In diesem kurzen Tutorial werden die ersten Schritte der Datenhaltung
 gezeigt.
@@ -77,3 +77,5 @@ Ein Graph in der Art wie unten wird angezeigt werden:
 ![Graphenansicht von Fritz und Franz](tutorial_01_11.png)
 
 Damit haben Sie die ersten Schritte getätigt. Viel Spaß beim Erstellen und Verknüpfen Ihrer Daten.
+
+[<< Segrada starten](run.md) [Dateien und Quellenangaben hinzufügen >>](tutorial02.md)

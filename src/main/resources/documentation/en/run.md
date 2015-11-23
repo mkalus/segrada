@@ -51,3 +51,5 @@ You can deploy Segrada as WAR in a servlet container. This has not been tested t
 is welcome.
 
 Compile Segrada as WAR by changing the `packaging` Tag in pom.xml to WAR.
+
+[First Steps >>](tutorial01.md)

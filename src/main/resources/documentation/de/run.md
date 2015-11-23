@@ -57,3 +57,5 @@ Sie können Segrada als WAR in einem Servlet-Container starten. Diese Funktion i
 getestet. Erfahrungen und Feedback sind daher erwünscht. 
 
 Kompilieren Sie Segrada mit folgender Änderung: Ändern Sie das `packaging` Tag in der Datei pom.xml nach WAR.
+
+[Erste Schritte >>](tutorial01.md)

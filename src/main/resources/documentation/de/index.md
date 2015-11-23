@@ -8,6 +8,7 @@ Segrada starten und ausführen:
 
 * [Segrada starten](run.md)
 * [Erste Schritte](tutorial01.md)
+* [Dateien und Quellenangaben hinzufügen](tutorial02.md)
 
 Referenz
 

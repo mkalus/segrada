@@ -1,6 +1,6 @@
 ## First Steps
 
-[<< Running Segrada](run.md)
+[<< Running Segrada](run.md) [Adding files and source references >>](tutorial02.md)
 
 Segrada is running &ndash; what next? This is a short tutorial to get you running.
 
@@ -73,3 +73,5 @@ A graph will be created, similar to this one:
 ![Graph view of Bill and Bob](tutorial_01_11.png)
 
 You have now succeeded your first steps. Have fun creating your nodes and relations.
+
+[<< Running Segrada](run.md) [Adding files and source references >>](tutorial02.md)
