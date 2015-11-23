@@ -95,10 +95,9 @@ public class SourceReferenceController extends AbstractBaseController<ISourceRef
 	@Produces(MediaType.TEXT_HTML)
 	public Response delete(@PathParam("uid") String uid, @QueryParam("backUrl") String backUrl) {
 		if (!service.delete(service.findById(service.convertUidToId(uid)))) {
-			clearCache(); // delete caches
-
 			return Response.ok(new Viewable("error", "DELETE failed.")).build();
 		}
+		clearCache(); // delete caches
 
 		return Response.seeOther(URI.create(backUrl)).build();
 	}
