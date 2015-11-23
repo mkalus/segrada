@@ -1,6 +1,6 @@
 # Running Segrada
 
-[First Steps >>](first_steps.md)
+[First Steps >>](tutorial01.md)
 
 ## Using the Launcher
 

@@ -7,7 +7,7 @@ Understanding Segrada:
 Starting and running Segrada:
 
 * [Running Segrada](run.md)
-* [First steps](first_steps.md)
+* [First steps](tutorial01.md)
 
 Reference
 

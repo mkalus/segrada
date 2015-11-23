@@ -7,7 +7,7 @@ Segrada verstehen:
 Segrada starten und ausführen:
 
 * [Segrada starten](run.md)
-* [Erste Schritte](first_steps.md)
+* [Erste Schritte](tutorial01.md)
 
 Referenz
 

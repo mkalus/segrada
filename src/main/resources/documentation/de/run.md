@@ -1,6 +1,6 @@
 # Segrada starten
 
-[Erste Schritte >>](first_steps.md)
+[Erste Schritte >>](tutorial01.md)
 
 ## Den Starter benutzer
 
