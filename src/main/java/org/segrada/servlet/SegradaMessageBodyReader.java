@@ -31,6 +31,7 @@ import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Provider
 @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -95,27 +96,28 @@ public class SegradaMessageBodyReader implements MessageBodyReader<SegradaEntity
 			}
 		}
 
+		// create key set
+		Set<String> keys = parameterMap.keySet();
+		// clear tags before setting new ones: make sure to clear tags if empty
+		if (keys.contains("clearTags")) {
+			Method setter = setters.get(parameterMap.get("clearTags")[0]);
+			if (setter != null) {
+				try {
+					// setTags method?
+					if (setter.getName().equals("setTags"))
+						((SegradaTaggable)entity).setTags(new String[]{});
+					else if (setter.getName().equals("setChildTags"))
+						((ITag)entity).setChildTags(new String[]{});
+				} catch (Exception e) {
+					logger.error("Could not set entity of type " + aClass.getSimpleName() + ", method " + setter.getName() + " to clear its tags", e);
+				}
+			}
+		}
+
 		// get each form key and value
 		for (String key : parameterMap.keySet()) {
-			// do not update id
-			if (key.equals("id")) continue;
-			// clear tags before setting new ones: make sure to clear tags if empty
-			if (key.equals("clearTags")) {
-				Method setter = setters.get(parameterMap.get("clearTags")[0]);
-				if (setter != null) {
-					try {
-						// setTags method?
-						if (setter.getName().equals("setTags"))
-							((SegradaTaggable)entity).setTags(new String[]{});
-						else if (setter.getName().equals("setChildTags"))
-							((ITag)entity).setChildTags(new String[]{});
-					} catch (Exception e) {
-						logger.error("Could not set entity of type " + aClass.getSimpleName() + ", method " + setter.getName() + " to clear its tags", e);
-					}
-				}
-
-				continue;
-			}
+			// do not update id, ignore clearTags and _csrf
+			if (key.equals("id") || key.equals("clearTags") || key.equals("_csrf")) continue;
 
 			Method setter = setters.get(key);
 			if (setter != null) {
