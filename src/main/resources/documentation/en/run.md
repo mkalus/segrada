@@ -15,8 +15,8 @@ Segrada Launcher is a convenient way to start Segrada on your local machine.
 * Open Windows Explorer in that folder and click on Segrada.exe to run the launcher. If the launcher does **not** start,
   check your Java version and/or download it from [Oracle](https://www.java.com/).
 * You should see the launcher window similar to the one above.
-* _Optionally:_ Select a path with an existing database. Default is the folder `segrada_data` in the folder where
-  Segrada.exe and the other program files are located. 
+* _Optionally:_ Select a path with an existing database (or select an empty folder to initialize a database there).
+  Default is the folder `segrada_data` in the folder where Segrada.exe and the other program files are located.
 * In the launcher window, click on "Start" to create a database. This will take a while on the first time.
 * Windows Firewall might complain. Click "Ok" to accept the changes.
 * Open your browser and to to [http://localhost:8080/](http://localhost:8080/).

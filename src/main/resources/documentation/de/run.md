@@ -33,8 +33,9 @@ Der Starter is eine einfache Möglichkeit, Segrada auf dem lokalen Rechner laufe
   Starter **nicht** starten sollte, prüfen Sie bitte Ihre Java-Version und/oder laden sie Java von
   [Oracle](https://www.java.com/) herunter.
 * Das Starterfenster sollte nun in ähnlicher Weise wie oben zu sehen sein.
-* _Optional:_ Wählen Sie einen Pfad, in dem eine existierende Datenbank bereits gespeichert ist. Der Standardordner
-  ist `segrada_data` im selben Verzeichnis wie die Programmdateien von Segrada.
+* _Optional:_ Wählen Sie einen Pfad, in dem eine existierende Datenbank bereits gespeichert ist (oder verwenden Sie
+  einen leeren Ordner, um dort eine neue Datenbank zu erstellen). Der Standardordner ist `segrada_data` im selben
+  Verzeichnis wie die Programmdateien von Segrada.
 * Klicken Sie auf "Start" im Starter-Fenster, um eine Datenbank zu erstellen. Dies wird beim ersten Mal eine Weile
   dauern.
 * Öffnen Sie ihren Browser unter [http://localhost:8080/](http://localhost:8080/).
