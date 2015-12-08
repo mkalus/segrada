@@ -34,6 +34,7 @@
 					<td><input type="text" class="form-control" th:value="${filters.shortRef}" name="short_ref" th:placeholder="#{field.filter_shortRef}" title="#{field.filter_shortRef}" /></td>
 					<td><input type="text" class="form-control" th:value="${filters.search}" name="search" th:placeholder="#{field.filter_title}" title="#{field.filter_title}" /></td>
 					<td>
+						<input type="hidden" name="clearTags" value="1" />
 						<select multiple="multiple" type="text" name="tags" class="sg-tags">
 							<option th:each="tag : ${filters.tags}" selected="selected" th:value="${tag}" th:text="${tag}">Tag</option>
 						</select>

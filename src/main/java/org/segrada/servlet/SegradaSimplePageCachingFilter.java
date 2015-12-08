@@ -146,9 +146,19 @@ public class SegradaSimplePageCachingFilter extends SimplePageCachingFilter {
 		}
 
 		// get query data and add it to list (overwrite session, if needed)
+		boolean clearTags = false; // flag to check whether parameter clearTags was sent in form data
+		boolean tagsSetByForm =  false; // flag to check whether there has been a field tags in form data
 		for (Map.Entry<String, String[]> parameter : httpRequest.getParameterMap().entrySet()) {
-			queryData.put(parameter.getKey(), String.join(",", parameter.getValue()));
+			String key = parameter.getKey();
+			if (key.equals("clearTags")) {
+				clearTags = true;
+				continue; // do not add to parameters
+			}
+			if (key.equals("tags")) tagsSetByForm = true; // tags were in form data
+			queryData.put(key, String.join(",", parameter.getValue()));
 		}
+		// did we have field clearTags in form, but no tags were set? => delete tags saved in session, if needed
+		if (clearTags && ! tagsSetByForm) queryData.remove("tags"); // will be removed from session via controller
 
 		// create query string as key
 		StringBuilder queryString = new StringBuilder();

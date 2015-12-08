@@ -32,6 +32,7 @@
 					<td class="text-center"><a class="sg-control-set btn btn-sm btn-link" href="#" th:href="@{${myurl}(reset=1)}" th:title="#{reset}" th:attr="data-target-id=${targetId}"><i class="fa fa-eraser"></i></a></td>
 					<td><input type="text" class="form-control" th:value="${filters.search}" name="search" th:placeholder="#{field.filter_title}" title="#{field.filter_title}" /></td>
 					<td>
+						<input type="hidden" name="clearTags" value="1" />
 						<select multiple="multiple" type="text" name="tags" class="sg-tags">
 							<option th:each="tag : ${filters.tags}" selected="selected" th:value="${tag}" th:text="${tag}">Tag</option>
 						</select>
