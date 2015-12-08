@@ -80,8 +80,6 @@ public class SegradaGuiceServletContextListener extends GuiceServletContextListe
 
 						initParams = new TreeMap<>();
 						initParams.put("com.sun.jersey.config.property.WebPageContentRegex", filterPattern);
-						//TODO: implement client side of this, in order to make it work
-						//initParams.put("com.sun.jersey.spi.container.ContainerRequestFilters", "com.sun.jersey.api.container.filter.CsrfProtectionFilter");
 
 						// guice container filter
 						filter("/*").through(GuiceContainer.class, initParams);
