@@ -25,6 +25,11 @@ Features:
 [Documentation on GitHub](https://github.com/mkalus/segrada/blob/master/src/main/resources/documentation/index.md)
 
 
+## Translation
+
+[Translation project on Transifex](https://www.transifex.com/auxnet/segrada/dashboard/)
+
+
 ## Running Segrada
 
 Download from: [www.segrada.org](http://www.segrada.org/ "Segrada Homepage")
