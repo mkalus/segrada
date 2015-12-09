@@ -53,7 +53,8 @@ In order to run Segrada as a server, start the server with the headless option:
 
     java -jar segrada-1.0-SNAPSHOT.jar headless
 
-See [Command Line Options](command_line_options.md) for more options.
+See [Command Line Options](command_line_options.md) for more options. You can also
+[start Segrada automatically](autostart.md).
 
 
 ## Deploying Segrada as Servlet

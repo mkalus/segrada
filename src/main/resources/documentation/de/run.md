@@ -64,7 +64,8 @@ Um Segrada als eigenständigen Server zu starten, kann man die headless-Option v
 
     java -jar segrada-1.0-SNAPSHOT.jar headless
 
-Mehr Optionen unter [Kommandozeilenoptionen](command_line_options.md).
+Mehr Optionen unter [Kommandozeilenoptionen](command_line_options.md). Zudem können Sie
+[Segrada automatisch starten lassen](autostart.md).
 
 
 ## Segrada im Servlet-Kontext

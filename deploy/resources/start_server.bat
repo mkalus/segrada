@@ -1,0 +1,1 @@
+start "Segrada" Segrada.exe headless

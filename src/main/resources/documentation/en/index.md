@@ -13,4 +13,5 @@ Starting and running Segrada:
 Reference
 
 * [Command Line Options](command_line_options.md)
+* [Starting Segrada Automatically](autostart.md)
 * [Users and Groups](users_and_groups.md)

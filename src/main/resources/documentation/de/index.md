@@ -13,5 +13,6 @@ Segrada starten und ausführen:
 Referenz
 
 * [Kommandozeilenoptionen](command_line_options.md)
+* [Segrada automatisch starten](autostart.md)
 * [Benutzer und Gruppen](users_and_groups.md)
 
