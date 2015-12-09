@@ -24,7 +24,23 @@ Der Starter is eine einfache Möglichkeit, Segrada auf dem lokalen Rechner laufe
 * Es kann sein, dass der Windowsfirewall eine Warnung ausgibt. Diese können Sie mit "Ok" bestätigen.
 * Öffnen Sie ihren Browser unter [http://localhost:8080/](http://localhost:8080/).
 
-### Mac, Linux, Unix
+### Mac
+
+* Laden Sie Segrada als TGZ-Datei von der Seite [www.segrada.org](http://segrada.org/fileadmin/downloads/Segrada.zip)
+  herunter.
+* Entpacken Sie die TGZ-Datei in einen beliebigen Ordner Ihrer Wahl.
+* Starten Sie das Kommando `start_mac.command` in dem gerade entpackten Ordner aus. Falls der
+  Starter **nicht** starten sollte, prüfen Sie bitte Ihre Java-Version und/oder laden sie Java von
+  [Oracle](https://www.java.com/) herunter.
+* Das Starterfenster sollte nun in ähnlicher Weise wie oben zu sehen sein.
+* _Optional:_ Wählen Sie einen Pfad, in dem eine existierende Datenbank bereits gespeichert ist (oder verwenden Sie
+  einen leeren Ordner, um dort eine neue Datenbank zu erstellen). Der Standardordner ist `segrada_data` im selben
+  Verzeichnis wie die Programmdateien von Segrada.
+* Klicken Sie auf "Start" im Starter-Fenster, um eine Datenbank zu erstellen. Dies wird beim ersten Mal eine Weile
+  dauern.
+* Öffnen Sie ihren Browser unter [http://localhost:8080/](http://localhost:8080/).
+
+### Linux, Unix
 
 * Laden Sie Segrada als TGZ-Datei von der Seite [www.segrada.org](http://segrada.org/fileadmin/downloads/Segrada.zip)
   herunter.
@@ -40,7 +56,6 @@ Der Starter is eine einfache Möglichkeit, Segrada auf dem lokalen Rechner laufe
   dauern.
 * Öffnen Sie ihren Browser unter [http://localhost:8080/](http://localhost:8080/).
 
-Geplant: Mac-Start-Programm.
 
 
 ## Segrada als Server starten
