@@ -63,7 +63,11 @@ public class PageController {
 		String language = lObject==null?Locale.getDefault().getLanguage():(String) lObject;
 
 		try {
-			final InputStream in = getClass().getResourceAsStream("/documentation/" + language + "/" + image + ".png");
+			InputStream ins = getClass().getResourceAsStream("/documentation/" + language + "/" + image + ".png");
+			// fallback to English language
+			if (ins == null) ins = getClass().getResourceAsStream("/documentation/en/" + image + ".png");
+			// make final
+			final InputStream in = ins;
 
 			// set streaming output
 			StreamingOutput output = outputStream -> {
@@ -130,7 +134,13 @@ public class PageController {
 
 		// read schema from resource file
 		InputStream is = this.getClass().getResourceAsStream(resourceName);
-		if (is == null) return "NOT AVAILABLE";
+		if (is == null) {
+			// try fallback to english language
+			resourceName = "/documentation/en/" + page + ".md";
+			is = this.getClass().getResourceAsStream(resourceName);
+			if (is == null) // still not found
+				return "NOT AVAILABLE";
+		}
 
 		// if no resouce exists do not run updater
 		try {
