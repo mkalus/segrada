@@ -9,11 +9,20 @@ import org.segrada.service.base.AbstractFullTextService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.servlet.ServletContext;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.Locale;
 import java.util.Map;
+import java.util.PropertyResourceBundle;
+import java.util.ResourceBundle;
 
 /**
  * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]
@@ -46,6 +55,11 @@ public class AdminController {
 	@Inject
 	private Map<String, AbstractFullTextService> fullTextServiceMap;
 
+	/**
+	 * resource bundle
+	 */
+	private ResourceBundle messages;
+
 	@GET
 	@Produces(MediaType.TEXT_HTML)
 	public String index() {
@@ -55,8 +69,8 @@ public class AdminController {
 	@GET
 	@Path("/reindex")
 	@Produces(MediaType.TEXT_HTML)
-	public String reindex() {
-		clearCache(); // delete caches
+	public String reindex(@Context ServletContext context) {
+		clearCache(context); // delete caches
 
 		// clear index
 		searchEngine.clearAllIndexes();
@@ -82,19 +96,51 @@ public class AdminController {
 				logger.debug("Reindexed " + entry + ": " + done + "/" + total);
 		}
 
-		return "Fertig."; //TODO i18n
+		initI18N(context);
+		try {
+			return messages.getString("ReindexingFinished");
+		} catch (Exception e) {
+			return "Finished.";
+		}
 	}
 
 	@GET
 	@Path("/clear_cache")
 	@Produces(MediaType.TEXT_HTML)
-	public String clearCache() {
+	public String clearCache(@Context ServletContext context) {
 		// delete caches
 		Ehcache cache = CacheManager.getInstance().getEhcache("SimplePageCachingFilter");
 		if (cache != null) {
 			cache.removeAll(); // flush whole cache
 		}
 
-		return "Cache gelöscht."; //TODO i18n
+		initI18N(context);
+		try {
+			return messages.getString("CacheCleared");
+		} catch (Exception e) {
+			return "Cache has been cleared.";
+		}
+	}
+
+	/**
+	 * Initialize I18N - not elegant but works for this controller
+	 */
+	private void initI18N(ServletContext context) {
+		if (messages == null) {
+			Locale locale = Locale.getDefault();
+
+			try {
+				// try to get language in correct locale
+				URL url = context.getResource("/WEB-INF/i18n/messages_" + locale.getLanguage() + ".properties");
+				// fallback to English
+				if (url == null)
+					url = context.getResource("/WEB-INF/i18n/messages.properties");
+
+				// load resources
+				messages = new PropertyResourceBundle(url.openStream());
+			} catch (IOException e) {
+				logger.error("Could not load resource file for admin controller for language " + locale.getLanguage(), e);
+			}
+		}
 	}
 }
