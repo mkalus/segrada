@@ -29,6 +29,8 @@ Features:
 
 [Translation project on Transifex](https://www.transifex.com/auxnet/segrada/dashboard/)
 
+We are looking for translators. If you want to support Segrada, feel free to contact us.
+
 
 ## Running Segrada
 
