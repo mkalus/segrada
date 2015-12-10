@@ -38,7 +38,8 @@ Segrada Launcher is a convenient way to start Segrada on your local machine.
 * Download Segrada as TGZ file from [www.segrada.org](http://segrada.org/fileadmin/downloads/Segrada.tgz).
 * Unpack TGZ to a folder of your choice.
 * Open the command line and run `./start.sh` in the folder you just extracted. If the launcher does **not** start,
-  check your Java version and/or download it from [Oracle](https://www.java.com/).
+  check your Java version. You can install OpenJDK 8, look on the
+  [OpenJDK website](http://openjdk.java.net/install/index.html) for help.
 * You should see the launcher window similar to the one above.
 * _Optionally:_ Select a path with an existing database. Default is the folder `segrada_data` in the folder where
   Segrada.exe and the other program files are located. 
