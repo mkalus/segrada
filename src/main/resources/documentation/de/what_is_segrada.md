@@ -14,7 +14,7 @@ Das Bild oben zeigt einige der Möglichkeiten von Segrada auf:
 * Knoten sind *semantisch* untereinander verknüpft, d.h. die **Verknüpfungen** tragen eine Bedeutung (und ebenfalls ggf.
   zeitliche Angaben), die die Art der Verbindung verdeutlicht.
 * Das Bild zeigt also einen **Graphen** mit Knoten und Verknüpfungen an (bzw. mit Vertices und Kanten), die auch ein
-  Mensch leicht interpretieren kann: Ferdindand Kron lebte also eine Weile in Goa und arbeite für zwei Firmen, z.T.
+  Mensch leicht interpretieren kann: Ferdinand Kron lebte also eine Weile in Goa und arbeite für zwei Firmen, z.T.
   zur selben Zeit. Beide Firmen stammten aus Augsburg, wie auch Kron selbst.
 
 Mit Segrada kann man solche Graphen erstellen und sich auch anzeigen lassen. Segrada bietet darüber hinaus noch weitere

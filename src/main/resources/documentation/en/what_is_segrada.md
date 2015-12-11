@@ -12,7 +12,7 @@ The image above convey some of the possibilities of Segrada:
 * Nodes are linked to each other *semantically*. Such **relations** carry a meaning (and, possibly, a time frame, too)
   which describes the type of link between the nodes.
 * Thus, the image shows a **graph** with nodes and relations (or vertices and edges) which can easily be interpreted
-  by humans: Ferdindand Kron in Goa for a while and worked for two companies, partially at the same time. Both firms
+  by humans: Ferdinand Kron in Goa for a while and worked for two companies, partially at the same time. Both firms
   hailed from the city of Augsburg, hometown of Kron.
 
 Using Segrada you can create your own graphs and also show them in a similar way as above. Additionally, Segrada boasts
