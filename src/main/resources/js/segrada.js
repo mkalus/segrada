@@ -73,6 +73,19 @@
 		}
 	});
 
+	// clean certain urls from jsessionid elements
+	function cleanPathFromSessionId(path) {
+		return path.replace(/;jsessionid=([^?]*)/, '');
+	}
+
+	urlSegradaPictogramSearch = cleanPathFromSessionId(urlSegradaPictogramSearch);
+	urlSegradaPictogramFile = cleanPathFromSessionId(urlSegradaPictogramFile);
+	urlSegradaTagSearch = cleanPathFromSessionId(urlSegradaTagSearch);
+	urlSegradaNodeSearch = cleanPathFromSessionId(urlSegradaNodeSearch);
+	urlSegradaFileSearch = cleanPathFromSessionId(urlSegradaFileSearch);
+	urlSegradaSourceSearch = cleanPathFromSessionId(urlSegradaSourceSearch);
+	urlSegradaRelationAdd = cleanPathFromSessionId(urlSegradaRelationAdd);
+
 	// load google maps dynamically - taken from http://stackoverflow.com/questions/3922764/load-google-maps-v3-dynamically-with-ajax
 	var gMapsLoaded = false;
 	//var geocoder = null;
