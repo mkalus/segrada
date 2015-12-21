@@ -46,8 +46,10 @@ Der Starter is eine einfache Möglichkeit, Segrada auf dem lokalen Rechner laufe
   herunter.
 * Entpacken Sie die TGZ-Datei in einen beliebigen Ordner Ihrer Wahl.
 * Öffnen Sie die Kommandozeile und führen Sie den Befehl `./start.sh` in dem gerade entpackten Ordner aus. Falls der
-  Starter **nicht** starten sollte, prüfen Sie bitte Ihre Java-Version. Anleitungen zum Installieren von OpenJDK 8
-  finden Sie unter auf der [Seite von OpenJDK](http://openjdk.java.net/install/index.html).
+  Starter **nicht** starten sollte, prüfen Sie bitte Ihre Java-Version. Aus irgendeinem obskuren Grund muss auf
+  Apple-Rechner das JDK installiert werden, um Java auszuführen. Besuchen Sie dazu die
+  [Java-Seite von Oracle](http://www.oracle.com/technetwork/java/javase/downloads/index.html) und wählen Sie ein
+  Installationspaket für Ihre Platform (z.B. Java SE Development Kit 8u66 für Mac 64-Bit).
 * Das Starterfenster sollte nun in ähnlicher Weise wie oben zu sehen sein.
 * _Optional:_ Wählen Sie einen Pfad, in dem eine existierende Datenbank bereits gespeichert ist (oder verwenden Sie
   einen leeren Ordner, um dort eine neue Datenbank zu erstellen). Der Standardordner ist `segrada_data` im selben
