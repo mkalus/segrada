@@ -12,6 +12,7 @@ import java.io.File;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Locale;
+import java.util.Properties; 
 import java.util.ResourceBundle;
 
 /**
@@ -238,9 +239,16 @@ public class SegradaLauncher extends JFrame implements ApplicationStatusChangedL
 	 */
 	private void openBrowser(ActionEvent actionEvent) {
 		Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
+		Properties env = System.getProperties();
+		String propPort = "8080";
+		if (env.getProperty("server.port") != null) {
+			try {
+				propPort = env.getProperty("server.port");
+			} catch (Exception e) {}
+		}
 		if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
 			try {
-				desktop.browse(new URI("http://localhost:8080/"));
+				desktop.browse(new URI("http://localhost:" + propPort));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
