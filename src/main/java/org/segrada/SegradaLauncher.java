@@ -242,13 +242,15 @@ public class SegradaLauncher extends JFrame implements ApplicationStatusChangedL
 		Properties env = System.getProperties();
 		String propPort = "8080";
 		if (env.getProperty("server.port") != null) {
-			try {
-				propPort = env.getProperty("server.port");
-			} catch (Exception e) {}
+			propPort = env.getProperty("server.port");
+		}
+		String contextRoot = "/";
+		if (env.getProperty("server.context") != null) {
+			contextRoot = env.getProperty("server.context");
 		}
 		if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
 			try {
-				desktop.browse(new URI("http://localhost:" + propPort));
+				desktop.browse(new URI("http://localhost:" + propPort + contextRoot));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
