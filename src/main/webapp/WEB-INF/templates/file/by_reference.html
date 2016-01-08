@@ -51,6 +51,7 @@
 					<div class="col-sm-10">
 						<input type="text" th:id="${'ref-source-' + uid + '-select'}" name="sourceName" class="form-control sg-file-search" th:placeholder="#{Source}" th:attr="data-id=${'ref-source-' + uid},data-select-id=${selectReference}" />
 						<input type="hidden" th:id="${'ref-source-' + uid}" name="source" />
+						<span class="help-block" th:unless="${errors}"><small th:text="#{form.typeahead.hint}"></small></span>
 						<span class="help-block" th:text="${errors}?(${errors['source']}?${#messages.msg(errors['source'])})">Error</span>
 					</div>
 				</div>

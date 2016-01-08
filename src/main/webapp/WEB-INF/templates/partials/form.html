@@ -149,7 +149,7 @@
 		<select multiple="multiple" type="text" th:id="${name + '-' + id}" th:name="${name}" class="sg-tags">
 			<option th:each="tag : ${field}" selected="" th:value="${tag}" th:text="${tag}">Tag</option>
 		</select>
-		<span class="help-block" th:text="#{form.tags.hint}">Help text</span>
+		<span class="help-block"><small th:text="#{form.tags.hint}">Help text</small></span>
 		<span class="help-block" th:text="${errors}?(${errors[name]}?${#messages.msg(errors[name])})">Error</span>
 	</div>
 </div>
@@ -163,6 +163,7 @@
 	<div class="col-sm-10">
 		<input type="text" th:id="${name + '-' + id + '-select'}" th:name="${name + 'Name'}" th:value="${field}?${field.title}" class="form-control sg-node-search" th:placeholder="${label}" th:attr="data-id=${name + '-' + id},data-attr=${'data-tags-' + direction},data-select-id=${selectReference}" />
 		<input type="hidden" th:id="${name + '-' + id}" th:name="${name}" th:value="${field}?${field.id}" />
+		<span class="help-block" th:unless="${errors}"><small th:text="#{form.typeahead.hint}"></small></span>
 		<span class="help-block" th:text="${errors}?(${errors[name]}?${#messages.msg(errors[name])})">Error</span>
 	</div>
 </div>

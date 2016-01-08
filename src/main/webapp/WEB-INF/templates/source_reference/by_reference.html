@@ -65,7 +65,7 @@
 					<div class="col-sm-10">
 						<input type="text" th:id="${'sourceId-' + uid}" th:attr="data-id=${'sourceId-' + uid + '-data'}" name="sourceTitle" class="form-control sg-source-search" th:placeholder="#{field.source}" />
 						<input type="hidden" th:id="${'sourceId-' + uid + '-data'}" name="sourceId" />
-						<span class="help-block"></span>
+						<span class="help-block"><small th:text="#{form.typeahead.hint}"></small></span>
 					</div>
 				</div>
 
