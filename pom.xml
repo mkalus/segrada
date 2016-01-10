@@ -341,7 +341,7 @@
 					<failOnMissingWebXml>false</failOnMissingWebXml>
 				</configuration>
 			</plugin>
-			<!-- copy resources -->
+			<!-- copy resources - needed to test target directory -->
 			<plugin>
 				<artifactId>maven-resources-plugin</artifactId>
 				<version>2.6</version>
@@ -406,6 +406,67 @@
 								</resource>
 							</resources>
 						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>com.akathist.maven.plugins.launch4j</groupId>
+				<artifactId>launch4j-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>Segrada</id>
+						<phase>package</phase>
+						<goals><goal>launch4j</goal></goals>
+						<configuration>
+							<dontWrapJar>false</dontWrapJar>
+							<headerType>gui</headerType>
+							<jar>${basedir}/target/segrada-1.0-SNAPSHOT.jar</jar>
+							<outfile>${basedir}/target/Segrada.exe</outfile>
+							<errTitle></errTitle>
+							<cmdLine></cmdLine>
+							<chdir>.</chdir>
+							<priority>normal</priority>
+							<downloadUrl>http://java.com/download</downloadUrl>
+							<supportUrl></supportUrl>
+							<stayAlive>false</stayAlive>
+							<restartOnCrash>false</restartOnCrash>
+							<manifest></manifest>
+							<icon>${basedir}/src/main/webapp/favicon.ico</icon>
+							<singleInstance>
+								<mutexName>Segrada</mutexName>
+								<windowTitle>Segrada</windowTitle>
+							</singleInstance>
+							<jre>
+								<path></path>
+								<bundledJre64Bit>false</bundledJre64Bit>
+								<bundledJreAsFallback>false</bundledJreAsFallback>
+								<minVersion>1.8.0</minVersion>
+								<maxVersion></maxVersion>
+								<jdkPreference>preferJre</jdkPreference>
+								<runtimeBits>64/32</runtimeBits>
+								<opts>
+									<opt>-DsavePath=&quot;%PWD%/segrada_data&quot;</opt>
+									<opt>-DorientDB.url=&quot;plocal:%PWD%/segrada_data/db&quot;</opt>
+								</opts>
+							</jre>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<!-- assembly plugin to create tgz and zip files -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<configuration>
+					<descriptor>src/assembly/bin.xml</descriptor>
+					<finalName>Segrada</finalName>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
 					</execution>
 				</executions>
 			</plugin>
