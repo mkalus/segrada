@@ -359,11 +359,7 @@
 							<outputDirectory>${basedir}/target</outputDirectory>
 							<resources>
 								<resource>
-									<directory>deploy/resources</directory>
-								</resource>
-								<resource>
-									<directory>deploy</directory>
-									<include>launch4j.xml</include>
+									<directory>src/bin</directory>
 								</resource>
 							</resources>
 						</configuration>
