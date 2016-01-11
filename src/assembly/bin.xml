@@ -38,5 +38,11 @@
 			<lineEnding>unix</lineEnding>
 			<fileMode>0755</fileMode>
 		</fileSet>
+		<fileSet>
+			<includes>
+				<include>license.txt</include>
+				<include>README.md</include>
+			</includes>
+		</fileSet>
 	</fileSets>
 </assembly>
