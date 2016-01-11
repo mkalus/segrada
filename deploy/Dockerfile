@@ -4,6 +4,10 @@
 # Get Docker image via "docker pull ronix/segrada"
 # You can mount a volume /segrada_data to make data persistent
 # Build using docker build -rm -t ronix/segrada .
+# Run like this:
+# docker run --name segrada -p 8080:8080 ronix/segrada
+# or
+# docker run --name segrada -p 8080:8080 -v path_to/segrada_data:/usr/local/segrada/segrada_data ronix/segrada
 ############################################################
 
 # Set the base image to use to Java 8
@@ -13,7 +17,7 @@ FROM java:8-jre
 RUN groupadd -r segrada && useradd -r -g segrada segrada
 
 ENV SEGRADA_HOME /usr/local/segrada
-ENV PATH $SEGRADA_HOME/bin:$PATH
+ENV PATH $SEGRADA_HOME:$PATH
 RUN mkdir -p "$SEGRADA_HOME"
 WORKDIR $SEGRADA_HOME
 
@@ -44,8 +48,12 @@ RUN set -xe \
 	&& chown -R segrada:segrada . \
 	&& mv Segrada/* . \
 	&& rmdir Segrada \
-	&& rm Segrada*.tar.gz* \
-	&& ln -s $SEGRADA_HOME/segrada_data /segrada_data
+	&& rm Segrada*.tar.gz*
+
+## Set default variables to be changed during runtime
+#ENV SEGRADA_SAVE_PATH ./segrada_data
+#ENV SEGRADA_DB_URL plocal:/segrada_data/db
+##TODO more variables
 
 # Port to expose (default: 8080)
 EXPOSE 8080
