@@ -1,11 +1,14 @@
 #!/usr/bin/env bash
+# Linux start script
 
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 cd "$DIR"
 
 if [ -n "$JAVA_HOME" ]; then
-  $JAVA_HOME/bin/java -jar ./segrada-1.0-SNAPSHOT.jar "$@"
+  JAVARUN="$JAVA_HOME/bin/java"
 else
-  java -jar ./segrada-1.0-SNAPSHOT.jar "$@"
+  JAVARUN="java"
 fi
+
+$JAVARUN -jar ./segrada-1.0-SNAPSHOT.jar "$@"
 cd $OLDPWD
