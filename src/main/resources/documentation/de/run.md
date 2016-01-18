@@ -70,6 +70,14 @@ Mehr Optionen unter [Kommandozeilenoptionen](command_line_options.md). Zudem kö
 [Segrada automatisch starten lassen](autostart.md).
 
 
+## Segrada in Docker starten
+
+Sie können Segrada auch als Docker-Container laufen lassen. Holen Sie das Image und starten Sie es mit:
+
+`docker pull ronix/segrada`  
+`docker run --name segrada -p 8080:8080 ronix/segrada`
+
+
 ## Segrada im Servlet-Kontext
 
 Sie können Segrada als WAR in einem Servlet-Container starten. Diese Funktion ist bislang nicht besonders intensiv

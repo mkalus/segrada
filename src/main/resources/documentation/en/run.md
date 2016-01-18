@@ -60,6 +60,14 @@ See [Command Line Options](command_line_options.md) for more options. You can al
 [start Segrada automatically](autostart.md).
 
 
+## Running Segrada in Docker
+
+You can also launch Segrada in Docker. Pull and rund with:
+
+`docker pull ronix/segrada`  
+`docker run --name segrada -p 8080:8080 ronix/segrada`
+
+
 ## Deploying Segrada as Servlet
 
 You can deploy Segrada as WAR in a servlet container. This has not been tested thoroughly, yet, so help and feedback
