@@ -56,6 +56,7 @@ RUN set -xe \
 
 # Port to expose (default: 8080)
 EXPOSE 8080
+VOLUME ["/usr/local/segrada/segrada_data"]
 USER segrada
 ENTRYPOINT ["/usr/bin/java", "-jar", "./segrada-1.0-SNAPSHOT.jar"]
 CMD ["headless"]
