@@ -8,6 +8,8 @@
 # docker run --name segrada -p 8080:8080 ronix/segrada
 # or
 # docker run --name segrada -p 8080:8080 -v path_to/segrada_data:/usr/local/segrada/segrada_data ronix/segrada
+# or (using environmental variables)
+# docker run -e "SEGRADA_ORIENTDB_URL=remote:localhost/Segrada" ronix/segrada
 ############################################################
 
 # Set the base image to use to Java 8
@@ -50,15 +52,10 @@ RUN set -xe \
 	&& rmdir Segrada \
 	&& rm Segrada*.tar.gz*
 
-## Set default variables to be changed during runtime
-#ENV SEGRADA_SAVE_PATH ./segrada_data
-#ENV SEGRADA_DB_URL plocal:/segrada_data/db
-##TODO more variables
+# Variables of Segrada can be set as defined in environmental variables doc.
 
 # Port to expose (default: 8080)
 EXPOSE 8080
 USER segrada
 ENTRYPOINT ["/usr/bin/java", "-jar", "./segrada-1.0-SNAPSHOT.jar"]
 CMD ["headless"]
-
-# TODO add options/variables
