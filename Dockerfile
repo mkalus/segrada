@@ -1,7 +1,5 @@
 ############################################################
-# Dockerfile to run Segrada Containers - get image from web
-# This is a variant of the Dockerfile contained in the root of this project
-#
+# Dockerfile to run Segrada Containers - get locally created image e.g. via maven
 # Based on JRE8 Image
 # Get Docker image via "docker pull ronix/segrada"
 # You can mount a volume /segrada_data to make data persistent
@@ -37,22 +35,22 @@ RUN set -xe \
 		gpg --keyserver ha.pool.sks-keyservers.net --recv-keys "$key"; \
 	done
 
-ENV SEGRADA_TGZ_URL http://segrada.org/fileadmin/downloads/Segrada.tar.gz
 ENV SEGRADA_DB_TGZ_URL http://segrada.org/fileadmin/downloads/SegradaEmptyDB.tar.gz
 
 RUN set -xe \
-	&& curl -SL "$SEGRADA_TGZ_URL" -o Segrada.tar.gz \
-	&& curl -SL "$SEGRADA_TGZ_URL.asc" -o Segrada.tar.gz.asc \
 	&& curl -SL "$SEGRADA_DB_TGZ_URL" -o SegradaEmptyDB.tar.gz \
 	&& curl -SL "$SEGRADA_DB_TGZ_URL.asc" -o SegradaEmptyDB.tar.gz.asc \
-	&& gpg --verify --trust-model always Segrada.tar.gz.asc \
 	&& gpg --verify --trust-model always SegradaEmptyDB.tar.gz.asc \
 	&& tar -xvf SegradaEmptyDB.tar.gz \
-	&& tar -xvf Segrada.tar.gz \
 	&& chown -R segrada:segrada . \
-	&& mv Segrada/* . \
-	&& rmdir Segrada \
 	&& rm Segrada*.tar.gz*
+
+ADD target/Segrada.tar.gz .
+
+RUN set -xe \
+	&& chown -R segrada:segrada Segrada \
+	&& mv Segrada/* . \
+	&& rmdir Segrada
 
 # Variables of Segrada can be set as defined in environmental variables doc.
 
