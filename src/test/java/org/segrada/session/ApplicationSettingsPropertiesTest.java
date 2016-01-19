@@ -15,6 +15,7 @@ public class ApplicationSettingsPropertiesTest {
 
 	@Before
 	public void setUp() throws Exception {
+		// environmental variables cannot be tested but should be ok
 		applicationSettings = new ApplicationSettingsProperties();
 	}
 

@@ -239,18 +239,11 @@ public class SegradaLauncher extends JFrame implements ApplicationStatusChangedL
 	 */
 	private void openBrowser(ActionEvent actionEvent) {
 		Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
-		Properties env = System.getProperties();
-		String propPort = "8080";
-		if (env.getProperty("server.port") != null) {
-			propPort = env.getProperty("server.port");
-		}
-		String contextRoot = "/";
-		if (env.getProperty("server.context") != null) {
-			contextRoot = env.getProperty("server.context");
-		}
+
+		// context and port has been set in Segrada Application
 		if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
 			try {
-				desktop.browse(new URI("http://localhost:" + propPort + contextRoot));
+				desktop.browse(new URI("http://localhost:" + String.valueOf(SegradaApplication.getPort()) + SegradaApplication.getContextRoot()));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

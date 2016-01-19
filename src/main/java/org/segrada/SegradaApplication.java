@@ -6,12 +6,11 @@ import org.eclipse.jetty.servlet.DefaultServlet;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.segrada.servlet.SegradaGuiceServletContextListener;
 import org.segrada.util.ApplicationStatusChangedListener;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.DispatcherType;
-import java.util.EnumSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 
 /**
  * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]
@@ -31,6 +30,8 @@ import java.util.Properties;
  * Segrada application standalone server
  */
 public class SegradaApplication {
+	private static final Logger logger = LoggerFactory.getLogger(SegradaApplication.class);
+
 	/**
 	 * server statuses
 	 */
@@ -45,6 +46,60 @@ public class SegradaApplication {
 	 * current server status
 	 */
 	private static int serverStatus = STATUS_OFF;
+
+	/**
+	 * context root
+	 */
+	private static String contextRoot = "/";
+
+	/**
+	 * port to listen to
+	 */
+	private static int port = 8080;
+
+	/**
+	 * prepare context data - get port and contextRoot from environmental variables or properties
+	 */
+	public static void prepareServerContext() {
+		// get context and from environmental variables
+		Map<String, String> var = System.getenv();
+		if (var.containsKey("SEGRADA_SERVER_PORT")) {
+			try {
+				String propPort = var.get("SEGRADA_SERVER_PORT");
+				if (propPort != null)
+					port = Integer.parseInt(propPort);
+			} catch (Exception e) {
+				logger.warn("Environment variable SEGRADA_SERVER_PORT contains illegal value " + var.get("SEGRADA_SERVER_PORT") + " - ignoring.");
+			}
+		}
+		if (var.containsKey("SEGRADA_SERVER_CONTEXT")) {
+			String propCtx = var.get("SEGRADA_SERVER_CONTEXT");
+			if (propCtx != null)
+				contextRoot = var.get("SEGRADA_SERVER_CONTEXT");
+		}
+
+		// get properties from file
+		Properties env = System.getProperties();
+		if (env.getProperty("server.port") != null) {
+			try {
+				String propPort = env.getProperty("server.port");
+				port = Integer.parseInt(propPort);
+			} catch (Exception e) {
+				logger.warn("Property server.port contains illegal value " + env.getProperty("server.port") + " - ignoring.");
+			}
+		}
+		if (env.getProperty("server.context") != null) {
+			contextRoot = env.getProperty("server.context");
+		}
+	}
+
+	public static String getContextRoot() {
+		return contextRoot;
+	}
+
+	public static int getPort() {
+		return port;
+	}
 
 	/**
 	 * listeners for application status changes
@@ -99,19 +154,8 @@ public class SegradaApplication {
 		if (server != null)
 			throw new Exception("Server instance already created.");
 
-		// define properties
-		Properties env = System.getProperties();
-		int port = 8080;
-		if (env.getProperty("server.port") != null) {
-			try {
-				String propPort = env.getProperty("server.port");
-				port = Integer.parseInt(propPort);
-			} catch (Exception e) {}
-		}
-		String contextRoot = "/";
-		if (env.getProperty("server.context") != null) {
-			contextRoot = env.getProperty("server.context");
-		}
+		// prepare server context
+		prepareServerContext();
 
 		// set server starting
 		setServerStatus(STATUS_STARTING);
