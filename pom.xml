@@ -174,7 +174,7 @@
 			</exclusions>
 		</dependency>
 
-		<!-- Search -->
+		<!-- Search: Lucene -->
 		<dependency>
 			<groupId>org.apache.lucene</groupId>
 			<artifactId>lucene-core</artifactId>
@@ -204,6 +204,13 @@
 			<groupId>org.apache.lucene</groupId>
 			<artifactId>lucene-spatial</artifactId>
 			<version>${lucene.version}</version>
+		</dependency>
+
+		<!-- Solr Client -->
+		<dependency>
+			<groupId>org.apache.solr</groupId>
+			<artifactId>solr-solrj</artifactId>
+			<version>5.4.0</version>
 		</dependency>
 
 		<!-- Apache Tika: Extract content from documents -->

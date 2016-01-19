@@ -15,6 +15,7 @@ import org.apache.lucene.store.SimpleFSDirectory;
 import org.apache.lucene.util.Version;
 import org.segrada.search.SearchEngine;
 import org.segrada.search.lucene.LuceneSearchEngine;
+import org.segrada.search.solr.SolrSearchEngine;
 import org.segrada.service.*;
 import org.segrada.service.base.AbstractFullTextService;
 import org.segrada.service.base.AbstractRepositoryService;
@@ -63,8 +64,6 @@ public class ServiceModule extends AbstractModule {
 
 		// bind binary data service
 		bind(BinaryDataService.class).to(BinaryDataServiceFile.class);
-		// bind search engine
-		bind(SearchEngine.class).to(LuceneSearchEngine.class);
 
 		// bind repository factory
 		bind(RepositoryFactory.class).to(OrientDbRepositoryFactory.class);
@@ -110,7 +109,20 @@ public class ServiceModule extends AbstractModule {
 	@Provides
 	@Singleton
 	@Inject
-	OrientGraphFactory provideOrientGraphFactory(ApplicationSettings settings) {
+	public SearchEngine provideSearchEngine(ApplicationSettings settings, Directory luceneDirectory, Analyzer luceneAnalyzer) {
+		// solr has been set?
+		String solrServer = settings.getSetting("solr.server");
+		if (solrServer != null && !solrServer.isEmpty()) {
+			// define search engine for solr server
+			return new SolrSearchEngine(settings, luceneAnalyzer);
+		}
+		return new LuceneSearchEngine(luceneDirectory, luceneAnalyzer);
+	}
+
+	@Provides
+	@Singleton
+	@Inject
+	public OrientGraphFactory provideOrientGraphFactory(ApplicationSettings settings) {
 		if (logger.isInfoEnabled())
 			logger.info("Providing OrientGraphFactory: " + settings.getSetting("orientDB.url"));
 

@@ -44,6 +44,7 @@ public class ApplicationSettingsProperties implements ApplicationSettings {
 		buildMap.put("SEGRADA_LUCENE_ANALYZER", "lucene.analyzer");
 		buildMap.put("SEGRADA_SERVER_PORT", "server.port");
 		buildMap.put("SEGRADA_SERVER_CONTEXT", "server.context");
+		buildMap.put("SEGRADA_SOLR_SERVER", "solr.server");
 		environmentToProperty = Collections.unmodifiableMap(buildMap);
 	}
 

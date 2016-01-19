@@ -22,6 +22,7 @@ Example:
 * `orientDB.url` OrientDB database URL (default: plocal:./segrada_data/db)
 * `orientDB.login` OrientDB database login (default: admin)
 * `orientDB.password` OrientDB database password (default: admin)
+* `solr.server` If specified use remote Solr server to index search instead of local Lucene (default: empty)
 * `lucene.analyzer` Lucene analyser to use (default: org.apache.lucene.analysis.standard.StandardAnalyzer)
 * `requireLogin` Require login? (default: false, meaning autologin as admin)
 * `uploads.storage` Type of storage used when uploading files, MEMORY or FILE (default: MEMORY)
@@ -53,6 +54,7 @@ Mappings to command line parameters above:
 * `SEGRADA_ORIENTDB_URL` -> `orientDB.url`
 * `SEGRADA_ORIENTDB_LOGIN` -> `orientDB.login`
 * `SEGRADA_ORIENTDB_PASSWORD` -> `orientDB.password`
+* `SEGRADA_SOLR_SERVER` -> `solr.server`
 * `SEGRADA_LUCENE_ANALYZER` -> `lucene.analyzer`
 * `SEGRADA_REQUIRE_LOGIN` -> `requireLogin`
 * `SEGRADA_UPLOADS_STORAGE` -> `uploads.storage`

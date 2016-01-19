@@ -50,12 +50,12 @@ public class LuceneSearchEngine implements SearchEngine {
 	/**
 	 * reference to analyzer
 	 */
-	protected Analyzer analyzer;
+	protected final Analyzer analyzer;
 
 	/**
 	 * reference to directory
 	 */
-	protected Directory directory;
+	protected final Directory directory;
 
 	/**
 	 * stored and non text indexed field type
@@ -176,7 +176,7 @@ public class LuceneSearchEngine implements SearchEngine {
 			// Parse a simple query that searches for "text":
 			MultiFieldQueryParser parser;
 			String[] containFields;
-			// fo we have a filter to contain to certain fields?
+			// do we have a filter to contain to certain fields?
 			if (filters.containsKey("fields")) {
 				String fields = filters.get("fields");
 				if (fields.isEmpty()) containFields = new String[]{"title", "subTitles", "content"};
@@ -199,7 +199,7 @@ public class LuceneSearchEngine implements SearchEngine {
 			// filters for query
 			List<Filter> searchFilters = new LinkedList<>();
 
-			// class filter?
+			// class filter
 			if (filters.containsKey("class") && !filters.get("class").isEmpty()) {
 				TermQuery categoryQuery = new TermQuery(new Term("className", filters.get("class")));
 				searchFilters.add(new QueryWrapperFilter(categoryQuery));
