@@ -74,8 +74,44 @@ Mehr Optionen unter [Kommandozeilenoptionen](command_line_options.md). Zudem kö
 
 Sie können Segrada auch als Docker-Container laufen lassen. Holen Sie das Image und starten Sie es mit:
 
-`docker pull ronix/segrada`  
-`docker run --name segrada -p 8080:8080 ronix/segrada`
+    docker pull ronix/segrada
+    docker run --name segrada -p 8080:8080 ronix/segrada
+
+Falls Sie Segrada in einer verteilten Umgebung testen wollen, können Sie auch OrientDb und Solr als Docker-Container
+starten. Hier ein Beispielskript:
+
+    # get empty database and prepare Orient directory to use below
+    mkdir mysegrada_test
+    cd mysegrada_test
+    wget http://segrada.org/fileadmin/downloads/SegradaEmptyDB.tar.gz
+    tar xzf SegradaEmptyDB.tar.gz
+    rm SegradaEmptyDB.tar.gz
+    mkdir orientdbs
+    mv segrada_data/db/ orientdbs/Segrada
+    # this is for testing only - should be changed in production:
+    chmod 777 segrada_data
+    
+    # pull and run OrientDB
+    docker pull orientdb/orientdb
+    docker run -d -e "ORIENTDB_ROOT_PASSWORD=12345" -v "$(pwd)/databases:/orientdb/databases" -p 2424:2424 \
+        -p 2480:2480 orientdb/orientdb
+    
+    # pull and run Solr
+    docker pull solr
+    docker run --name my_solr -d -p 8983:8983 -t solr
+    # create segrada core (Segrada will use default schema of Solr)
+    sudo docker exec -it --user=solr my_solr bin/solr create_core -c segrada
+    
+    # pull and run
+    docker pull ronix/segrada
+    docker run -d -e "SEGRADA_ORIENTDB_LOGIN=admin" -e "SEGRADA_ORIENTDB_URL=remote:localhost/Segrada" \
+        -v "$(pwd)/segrada_data:/usr/local/segrada/segrada_data" \
+        -e "SEGRADA_ORIENTDB_PASSWORD=admin" --net="host" -p 8080:8080 ronix/segrada
+
+Nun müssen Sie nur noch die Verteilung von hochgeladenen Dateien zwischen den einzelnen Knoten angehen. Sie können
+dafür ein (verteiltes) Netzwerk-Dateisystem verwenden z.B. NFS, Gluster oder Ceph. Eine andere Option wäre die
+Synchronisation der Dateien zwischen den Knoten. BitTorrentSync oder syncthing können hier beispielsweise verwendet
+werden.
 
 
 ## Segrada im Servlet-Kontext

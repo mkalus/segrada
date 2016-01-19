@@ -64,8 +64,42 @@ See [Command Line Options](command_line_options.md) for more options. You can al
 
 You can also launch Segrada in Docker. Pull and rund with:
 
-`docker pull ronix/segrada`  
-`docker run --name segrada -p 8080:8080 ronix/segrada`
+    docker pull ronix/segrada
+    docker run --name segrada -p 8080:8080 ronix/segrada
+
+If you want to test Segrada in a distributed environment, you can run OrientDb and Solr on Docker, too. Do the following:
+
+    # get empty database and prepare Orient directory to use below
+    mkdir mysegrada_test
+    cd mysegrada_test
+    wget http://segrada.org/fileadmin/downloads/SegradaEmptyDB.tar.gz
+    tar xzf SegradaEmptyDB.tar.gz
+    rm SegradaEmptyDB.tar.gz
+    mkdir orientdbs
+    mv segrada_data/db/ orientdbs/Segrada
+    # this is for testing only - should be changed in production:
+    chmod 777 segrada_data
+    
+    # pull and run OrientDB
+    docker pull orientdb/orientdb
+    docker run -d -e "ORIENTDB_ROOT_PASSWORD=12345" -v "$(pwd)/databases:/orientdb/databases" -p 2424:2424 \
+        -p 2480:2480 orientdb/orientdb
+    
+    # pull and run Solr
+    docker pull solr
+    docker run --name my_solr -d -p 8983:8983 -t solr
+    # create segrada core (Segrada will use default schema of Solr)
+    sudo docker exec -it --user=solr my_solr bin/solr create_core -c segrada
+    
+    # pull and run
+    docker pull ronix/segrada
+    docker run -d -e "SEGRADA_ORIENTDB_LOGIN=admin" -e "SEGRADA_ORIENTDB_URL=remote:localhost/Segrada" \
+        -v "$(pwd)/segrada_data:/usr/local/segrada/segrada_data" \
+        -e "SEGRADA_ORIENTDB_PASSWORD=admin" --net="host" -p 8080:8080 ronix/segrada
+
+Now you only have to cope with the issue of distributing uploading files. You can use a network and/or distributed file
+system for this, like NFS, Gluster, or Ceph. Another option would be to synchronize files between nodes. BitTorrentSync
+or syncthing would be choices here.
 
 
 ## Deploying Segrada as Servlet
