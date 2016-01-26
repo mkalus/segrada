@@ -69,7 +69,11 @@ public class OrientDbRelationRepository extends AbstractCoreOrientDbRepository<I
 
 		// load relation link
 		ODocument relationLink = getRelationLink(document, true);
-		if (relationLink == null) return null; // exact error was logged below
+		if (relationLink == null) {
+			// this is an invalid entry: delete if from database
+			document.delete(); // this is not elegant, but we can clean such entries on the fly by doing this
+			return null; // exact error was logged below
+		}
 
 		// get from/to - slim entities, just title and id
 		relation.setFromEntity(getRelatedEntity(relationLink, "out"));
@@ -113,7 +117,10 @@ public class OrientDbRelationRepository extends AbstractCoreOrientDbRepository<I
 		}
 		if (relationLinkO instanceof ODocument) return (ODocument) relationLinkO;
 		else if (relationLinkO instanceof ORecordId) {
-			return repositoryFactory.getDb().load((ORecordId) relationLinkO);
+			ODocument doc = repositoryFactory.getDb().load((ORecordId) relationLinkO);
+			if (doc == null)
+				logger.error("Instance vanished from database: " + relationLinkO);
+			return doc;
 		} else {
 			logger.error("Invalid class type: " + relationLinkO.getClass().getName());
 			return null;
