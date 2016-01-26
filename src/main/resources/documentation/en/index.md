@@ -15,6 +15,7 @@ Reference
 * [Command Line Options](command_line_options.md)
 * [Starting Segrada Automatically](autostart.md)
 * [Users and Groups](users_and_groups.md)
+* [Accessing your Database through OrientDb](orientdb.md)
 
 Segrada has been created by Maximilian Kalus &copy; 2015.  
 Visit our Website: [http://segrada.org/](http://segrada.org/).
