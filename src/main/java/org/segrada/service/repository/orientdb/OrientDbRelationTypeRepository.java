@@ -77,40 +77,49 @@ public class OrientDbRelationTypeRepository extends AbstractColoredOrientDbRepos
 		// get from and to tags
 		TagRepository tagRepository = repositoryFactory.produceRepository(OrientDbTagRepository.class);
 		if (tagRepository != null) {
-			List<ODocument> list = document.field("fromTags", OType.LINKLIST);
-			if (list != null) {
-				String[] tags = new String[list.size()];
-				StringBuilder tagIds = new StringBuilder();
-				int i = 0;
-
-				for (ODocument tag : list) {
-					tags[i] = tag.field("title", OType.STRING);
-					if (i++ > 0) tagIds.append(",");
-					tagIds.append(tag.getIdentity().toString());
-				}
-
-				relationType.setFromTags(tags);
-				relationType.setFromTagIds(tagIds.toString());
-			}
-
-			list = document.field("toTags", OType.LINKLIST);
-			if (list != null) {
-				String[] tags = new String[list.size()];
-				StringBuilder tagIds = new StringBuilder();
-				int i = 0;
-
-				for (ODocument tag : list) {
-					tags[i] = tag.field("title", OType.STRING);
-					if (i++ > 0) tagIds.append(",");
-					tagIds.append(tag.getIdentity().toString());
-				}
-
-				relationType.setToTags(tags);
-				relationType.setToTagIds(tagIds.toString());
-			}
+			convertToEntityAggregateTagData(document, relationType, false);
+			convertToEntityAggregateTagData(document, relationType, true);
 		}
 
 		return relationType;
+	}
+
+	/**
+	 * helper function to properly aggregate tag data for to and from tags
+	 * @param document source
+	 * @param relationType target
+	 * @param to for "to" instead of "from" direction
+	 */
+	private void convertToEntityAggregateTagData(ODocument document, RelationType relationType, boolean to) {
+		List<ODocument> list = document.field(to?"toTags":"fromTags", OType.LINKLIST);
+		if (list != null) {
+			List<String> titles = new LinkedList<>();
+			StringBuilder tagIds = new StringBuilder();
+			int i = 0;
+
+			for (ODocument tag : list) {
+				if (tag != null) {
+					titles.add(tag.field("title", OType.STRING));
+					if (i++ > 0) tagIds.append(",");
+					tagIds.append(tag.getIdentity().toString());
+				} else logger.warn("Tag was null (probably deleted).");
+			}
+
+			// convert to array
+			i = 0;
+			String[] tags = new String[titles.size()];
+			for (String title : titles) {
+				tags[i++] = title;
+			}
+
+			if (to) {
+				relationType.setToTags(tags);
+				relationType.setToTagIds(tagIds.toString());
+			} else {
+				relationType.setFromTags(tags);
+				relationType.setFromTagIds(tagIds.toString());
+			}
+		}
 	}
 
 	@Override
