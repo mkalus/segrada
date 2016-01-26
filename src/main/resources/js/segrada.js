@@ -1,9 +1,9 @@
-(function ($) {
-	function escapeHTML(myString) {
-		if (typeof myString == 'string') return myString.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-		return '';
-	}
+function escapeHTML(myString) {
+	if (typeof myString == 'string') return myString.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+	return '';
+}
 
+(function ($) {
 	/**
 	 * tags tokenizer
 	 */
@@ -85,24 +85,6 @@
 	urlSegradaFileSearch = cleanPathFromSessionId(urlSegradaFileSearch);
 	urlSegradaSourceSearch = cleanPathFromSessionId(urlSegradaSourceSearch);
 	urlSegradaRelationAdd = cleanPathFromSessionId(urlSegradaRelationAdd);
-
-	// load google maps dynamically - taken from http://stackoverflow.com/questions/3922764/load-google-maps-v3-dynamically-with-ajax
-	var gMapsLoaded = false;
-	//var geocoder = null;
-	window.gMapsCallback = function(){
-		gMapsLoaded = true;
-		//$(window).trigger('gMapsLoaded');
-	};
-	window.loadGoogleMaps = function(){
-		if(gMapsLoaded) return window.gMapsCallback();
-		var script_tag = document.createElement('script');
-		script_tag.setAttribute("type","text/javascript");
-		script_tag.setAttribute("src","http://maps.google.com/maps/api/js?sensor=false&callback=gMapsCallback&libraries=places&language=" + $('html').attr('lang'));
-		(document.getElementsByTagName("head")[0] || document.documentElement).appendChild(script_tag);
-
-		// also set geocoder
-		//geocoder = (typeof google === 'object' && typeof google.maps === 'object')?new google.maps.Geocoder():null;
-	};
 
 	// is graph initialized?
 	var graphInitialized = false;
@@ -663,90 +645,7 @@
 					alert("Error " + responseText.status + "\n" + responseText.statusText);
 				}
 			});
-		});
-
-		// *******************************************************
-		// dynamic map loader
-		$('.sg-geotab', part).on('shown.bs.tab', function (e) {
-			var target = $(e.target);
-
-			// map created already?
-			if (target.attr('data-created') == '1') return;
-
-			// set flag
-			target.attr('data-created', '1');
-
-			var id = target.attr('data-locations-id');
-			var container = $(id);
-
-			var form = $('.sg-map-form', container);
-			var input = $('.sg-geocomplete', form);
-			var point = new google.maps.LatLng(0, 0);
-			input.geocomplete({
-				map: id + '-map',
-				details: id + '-form',
-				markerOptions: {
-					draggable: true
-				},
-				mapOptions: {
-					mapTypeId: google.maps.MapTypeId.HYBRID,
-					zoom: 1,
-					center: point,
-					scrollwheel: true,
-					draggable: true
-				}
-			}).bind("geocode:result", function(event, result) {
-				$('input[type=submit]', form).show();
-			}).bind("geocode:dragged", function(event, latLng){
-				$("input[name=lat]", form).val(latLng.lat());
-				$("input[name=lng]", form).val(latLng.lng());
-			});
-
-			// add form adder
-			$('.sg-map-add-marker', container).click(function(e) {
-				$(this).hide();
-				form.show();
-				e.preventDefault();
-			});
-
-			// add markers
-			updateGeocompleteMap(id, $(id + '-markers', container), input);
-
-			// add removal listener to clean marker array below
-			$(id + '-map').on("destroyed", function () {
-				if(typeof segradaMapMarkers[id] !== 'undefined') {
-					// remove markers
-					for (var i = 0; i < segradaMapMarkers[id].length; i++)
-						segradaMapMarkers[id][i].setMap(null);
-
-					delete segradaMapMarkers[id];
-				}
-
-				//console.log(segradaMapMarkers);
-			});
-
-			$('.sg-geocomplete-find', form).click(function(){
-				input.trigger("geocode");
-			}).click(); // click to create map
-
-			// form submitted
-			form.ajaxForm({
-				beforeSubmit: function(arr, $form, options) {
-					// disable container
-					container.addClass('disabled');
-					return true;
-				},
-				success: function (responseText, statusText, xhr, $form) {
-					container.removeClass('disabled');
-					$(id + '-markers', container).replaceWith(responseText);
-					updateGeocompleteMap(id, $(id + '-markers', container), input);
-				},
-				error: function (responseText, statusText, xhr, $form) {
-					container.removeClass('disabled');
-					alert("Error " + responseText.status + "\n" + responseText.statusText);
-				}
-			});
-		});
+		})
 
 		// *******************************************************
 		// Graph: load remote data and update graph view
@@ -835,82 +734,12 @@
 					loadDataAddUrl(url);
 			});
 		});
+
+		// call afterAjaxHooks
+		for (var i = 0; i < afterAjaxHooks.length; i++) {
+			afterAjaxHooks[i](part); // call function with part parameter
+		}
 	} // afterAJAX end
-
-	// keeps markers
-	var segradaMapMarkers = [];
-
-	// update map with markers
-	function updateGeocompleteMap(id, markerContainer, input) {
-		var map = input.geocomplete("map");
-
-		// clear old markers
-		if(typeof segradaMapMarkers[id] !== 'undefined') {
-			// remove markers
-			for (var i = 0; i < segradaMapMarkers[id].length; i++)
-				segradaMapMarkers[id][i].setMap(null);
-
-			delete segradaMapMarkers[id];
-		}
-
-		// create new marker array
-		segradaMapMarkers[id] = [];
-		var deleteText = $(id + '-delete').html();
-
-		// this is the bounding box container
-		var bounds = new google.maps.LatLngBounds();
-
-		$('.sg-location-marker', markerContainer).each(function() {
-			var $this = $(this);
-			var myLatlng = new google.maps.LatLng($this.attr('data-lat'),$this.attr('data-lng'));
-			bounds.extend(myLatlng);
-			var dataId = $this.attr('data-id');
-			var comment = $this.attr('data-comment');
-			if (typeof comment != 'undefined' && comment != '') comment = '<p>' + escapeHTML(comment) + '</p>';
-			else comment = '';
-			var infowindow = new google.maps.InfoWindow({
-				content: '<p>' + $this.attr('data-lat') + ',' + $this.attr('data-lng') + '</p>'
-					+ comment
-					+ '<p><a href="' + $this.attr('data-delete') + '" id="' + dataId + '-delete">' + deleteText + '</a></p>'
-			});
-			var marker = new google.maps.Marker({
-				position: myLatlng,
-				map: map,
-				icon: 'https://maps.google.com/mapfiles/ms/micons/blue-dot.png'
-			});
-			google.maps.event.addListener(marker, 'click', function() {
-				infowindow.open(map,marker);
-				// delete marker
-				var link = $('#' + dataId + '-delete');
-				link.unbind("click");
-				link.click(function(e) {
-					// call confirm
-					var deleteConfirmText = $(id + '-delete-confirm').html().replace('{0}', $this.attr('data-lat') + ',' + $this.attr('data-lng'));
-					if (confirm(deleteConfirmText))
-						// call ajax
-						$.get($(this).attr('href'), function (responseText) {
-							markerContainer.replaceWith(responseText);
-							updateGeocompleteMap(id, $(id + '-markers'), input);
-						});
-					e.preventDefault();
-				});
-			});
-			segradaMapMarkers[id][segradaMapMarkers[id].length] = marker;
-		});
-
-		//contain by map markers
-		if (segradaMapMarkers[id].length == 0) {
-			map.setZoom(1);
-			map.setCenter(new google.maps.LatLng(0, 0));
-		} else {
-			// zoom in onto the markers
-			map.fitBounds(bounds);
-			if (segradaMapMarkers[id].length == 1)
-				setTimeout(function(){ map.setZoom(12); }, 250); // small delay before zooming out
-		}
-
-		//console.log(segradaMapMarkers);
-	}
 
 	// *******************************************************
 	// Graph functions
@@ -1213,9 +1042,5 @@
 
 		// init defaults
 		afterAjax($('body'));
-
-		// load Google Maps
-		//$(window).bind('gMapsLoaded', initialize);
-		window.loadGoogleMaps();
 	});
 })(jQuery);

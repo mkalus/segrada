@@ -51,11 +51,16 @@ public class MainController {
 		String requireLogin = applicationSettings.getSetting("requireLogin");
 		boolean showLogout = requireLogin != null && !requireLogin.isEmpty() && requireLogin.equalsIgnoreCase("true");
 
+		// map engine defined in settings
+		String mapEngine = applicationSettings.getSetting("map.engine");
+		if (mapEngine == null) mapEngine = "ol"; // open layers as default
+
 		// create model map
 		Map<String, Object> model = new HashMap<>();
 		model.put("version", SegradaUpdateChecker.currentVersion);
 		model.put("versionUpdate", versionUpdate);
 		model.put("showLogout", showLogout);
+		model.put("mapEngine", mapEngine);
 
 		return new Viewable("home", model);
 	}
