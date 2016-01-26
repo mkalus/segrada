@@ -17,7 +17,9 @@ Features:
 * Scalable: Use on desktop, run as single or distributed server.
 * Internationalized: Currently English and German
 
-**Note:** A few features are still missing from the current release.
+**Note:** Application is still beta and subject to enhancements and changes. The application is capable to update older
+databases to newer versions, if needed. Still, there is a certain risk and the author does not take any responsibility
+for lost and/or mangled data.
 
 
 ## Documentation
