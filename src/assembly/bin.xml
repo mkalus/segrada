@@ -11,7 +11,20 @@
 				<include>segrada-1.0-SNAPSHOT.jar</include>
 				<include>lib/*</include>
 				<include>src/**</include>
+				<include>Segrada.app/**</include>
 			</includes>
+			<excludes>
+				<exclude>Segrada.app/Contents/MacOS/Segrada</exclude>
+			</excludes>
+		</fileSet>
+		<fileSet>
+			<directory>${project.build.directory}</directory>
+			<outputDirectory>/</outputDirectory>
+			<includes>
+				<include>Segrada.app/Contents/MacOS/Segrada</include>
+			</includes>
+			<lineEnding>unix</lineEnding>
+			<fileMode>0755</fileMode>
 		</fileSet>
 		<fileSet>
 			<directory>${project.build.directory}</directory>

@@ -1,0 +1,11 @@
+#!/bin/sh
+
+scriptdir=$(cd "$(dirname "$0")"; pwd)
+cd "$scriptdir"
+cd ../../..
+
+if [ -n "$JAVA_HOME" ]; then
+	$JAVA_HOME/bin/java -Xdock:name="Segrada" -jar ./segrada-1.0-SNAPSHOT.jar "$@"
+else
+	java -Xdock:name="Segrada" -jar ./segrada-1.0-SNAPSHOT.jar "$@"
+fi
