@@ -243,7 +243,7 @@ public class SolrSearchEngine implements SearchEngine {
 			int pages = (int) (results.getNumFound() / entriesPerPage + 1);
 
 			// cycle trough hits
-			List<SearchHit> hits = new LinkedList<>();
+			List<SearchHit> hits = new ArrayList<>();
 
 			for (SolrDocument doc : results) {
 				SearchHit searchHit = createHitFromDocument(doc);
@@ -275,7 +275,7 @@ public class SolrSearchEngine implements SearchEngine {
 		}
 
 		// return empty list result in order to avoid NPEs
-		return new PaginationInfo<>(page, 1, 0, entriesPerPage, new LinkedList<>());
+		return new PaginationInfo<>(page, 1, 0, entriesPerPage, new ArrayList<>());
 	}
 
 	/**

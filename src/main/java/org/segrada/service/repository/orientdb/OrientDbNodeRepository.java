@@ -124,7 +124,7 @@ public class OrientDbNodeRepository extends AbstractCoreOrientDbRepository<INode
 
 	@Override
 	public List<INode> findBySearchTermAndTags(@Nullable String term, int maximum, boolean returnWithoutTerm, @Nullable String[] tagIds) {
-		List<INode> hits = new LinkedList<>();
+		List<INode> hits = new ArrayList<>();
 
 		// empty search term and returnWithoutTerm false
 		if (!returnWithoutTerm && (term == null || term.equals(""))) return hits;
@@ -188,7 +188,7 @@ public class OrientDbNodeRepository extends AbstractCoreOrientDbRepository<INode
 		if (filters == null) filters = new HashMap<>();
 
 		// aggregate filters
-		List<String> constraints = new LinkedList<>();
+		List<String> constraints = new ArrayList<>();
 		// search term
 		if (filters.get("search") != null) {
 			constraints.add(createSearchTermFullText((String) filters.get("search")));

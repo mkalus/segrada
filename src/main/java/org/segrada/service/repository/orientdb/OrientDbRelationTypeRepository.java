@@ -93,7 +93,7 @@ public class OrientDbRelationTypeRepository extends AbstractColoredOrientDbRepos
 	private void convertToEntityAggregateTagData(ODocument document, RelationType relationType, boolean to) {
 		List<ODocument> list = document.field(to?"toTags":"fromTags", OType.LINKLIST);
 		if (list != null) {
-			List<String> titles = new LinkedList<>();
+			List<String> titles = new ArrayList<>();
 			StringBuilder tagIds = new StringBuilder();
 			int i = 0;
 
@@ -175,7 +175,7 @@ public class OrientDbRelationTypeRepository extends AbstractColoredOrientDbRepos
 			tagRepository.createNewTagsByTitles(tags);
 
 			// get all tag ids and populate list
-			List<ORecordId> list = new LinkedList<>();
+			List<ORecordId> list = new ArrayList<>();
 			for (String id : tagRepository.findTagIdsByTitles(tags)) {
 				list.add(new ORecordId(id));
 			}
@@ -190,7 +190,7 @@ public class OrientDbRelationTypeRepository extends AbstractColoredOrientDbRepos
 
 	@Override
 	public List<IRelationType> findBySearchTerm(String term, int maximum, boolean returnWithoutTerm) {
-		List<IRelationType> hits = new LinkedList<>();
+		List<IRelationType> hits = new ArrayList<>();
 
 		// empty search term and returnWithoutTerm false
 		if (!returnWithoutTerm && (term == null || term.equals(""))) return hits;
@@ -223,7 +223,7 @@ public class OrientDbRelationTypeRepository extends AbstractColoredOrientDbRepos
 		if (filters == null) filters = new HashMap<>();
 
 		// aggregate filters
-		List<String> constraints = new LinkedList<>();
+		List<String> constraints = new ArrayList<>();
 		// search term
 		if (filters.get("search") != null) {
 			constraints.add(createSearchTermFullText((String) filters.get("search")));

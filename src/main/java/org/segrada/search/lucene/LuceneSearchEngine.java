@@ -21,8 +21,8 @@ import org.slf4j.LoggerFactory;
 
 import javax.annotation.PreDestroy;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -197,7 +197,7 @@ public class LuceneSearchEngine implements SearchEngine {
 			}
 
 			// filters for query
-			List<Filter> searchFilters = new LinkedList<>();
+			List<Filter> searchFilters = new ArrayList<>();
 
 			// class filter
 			if (filters.containsKey("class") && !filters.get("class").isEmpty()) {
@@ -274,7 +274,7 @@ public class LuceneSearchEngine implements SearchEngine {
 				fieldQuery = highlighter.getFieldQuery(new QueryParser(Version.LUCENE_47, "content", analyzer).parse(searchTerm), iReader);
 
 			// cycle trough hits
-			List<SearchHit> hits = new LinkedList<>();
+			List<SearchHit> hits = new ArrayList<>();
 
 			for (int i = startIndex ; i < endIndex ; i++) {
 				ScoreDoc scoreDoc = topDocs.scoreDocs[i];
@@ -310,7 +310,7 @@ public class LuceneSearchEngine implements SearchEngine {
 		}
 
 		// return empty list result in order to avoid NPEs
-		return new PaginationInfo<>(page, 1, 0, entriesPerPage, new LinkedList<>());
+		return new PaginationInfo<>(page, 1, 0, entriesPerPage, new ArrayList<>());
 	}
 
 	@Override

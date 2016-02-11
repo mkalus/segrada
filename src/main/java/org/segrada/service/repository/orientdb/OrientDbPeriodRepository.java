@@ -15,7 +15,7 @@ import org.segrada.service.util.AbstractLazyLoadedObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -125,7 +125,7 @@ public class OrientDbPeriodRepository extends AbstractSegradaOrientDbRepository<
 		OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>("select @rid as id from Period where parent = ?" + getDefaultOrder(true));
 		List<ODocument> result = db.command(query).execute(new ORecordId(id));
 
-		List<IPeriod> list = new LinkedList<>();
+		List<IPeriod> list = new ArrayList<>();
 
 		// populate set
 		for (ODocument document : result)
@@ -176,7 +176,7 @@ public class OrientDbPeriodRepository extends AbstractSegradaOrientDbRepository<
 		OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>("select * from Period" + constraints + getDefaultOrder(true) + " LIMIT 100");
 		List<ODocument> result = db.command(query).execute();
 
-		List<IPeriod> list = new LinkedList<>();
+		List<IPeriod> list = new ArrayList<>();
 
 		// populate set
 		for (ODocument document : result)

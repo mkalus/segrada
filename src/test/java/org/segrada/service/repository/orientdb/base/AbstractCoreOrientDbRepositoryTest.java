@@ -26,7 +26,7 @@ import org.segrada.session.Identity;
 import org.segrada.test.OrientDBTestInstance;
 import org.segrada.test.OrientDbTestApplicationSettings;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -103,7 +103,7 @@ public class AbstractCoreOrientDbRepositoryTest {
 		assertNull(document.field("minEntryCalendar"));
 		assertNull(document.field("maxEntryCalendar"));
 
-		List<IPeriod> list = new LinkedList<>();
+		List<IPeriod> list = new ArrayList<>();
 
 		// add a few periods
 		IPeriod period1 = new Period();

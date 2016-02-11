@@ -200,7 +200,7 @@ public class OrientDbRelationRepository extends AbstractCoreOrientDbRepository<I
 
 	@Override
 	public List<IRelation> findByRelation(INode node) {
-		List<IRelation> list = new LinkedList<>();
+		List<IRelation> list = new ArrayList<>();
 
 		// no NPEs
 		if (node == null) return list;
@@ -220,7 +220,7 @@ public class OrientDbRelationRepository extends AbstractCoreOrientDbRepository<I
 
 	@Override
 	public List<IRelation> findByRelationType(IRelationType relationType) {
-		List<IRelation> list = new LinkedList<>();
+		List<IRelation> list = new ArrayList<>();
 
 		// no NPEs
 		if (relationType == null) return list;
@@ -344,7 +344,7 @@ public class OrientDbRelationRepository extends AbstractCoreOrientDbRepository<I
 		if (filters == null) filters = new HashMap<>();
 
 		// aggregate filters
-		List<String> constraints = new LinkedList<>();
+		List<String> constraints = new ArrayList<>();
 		// search term
 		if (filters.containsKey("search")) {
 			//constraints.add(createSearchTermFullText((String) filters.get("search")));

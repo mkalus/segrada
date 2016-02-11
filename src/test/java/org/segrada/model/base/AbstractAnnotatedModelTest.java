@@ -9,7 +9,7 @@ import org.segrada.model.prototype.IComment;
 import org.segrada.model.prototype.IFile;
 import org.segrada.model.prototype.ISourceReference;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -34,14 +34,14 @@ public class AbstractAnnotatedModelTest {
 		entity1.setTags(new String[]{});
 		entity2.setTags(new String[]{"Test"});
 
-		List<IFile> files1 = new LinkedList<>();
-		List<IFile> files2 = new LinkedList<>();
+		List<IFile> files1 = new ArrayList<>();
+		List<IFile> files2 = new ArrayList<>();
 		files1.add(new File());
-		List<IComment> comments1 = new LinkedList<>();
-		List<IComment> comments2 = new LinkedList<>();
+		List<IComment> comments1 = new ArrayList<>();
+		List<IComment> comments2 = new ArrayList<>();
 		comments1.add(new Comment());
-		List<ISourceReference> sourceReferences1 = new LinkedList<>();
-		List<ISourceReference> sourceReferences2 = new LinkedList<>();
+		List<ISourceReference> sourceReferences1 = new ArrayList<>();
+		List<ISourceReference> sourceReferences2 = new ArrayList<>();
 		sourceReferences1.add(new SourceReference());
 
 		entity1.setFiles(files1);
@@ -81,14 +81,14 @@ public class AbstractAnnotatedModelTest {
 		entity1.setTags(new String[]{});
 		entity2.setTags(new String[] { "Test"});
 
-		List<IFile> files1 = new LinkedList<>();
-		List<IFile> files2 = new LinkedList<>();
+		List<IFile> files1 = new ArrayList<>();
+		List<IFile> files2 = new ArrayList<>();
 		files1.add(new File());
-		List<IComment> comments1 = new LinkedList<>();
-		List<IComment> comments2 = new LinkedList<>();
+		List<IComment> comments1 = new ArrayList<>();
+		List<IComment> comments2 = new ArrayList<>();
 		comments1.add(new Comment());
-		List<ISourceReference> sourceReferences1 = new LinkedList<>();
-		List<ISourceReference> sourceReferences2 = new LinkedList<>();
+		List<ISourceReference> sourceReferences1 = new ArrayList<>();
+		List<ISourceReference> sourceReferences2 = new ArrayList<>();
 		sourceReferences1.add(new SourceReference());
 
 		entity1.setFiles(files1);

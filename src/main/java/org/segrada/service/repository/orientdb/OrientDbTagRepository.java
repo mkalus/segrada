@@ -159,7 +159,7 @@ public class OrientDbTagRepository extends AbstractSegradaOrientDbRepository<ITa
 
 	@Override
 	public List<ITag> findBySearchTerm(String term, int maximum, boolean returnWithoutTerm) {
-		List<ITag> hits = new LinkedList<>();
+		List<ITag> hits = new ArrayList<>();
 
 		// empty search term and returnWithoutTerm false
 		if (!returnWithoutTerm && (term == null || term.equals(""))) return hits;
@@ -199,7 +199,7 @@ public class OrientDbTagRepository extends AbstractSegradaOrientDbRepository<ITa
 
 	@Override
 	public List<ITag> createNewTagsByTitles(String[] titles) {
-		List<ITag> list = new LinkedList<>();
+		List<ITag> list = new ArrayList<>();
 
 		for (ODocument document : findTagDocumentsByCriteria("title", titles, true)) {
 			list.add(convertToEntity(document));
@@ -210,7 +210,7 @@ public class OrientDbTagRepository extends AbstractSegradaOrientDbRepository<ITa
 
 	@Override
 	public List<ITag> findTagsByTitles(String[] titles) {
-		List<ITag> list = new LinkedList<>();
+		List<ITag> list = new ArrayList<>();
 
 		for (ODocument document : findTagDocumentsByCriteria("title", titles, false)) {
 			list.add(convertToEntity(document));
@@ -261,7 +261,7 @@ public class OrientDbTagRepository extends AbstractSegradaOrientDbRepository<ITa
 	protected List<ODocument> findTagDocumentsByCriteria(String field, String[] searchCriteria, boolean onlyNonExistent) {
 		initDb();
 
-		List<ODocument> list = new LinkedList<>();
+		List<ODocument> list = new ArrayList<>();
 
 		// avoid NPEs
 		if (searchCriteria == null || searchCriteria.length == 0) return list;
@@ -310,7 +310,7 @@ public class OrientDbTagRepository extends AbstractSegradaOrientDbRepository<ITa
 
 	@Override
 	public List<SegradaTaggable> findByTag(String id, boolean traverse, @Nullable String[] classes) {
-		List<SegradaTaggable> list = new LinkedList<>();
+		List<SegradaTaggable> list = new ArrayList<>();
 
 		// avoid NPEs
 		if (id == null) return list;
@@ -515,7 +515,7 @@ public class OrientDbTagRepository extends AbstractSegradaOrientDbRepository<ITa
 		if (filters == null) filters = new HashMap<>();
 
 		// aggregate filters
-		List<String> constraints = new LinkedList<>();
+		List<String> constraints = new ArrayList<>();
 		// search term
 		if (filters.get("search") != null) {
 			constraints.add("title LIKE '%" + OrientStringEscape.escapeOrientSql((String)filters.get("search")) + "%'");

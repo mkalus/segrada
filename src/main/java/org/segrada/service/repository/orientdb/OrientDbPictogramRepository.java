@@ -12,7 +12,7 @@ import org.segrada.service.repository.orientdb.base.AbstractSegradaOrientDbRepos
 import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory;
 import org.segrada.util.Sluggify;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -85,7 +85,7 @@ public class OrientDbPictogramRepository extends AbstractSegradaOrientDbReposito
 
 	@Override
 	public List<IPictogram> findBySearchTerm(String term, int maximum, boolean returnWithoutTerm) {
-		List<IPictogram> hits = new LinkedList<>();
+		List<IPictogram> hits = new ArrayList<>();
 
 		// empty search term and returnWithoutTerm false
 		if (!returnWithoutTerm && (term == null || term.equals(""))) return hits;

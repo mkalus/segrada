@@ -129,7 +129,7 @@ public class OrientDbSourceRepository extends AbstractAnnotatedOrientDbRepositor
 		OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>("select * from Source where longTitle LIKE ? OR shortTitle LIKE ?" + getDefaultOrder(true));
 		List<ODocument> result = db.command(query).execute(title, title);
 
-		List<ISource> list = new LinkedList<>();
+		List<ISource> list = new ArrayList<>();
 
 		// populate set
 		for (ODocument document : result)
@@ -153,7 +153,7 @@ public class OrientDbSourceRepository extends AbstractAnnotatedOrientDbRepositor
 
 	@Override
 	public List<ISource> findBySearchTerm(String term, int maximum, boolean returnWithoutTerm) {
-		List<ISource> hits = new LinkedList<>();
+		List<ISource> hits = new ArrayList<>();
 
 		// empty search term and returnWithoutTerm false
 		if (!returnWithoutTerm && (term == null || term.equals(""))) return hits;
@@ -192,7 +192,7 @@ public class OrientDbSourceRepository extends AbstractAnnotatedOrientDbRepositor
 		if (filters == null) filters = new HashMap<>();
 
 		// aggregate filters
-		List<String> constraints = new LinkedList<>();
+		List<String> constraints = new ArrayList<>();
 		// search term
 		if (filters.containsKey("search")) {
 			constraints.add(createSearchTermFullText((String) filters.get("search")));

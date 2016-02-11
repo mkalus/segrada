@@ -507,10 +507,12 @@ public class FileController extends AbstractColoredController<IFile> {
 		if (pictogramId != null) pictogram = pictogramService.findById(pictogramId);
 
 		// get tags
-		List<String> tagList = new LinkedList<>();
-		if (tagParts != null)
+		List<String> tagList;
+		if (tagParts != null) {
+			tagList = new ArrayList<>(tagParts.size());
 			for (FormDataBodyPart part : tagParts)
-					tagList.add(part.getValueAs(String.class));
+				tagList.add(part.getValueAs(String.class));
+		} else tagList = new ArrayList<>(0);
 		String tags[] = new String[tagList.size()];
 		tagList.toArray(tags);
 

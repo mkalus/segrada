@@ -3,15 +3,16 @@ package org.segrada.service.repository.orientdb.base;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.orientechnologies.orient.core.sql.OCommandSQL;
 import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
-import org.segrada.model.prototype.*;
+import org.segrada.model.prototype.IComment;
+import org.segrada.model.prototype.IFile;
+import org.segrada.model.prototype.ISourceReference;
+import org.segrada.model.prototype.SegradaAnnotatedEntity;
 import org.segrada.service.repository.CommentRepository;
 import org.segrada.service.repository.FileRepository;
 import org.segrada.service.repository.SourceReferenceRepository;
-import org.segrada.service.repository.TagRepository;
 import org.segrada.service.repository.orientdb.OrientDbCommentRepository;
 import org.segrada.service.repository.orientdb.OrientDbFileRepository;
 import org.segrada.service.repository.orientdb.OrientDbSourceReferenceRepository;
-import org.segrada.service.repository.orientdb.OrientDbTagRepository;
 import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory;
 import org.segrada.service.util.AbstractLazyLoadedObject;
 import org.segrada.service.util.PaginationInfo;
@@ -21,7 +22,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 

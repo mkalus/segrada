@@ -136,7 +136,7 @@ public class SegradaApplication {
 	 */
 	public static void addApplicationStatusChangedListener(ApplicationStatusChangedListener listener) {
 		if (applicationStatusChangedListeners == null)
-			applicationStatusChangedListeners = new LinkedList<>();
+			applicationStatusChangedListeners = new ArrayList<>();
 
 		applicationStatusChangedListeners.add(listener);
 	}

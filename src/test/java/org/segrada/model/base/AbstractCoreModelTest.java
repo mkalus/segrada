@@ -4,7 +4,7 @@ import org.junit.Test;
 import org.segrada.model.*;
 import org.segrada.model.prototype.*;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -29,14 +29,14 @@ public class AbstractCoreModelTest {
 		entity1.setTags(new String[]{});
 		entity2.setTags(new String[]{"Test"});
 
-		List<IFile> files1 = new LinkedList<>();
-		List<IFile> files2 = new LinkedList<>();
+		List<IFile> files1 = new ArrayList<>();
+		List<IFile> files2 = new ArrayList<>();
 		files1.add(new File());
-		List<IComment> comments1 = new LinkedList<>();
-		List<IComment> comments2 = new LinkedList<>();
+		List<IComment> comments1 = new ArrayList<>();
+		List<IComment> comments2 = new ArrayList<>();
 		comments1.add(new Comment());
-		List<ISourceReference> sourceReferences1 = new LinkedList<>();
-		List<ISourceReference> sourceReferences2 = new LinkedList<>();
+		List<ISourceReference> sourceReferences1 = new ArrayList<>();
+		List<ISourceReference> sourceReferences2 = new ArrayList<>();
 		sourceReferences1.add(new SourceReference());
 
 		entity1.setFiles(files1);
@@ -46,11 +46,11 @@ public class AbstractCoreModelTest {
 		entity1.setSourceReferences(sourceReferences1);
 		entity2.setSourceReferences(sourceReferences2);
 
-		List<ILocation> locations1 = new LinkedList<>();
-		List<ILocation> locations2 = new LinkedList<>();
+		List<ILocation> locations1 = new ArrayList<>();
+		List<ILocation> locations2 = new ArrayList<>();
 		locations1.add(new Location());
-		List<IPeriod> periods1 = new LinkedList<>();
-		List<IPeriod> periods2 = new LinkedList<>();
+		List<IPeriod> periods1 = new ArrayList<>();
+		List<IPeriod> periods2 = new ArrayList<>();
 		periods1.add(new Period());
 
 		entity1.setLocations(locations1);
@@ -88,14 +88,14 @@ public class AbstractCoreModelTest {
 		entity1.setTags(new String[]{});
 		entity2.setTags(new String[] { "Test"});
 
-		List<IFile> files1 = new LinkedList<>();
-		List<IFile> files2 = new LinkedList<>();
+		List<IFile> files1 = new ArrayList<>();
+		List<IFile> files2 = new ArrayList<>();
 		files1.add(new File());
-		List<IComment> comments1 = new LinkedList<>();
-		List<IComment> comments2 = new LinkedList<>();
+		List<IComment> comments1 = new ArrayList<>();
+		List<IComment> comments2 = new ArrayList<>();
 		comments1.add(new Comment());
-		List<ISourceReference> sourceReferences1 = new LinkedList<>();
-		List<ISourceReference> sourceReferences2 = new LinkedList<>();
+		List<ISourceReference> sourceReferences1 = new ArrayList<>();
+		List<ISourceReference> sourceReferences2 = new ArrayList<>();
 		sourceReferences1.add(new SourceReference());
 
 		entity1.setFiles(files1);
@@ -105,11 +105,11 @@ public class AbstractCoreModelTest {
 		entity1.setSourceReferences(sourceReferences1);
 		entity2.setSourceReferences(sourceReferences2);
 
-		List<ILocation> locations1 = new LinkedList<>();
-		List<ILocation> locations2 = new LinkedList<>();
+		List<ILocation> locations1 = new ArrayList<>();
+		List<ILocation> locations2 = new ArrayList<>();
 		locations1.add(new Location());
-		List<IPeriod> periods1 = new LinkedList<>();
-		List<IPeriod> periods2 = new LinkedList<>();
+		List<IPeriod> periods1 = new ArrayList<>();
+		List<IPeriod> periods2 = new ArrayList<>();
 		periods1.add(new Period());
 
 		entity1.setLocations(locations1);

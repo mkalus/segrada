@@ -16,7 +16,7 @@ import org.segrada.service.util.PaginationInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -124,7 +124,7 @@ public class OrientDbSourceReferenceRepository extends AbstractSegradaOrientDbRe
 	 * @return list of source references found
 	 */
 	private PaginationInfo<ISourceReference> findByX(String id, String direction, int page, int entriesPerPage) {
-		List<ISourceReference> list = new LinkedList<>();
+		List<ISourceReference> list = new ArrayList<>();
 
 		// empty?
 		if (id == null) return new PaginationInfo<>(

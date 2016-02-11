@@ -13,7 +13,6 @@ import org.segrada.model.prototype.SegradaTaggable;
 import org.segrada.rendering.json.JSONConverter;
 import org.segrada.service.TagService;
 import org.segrada.service.base.AbstractRepositoryService;
-import org.segrada.service.repository.orientdb.exception.CircularConnectionException;
 import org.segrada.service.repository.prototype.CRUDRepository;
 import org.segrada.util.Sluggify;
 
@@ -22,7 +21,10 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]
@@ -117,7 +119,7 @@ public class TagController extends AbstractBaseController<ITag> {
 
 		model.put("entity", tag);
 
-		List<String> childTags = new LinkedList<>();
+		List<String> childTags = new ArrayList<>();
 		for (SegradaTaggable taggable : service.findByTag(tag.getId(), false, new String[]{"Tag"})) {
 			childTags.add(((ITag) taggable).getTitle());
 		}
@@ -193,7 +195,7 @@ public class TagController extends AbstractBaseController<ITag> {
 		ITag entity = (ITag) model.get("entity");
 
 		// get child tags
-		List<String> childTags = new LinkedList<>();
+		List<String> childTags = new ArrayList<>();
 		for (SegradaTaggable taggable : service.findByTag(entity.getId(), false, new String[]{"Tag"})) {
 			childTags.add(((ITag) taggable).getTitle());
 		}

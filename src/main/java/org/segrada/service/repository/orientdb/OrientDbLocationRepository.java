@@ -13,7 +13,7 @@ import org.segrada.service.util.AbstractLazyLoadedObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -104,7 +104,7 @@ public class OrientDbLocationRepository extends AbstractSegradaOrientDbRepositor
 		OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>("select @rid as id from Location where parent = ?" + getDefaultOrder(true));
 		List<ODocument> result = db.command(query).execute(new ORecordId(id));
 
-		List<ILocation> list = new LinkedList<>();
+		List<ILocation> list = new ArrayList<>();
 
 		// populate set
 		for (ODocument document : result)
@@ -143,7 +143,7 @@ public class OrientDbLocationRepository extends AbstractSegradaOrientDbRepositor
 		List<ILocation> near = findNear(latitude, longitude, radius);
 
 		// now check for the closest elements
-		List<ILocation> list = new LinkedList<>();
+		List<ILocation> list = new ArrayList<>();
 
 		// closest distance flag
 		double closest = -1;
@@ -169,7 +169,7 @@ public class OrientDbLocationRepository extends AbstractSegradaOrientDbRepositor
 				latitude + "," + longitude + ",{\"maxDistance\":" + radius + "}]");
 		List<ODocument> result = db.command(query).execute();
 
-		List<ILocation> list = new LinkedList<>();
+		List<ILocation> list = new ArrayList<>();
 
 		// populate set
 		for (ODocument document : result)
@@ -198,7 +198,7 @@ public class OrientDbLocationRepository extends AbstractSegradaOrientDbRepositor
 				latitude1 + "," + longitude1 + "], [" + latitude2 + "," + longitude2 + "]]");
 		List<ODocument> result = db.command(query).execute();
 
-		List<ILocation> list = new LinkedList<>();
+		List<ILocation> list = new ArrayList<>();
 
 		// populate set
 		for (ODocument document : result)

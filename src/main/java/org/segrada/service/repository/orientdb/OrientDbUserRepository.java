@@ -12,7 +12,7 @@ import org.segrada.util.OrientStringEscape;
 import org.segrada.util.Sluggify;
 
 import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -91,7 +91,7 @@ public class OrientDbUserRepository extends AbstractSegradaOrientDbRepository<IU
 		if (filters == null) filters = new HashMap<>();
 
 		// aggregate filters
-		List<String> constraints = new LinkedList<>();
+		List<String> constraints = new ArrayList<>();
 		// search term
 		if (filters.get("search") != null) {
 			String term = "'" + OrientStringEscape.escapeOrientSql((String) filters.get("search")) + "'";

@@ -15,7 +15,7 @@ import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -84,7 +84,7 @@ public class OrientDbCommentRepository extends AbstractAnnotatedOrientDbReposito
 
 	@Override
 	public List<IComment> findByReference(String id) {
-		List<IComment> list = new LinkedList<>();
+		List<IComment> list = new ArrayList<>();
 
 		// empty?
 		if (id == null) return list;
@@ -103,7 +103,7 @@ public class OrientDbCommentRepository extends AbstractAnnotatedOrientDbReposito
 
 	@Override
 	public List<SegradaEntity> findByComment(String id) {
-		List<SegradaEntity> list = new LinkedList<>();
+		List<SegradaEntity> list = new ArrayList<>();
 
 		// avoid NPEs
 		if (id == null) return list;

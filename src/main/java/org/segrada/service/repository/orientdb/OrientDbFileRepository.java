@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -123,7 +123,7 @@ public class OrientDbFileRepository extends AbstractAnnotatedOrientDbRepository<
 		OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>("select * from File where title LIKE ? OR filename LIKE ?" + getDefaultOrder(true));
 		List<ODocument> result = db.command(query).execute(titleOrFilename, titleOrFilename);
 
-		List<IFile> list = new LinkedList<>();
+		List<IFile> list = new ArrayList<>();
 
 		// populate set
 		for (ODocument document : result)
@@ -134,7 +134,7 @@ public class OrientDbFileRepository extends AbstractAnnotatedOrientDbRepository<
 
 	@Override
 	public List<IFile> findByReference(String id, boolean isFile) {
-		List<IFile> list = new LinkedList<>();
+		List<IFile> list = new ArrayList<>();
 
 		// avoid NPEs
 		if (id == null) return list;
@@ -165,7 +165,7 @@ public class OrientDbFileRepository extends AbstractAnnotatedOrientDbRepository<
 
 	@Override
 	public List<SegradaEntity> findByFile(String id, @Nullable String byClass) {
-		List<SegradaEntity> list = new LinkedList<>();
+		List<SegradaEntity> list = new ArrayList<>();
 
 		// avoid NPEs
 		if (id == null) return list;
@@ -234,7 +234,7 @@ public class OrientDbFileRepository extends AbstractAnnotatedOrientDbRepository<
 
 	@Override
 	public List<IFile> findBySearchTerm(String term, int maximum, boolean returnWithoutTerm) {
-		List<IFile> hits = new LinkedList<>();
+		List<IFile> hits = new ArrayList<>();
 
 		// empty search term and returnWithoutTerm false
 		if (!returnWithoutTerm && (term == null || term.equals(""))) return hits;
@@ -280,7 +280,7 @@ public class OrientDbFileRepository extends AbstractAnnotatedOrientDbRepository<
 		if (filters == null) filters = new HashMap<>();
 
 		// aggregate filters
-		List<String> constraints = new LinkedList<>();
+		List<String> constraints = new ArrayList<>();
 		// search term
 		if (filters.get("search") != null) {
 			constraints.add(createSearchTermFullText((String) filters.get("search")));

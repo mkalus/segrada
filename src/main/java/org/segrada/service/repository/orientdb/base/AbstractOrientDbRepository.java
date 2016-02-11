@@ -1,9 +1,7 @@
 package org.segrada.service.repository.orientdb.base;
 
-import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 import com.orientechnologies.orient.core.id.ORecordId;
 import com.orientechnologies.orient.core.record.impl.ODocument;
-import com.orientechnologies.orient.core.sql.OCommandSQL;
 import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
 import org.segrada.model.base.AbstractSegradaEntity;
 import org.segrada.model.prototype.SegradaEntity;
@@ -14,9 +12,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 
 /**
@@ -205,7 +202,7 @@ abstract public class AbstractOrientDbRepository<T extends SegradaEntity> extend
 	 * @return linked list of entities
 	 */
 	public List<T> findAll() {
-		List<T> entities = new LinkedList<>();
+		List<T> entities = null;
 
 		try {
 			initDb();
@@ -217,6 +214,9 @@ abstract public class AbstractOrientDbRepository<T extends SegradaEntity> extend
 			OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>(sql);
 			List<ODocument> list = db.command(query).execute();
 
+			// preallocate size
+			entities = new ArrayList<>(list.size());
+
 			for (ODocument document : list) {
 				entities.add(convertToEntity(document));
 			}
@@ -224,7 +224,7 @@ abstract public class AbstractOrientDbRepository<T extends SegradaEntity> extend
 			logger.error("Exception thrown while fetching all entities.", e);
 		}
 
-		return entities;
+		return entities==null?new ArrayList<>(0):entities;
 	}
 
 	/**
@@ -339,7 +339,7 @@ abstract public class AbstractOrientDbRepository<T extends SegradaEntity> extend
 		}
 		String constraint = " from ".concat(getModelClassName()).concat(sb.toString());
 
-		List<T> entities = new LinkedList<>();
+		List<T> entities = new ArrayList<>();
 
 		try {
 			initDb();
