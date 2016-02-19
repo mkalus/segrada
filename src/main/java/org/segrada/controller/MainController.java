@@ -7,6 +7,7 @@ import org.segrada.service.ConfigService;
 import org.segrada.servlet.SegradaUpdateChecker;
 import org.segrada.session.ApplicationSettings;
 
+import javax.annotation.security.PermitAll;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -42,6 +43,7 @@ public class MainController {
 
 	@GET
 	@Produces(MediaType.TEXT_HTML)
+	@PermitAll
 	public Viewable index() {
 		// get version update variable
 		String versionUpdate = service.getValue("versionUpdate");

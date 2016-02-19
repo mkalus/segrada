@@ -5,6 +5,8 @@ import com.google.inject.Injector;
 import com.google.inject.servlet.GuiceServletContextListener;
 import com.google.inject.servlet.ServletModule;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
+import org.segrada.auth.CheckAuthentication;
+import org.segrada.config.AuthenticationModule;
 import org.segrada.config.ServiceModule;
 import org.segrada.config.TemplateModule;
 import org.segrada.controller.*;
@@ -36,6 +38,7 @@ public class SegradaGuiceServletContextListener extends GuiceServletContextListe
 	@Override
 	protected Injector getInjector() {
 		Injector injector = Guice.createInjector(
+				new AuthenticationModule(),
 				new TemplateModule(),
 				new ServiceModule(),
 				new ServletModule() {
@@ -91,6 +94,7 @@ public class SegradaGuiceServletContextListener extends GuiceServletContextListe
 		OrientDBFilter.setInjector(injector);
 		SegradaSimplePageCachingFilter.setInjector(injector);
 		DefaultMarkupFilter.setInjector(injector);
+		CheckAuthentication.setInjector(injector);
 
 		return injector;
 	}
