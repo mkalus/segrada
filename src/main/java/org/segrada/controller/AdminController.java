@@ -100,7 +100,7 @@ public class AdminController {
 		try {
 			return messages.getString("ReindexingFinished");
 		} catch (Exception e) {
-			return "Finished.";
+			return "Finished with error(s).";
 		}
 	}
 
