@@ -312,8 +312,8 @@ public class FileController extends AbstractColoredController<IFile> {
 		if (errors.size() > 0) {
 			try {
 				JSONObject jsonObject = new JSONObject();
-				for (String key : errors.keySet())
-					jsonObject.put(key, errors.get(key));
+				for (Map.Entry<String, String> stringStringEntry : errors.entrySet())
+					jsonObject.put(stringStringEntry.getKey(), stringStringEntry.getValue());
 
 				add = "?errors=" + URLEncoder.encode(jsonObject.toString(), "UTF-8");
 			} catch (Exception e) {

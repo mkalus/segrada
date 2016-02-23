@@ -74,11 +74,11 @@ public class ApplicationSettingsProperties implements ApplicationSettings {
 
 		// now overwrite propeties with those defined as system variables
 		Map<String, String> var = System.getenv();
-		for (String envName : environmentToProperty.keySet()) {
-			if (var.containsKey(envName)) {
+		for (Map.Entry<String, String> stringStringEntry : environmentToProperty.entrySet()) {
+			if (var.containsKey(stringStringEntry.getKey())) {
 				// get value from environment and mapped property name
-				String value = var.get(envName);
-				String key = environmentToProperty.get(envName);
+				String value = var.get(stringStringEntry.getKey());
+				String key = stringStringEntry.getValue();
 				// set property
 				if (value != null) {
 					settings.setProperty(key, value);
