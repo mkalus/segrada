@@ -141,7 +141,7 @@ public class ThymeleafViewProcessor implements ViewProcessor<String> {
 	 * set locale according to session, if needed
 	 * @param context web context
 	 */
-	private void updateLocale(WebContext context) {
+	private static void updateLocale(WebContext context) {
 		if (context != null && context.getHttpSession() != null) {
 			// get locale saved in session
 			Object lObject = context.getHttpSession().getAttribute("language");

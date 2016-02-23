@@ -90,7 +90,7 @@ public class OrientDbRelationTypeRepository extends AbstractColoredOrientDbRepos
 	 * @param relationType target
 	 * @param to for "to" instead of "from" direction
 	 */
-	private void convertToEntityAggregateTagData(ODocument document, RelationType relationType, boolean to) {
+	private static void convertToEntityAggregateTagData(ODocument document, RelationType relationType, boolean to) {
 		List<ODocument> list = document.field(to?"toTags":"fromTags", OType.LINKLIST);
 		if (list != null) {
 			List<String> titles = new ArrayList<>();
@@ -169,7 +169,7 @@ public class OrientDbRelationTypeRepository extends AbstractColoredOrientDbRepos
 	 * @param fieldName
 	 * @param tagRepository
 	 */
-	private void populateODocumentWithToFromTagsHelper(ODocument document, String[] tags, String fieldName, TagRepository tagRepository) {
+	private static void populateODocumentWithToFromTagsHelper(ODocument document, String[] tags, String fieldName, TagRepository tagRepository) {
 		if (tags != null && tags.length > 0) {
 			// create tags if needed
 			tagRepository.createNewTagsByTitles(tags);
@@ -261,7 +261,7 @@ public class OrientDbRelationTypeRepository extends AbstractColoredOrientDbRepos
 	 * @param term term(s) to search for
 	 * @return search term part
 	 */
-	private String createSearchTermFullText(String term) {
+	private static String createSearchTermFullText(String term) {
 		// create query term for lucene full text search
 		StringBuilder sb = new StringBuilder(" [fromTitle, toTitle] LUCENE '");
 		boolean first = true;

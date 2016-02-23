@@ -309,7 +309,7 @@ public class OrientDbFileRepository extends AbstractAnnotatedOrientDbRepository<
 	 * @param term term(s) to search for
 	 * @return search term part
 	 */
-	private String createSearchTermFullText(String term) {
+	private static String createSearchTermFullText(String term) {
 		// create query term for lucene full text search
 		StringBuilder sb = new StringBuilder(" [title, filename] LUCENE '");
 		boolean first = true;

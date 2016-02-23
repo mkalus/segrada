@@ -224,7 +224,7 @@ public class OrientDbSourceRepository extends AbstractAnnotatedOrientDbRepositor
 	 * @param term term(s) to search for
 	 * @return search term part
 	 */
-	private String createSearchTermFullText(String term) {
+	private static String createSearchTermFullText(String term) {
 		StringBuilder sb = new StringBuilder(" [longTitle,shortRef,shortTitle] LUCENE '");
 		boolean first = true;
 		for (String termPart : term.toLowerCase().split("\\s+")) {
