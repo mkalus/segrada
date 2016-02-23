@@ -47,7 +47,7 @@ public class OrientDbSchemaUpdater {
 	/**
 	 * graph factory instance
 	 */
-	private OrientGraphFactory orientGraphFactory;
+	private final OrientGraphFactory orientGraphFactory;
 
 	private final String dbPath;
 
