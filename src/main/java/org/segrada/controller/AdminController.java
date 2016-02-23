@@ -9,6 +9,7 @@ import org.segrada.service.base.AbstractFullTextService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.security.RolesAllowed;
 import javax.servlet.ServletContext;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -62,6 +63,7 @@ public class AdminController {
 
 	@GET
 	@Produces(MediaType.TEXT_HTML)
+	@RolesAllowed("admin")
 	public String index() {
 		return "Not implemented.";
 	}
@@ -69,6 +71,7 @@ public class AdminController {
 	@GET
 	@Path("/reindex")
 	@Produces(MediaType.TEXT_HTML)
+	@RolesAllowed("admin")
 	public String reindex(@Context ServletContext context) {
 		clearCache(context); // delete caches
 
@@ -107,6 +110,7 @@ public class AdminController {
 	@GET
 	@Path("/clear_cache")
 	@Produces(MediaType.TEXT_HTML)
+	@RolesAllowed("admin")
 	public String clearCache(@Context ServletContext context) {
 		// delete caches
 		Ehcache cache = CacheManager.getInstance().getEhcache("SimplePageCachingFilter");

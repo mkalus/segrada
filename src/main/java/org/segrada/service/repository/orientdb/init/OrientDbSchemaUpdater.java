@@ -42,7 +42,7 @@ public class OrientDbSchemaUpdater {
 	/**
 	 * current version of db
 	 */
-	private static final int CURRENT_VERSION = 3;
+	private static final int CURRENT_VERSION = 4;
 
 	/**
 	 * graph factory instance
@@ -253,6 +253,15 @@ public class OrientDbSchemaUpdater {
 		// no database population here, just update
 		if (version <= 2) {
 			version = 3;
+		}
+
+		// update group stuff
+		if (version <= 3) {
+			//TODO
+
+			version = 4;
+
+			logger.info("Schema data updated to version 4.");
 		}
 
 		// upsert config defaults
