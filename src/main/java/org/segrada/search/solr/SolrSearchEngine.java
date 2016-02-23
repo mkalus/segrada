@@ -363,7 +363,7 @@ public class SolrSearchEngine implements SearchEngine {
 			QueryResponse response = solr.query(query);
 			SolrDocumentList results = response.getResults();
 
-			if (results.size() > 0) {
+			if (!results.isEmpty()) {
 				if (response.getHighlighting().get(id) != null) {
 					List<String> fragments = response.getHighlighting().get(id).get(this.content);
 					String[] bestFragments = new String[fragments.size() > 100?100:fragments.size()];

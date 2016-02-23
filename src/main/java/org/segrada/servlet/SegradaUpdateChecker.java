@@ -81,7 +81,7 @@ public class SegradaUpdateChecker {
 
 					// update needed?
 					boolean updateNeeded = false;
-					if (list.size() == 0) updateNeeded = true;
+					if (list.isEmpty()) updateNeeded = true;
 					else { // update needed?
 						ODocument doc = list.get(0);
 						try { // try to parse int

@@ -149,8 +149,8 @@ public class FileController extends AbstractColoredController<IFile> {
 		if (minEntry != null) filters.put("minEntry", minEntry);
 		if (maxEntry != null) filters.put("maxEntry", maxEntry);
 		if (tags != null) {
-			if (tags.size() == 0 && search != null) filters.put("tags", null);
-			else if (tags.size() > 0) {
+			if (tags.isEmpty() && search != null) filters.put("tags", null);
+			else if (!tags.isEmpty()) {
 				String[] tagArray = new String[tags.size()];
 				tags.toArray(tagArray);
 				filters.put("tags", tagArray);
@@ -309,7 +309,7 @@ public class FileController extends AbstractColoredController<IFile> {
 		clearCache(); // delete caches
 
 		String add = "";
-		if (errors.size() > 0) {
+		if (!errors.isEmpty()) {
 			try {
 				JSONObject jsonObject = new JSONObject();
 				for (String key : errors.keySet())
@@ -386,7 +386,7 @@ public class FileController extends AbstractColoredController<IFile> {
 
 		// explode tags
 		String[] tagIds;
-		if (tags != null && tags.length() > 0) tagIds = tags.split(",");
+		if (tags != null && !tags.isEmpty()) tagIds = tags.split(",");
 		else tagIds = null;
 
 		// search term finding

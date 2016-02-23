@@ -170,7 +170,7 @@ public class ServiceModule extends AbstractModule {
 		String analyzer = checkNotNull(settings.getSetting("lucene.analyzer"), "lucene.analyzer");
 
 		// fallback 1
-		if (analyzer == null || analyzer.length() == 0) return new StandardAnalyzer(Version.LUCENE_47);
+		if (analyzer == null || analyzer.isEmpty()) return new StandardAnalyzer(Version.LUCENE_47);
 
 		// class for name
 		try {

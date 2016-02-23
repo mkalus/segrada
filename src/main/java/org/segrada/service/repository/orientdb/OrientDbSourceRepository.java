@@ -113,7 +113,7 @@ public class OrientDbSourceRepository extends AbstractAnnotatedOrientDbRepositor
 		List<ODocument> result = db.command(query).execute(ref);
 
 		// no pic found?
-		if (result.size() == 0) return null;
+		if (result.isEmpty()) return null;
 
 		// get first entity
 		return convertToEntity(result.get(0));
@@ -162,7 +162,7 @@ public class OrientDbSourceRepository extends AbstractAnnotatedOrientDbRepositor
 
 		// search for term
 		List<ODocument> result;
-		if (term != null && term.length() > 0) {
+		if (term != null && !term.isEmpty()) {
 			// execute query
 			OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>("select * from Source where " + createSearchTermFullText(term) + " LIMIT " + maximum);
 			//System.out.println(query);

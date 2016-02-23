@@ -144,7 +144,7 @@ public class OrientDbCommentRepository extends AbstractAnnotatedOrientDbReposito
 		OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>("select @RID as id from IsCommentOf where out = " + comment.getId() + " and in = " + entity.getId());
 		List<ODocument> result = db.command(query).execute();
 
-		if (result.size() > 0) {
+		if (!result.isEmpty()) {
 			// remove edge
 			db.command(new OCommandSQL("delete edge " + result.get(0).field("id", String.class))).execute();
 		}

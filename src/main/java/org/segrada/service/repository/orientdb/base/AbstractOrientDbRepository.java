@@ -234,7 +234,7 @@ abstract public class AbstractOrientDbRepository<T extends SegradaEntity> extend
 	 */
 	public T find(@Nullable String id) {
 		// sanity check to return null when looking for null
-		if (id == null || id.length() == 0) return null;
+		if (id == null || id.isEmpty()) return null;
 
 		try {
 			initDb();
@@ -329,7 +329,7 @@ abstract public class AbstractOrientDbRepository<T extends SegradaEntity> extend
 	protected PaginationInfo<T> paginate(int page, int entriesPerPage, List<String> constraints, String customOrder) {
 		// create constraint string
 		StringBuilder sb = new StringBuilder();
-		if (constraints.size() > 0) {
+		if (!constraints.isEmpty()) {
 			boolean first = true;
 			for (String constraint : constraints) {
 				sb.append(first?" WHERE ":" AND ");

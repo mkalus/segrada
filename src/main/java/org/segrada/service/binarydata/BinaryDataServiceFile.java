@@ -87,7 +87,7 @@ public class BinaryDataServiceFile implements BinaryDataService {
 	@Override
 	public String saveNewReference(SegradaEntity entity, String fileName, String mimeType, byte[] data, @Nullable String oldReferenceToReplace) {
 		// create new filename, if empty
-		if (fileName == null || fileName.length() == 0) fileName = RandomStringUtils.randomAlphanumeric(8);
+		if (fileName == null || fileName.isEmpty()) fileName = RandomStringUtils.randomAlphanumeric(8);
 
 		// create prefix and suffix
 		String prefix, suffix;

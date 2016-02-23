@@ -86,7 +86,7 @@ public class OrientDbSchemaUpdater {
 				List<ODocument> list = db.command(query).execute();
 
 				// found something in db?
-				if (list.size() == 0) version = 0;
+				if (list.isEmpty()) version = 0;
 				else { // yes
 					ODocument doc = list.get(0);
 					try { // try to parse int
