@@ -134,7 +134,7 @@ abstract public class AbstractFullTextService<BEAN extends SegradaEntity, REPOSI
 	 * Helper class for search index saving
 	 */
 	protected class SearchIndexEntity {
-		private String id;
+		private final String id;
 
 		public String title;
 

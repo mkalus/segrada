@@ -60,14 +60,14 @@ public class SolrSearchEngine implements SearchEngine {
 	/**
 	 * mappings to field names
 	 */
-	private String id = "id";
-	private String className = "className_s";
-	private String title = "title_t";
-	private String subTitles = "subTitles_t";
-	private String content = "content_t";
-	private String tag = "tag_ss";
-	private String color = "color_s"; // should be stored only
-	private String icon = "icon_s"; // should be stored only
+	private final String id = "id";
+	private final String className = "className_s";
+	private final String title = "title_t";
+	private final String subTitles = "subTitles_t";
+	private final String content = "content_t";
+	private final String tag = "tag_ss";
+	private final String color = "color_s"; // should be stored only
+	private final String icon = "icon_s"; // should be stored only
 
 	/**
 	 * Constructor
