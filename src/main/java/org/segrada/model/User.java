@@ -48,10 +48,6 @@ public class User extends AbstractSegradaEntity implements IUser {
 	@Pattern(regexp="^(ADMIN|USER)$", message = "error.role.type")
 	private String role;
 
-	private Long created;
-
-	private Long modified;
-
 	private Long lastLogin;
 
 	private Boolean active;
@@ -60,7 +56,8 @@ public class User extends AbstractSegradaEntity implements IUser {
 	 * Constructor
 	 */
 	public User() {
-		created = modified = System.currentTimeMillis();
+		setCreated(System.currentTimeMillis());
+		setModified(System.currentTimeMillis());
 		active = true;
 	}
 
@@ -107,26 +104,6 @@ public class User extends AbstractSegradaEntity implements IUser {
 	@Override
 	public String getTitle() {
 		return getName();
-	}
-
-	@Override
-	public Long getCreated() {
-		return created;
-	}
-
-	@Override
-	public void setCreated(Long created) {
-		this.created = created;
-	}
-
-	@Override
-	public Long getModified() {
-		return modified;
-	}
-
-	@Override
-	public void setModified(Long modified) {
-		this.modified = modified;
 	}
 
 	@Override
