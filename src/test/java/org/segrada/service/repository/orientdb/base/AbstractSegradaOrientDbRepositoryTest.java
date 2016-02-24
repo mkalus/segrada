@@ -10,14 +10,14 @@ import org.junit.Test;
 import org.segrada.model.Node;
 import org.segrada.model.User;
 import org.segrada.model.base.AbstractSegradaEntity;
-import org.segrada.model.prototype.INode;
-import org.segrada.model.prototype.IPictogram;
-import org.segrada.model.prototype.IUser;
-import org.segrada.model.prototype.SegradaTaggable;
+import org.segrada.model.prototype.*;
 import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory;
 import org.segrada.session.Identity;
 import org.segrada.test.OrientDBTestInstance;
 import org.segrada.test.OrientDbTestApplicationSettings;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.Assert.*;
 
@@ -53,7 +53,8 @@ public class AbstractSegradaOrientDbRepositoryTest {
 	public void tearDown() throws Exception {
 		// close db
 		try {
-			mockOrientDbRepository.db.close();
+			if (mockOrientDbRepository.db != null)
+				mockOrientDbRepository.db.close();
 		} catch (Exception e) {
 			// do nothing
 		}
@@ -65,6 +66,7 @@ public class AbstractSegradaOrientDbRepositoryTest {
 		db.command(new OCommandSQL("drop class Mock")).execute();
 		db.command(new OCommandSQL("drop class MockUser")).execute();
 		db.command(new OCommandSQL("truncate class User")).execute();
+		db.command(new OCommandSQL("truncate class UserGroup")).execute();
 		db.command(new OCommandSQL("delete vertex V")).execute();
 		db.command(new OCommandSQL("delete edge E")).execute();
 
@@ -248,9 +250,15 @@ public class AbstractSegradaOrientDbRepositoryTest {
 
 	@Test
 	public void testConvertToUser() throws Exception {
+		ODocument group = new ODocument("UserGroup").field("title", "title")
+				.field("titleasc", "titleasc").field("roles", new HashMap<String, String>())
+				.field("created", 1L).field("modified", 2L)
+				.field("active", true);
+		group.save();
+
 		ODocument document = new ODocument("User").field("login", "login")
 				.field("password", "password").field("name", "name")
-				.field("role", "USER").field("created", 1L).field("modified", 2L)
+				.field("group", group).field("created", 1L).field("modified", 2L)
 				.field("lastLogin", 3L).field("active", true);
 
 		IUser user = mockOrientDbRepository.convertToUser(document);
@@ -258,11 +266,43 @@ public class AbstractSegradaOrientDbRepositoryTest {
 		assertEquals("login", user.getLogin());
 		assertEquals("password", user.getPassword());
 		assertEquals("name", user.getName());
-		assertEquals("USER", user.getRole());
+		assertEquals(group.getIdentity().toString(), user.getGroup().getId());
 		assertEquals(new Long(1L), user.getCreated());
 		assertEquals(new Long(2L), user.getModified());
 		assertEquals(new Long(3L), user.getLastLogin());
 		assertEquals(true, user.getActive());
+	}
+
+	@Test
+	public void testConvertToUserGroup() throws Exception {
+		Map<String, String> roles = new HashMap<>();
+		roles.put("Test", "1");
+		roles.put("Test3", "-1");
+		roles.put("Test5", "xxx"); // test robustness of code
+
+		ODocument document = new ODocument("UserGroup").field("title", "title")
+				.field("titleasc", "titleasc").field("roles", roles)
+				.field("created", 1L).field("modified", 2L)
+				.field("lastLogin", 3L).field("active", true);
+
+		IUserGroup userGroup = mockOrientDbRepository.convertToUserGroup(document);
+
+		assertEquals("title", userGroup.getTitle());
+		assertEquals(1, userGroup.getRole("Test"));
+		assertEquals(0, userGroup.getRole("Test2"));
+		assertEquals(-1, userGroup.getRole("Test3"));
+		assertEquals(new Long(1L), userGroup.getCreated());
+		assertEquals(new Long(2L), userGroup.getModified());
+		assertEquals(true, userGroup.getActive());
+
+		// check if groups are still the same after saving
+		document.save();
+
+		userGroup = mockOrientDbRepository.convertToUserGroup(document);
+
+		assertEquals(1, userGroup.getRole("Test"));
+		assertEquals(0, userGroup.getRole("Test2"));
+		assertEquals(-1, userGroup.getRole("Test3"));
 	}
 
 	@Test
@@ -284,17 +324,40 @@ public class AbstractSegradaOrientDbRepositoryTest {
 
 	@Test
 	public void testLazyLoadUser() throws Exception {
+		ODocument group = new ODocument("UserGroup").field("title", "title")
+				.field("titleasc", "titleasc").field("roles", new HashMap<String, String>())
+				.field("created", 1L).field("modified", 2L)
+				.field("active", true);
+		group.save();
+
 		ODocument document = new ODocument("User").field("login", "login")
 				.field("password", "password").field("name", "name").field("nameasc", "name")
-				.field("role", "USER").field("created", 1L).field("modified", 2L)
+				.field("created", 1L).field("modified", 2L).field("group", group)
 				.field("lastLogin", 3L).field("active", true);
 		document.save();
 
 		IUser user = mockOrientDbRepository.lazyLoadUser(new ORecordId(document.getIdentity()));
 		assertNotNull(user);
 		assertEquals(document.getIdentity().toString(), user.getId());
+	}
 
-		orientDBTestInstance.getDatabase().command(new OCommandSQL("truncate class User")).execute();
+	@Test
+	public void testLazyLoadUserGroup() throws Exception {
+		Map<String, String> roles = new HashMap<>();
+		roles.put("Test", "1");
+		roles.put("Test3", "-1");
+		roles.put("Test5", "xxx"); // test robustness of code
+
+		ODocument document = new ODocument("UserGroup").field("title", "title")
+				.field("titleasc", "titleasc").field("roles", roles)
+				.field("created", 1L).field("modified", 2L)
+				.field("lastLogin", 3L).field("active", true);
+		document.save();
+
+		IUserGroup userGroup = mockOrientDbRepository.lazyLoadUserGroup(new ORecordId(document.getIdentity()));
+
+		assertNotNull(userGroup);
+		assertEquals(document.getIdentity().toString(), userGroup.getId());
 	}
 
 	@Test

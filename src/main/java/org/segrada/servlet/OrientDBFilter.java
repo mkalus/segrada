@@ -6,13 +6,16 @@ import com.orientechnologies.orient.core.Orient;
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 import com.orientechnologies.orient.core.id.ORID;
 import com.orientechnologies.orient.core.id.ORecordId;
+import com.orientechnologies.orient.core.metadata.schema.OType;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.tinkerpop.blueprints.impls.orient.OrientGraphFactory;
 import org.eclipse.jetty.server.Request;
 import org.segrada.SegradaApplication;
 import org.segrada.controller.LoginController;
 import org.segrada.model.User;
+import org.segrada.model.UserGroup;
 import org.segrada.model.prototype.IUser;
+import org.segrada.model.prototype.IUserGroup;
 import org.segrada.search.lucene.LuceneSearchEngine;
 import org.segrada.service.repository.RememberMeRepository;
 import org.segrada.service.repository.orientdb.init.OrientDbSchemaUpdater;
@@ -27,6 +30,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 /**
@@ -190,7 +194,7 @@ public class OrientDBFilter implements Filter {
 			user.setLogin(document.field("login", String.class));
 			user.setPassword(document.field("password", String.class));
 			user.setName(document.field("name", String.class));
-			user.setRole(document.field("role", String.class));
+			user.setGroup(docToUserGroup(document.field("group", ODocument.class)));
 			user.setLastLogin(document.field("lastLogin", Long.class));
 			user.setActive(document.field("active", Boolean.class));
 			user.setId(document.getIdentity().toString());
@@ -199,6 +203,40 @@ public class OrientDBFilter implements Filter {
 			user.setModified(document.field("modified", Long.class));
 
 			return user;
+		}
+
+		return null;
+	}
+
+	/**
+	 * convert document to user group
+	 * @param document ODocument of user group
+	 * @return IUserGroup instance or null
+	 */
+	private static IUserGroup docToUserGroup(ODocument document) {
+		if (document != null) {
+			UserGroup userGroup = new UserGroup();
+
+			userGroup.setTitle(document.field("title", String.class));
+			Map<String, String> roles = document.field("roles", OType.EMBEDDEDMAP);
+			for (Object key : roles.keySet()) {
+				try {
+					String realKey = (String) key;
+					Integer value = new Integer(roles.get(key));
+
+					userGroup.setRole(realKey, value);
+				} catch (NumberFormatException e) {
+					logger.error("NumberFormatException while converting group right " + roles.get(key) + " in role " + key + ", group " + userGroup.getTitle());
+					// ignore error by not adding this role to the group
+				}
+			}
+
+			userGroup.setId(document.getIdentity().toString());
+			userGroup.setVersion(document.getVersion());
+			userGroup.setCreated(document.field("created", Long.class));
+			userGroup.setModified(document.field("modified", Long.class));
+
+			return userGroup;
 		}
 
 		return null;

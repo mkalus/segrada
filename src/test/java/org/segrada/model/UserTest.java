@@ -9,9 +9,7 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.segrada.test.PropertyAsserter.assertBasicGetterSetterBehavior;
 
 public class UserTest {
@@ -30,11 +28,13 @@ public class UserTest {
 
 	@Test
 	public void testValidUser() throws Exception {
+		final UserGroup userGroup = new UserGroup();
+
 		final User user = new User();
 		user.setLogin("login");
 		user.setName("John Doe");
 		user.setPassword("supersecretpassword");
-		user.setRole("USER");
+		user.setGroup(userGroup);
 		Set<ConstraintViolation<User>> constraintViolations = validator.validate(user);
 		assertTrue("User not valid", constraintViolations.size() == 0);
 	}
@@ -100,15 +100,9 @@ public class UserTest {
 	}
 
 	@Test
-	public void testEmptyRole() throws Exception {
-		Set<ConstraintViolation<User>> constraintViolations = validator.validateValue(User.class, "role", null);
-		assertTrue("Role empty", constraintViolations.size() == 1);
-	}
-
-	@Test
-	public void testWrongRole() throws Exception {
-		Set<ConstraintViolation<User>> constraintViolations = validator.validateValue(User.class, "role", "COOLUSER");
-		assertTrue("Role not USER or ADMIN", constraintViolations.size() == 1);
+	public void testEmptyGroup() throws Exception {
+		Set<ConstraintViolation<User>> constraintViolations = validator.validateValue(User.class, "group", null);
+		assertTrue("Group empty", constraintViolations.size() == 1);
 	}
 
 	@Test
@@ -117,7 +111,6 @@ public class UserTest {
 		user.setLogin("login");
 		user.setName("John Doe");
 		user.setPassword("supersecretpassword");
-		user.setRole("USER");
 
 		assertEquals("John Doe", user.getTitle());
 	}

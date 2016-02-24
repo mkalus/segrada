@@ -272,8 +272,8 @@ public class OrientDbSchemaUpdater {
 					.field("active", true);
 			db.save(doc);
 
-			// update all admins to new group
-			db.command(new OCommandSQL("UPDATE User SET group = " + doc.getIdentity().toString() + " WHERE role LIKE 'ADMIN'")).execute();
+			// promote all users to admins
+			db.command(new OCommandSQL("UPDATE User SET group = " + doc.getIdentity().toString())).execute();
 
 			// user group
 			roles = new HashMap<>();

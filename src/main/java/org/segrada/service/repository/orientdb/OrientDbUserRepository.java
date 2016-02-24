@@ -1,8 +1,10 @@
 package org.segrada.service.repository.orientdb;
 
 import com.google.inject.Inject;
+import com.orientechnologies.orient.core.id.ORecordId;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
+import org.segrada.model.base.AbstractSegradaEntity;
 import org.segrada.model.prototype.IUser;
 import org.segrada.service.repository.UserRepository;
 import org.segrada.service.repository.orientdb.base.AbstractSegradaOrientDbRepository;
@@ -61,7 +63,7 @@ public class OrientDbUserRepository extends AbstractSegradaOrientDbRepository<IU
 				.field("password", entity.getPassword())
 				.field("name", entity.getName())
 				.field("nameasc", Sluggify.asciify(entity.getName()))
-				.field("role", entity.getRole())
+				.field("group", new ORecordId(entity.getGroup().getId()))
 				.field("created", entity.getCreated())
 				.field("modified", entity.getModified())
 				.field("lastLogin", entity.getLastLogin())

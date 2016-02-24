@@ -44,27 +44,7 @@ public class OrientDbUserGroupRepository extends AbstractSegradaOrientDbReposito
 
 	@Override
 	public IUserGroup convertToEntity(ODocument document) {
-		UserGroup userGroup = new UserGroup();
-
-		userGroup.setTitle(document.field("title", String.class));
-		Map<String, String> roles = document.field("roles", OType.EMBEDDEDMAP);
-		for (Object key : roles.keySet()) {
-			try {
-				String realKey = (String) key;
-				Integer value = new Integer(roles.get(key));
-
-				userGroup.setRole(realKey, value);
-			} catch (NumberFormatException e) {
-				logger.error("NumberFormatException while converting group right " + roles.get(key) + " in role " + key + ", group " + userGroup.getTitle());
-				// ignore error by not adding this role to the group
-			}
-		}
-
-		// populate with data
-		populateEntityWithBaseData(document, userGroup);
-		populateEntityWithCreatedModified(document, userGroup);
-
-		return userGroup;
+		return convertToUserGroup(document);
 	}
 
 	@Override

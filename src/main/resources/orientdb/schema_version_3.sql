@@ -21,6 +21,10 @@ create index UserGroup.titleasc NOTUNIQUE
 
 ######################################################################################################################
 create property User.group Link<UserGroup>
+alter property User.group MANDATORY true
 
+######################################################################################################################
+# to make stuff work:
+alter property User.role MANDATORY false
 # executed in populate data:
 #drop property User.role FORCE

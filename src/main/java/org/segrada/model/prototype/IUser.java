@@ -36,11 +36,8 @@ public interface IUser extends SegradaEntity {
 	String getName();
 	void setName(String name);
 
-	/**
-	 * @return role of user - may be one of ADMIN, USER, VISITOR
-	 */
-	String getRole();
-	void setRole(String role);
+	IUserGroup getGroup();
+	void setGroup(IUserGroup group);
 
 	/**
 	 * @return last login date

@@ -4,6 +4,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.segrada.model.base.AbstractSegradaEntity;
 import org.segrada.model.prototype.IUser;
+import org.segrada.model.prototype.IUserGroup;
 
 import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.NotNull;
@@ -45,8 +46,7 @@ public class User extends AbstractSegradaEntity implements IUser {
 	private String name;
 
 	@NotNull(message = "error.notNull")
-	@Pattern(regexp="^(ADMIN|USER)$", message = "error.role.type")
-	private String role;
+	private IUserGroup group;
 
 	private Long lastLogin;
 
@@ -92,13 +92,13 @@ public class User extends AbstractSegradaEntity implements IUser {
 	}
 
 	@Override
-	public String getRole() {
-		return role;
+	public IUserGroup getGroup() {
+		return group;
 	}
 
 	@Override
-	public void setRole(String role) {
-		this.role = role;
+	public void setGroup(IUserGroup group) {
+		this.group = group;
 	}
 
 	@Override

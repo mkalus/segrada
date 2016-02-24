@@ -8,14 +8,16 @@ import org.junit.Before;
 import org.junit.Test;
 import org.segrada.model.User;
 import org.segrada.model.prototype.IUser;
+import org.segrada.model.prototype.IUserGroup;
+import org.segrada.service.repository.orientdb.base.AbstractSegradaOrientDbRepository;
 import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory;
 import org.segrada.session.Identity;
 import org.segrada.test.OrientDBTestInstance;
 import org.segrada.test.OrientDbTestApplicationSettings;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
+import java.util.HashMap;
+
+import static org.junit.Assert.*;
 
 public class OrientDbUserRepositoryTest {
 	/**
@@ -51,6 +53,7 @@ public class OrientDbUserRepositoryTest {
 	public void tearDown() throws Exception {
 		// truncate db
 		factory.getDb().command(new OCommandSQL("truncate class User")).execute();
+		factory.getDb().command(new OCommandSQL("truncate class UserGroup")).execute();
 
 		// close db
 		try {
@@ -67,9 +70,15 @@ public class OrientDbUserRepositoryTest {
 
 	@Test
 	public void testConvertToEntity() throws Exception {
+		ODocument group = new ODocument("UserGroup").field("title", "title")
+				.field("titleasc", "titleasc").field("roles", new HashMap<String, String>())
+				.field("created", 1L).field("modified", 2L)
+				.field("active", true);
+		group.save();
+
 		ODocument document = new ODocument("User").field("login", "login")
 				.field("password", "password").field("name", "name")
-				.field("role", "USER").field("created", 1L).field("modified", 2L)
+				.field("group", group).field("created", 1L).field("modified", 2L)
 				.field("lastLogin", 3L).field("active", true);
 
 		IUser user = repository.convertToEntity(document);
@@ -77,7 +86,7 @@ public class OrientDbUserRepositoryTest {
 		assertEquals("login", user.getLogin());
 		assertEquals("password", user.getPassword());
 		assertEquals("name", user.getName());
-		assertEquals("USER", user.getRole());
+		assertEquals(group.getIdentity().toString(), user.getGroup().getId());
 		assertEquals(new Long(1L), user.getCreated());
 		assertEquals(new Long(2L), user.getModified());
 		assertEquals(new Long(3L), user.getLastLogin());
@@ -86,11 +95,18 @@ public class OrientDbUserRepositoryTest {
 
 	@Test
 	public void testConvertToDocument() throws Exception {
+		ODocument group = new ODocument("UserGroup").field("title", "title")
+				.field("titleasc", "titleasc").field("roles", new HashMap<String, String>())
+				.field("created", 1L).field("modified", 2L)
+				.field("active", true);
+		group.save();
+		IUserGroup userGroup = repository.convertToUserGroup(group);
+
 		IUser user = new User();
 		user.setLogin("login");
 		user.setPassword("password");
 		user.setName("name");
-		user.setRole("USER");
+		user.setGroup(userGroup);
 		user.setCreated(1L);
 		user.setModified(2L);
 		user.setLastLogin(3L);
@@ -102,7 +118,7 @@ public class OrientDbUserRepositoryTest {
 		assertEquals("login", document.field("login"));
 		assertEquals("password", document.field("password"));
 		assertEquals("name", document.field("name"));
-		assertEquals("USER", document.field("role"));
+		assertEquals(userGroup.getId(), document.field("group", String.class));
 		assertEquals(new Long(1L), document.field("created", Long.class));
 		assertEquals(new Long(2L), document.field("modified", Long.class));
 		assertEquals(new Long(3L), document.field("lastLogin", Long.class));
@@ -127,11 +143,18 @@ public class OrientDbUserRepositoryTest {
 
 	@Test
 	public void testFindByLogin() throws Exception {
+		ODocument group = new ODocument("UserGroup").field("title", "title")
+				.field("titleasc", "titleasc").field("roles", new HashMap<String, String>())
+				.field("created", 1L).field("modified", 2L)
+				.field("active", true);
+		group.save();
+		IUserGroup userGroup = repository.convertToUserGroup(group);
+
 		IUser user = new User();
 		user.setLogin("login");
 		user.setPassword("password");
 		user.setName("name");
-		user.setRole("USER");
+		user.setGroup(userGroup);
 		user.setCreated(1L);
 		user.setModified(2L);
 		user.setLastLogin(3L);

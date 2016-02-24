@@ -2,7 +2,9 @@ package org.segrada.session;
 
 import org.junit.Test;
 import org.segrada.model.User;
+import org.segrada.model.UserGroup;
 import org.segrada.model.prototype.IUser;
+import org.segrada.model.prototype.IUserGroup;
 
 import static org.junit.Assert.*;
 
@@ -47,7 +49,6 @@ public class IdentityTest {
 		IUser user = new User();
 		user.setId("#99:99");
 		user.setName("Testini");
-		user.setRole("TEST");
 
 		assertNull(identity.getId());
 
@@ -68,7 +69,6 @@ public class IdentityTest {
 		IUser user = new User();
 		user.setId("#99:99");
 		user.setName("Testini");
-		user.setRole("TEST");
 
 		assertNull(identity.getName());
 
@@ -84,23 +84,25 @@ public class IdentityTest {
 	}
 
 	@Test
-	public void testGetRole() throws Exception {
+	public void testGetUserGroup() throws Exception {
 		Identity identity = new Identity();
+		IUserGroup group = new UserGroup();
+		group.setTitle("Test");
 		IUser user = new User();
 		user.setId("#99:99");
 		user.setName("Testini");
-		user.setRole("TEST");
+		user.setGroup(group);
 
-		assertNull(identity.getRole());
+		assertNull(identity.getUserGroup());
 
 		identity.setUser(user);
 
-		assertNotNull(identity.getRole());
+		assertNotNull(identity.getUserGroup());
 
 		// logout
 		identity.logout();
 
 		// should return null again
-		assertNull(identity.getRole());
+		assertNull(identity.getUserGroup());
 	}
 }

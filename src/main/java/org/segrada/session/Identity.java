@@ -4,6 +4,7 @@ import com.google.inject.servlet.SessionScoped;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.segrada.model.prototype.IUser;
+import org.segrada.model.prototype.IUserGroup;
 
 import java.io.Serializable;
 
@@ -49,9 +50,11 @@ public class Identity implements Serializable {
 		return this.user==null?null:this.user.getName();
 	}
 
-	public String getRole() {
-		return this.user==null?null:this.user.getRole();
+	public IUserGroup getUserGroup() {
+		return this.user==null?null:this.user.getGroup();
 	}
+
+	//TODO
 
 	/**
 	 * @return true if user is authenticated/logged in
@@ -79,6 +82,7 @@ public class Identity implements Serializable {
 
 	@Override
 	public String toString() {
-		return "{Identity}" + (isAuthenticated()?(getId() + "," + getRole() + "," + getName()):("*notLoggedIn*"));
+		IUserGroup group = getUserGroup();
+		return "{Identity}" + (isAuthenticated()?(getId() + "," + (group!=null?group.getTitle() + ",":"") + getName()):("*notLoggedIn*"));
 	}
 }

@@ -70,8 +70,8 @@ public class CheckAuthentication implements MethodInterceptor {
                 Set<String> rolesSet = new HashSet<>(Arrays.asList(rolesAnnotation.value()));
 
                 //TODO: check multiple roles
-                if (!rolesSet.contains(identity.getRole()))
-                    return returnAccessDenied();
+                //if (!rolesSet.contains(identity.getRole()))
+                //    return returnAccessDenied();
             }
         } else if (identity == null) return returnAccessDenied(); // permit all will still check the existence of identity
 

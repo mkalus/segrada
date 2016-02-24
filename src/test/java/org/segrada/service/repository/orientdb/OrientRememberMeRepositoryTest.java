@@ -12,6 +12,7 @@ import org.junit.Test;
 import org.segrada.test.OrientDBTestInstance;
 
 import java.security.MessageDigest;
+import java.util.HashMap;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -48,6 +49,7 @@ public class OrientRememberMeRepositoryTest {
 	public void tearDown() throws Exception {
 		// truncate db
 		db.command(new OCommandSQL("truncate class User")).execute();
+		db.command(new OCommandSQL("truncate class UserGroup")).execute();
 		db.command(new OCommandSQL("truncate class RememberMeToken")).execute();
 
 		// close db
@@ -60,10 +62,16 @@ public class OrientRememberMeRepositoryTest {
 
 	@Test
 	public void testCreateTokenForCookie() throws Exception {
+		ODocument group = new ODocument("UserGroup").field("title", "title")
+				.field("titleasc", "titleasc").field("roles", new HashMap<String, String>())
+				.field("created", 1L).field("modified", 2L)
+				.field("active", true);
+		group.save();
+
 		// create new user
 		ODocument document = new ODocument("User").field("login", "login")
 				.field("password", "password").field("name", "name").field("nameasc", "name")
-				.field("role", "USER").field("created", 1L).field("modified", 2L)
+				.field("group", group).field("created", 1L).field("modified", 2L)
 				.field("lastLogin", 3L).field("active", true);
 		document.save();
 
@@ -97,10 +105,16 @@ public class OrientRememberMeRepositoryTest {
 
 	@Test
 	public void testRemoveToken() throws Exception {
+		ODocument group = new ODocument("UserGroup").field("title", "title")
+				.field("titleasc", "titleasc").field("roles", new HashMap<String, String>())
+				.field("created", 1L).field("modified", 2L)
+				.field("active", true);
+		group.save();
+
 		// create new user
 		ODocument document = new ODocument("User").field("login", "login")
 				.field("password", "password").field("name", "name").field("nameasc", "name")
-				.field("role", "USER").field("created", 1L).field("modified", 2L)
+				.field("group", group).field("created", 1L).field("modified", 2L)
 				.field("lastLogin", 3L).field("active", true);
 		document.save();
 
@@ -133,10 +147,16 @@ public class OrientRememberMeRepositoryTest {
 
 	@Test
 	public void testValidateTokenAndGetUserId() throws Exception {
+		ODocument group = new ODocument("UserGroup").field("title", "title")
+				.field("titleasc", "titleasc").field("roles", new HashMap<String, String>())
+				.field("created", 1L).field("modified", 2L)
+				.field("active", true);
+		group.save();
+
 		// create new user
 		ODocument document = new ODocument("User").field("login", "login")
 				.field("password", "password").field("name", "name").field("nameasc", "name")
-				.field("role", "USER").field("created", 1L).field("modified", 2L)
+				.field("group", group).field("created", 1L).field("modified", 2L)
 				.field("lastLogin", 3L).field("active", true);
 		document.save();
 
