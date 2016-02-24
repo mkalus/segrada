@@ -194,7 +194,7 @@ public class OrientDBFilter implements Filter {
 			user.setLogin(document.field("login", String.class));
 			user.setPassword(document.field("password", String.class));
 			user.setName(document.field("name", String.class));
-			user.setGroup(docToUserGroup(document.field("group", ODocument.class)));
+			user.setGroup(docToUserGroup(document.field("group")));
 			user.setLastLogin(document.field("lastLogin", Long.class));
 			user.setActive(document.field("active", Boolean.class));
 			user.setId(document.getIdentity().toString());
