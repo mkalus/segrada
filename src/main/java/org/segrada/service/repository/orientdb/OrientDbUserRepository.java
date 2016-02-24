@@ -79,7 +79,7 @@ public class OrientDbUserRepository extends AbstractSegradaOrientDbRepository<IU
 		List<ODocument> result = db.command(query).execute(login.toLowerCase());
 
 		// no user found?
-		if (result.size() == 0) return null;
+		if (result.isEmpty()) return null;
 
 		// get first user
 		return convertToEntity(result.get(0));

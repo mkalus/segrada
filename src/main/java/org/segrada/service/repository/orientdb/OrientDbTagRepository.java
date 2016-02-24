@@ -151,7 +151,7 @@ public class OrientDbTagRepository extends AbstractSegradaOrientDbRepository<ITa
 		List<ODocument> result = db.command(query).execute(title);
 
 		// no entry found?
-		if (result.size() == 0) return null;
+		if (result.isEmpty()) return null;
 
 		// get first entity
 		return convertToEntity(result.get(0));
@@ -168,7 +168,7 @@ public class OrientDbTagRepository extends AbstractSegradaOrientDbRepository<ITa
 
 		// search for term
 		List<ODocument> result;
-		if (term != null && term.length() > 0) {
+		if (term != null && !term.isEmpty()) {
 			// create query term for lucene full text search
 			StringBuilder sb = new StringBuilder();
 			boolean first = true;
@@ -269,7 +269,7 @@ public class OrientDbTagRepository extends AbstractSegradaOrientDbRepository<ITa
 		// find each tag
 		for (String tag : searchCriteria) {
 			tag = tag.trim();
-			if (tag.length() == 0) continue; // skip empty tags
+			if (tag.isEmpty()) continue; // skip empty tags
 
 			// execute query
 			OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>("select * from Tag where " + field + " LIKE ?");
@@ -277,7 +277,7 @@ public class OrientDbTagRepository extends AbstractSegradaOrientDbRepository<ITa
 
 			// no tag found and do we want to create new tags?
 			if (onlyNonExistent) {
-				if (result.size() == 0) { // only if nothing is found
+				if (result.isEmpty()) { // only if nothing is found
 					Tag tagEntity = new Tag();
 					tagEntity.setTitle(tag);
 					this.save(tagEntity);
@@ -285,7 +285,7 @@ public class OrientDbTagRepository extends AbstractSegradaOrientDbRepository<ITa
 					list.add(convertToDocument(tagEntity));
 				}
 			} else {
-				if (result.size() != 0)
+				if (!result.isEmpty())
 					list.add(result.get(0));
 				else logger.info("findTagsByTagList: Skipping unknown tag " + tag);
 			}
@@ -464,7 +464,7 @@ public class OrientDbTagRepository extends AbstractSegradaOrientDbRepository<ITa
 		OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>("select @RID as id from IsTagOf where out.@class = 'Tag' AND out = " +  tagId + " AND in = " + childId + " LIMIT 1");
 		List<ODocument> result = db.command(query).execute();
 
-		if (result.size() > 0) {
+		if (!result.isEmpty()) {
 			// remove edge
 			db.command(new OCommandSQL("delete edge " + result.get(0).field("id", String.class))).execute();
 		}

@@ -199,7 +199,7 @@ public class OrientDbRelationTypeRepository extends AbstractColoredOrientDbRepos
 
 		// search for term
 		List<ODocument> result;
-		if (term != null && term.length() > 0) {
+		if (term != null && !term.isEmpty()) {
 			// execute query
 			OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>("select * from RelationType where " + createSearchTermFullText(term) + " LIMIT " + maximum);
 			result = db.command(query).execute();

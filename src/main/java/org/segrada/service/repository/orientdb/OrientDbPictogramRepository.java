@@ -77,7 +77,7 @@ public class OrientDbPictogramRepository extends AbstractSegradaOrientDbReposito
 		List<ODocument> result = db.command(query).execute(title);
 
 		// no pic found?
-		if (result.size() == 0) return null;
+		if (result.isEmpty()) return null;
 
 		// get first entity
 		return convertToEntity(result.get(0));
@@ -94,7 +94,7 @@ public class OrientDbPictogramRepository extends AbstractSegradaOrientDbReposito
 
 		// search for term
 		List<ODocument> result;
-		if (term != null && term.length() > 0) {
+		if (term != null && !term.isEmpty()) {
 			// create query term for lucene full text search
 			StringBuilder sb = new StringBuilder();
 			boolean first = true;

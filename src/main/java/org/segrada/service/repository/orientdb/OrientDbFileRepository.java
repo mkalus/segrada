@@ -213,7 +213,7 @@ public class OrientDbFileRepository extends AbstractAnnotatedOrientDbRepository<
 		OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>(sql);
 		List<ODocument> result = db.command(query).execute();
 
-		if (result.size() > 0) {
+		if (!result.isEmpty()) {
 			// remove edge
 			db.command(new OCommandSQL("delete edge " + result.get(0).field("id", String.class))).execute();
 		}
@@ -243,7 +243,7 @@ public class OrientDbFileRepository extends AbstractAnnotatedOrientDbRepository<
 
 		// search for term
 		List<ODocument> result;
-		if (term != null && term.length() > 0) {
+		if (term != null && !term.isEmpty()) {
 			// create query term for lucene full text search
 			StringBuilder sb = new StringBuilder();
 			boolean first = true;

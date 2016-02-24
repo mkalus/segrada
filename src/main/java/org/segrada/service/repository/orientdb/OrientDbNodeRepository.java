@@ -150,7 +150,7 @@ public class OrientDbNodeRepository extends AbstractCoreOrientDbRepository<INode
 			queryString += "]) where @class = 'Node'";
 
 			// with search term
-			if (term != null && term.length() > 0) {
+			if (term != null && !term.isEmpty()) {
 				String escapedTerm = OrientStringEscape.escapeOrientSql(term);
 				queryString += "and (title LIKE '%" + escapedTerm + "%' OR alternativeTitles LIKE '%" + escapedTerm + "%')";
 			}
@@ -158,7 +158,7 @@ public class OrientDbNodeRepository extends AbstractCoreOrientDbRepository<INode
 			queryString += " LIMIT " + maximum;
 		} else { // no tags, do search in normal way
 			String where;
-			if (term != null && term.length() > 0) where = "where " + createSearchTermFullText(term); // create search term
+			if (term != null && !term.isEmpty()) where = "where " + createSearchTermFullText(term); // create search term
 			else where = getDefaultOrder(true); // no term, just find top X entries
 
 			// create query

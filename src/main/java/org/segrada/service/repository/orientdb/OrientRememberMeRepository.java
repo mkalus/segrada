@@ -100,7 +100,7 @@ public class OrientRememberMeRepository implements RememberMeRepository {
 			// tags pointing to document still exist?
 			OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>("select * from RememberMeToken where selector = ?");
 			List<ODocument> result = db.command(query).execute(selector);
-			if (result != null && result.size() > 0)
+			if (result != null && !result.isEmpty())
 				selector = null; // exists: start again!
 		} while (selector == null);
 

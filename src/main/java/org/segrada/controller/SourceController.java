@@ -139,8 +139,8 @@ public class SourceController extends AbstractColoredController<ISource> {
 		if (minEntry != null) filters.put("minEntry", minEntry);
 		if (maxEntry != null) filters.put("maxEntry", maxEntry);
 		if (tags != null) {
-			if (tags.size() == 0 && search != null) filters.put("tags", null);
-			else if (tags.size() > 0) {
+			if (tags.isEmpty() && search != null) filters.put("tags", null);
+			else if (!tags.isEmpty()) {
 				String[] tagArray = new String[tags.size()];
 				tags.toArray(tagArray);
 				filters.put("tags", tagArray);
