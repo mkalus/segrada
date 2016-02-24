@@ -18,7 +18,6 @@ package org.segrada.model.prototype;
  * Pictogram model interface
  */
 public interface IPictogram extends SegradaEntity {
-	//String getTitle();
 	void setTitle(String title);
 
 	String getFileIdentifier();

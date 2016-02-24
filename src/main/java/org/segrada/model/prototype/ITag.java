@@ -18,7 +18,6 @@ package org.segrada.model.prototype;
  * Tag model interface
  */
 public interface ITag extends SegradaEntity, SegradaTaggable {
-	//String getTitle();
 	void setTitle(String title);
 
 	/**

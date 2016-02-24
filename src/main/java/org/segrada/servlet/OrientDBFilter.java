@@ -122,7 +122,6 @@ public class OrientDBFilter implements Filter {
 
 		// create database instance
 		ODatabaseDocumentTx db = injector.getInstance(ODatabaseDocumentTx.class);
-		//OrientGraph graph = injector.getInstance(OrientGraph.class);
 
 		if (logger.isTraceEnabled())
 			logger.trace("DB instance created");

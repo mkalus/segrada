@@ -18,7 +18,6 @@ package org.segrada.model.prototype;
  * Node model interface
  */
 public interface INode extends SegradaCoreEntity {
-	//String getTitle();
 	void setTitle(String title);
 
 	String getAlternativeTitles();

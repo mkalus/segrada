@@ -200,10 +200,6 @@ public class OrientDbNodeRepository extends AbstractCoreOrientDbRepository<INode
 
 
 		// period
-		//Long minJD = null, maxJD = null;
-		// get periods from session - not needed, since we always calculate from min/maxEntries
-		//if (filters.containsKey("minJD")) minJD = (Long)filters.get("minJD");
-		//if (filters.containsKey("maxJD")) maxJD = (Long)filters.get("maxJD");
 		// parse periods from input
 		if (filters.containsKey("minEntry")) { // parse from input
 			FlexibleDateParser parser = new FlexibleDateParser();

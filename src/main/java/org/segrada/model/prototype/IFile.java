@@ -18,7 +18,6 @@ package org.segrada.model.prototype;
  * Node model interface
  */
 public interface IFile extends SegradaAnnotatedEntity {
-	//String getTitle();
 	void setTitle(String title);
 
 	String getFilename();

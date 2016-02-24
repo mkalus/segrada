@@ -378,8 +378,7 @@ public class LuceneSearchEngine implements SearchEngine {
 
 			PhraseQuery query = new PhraseQuery();
 			query.add(new Term("id", id));
-
-			//iSearcher.doc(id);
+			
 			TopDocs topDocs = iSearcher.search(query, null, 1);
 
 			// not found?

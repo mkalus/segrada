@@ -140,8 +140,8 @@ public class ServiceModule extends AbstractModule {
 		if (logger.isTraceEnabled())
 			logger.trace("Getting database.");
 
-		//System.out.println("Available: " + orientGraphFactory.getAvailableInstancesInPool());
-		//System.out.println("Created: " + orientGraphFactory.getCreatedInstancesInPool());
+		logger.debug("Available: " + orientGraphFactory.getAvailableInstancesInPool());
+		logger.debug("Created: " + orientGraphFactory.getCreatedInstancesInPool());
 		return orientGraphFactory.getDatabase();
 	}
 
