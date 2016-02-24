@@ -115,17 +115,17 @@ public class SegradaMessageBodyReader implements MessageBodyReader<SegradaEntity
 		}
 
 		// get each form key and value
-		for (String key : parameterMap.keySet()) {
+		for (Map.Entry<String, String[]> stringEntry : parameterMap.entrySet()) {
 			// do not update id, ignore clearTags and _csrf
-			if (key.equals("id") || key.equals("clearTags") || key.equals("_csrf")) continue;
+			if (stringEntry.getKey().equals("id") || stringEntry.getKey().equals("clearTags") || stringEntry.getKey().equals("_csrf")) continue;
 
-			Method setter = setters.get(key);
+			Method setter = setters.get(stringEntry.getKey());
 			if (setter != null) {
 				// get first parameter of setter (type to cast)
 				Class setterType = setter.getParameterTypes()[0];
 
 				// preprocess values
-				String[] values = parameterMap.get(key);
+				String[] values = stringEntry.getValue();
 				// short cut first value - used in most cases
 				String firstValue = values!=null&&values.length>0?values[0]:null;
 				// object representation of value
@@ -133,7 +133,7 @@ public class SegradaMessageBodyReader implements MessageBodyReader<SegradaEntity
 
 				// preprocess values
 				if (value != null && !firstValue.isEmpty()) {
-					if (key.equals("color") && firstValue.startsWith("#")) {
+					if (stringEntry.getKey().equals("color") && firstValue.startsWith("#")) {
 						try {
 							if (value.equals("#ffffffff")) value = null;
 							else value = Integer.decode(firstValue);
