@@ -318,7 +318,7 @@ public class SolrSearchEngine implements SearchEngine {
 	 * @param field to check doc for
 	 * @return retrieved string or null
 	 */
-	private String getOneValueFromField(SolrDocument doc, String field) {
+	private static String getOneValueFromField(SolrDocument doc, String field) {
 		// sanity
 		if (doc == null || field == null || field.isEmpty() || !doc.containsKey(field)) return null;
 

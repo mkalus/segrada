@@ -86,7 +86,7 @@ public class CheckAuthentication implements MethodInterceptor {
      * @return null
      * @throws Exception on IO errors
      */
-    private Object returnAccessDenied() throws Exception {
+    private static Object returnAccessDenied() throws Exception {
         logger.info("ACCESS DENIED!");
 
         HttpServletResponse response = injector.getInstance(HttpServletResponse.class);

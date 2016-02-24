@@ -72,7 +72,7 @@ public class StripWhitespaceProcessor extends AbstractChildrenModifierAttrProces
 		return element;
 	}
 
-	private void filterTextNode(Text textNode, List<Node> filteredNodes) {
+	private static void filterTextNode(Text textNode, List<Node> filteredNodes) {
 		String textContent = textNode.getContent();
 		if (!textContent.matches("\\s*")) {
 			filteredNodes.add(textNode);

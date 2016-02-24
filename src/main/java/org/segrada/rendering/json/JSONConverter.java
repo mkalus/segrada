@@ -140,7 +140,7 @@ public class JSONConverter {
 	 * @param color input color
 	 * @return brightness 0-255
 	 */
-	private int calculateBrightness(int color) {
+	private static int calculateBrightness(int color) {
 		double red = (double) ((color >> 16) & 0x000000FF);
 		double green = (double) ((color >> 8) & 0x000000FF);
 		double blue = (double) (color & 0x000000FF);

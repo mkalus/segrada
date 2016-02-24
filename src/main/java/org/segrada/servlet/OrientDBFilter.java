@@ -183,7 +183,7 @@ public class OrientDBFilter implements Filter {
 	 * @param document ODocument of user
 	 * @return IUser instance or null
 	 */
-	private IUser docToUser(ODocument document) {
+	private static IUser docToUser(ODocument document) {
 		if (document != null) {
 			IUser user = new User();
 

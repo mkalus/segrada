@@ -239,7 +239,7 @@ public class OrientDbNodeRepository extends AbstractCoreOrientDbRepository<INode
 	 * @param term term(s) to search for
 	 * @return search term part
 	 */
-	private String createSearchTermFullText(String term) {
+	private static String createSearchTermFullText(String term) {
 		// create query term for lucene full text search
 		StringBuilder sb = new StringBuilder(" [title, alternativeTitles] LUCENE '");
 		boolean first = true;
