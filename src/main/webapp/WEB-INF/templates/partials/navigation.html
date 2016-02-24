@@ -49,7 +49,9 @@
 						<li><a class="sg-control-set" href="#" th:href="@{/pictogram}" th:inline="text"><span class="fa fa-university"></span> [[#{Pictograms}]]</a></li>
 						<li><a class="sg-control-set" href="#" th:href="@{/tag}" th:inline="text"><span class="fa fa-tag"></span> [[#{Tags}]]</a></li>
 						<li><a class="sg-control-set" href="#" th:href="@{/color}" th:inline="text"><span class="fa fa-tint"></span> [[#{Colors}]]</a></li>
+						<li th:if="${showLogout}" class="divider"></li>
 						<li th:if="${showLogout}"><a class="sg-control-set" href="#" th:href="@{/user}" th:inline="text"><span class="fa fa-user"></span> [[#{Users}]]</a></li>
+						<li th:if="${showLogout}"><a class="sg-control-set" href="#" th:href="@{/user_group}" th:inline="text"><span class="fa fa-users"></span> [[#{UserGroups}]]</a></li>
 					</ul>
 				</li>
 				<li class="dropdown">
@@ -66,7 +68,9 @@
 						<li><a class="sg-data-add" href="#" th:href="@{/pictogram/add}" th:inline="text"><span class="fa fa-university"></span> [[#{Pictogram}]]</a></li>
 						<li><a class="sg-data-add" href="#" th:href="@{/tag/add}" th:inline="text"><span class="fa fa-tag"></span> [[#{Tag}]]</a></li>
 						<li><a class="sg-data-add" href="#" th:href="@{/color/add}" th:inline="text"><span class="fa fa-tint"></span> [[#{Color}]]</a></li>
+						<li th:if="${showLogout}" class="divider"></li>
 						<li th:if="${showLogout}"><a class="sg-data-add" href="#" th:href="@{/user/add}" th:inline="text"><span class="fa fa-user"></span> [[#{User}]]</a></li>
+						<li th:if="${showLogout}"><a class="sg-control-set" href="#" th:href="@{/user_group/add}" th:inline="text"><span class="fa fa-users"></span> [[#{UserGroup}]]</a></li>
 					</ul>
 				</li>
 				<li><a href="#" id="sg-toggle-graph" type="button" th:title="#{nav.toggleGraph}"><span class="fa fa-share-alt" aria-hidden="true"></span> <span class="hidden-md hidden-lg hidden-sm" th:text="#{nav.toggleGraph}"></span></a></li>
@@ -101,7 +105,7 @@
 	</nav>
 </div>
 
-<script src="../static/js/vendor/jquery-1.11.2.min.js" th:src="@{/js/vendor/jquery-1.11.2.min.js}"></script>
+<script src="../static/js/vendor/jquery-1.12.1.min.js" th:src="@{/js/vendor/jquery-1.12.1.min.js}"></script>
 <script src="../static/js/vendor/bootstrap.min.js" th:src="@{/js/vendor/bootstrap.min.js}"></script>
 <script src="../static/js/vendor/ie10-viewport-bug-workaround.min.js" th:src="@{/js/vendor/ie10-viewport-bug-workaround.min.js}"></script>
 <script src="../static/js/segrada.min.js" th:src="@{/js/segrada.min.js}"></script>
