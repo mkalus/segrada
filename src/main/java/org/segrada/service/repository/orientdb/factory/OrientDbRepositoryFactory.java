@@ -129,9 +129,9 @@ public class OrientDbRepositoryFactory implements RepositoryFactory {
 			// testing environment
 			if (modelName.startsWith("Mock")) {
 				logger.debug("Working in testing environment: Finding Mock repository.");
-				for (Map.Entry<Class, SegradaRepository> classSegradaRepositoryEntry : repositoryMap.entrySet())
-					if (classSegradaRepositoryEntry.getKey().getName().contains("Mock"))
-						return (T) classSegradaRepositoryEntry.getValue();
+				for (Map.Entry<Class, SegradaRepository> repositoryEntry : repositoryMap.entrySet())
+					if (repositoryEntry.getKey().getName().contains("Mock"))
+						return (T) repositoryEntry.getValue();
 			}
 
 			logger.error("Error while producing repository from model name " + modelName, e);

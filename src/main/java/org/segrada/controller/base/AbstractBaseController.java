@@ -108,20 +108,20 @@ abstract public class AbstractBaseController<BEAN extends SegradaEntity> {
 			if (o != null && o instanceof Map) { // we have a session object saved - now copy filters
 				Map<String, Object> sessionFilter = (Map<String, Object>) session.getAttribute(key);
 				// copy filter keys that are in sessionFilter, but not in filters
-				for (Map.Entry<String, Object> stringObjectEntry : sessionFilter.entrySet()) {
-					if (!filters.containsKey(stringObjectEntry.getKey()))
-						filters.put(stringObjectEntry.getKey(), stringObjectEntry.getValue());
+				for (Map.Entry<String, Object> sessionEntry : sessionFilter.entrySet()) {
+					if (!filters.containsKey(sessionEntry.getKey()))
+						filters.put(sessionEntry.getKey(), sessionEntry.getValue());
 				}
 			}
 		}
 		Map<String, Object> cleanedFilter = new HashMap<>();
-		for (Map.Entry<String, Object> stringObjectEntry : filters.entrySet()) {
-			Object o = stringObjectEntry.getValue();
+		for (Map.Entry<String, Object> filterEntry : filters.entrySet()) {
+			Object o = filterEntry.getValue();
 			if (o != null) {
 				if ((o instanceof String && ((String)o).isEmpty()) ||
 						(o instanceof String[] && ((String[])o).length == 0)
 						) continue;
-				cleanedFilter.put(stringObjectEntry.getKey(), o);
+				cleanedFilter.put(filterEntry.getKey(), o);
 			}
 		}
 		// get page and per page settings

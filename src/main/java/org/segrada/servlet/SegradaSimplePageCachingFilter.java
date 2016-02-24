@@ -133,14 +133,14 @@ public class SegradaSimplePageCachingFilter extends SimplePageCachingFilter {
 			if (controllerData != null && controllerData instanceof Map) {
 				@SuppressWarnings("unchecked")
 				Map<String, Object> d = (Map<String, Object>)controllerData;
-				for (Map.Entry<String, Object> stringObjectEntry : d.entrySet()) {
-					Object o = stringObjectEntry.getValue();
+				for (Map.Entry<String, Object> entry : d.entrySet()) {
+					Object o = entry.getValue();
 					String value;
 					// concatenate string array in order to make caching work
 					if (o instanceof String[]) value = String.join(",", (String[]) o);
 					else // all other cases: convert to string
-						value = stringObjectEntry.getValue().toString();
-					queryData.put(stringObjectEntry.getKey(), value);
+						value = entry.getValue().toString();
+					queryData.put(entry.getKey(), value);
 				}
 			}
 		}
