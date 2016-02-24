@@ -7,6 +7,7 @@ import org.segrada.model.prototype.IUser;
 import org.segrada.model.prototype.IUserGroup;
 
 import java.io.Serializable;
+import java.util.Map;
 
 /**
  * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]
@@ -54,7 +55,17 @@ public class Identity implements Serializable {
 		return this.user==null?null:this.user.getGroup();
 	}
 
-	//TODO
+	public boolean hasRole(String role) {
+		return this.user != null && this.user.getGroup().hasRole(role);
+	}
+
+	public int getRole(String role) {
+		return this.user==null?0:this.user.getGroup().getRole(role);
+	}
+
+	public Map<String, Integer> getRoles() {
+		return this.user==null?null:this.user.getGroup().getRoles();
+	}
 
 	/**
 	 * @return true if user is authenticated/logged in

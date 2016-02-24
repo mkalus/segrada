@@ -105,4 +105,82 @@ public class IdentityTest {
 		// should return null again
 		assertNull(identity.getUserGroup());
 	}
+
+	@Test
+	public void testHasRole() throws Exception {
+		Identity identity = new Identity();
+		IUserGroup group = new UserGroup();
+		group.setTitle("Test");
+		group.setRole("Test");
+		IUser user = new User();
+		user.setId("#99:99");
+		user.setName("Testini");
+		user.setGroup(group);
+
+		assertFalse(identity.hasRole("Test"));
+		assertFalse(identity.hasRole("Test2"));
+
+		identity.setUser(user);
+
+		assertTrue(identity.hasRole("Test"));
+		assertFalse(identity.hasRole("Test2"));
+
+		// logout
+		identity.logout();
+
+		// should return false again
+		assertFalse(identity.hasRole("Test"));
+	}
+
+	@Test
+	public void testGetRole() throws Exception {
+		Identity identity = new Identity();
+		IUserGroup group = new UserGroup();
+		group.setTitle("Test");
+		group.setRole("Test");
+		IUser user = new User();
+		user.setId("#99:99");
+		user.setName("Testini");
+		user.setGroup(group);
+
+		assertEquals(0, identity.getRole("Test"));
+		assertEquals(0, identity.getRole("Test2"));
+
+		identity.setUser(user);
+
+		assertEquals(1, identity.getRole("Test"));
+		assertEquals(0, identity.getRole("Test2"));
+
+		// logout
+		identity.logout();
+
+		// should return false again
+		assertEquals(0, identity.getRole("Test"));
+	}
+
+	@Test
+	public void testGetRoles() throws Exception {
+		Identity identity = new Identity();
+		IUserGroup group = new UserGroup();
+		group.setTitle("Test");
+		group.setRole("Test");
+		IUser user = new User();
+		user.setId("#99:99");
+		user.setName("Testini");
+		user.setGroup(group);
+
+		assertNull(identity.getRoles());
+
+		identity.setUser(user);
+
+		assertNotNull(identity.getRoles());
+		assertTrue(identity.getRoles().containsKey("Test"));
+		assertTrue(identity.getRoles().containsValue(1));
+
+		// logout
+		identity.logout();
+
+		// should return false again
+		assertNull(identity.getRoles());
+	}
 }

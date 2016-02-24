@@ -64,14 +64,24 @@ public class CheckAuthentication implements MethodInterceptor {
             if (method.isAnnotationPresent(DenyAll.class))
                 return returnAccessDenied();
 
-            //Verify user access
-            if (method.isAnnotationPresent(RolesAllowed.class)) {
-                RolesAllowed rolesAnnotation = method.getAnnotation(RolesAllowed.class);
-                Set<String> rolesSet = new HashSet<>(Arrays.asList(rolesAnnotation.value()));
+            // is admin?
+            if (!identity.hasRole("ADMIN")) {
+                //Verify user access
+                if (method.isAnnotationPresent(RolesAllowed.class)) {
+                    RolesAllowed rolesAnnotation = method.getAnnotation(RolesAllowed.class);
+                    Set<String> rolesSet = new HashSet<>(Arrays.asList(rolesAnnotation.value()));
 
-                //TODO: check multiple roles
-                //if (!rolesSet.contains(identity.getRole()))
-                //    return returnAccessDenied();
+                    // check multiple roles
+                    boolean matched = false;
+                    for (String role : rolesSet)
+                        if (identity.getRoles().containsKey(role)) {
+                            matched = true;
+                            break;
+                        }
+
+                    if (!matched)
+                        return returnAccessDenied();
+                }
             }
         } else if (identity == null) return returnAccessDenied(); // permit all will still check the existence of identity
 
