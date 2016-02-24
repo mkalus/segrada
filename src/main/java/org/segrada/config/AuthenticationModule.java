@@ -1,11 +1,12 @@
 package org.segrada.config;
 
 import com.google.inject.AbstractModule;
-import com.google.inject.Inject;
-import com.google.inject.Provides;
 import com.google.inject.matcher.Matchers;
-import com.google.inject.servlet.RequestScoped;
 import org.segrada.auth.CheckAuthentication;
+import org.segrada.session.ApplicationSettings;
+import org.segrada.session.ApplicationSettingsProperties;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.security.DenyAll;
 import javax.annotation.security.PermitAll;
@@ -29,23 +30,29 @@ import javax.annotation.security.RolesAllowed;
  * Method to include authentication
  */
 public class AuthenticationModule extends AbstractModule {
+    private static final Logger logger = LoggerFactory.getLogger(AuthenticationModule.class);
+
     @Override
     protected void configure() {
-        CheckAuthentication checkAuthentication = getCheckAuthentication();
+        ApplicationSettings settings = ApplicationSettingsProperties.getInstance();
+        requestInjection(settings);
 
-        // bind auth checker to methods annotated with respective security annotations
-        bindInterceptor(Matchers.any(), Matchers.annotatedWith(PermitAll.class),
-                checkAuthentication);
-        bindInterceptor(Matchers.any(), Matchers.annotatedWith(DenyAll.class),
-                checkAuthentication);
-        bindInterceptor(Matchers.any(), Matchers.annotatedWith(RolesAllowed.class),
-                checkAuthentication);
-    }
+        String requireLogin = settings.getSetting("requireLogin");
 
-    @Provides
-    @RequestScoped
-    @Inject
-    public CheckAuthentication getCheckAuthentication() {
-        return new CheckAuthentication();
+        if (requireLogin != null && requireLogin.equals("true")) {
+            CheckAuthentication checkAuthentication = new CheckAuthentication();
+            requestInjection(checkAuthentication);
+
+            // bind auth checker to methods annotated with respective security annotations
+            bindInterceptor(Matchers.any(), Matchers.annotatedWith(PermitAll.class),
+                    checkAuthentication);
+            bindInterceptor(Matchers.any(), Matchers.annotatedWith(DenyAll.class),
+                    checkAuthentication);
+            bindInterceptor(Matchers.any(), Matchers.annotatedWith(RolesAllowed.class),
+                    checkAuthentication);
+
+            logger.info("Authentication initialized.");
+        } else
+            logger.info("Skipping authentication injection due to requireLogin == false.");
     }
 }

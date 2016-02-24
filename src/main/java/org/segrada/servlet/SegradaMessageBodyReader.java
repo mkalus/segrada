@@ -161,7 +161,16 @@ public class SegradaMessageBodyReader implements MessageBodyReader<SegradaEntity
 				}
 				// handle booleans
 				if (Boolean.class.isAssignableFrom(setterType)) {
-					value = !(firstValue == null || firstValue.isEmpty() || firstValue.equals("0") || firstValue.equalsIgnoreCase("f") || firstValue.equalsIgnoreCase("false"));
+					if (values != null && values.length > 1) {
+						// multiple values -> test for "1" or true and the like
+						value = false;
+						for (String v : values)
+							if (v != null && (v.equals("1") || v.equalsIgnoreCase("t") || v.equalsIgnoreCase("truw"))) {
+								value = true;
+								break;
+							}
+					} // only one value -> take that
+					else value = !(firstValue == null || firstValue.isEmpty() || firstValue.equals("0") || firstValue.equalsIgnoreCase("f") || firstValue.equalsIgnoreCase("false"));
 				}
 
 				// try to set value

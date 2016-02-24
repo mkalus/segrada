@@ -57,7 +57,7 @@ public class ServiceModule extends AbstractModule {
 	@Override
 	protected void configure() {
 		// bind settings
-		bind(ApplicationSettings.class).to(ApplicationSettingsProperties.class);
+		bind(ApplicationSettings.class).toInstance(ApplicationSettingsProperties.getInstance());
 
 		// bind password encoder
 		bind(PasswordEncoder.class).to(PBKDF2WithHmacSHA1PasswordEncoder.class);

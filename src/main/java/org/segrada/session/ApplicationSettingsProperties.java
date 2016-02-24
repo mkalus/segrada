@@ -29,6 +29,20 @@ public class ApplicationSettingsProperties implements ApplicationSettings {
 	private static final Logger logger = LoggerFactory.getLogger(ApplicationSettingsProperties.class);
 
 	/**
+	 * singleton reference
+	 */
+	private static ApplicationSettings instance;
+
+	/**
+	 * singleton getter
+	 * @return
+	 */
+	public static ApplicationSettings getInstance() {
+		if (instance == null) instance = new ApplicationSettingsProperties();
+		return instance;
+	}
+
+	/**
 	 * holds mapping of environmental variables to properties
 	 */
 	private static final Map<String, String> environmentToProperty;
@@ -57,6 +71,9 @@ public class ApplicationSettingsProperties implements ApplicationSettings {
 	 * Constructor
 	 */
 	public ApplicationSettingsProperties() {
+		// singleton reference
+		instance = this;
+
 		InputStream input;
 
 		ClassLoader classLoader = getClass().getClassLoader();

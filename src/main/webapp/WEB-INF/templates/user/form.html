@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-	<title th:text="#{add.user}">Create New Node</title>
+	<title th:text="#{add.user}">Create New User</title>
 	<div th:include="partials/common :: head" th:remove="tag"></div>
 </head>
 
@@ -42,14 +42,13 @@
 
 			<div th:replace="partials/form :: formTextfield (name='name',field=${entity.name},label=#{field.name},id=${tempId},errors=${errors},required=true)"></div>
 
-			<div class="form-group" th:classappend="${errors}?(${#maps.containsKey(errors, 'role')}?'has-error has-feedback')">
-				<label class="col-sm-2 control-label" th:for="${'role-' + id}"><span th:text="#{field.role}"></span><span class="text-danger"> *</span></label>
+			<div class="form-group" th:classappend="${errors}?(${#maps.containsKey(errors, 'group')}?'has-error has-feedback')">
+				<label class="col-sm-2 control-label" th:for="${'group-' + id}"><span th:text="#{field.group}"></span><span class="text-danger"> *</span></label>
 				<div class="col-sm-10">
-					<select th:id="${'role-' + id}" name="role" class="form-control">
-						<option value="ADMIN" th:selected="${entity.getRole()=='ADMIN'}">ADMIN</option>
-						<option value="USER" th:selected="${entity.getRole()=='USER'}">USER</option>
+					<select th:id="${'group-' + id}" name="group" class="form-control">
+						<option value="GROUP" th:each="userGroup : ${userGroups}" th:text="${userGroup.title}" th:value="${userGroup.id}" th:selected="${userGroup.uid == entity.group.uid}">Group</option>
 					</select>
-					<span class="help-block" th:text="${errors}?(${errors['role']}?${#messages.msg(errors['role'])})">Error</span>
+					<span class="help-block" th:text="${errors}?(${errors['group']}?${#messages.msg(errors['group'])})">Error</span>
 				</div>
 			</div>
 

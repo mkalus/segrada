@@ -6,6 +6,7 @@ import com.sun.jersey.api.view.Viewable;
 import org.segrada.controller.base.AbstractBaseController;
 import org.segrada.model.User;
 import org.segrada.model.prototype.IUser;
+import org.segrada.service.UserGroupService;
 import org.segrada.service.UserService;
 import org.segrada.util.PasswordEncoder;
 
@@ -40,6 +41,9 @@ public class UserController extends AbstractBaseController<IUser> {
 	private UserService service;
 
 	@Inject
+	private UserGroupService userGroupService;
+
+	@Inject
 	private PasswordEncoder passwordEncoder;
 
 	@Override
@@ -72,6 +76,12 @@ public class UserController extends AbstractBaseController<IUser> {
 	@Produces(MediaType.TEXT_HTML)
 	public Viewable edit(@PathParam("uid") String uid) {
 		return handleForm(service.findById(service.convertUidToId(uid)));
+	}
+
+	@Override
+	protected void enrichModelForEditingAndSaving(Map<String, Object> model) {
+		// add list of user groups
+		model.put("userGroups", userGroupService.findAll());
 	}
 
 	@POST

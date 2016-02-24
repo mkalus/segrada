@@ -1,0 +1,36 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" th:lang="${#locale.language}">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <title th:text="${entity.title}">User Group</title>
+    <div th:include="partials/common :: head" th:remove="tag"></div>
+</head>
+
+<body>
+<div th:replace="partials/common :: browser"></div>
+
+<div class="container">
+    <div class="sg-data sg-user-group" th:id="${'user-group-' + entity.uid}">
+        <div th:replace="partials/common :: headerboxright (type=#{UserGroup},base='user_group',uid=${entity.uid})"></div>
+        <h4 class="sg-data-header"><span class="fa fa-users" th:title="#{UserGroup}"></span> <span th:text="${entity.title}">User Group</span></h4>
+
+        <div class="sg-user-data sg-margin-top sg-margin-bottom">
+            <div class="row">
+                <div class="col-xs-3"><strong th:text="#{field.login}">TODO</strong></div>
+                <div class="col-xs-9">TODO: ACL list</div>
+            </div>
+            <div class="row">
+                <div class="col-xs-3"><strong th:text="#{field.active}">Active?</strong></div>
+                <div class="col-xs-9" th:if="${entity.active}"><i class="fa fa-check text-success"></i> <span th:text="#{field.userActive}">full text?</span></div>
+                <div class="col-xs-9" th:unless="${entity.active}"><i class="fa fa-times text-danger"></i> <span th:text="#{field.userInactive}">full text?</span></div>
+            </div>
+        </div>
+
+        <div th:replace="partials/common :: datafooter (entity=${entity})"></div>
+    </div>
+</div>
+
+<div th:replace="partials/common :: footer"></div>
+</body>
+</html>

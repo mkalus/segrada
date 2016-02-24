@@ -24,13 +24,13 @@
 			<tr>
 				<th th:text="#{field.login}">Login</th>
 				<th th:text="#{field.name}">Name</th>
-				<th th:text="#{field.role}">Role</th>
+				<th th:text="#{field.group}">Group</th>
 				<th></th>
 			</tr>
 			<tr th:each="entity : ${entities}" th:attr="data-data-dblclick=@{/user/show/{uid}(uid=${entity.uid})}">
 				<td th:text="${entity.login}">Login</td>
 				<td th:text="${entity.name}">Name</td>
-				<td th:text="${entity.role}">Role</td>
+				<td th:text="${entity.group.title}">Group</td>
 				<td class="text-right">
 					<div class="sg-data-icon-bar" role="group" aria-label="Actions" th:strip-whitespace="shallow">
 						<a class="sg-data-icon sg-data-add" href="#" th:title="#{Show}" th:href="@{/user/show/{uid}(uid=${entity.uid})}"><i class="fa fa-eye"></i></a>
