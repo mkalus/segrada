@@ -35,6 +35,7 @@ public class FuzzyDateRenderer {
 				switch (flag) {
 					case 'c': dateString = '~' + dateString; break; // add ca. prefix
 					case '?': dateString += '?'; break; // add ? suffix
+					default: break;
 				}
 
 		if (calendar != null && !calendar.isEmpty() && !calendar.equals("G")) {

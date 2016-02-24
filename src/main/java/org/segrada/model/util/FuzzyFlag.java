@@ -42,6 +42,7 @@ public enum FuzzyFlag {
 		switch (flag) {
 			case 'c': return FUZZY_CA;
 			case '?': return FUZZY_UNKNOWN;
+			default: break;
 		}
 		return null;
 	}
