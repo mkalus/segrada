@@ -52,7 +52,7 @@ public class OrientDbUserGroupRepositoryTest {
 	@After
 	public void tearDown() throws Exception {
 		// truncate db
-		//factory.getDb().command(new OCommandSQL("truncate class Color")).execute();
+		factory.getDb().command(new OCommandSQL("truncate class UserGroup")).execute();
 
 		// close db
 		try {

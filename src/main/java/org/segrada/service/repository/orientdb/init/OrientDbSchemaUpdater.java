@@ -6,7 +6,6 @@ import com.orientechnologies.orient.core.sql.OCommandSQL;
 import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
 import com.tinkerpop.blueprints.impls.orient.OrientGraph;
 import com.tinkerpop.blueprints.impls.orient.OrientGraphFactory;
-import org.segrada.util.OrientStringEscape;
 import org.segrada.util.PasswordEncoder;
 import org.segrada.util.Sluggify;
 import org.slf4j.Logger;
@@ -17,7 +16,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]
@@ -221,7 +222,7 @@ public class OrientDbSchemaUpdater {
 					.field("role", "ADMIN")
 					.field("created", now)
 					.field("modified", now)
-							//.field("lastLogin", null)
+					//.field("lastLogin", null)
 					.field("active", true);
 			db.save(doc);
 
@@ -257,7 +258,42 @@ public class OrientDbSchemaUpdater {
 
 		// update group stuff
 		if (version <= 3) {
-			//TODO
+			long now = System.currentTimeMillis();
+
+			// create new groups: admin group
+			Map<String, String> roles = new HashMap<>();
+			roles.put("ADMIN", "1");
+
+			ODocument doc = new ODocument("UserGroup")
+					.field("title", "Administrator")
+					.field("roles", roles)
+					.field("created", now)
+					.field("modified", now)
+					.field("active", true);
+			db.save(doc);
+
+			// update all admins to new group
+			db.command(new OCommandSQL("UPDATE User SET group = " + doc.getIdentity().toString() + " WHERE role LIKE 'ADMIN'")).execute();
+
+			// user group
+			roles = new HashMap<>();
+			roles.put("ADMIN", "1");
+
+			//TODO: update this to correct groups
+
+			doc = new ODocument("UserGroup")
+					.field("title", "User")
+					.field("roles", roles)
+					.field("created", now)
+					.field("modified", now)
+					.field("active", true);
+			db.save(doc);
+
+			// update all users to new group
+			db.command(new OCommandSQL("UPDATE User SET group = " + doc.getIdentity().toString() + " WHERE role NOT LIKE 'ADMIN'")).execute();
+
+			// drop old property
+			db.command(new OCommandSQL("drop property User.role FORCE")).execute();
 
 			version = 4;
 

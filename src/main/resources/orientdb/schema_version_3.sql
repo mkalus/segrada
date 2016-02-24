@@ -15,6 +15,12 @@ alter property UserGroup.roles MANDATORY true
 alter property UserGroup.created MANDATORY true
 alter property UserGroup.modified MANDATORY true
 alter property UserGroup.active MANDATORY true
+create index UserGroup.title UNIQUE_HASH_INDEX
 create index UserGroup.titleasc NOTUNIQUE
 
-#TODO: change connection to users
+
+######################################################################################################################
+create property User.group Link<UserGroup>
+
+# executed in populate data:
+#drop property User.role FORCE
