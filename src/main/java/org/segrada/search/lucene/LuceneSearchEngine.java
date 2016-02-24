@@ -171,10 +171,7 @@ public class LuceneSearchEngine implements SearchEngine {
 
 		try {
 			DirectoryReader iReader = DirectoryReader.open(directory);
-			IndexSearcher iSearcher = new IndexSearcher(iReader);
 
-			// Parse a simple query that searches for "text":
-			MultiFieldQueryParser parser;
 			String[] containFields;
 			// do we have a filter to contain to certain fields?
 			if (filters.containsKey("fields")) {
@@ -186,7 +183,9 @@ public class LuceneSearchEngine implements SearchEngine {
 				else if (fields.equalsIgnoreCase("allTitles")) containFields = new String[]{"title", "subTitles"};
 				else throw new RuntimeException("fields-Filter " + fields + " is not known.");
 			} else containFields = new String[]{"title", "subTitles", "content"};
-			parser = new MultiFieldQueryParser(Version.LUCENE_47, containFields, analyzer);
+
+			// Parse a simple query that searches for "text":
+			MultiFieldQueryParser parser = new MultiFieldQueryParser(Version.LUCENE_47, containFields, analyzer);
 
 			// which operator do we use?
 			parser.setDefaultOperator(QueryParser.Operator.AND);
@@ -255,6 +254,7 @@ public class LuceneSearchEngine implements SearchEngine {
 			int startIndex = (page - 1) * entriesPerPage;
 			int endIndex = page * entriesPerPage;
 
+			IndexSearcher iSearcher = new IndexSearcher(iReader);
 			// do search
 			TopDocs topDocs = iSearcher.search(query, filter, 1000);
 

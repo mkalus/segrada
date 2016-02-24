@@ -212,7 +212,6 @@ public class SegradaLauncher extends JFrame implements ApplicationStatusChangedL
 	public void restartApplication()
 	{
 		try {
-			final String javaBin = System.getProperty("java.home") + File.separator + "bin" + File.separator + "java";
 			final File currentJar = new File(SegradaLauncher.class.getProtectionDomain().getCodeSource().getLocation().toURI());
 
 			/* is it a jar file? */
@@ -221,6 +220,7 @@ public class SegradaLauncher extends JFrame implements ApplicationStatusChangedL
 
 			/* Build command: java -jar application.jar */
 			final ArrayList<String> command = new ArrayList<String>();
+			final String javaBin = System.getProperty("java.home") + File.separator + "bin" + File.separator + "java";
 			command.add(javaBin);
 			command.add("-jar");
 			command.add(currentJar.getPath());

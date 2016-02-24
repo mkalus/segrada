@@ -237,7 +237,6 @@ abstract public class AbstractBaseController<BEAN extends SegradaEntity> {
 	 * @return response, either empty response or list
 	 */
 	protected <E extends CRUDRepository<BEAN>> Response handleDelete(String empty, BEAN entity, AbstractRepositoryService<BEAN, E> service) {
-		boolean emptyValue = empty == null || empty.isEmpty() || empty.equals("0");
 
 		if (!service.delete(entity)) {
 			return Response.ok(new Viewable("error", "DELETE failed.")).build();
@@ -245,6 +244,7 @@ abstract public class AbstractBaseController<BEAN extends SegradaEntity> {
 
 		clearCache(); // delete caches
 
+		boolean emptyValue = empty == null || empty.isEmpty() || empty.equals("0");
 		// empty response
 		if (!emptyValue)
 			return Response.ok().build();

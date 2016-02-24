@@ -150,8 +150,6 @@ public class SolrSearchEngine implements SearchEngine {
 		int entriesPerPage = 20;
 
 		try {
-			SolrQuery query = new SolrQuery();
-
 			// Parse a simple query that searches for "text":
 			MultiFieldQueryParser parser;
 			String[] containFields;
@@ -177,6 +175,7 @@ public class SolrSearchEngine implements SearchEngine {
 
 			// filters for query
 
+			SolrQuery query = new SolrQuery();
 			// class filter
 			if (filters.containsKey("class") && !filters.get("class").isEmpty()) {
 				query.addFilterQuery(this.className, filters.get("class"));
