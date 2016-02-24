@@ -261,36 +261,45 @@ public class OrientDbSchemaUpdater {
 			long now = System.currentTimeMillis();
 
 			// create new groups: admin group
-			Map<String, String> roles = new HashMap<>();
-			roles.put("ADMIN", "1");
+			Map<String, String> roles = null;
+			ODocument doc = null;
+			try {
+				roles = new HashMap<>();
+				roles.put("ADMIN", "1");
 
-			ODocument doc = new ODocument("UserGroup")
-					.field("title", "Administrator")
-					.field("roles", roles)
-					.field("created", now)
-					.field("modified", now)
-					.field("active", true);
-			db.save(doc);
+				doc = new ODocument("UserGroup")
+						.field("title", "Administrator")
+						.field("titleasc", "administrator")
+						.field("roles", roles)
+						.field("created", now)
+						.field("modified", now)
+						.field("active", true);
+				db.save(doc);
 
-			// promote all users to admins
-			db.command(new OCommandSQL("UPDATE User SET group = " + doc.getIdentity().toString())).execute();
+				// promote all users to admins
+				db.command(new OCommandSQL("UPDATE User SET group = " + doc.getIdentity().toString())).execute();
+			} catch (Exception e) {
+				logger.error("Could not update UserGroup: " + e.getMessage());
+			}
 
 			// user group
-			roles = new HashMap<>();
-			roles.put("ADMIN", "1");
+			try {
+				roles = new HashMap<>();
+				roles.put("ADMIN", "1");
 
-			//TODO: update this to correct groups
+				//TODO: update this to correct groups
 
-			doc = new ODocument("UserGroup")
-					.field("title", "User")
-					.field("roles", roles)
-					.field("created", now)
-					.field("modified", now)
-					.field("active", true);
-			db.save(doc);
-
-			// update all users to new group
-			db.command(new OCommandSQL("UPDATE User SET group = " + doc.getIdentity().toString() + " WHERE role NOT LIKE 'ADMIN'")).execute();
+				doc = new ODocument("UserGroup")
+						.field("title", "User")
+						.field("titleasc", "user")
+						.field("roles", roles)
+						.field("created", now)
+						.field("modified", now)
+						.field("active", true);
+				db.save(doc);
+			} catch (Exception e) {
+				logger.error("Could not update UserGroup: " + e.getMessage());
+			}
 
 			// drop old property
 			db.command(new OCommandSQL("drop property User.role FORCE")).execute();
