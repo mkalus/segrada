@@ -7,6 +7,7 @@ import org.segrada.model.prototype.ITag;
 import org.segrada.search.SearchEngine;
 import org.segrada.service.TagService;
 
+import javax.annotation.security.PermitAll;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -44,6 +45,7 @@ public class SearchController {
 
 	@GET
 	@Produces(MediaType.TEXT_HTML)
+	@PermitAll
 	public Viewable index(
 			@QueryParam("s") String term,
 			@QueryParam("page") String page,
@@ -88,6 +90,7 @@ public class SearchController {
 	@GET
 	@Path("/in_document")
 	@Produces(MediaType.TEXT_HTML)
+	@PermitAll //TODO: ACL
 	public Viewable searchInDocument(
 			@QueryParam("s") String term,
 			@QueryParam("id") String id

@@ -8,6 +8,7 @@ import org.segrada.model.RelationType;
 import org.segrada.model.prototype.IRelationType;
 import org.segrada.service.RelationTypeService;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -45,6 +46,7 @@ public class RelationTypeController extends AbstractColoredController<IRelationT
 
 	@GET
 	@Produces(MediaType.TEXT_HTML)
+	@RolesAllowed("RELATION_TYPE")
 	public Viewable index(
 			@QueryParam("page") int page,
 			@QueryParam("entriesPerPage") int entriesPerPage,
@@ -79,6 +81,7 @@ public class RelationTypeController extends AbstractColoredController<IRelationT
 	@GET
 	@Path("/show/{uid}")
 	@Produces(MediaType.TEXT_HTML)
+	@RolesAllowed("RELATION_TYPE")
 	public Viewable show(@PathParam("uid") String uid) {
 		return handleShow(uid, service);
 	}
@@ -86,6 +89,7 @@ public class RelationTypeController extends AbstractColoredController<IRelationT
 	@GET
 	@Path("/add")
 	@Produces(MediaType.TEXT_HTML)
+	@RolesAllowed("RELATION_TYPE_ADD")
 	public Viewable add() {
 		return handleForm(service.createNewInstance());
 	}
@@ -93,6 +97,7 @@ public class RelationTypeController extends AbstractColoredController<IRelationT
 	@GET
 	@Path("/edit/{uid}")
 	@Produces(MediaType.TEXT_HTML)
+	@RolesAllowed({"RELATION_TYPE_EDIT", "RELATION_TYPE_EDIT_MINE"})
 	public Viewable edit(@PathParam("uid") String uid) {
 		return handleForm(service.findById(service.convertUidToId(uid)));
 	}
@@ -101,6 +106,7 @@ public class RelationTypeController extends AbstractColoredController<IRelationT
 	@Path("/update")
 	@Produces(MediaType.TEXT_HTML)
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@RolesAllowed({"RELATION_TYPE_EDIT", "RELATION_TYPE_EDIT_MINE"})
 	public Response update(RelationType entity) {
 		return handleUpdate(entity, service);
 	}
@@ -108,6 +114,7 @@ public class RelationTypeController extends AbstractColoredController<IRelationT
 	@GET
 	@Path("/delete/{uid}/{empty}")
 	@Produces(MediaType.TEXT_HTML)
+	@RolesAllowed({"RELATION_TYPE_DELETE", "RELATION_TYPE_DELETE_MINE"})
 	public Response delete(@PathParam("uid") String uid, @PathParam("empty") String empty) {
 		return handleDelete(empty, service.findById(service.convertUidToId(uid)), service);
 	}

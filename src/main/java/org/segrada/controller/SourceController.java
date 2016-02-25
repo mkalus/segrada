@@ -15,6 +15,8 @@ import org.segrada.service.SourceService;
 import org.segrada.service.TagService;
 
 import javax.annotation.Nullable;
+import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -56,6 +58,7 @@ public class SourceController extends AbstractColoredController<ISource> {
 
 	@GET
 	@Produces(MediaType.TEXT_HTML)
+	@RolesAllowed("SOURCE")
 	public Viewable index(
 			@QueryParam("page") int page,
 			@QueryParam("entriesPerPage") int entriesPerPage,
@@ -74,6 +77,7 @@ public class SourceController extends AbstractColoredController<ISource> {
 	@GET
 	@Path("/by_tag/{tagUid}")
 	@Produces(MediaType.TEXT_HTML)
+	//TODO: ACL
 	public Viewable byTag(
 			@QueryParam("page") int page,
 			@QueryParam("entriesPerPage") int entriesPerPage,
@@ -162,6 +166,7 @@ public class SourceController extends AbstractColoredController<ISource> {
 	@GET
 	@Path("/show/{uid}")
 	@Produces(MediaType.TEXT_HTML)
+	@RolesAllowed("SOURCE")
 	public Viewable show(@PathParam("uid") String uid) {
 		// create model map
 		Map<String, Object> model = new HashMap<>();
@@ -187,6 +192,7 @@ public class SourceController extends AbstractColoredController<ISource> {
 	@GET
 	@Path("/add")
 	@Produces(MediaType.TEXT_HTML)
+	@RolesAllowed("SOURCE_ADD")
 	public Viewable add() {
 		return handleForm(service.createNewInstance());
 	}
@@ -194,6 +200,7 @@ public class SourceController extends AbstractColoredController<ISource> {
 	@GET
 	@Path("/edit/{uid}")
 	@Produces(MediaType.TEXT_HTML)
+	@RolesAllowed({"SOURCE_EDIT", "SOURCE_EDIT_MINE"})
 	public Viewable edit(@PathParam("uid") String uid) {
 		return handleForm(service.findById(service.convertUidToId(uid)));
 	}
@@ -202,6 +209,7 @@ public class SourceController extends AbstractColoredController<ISource> {
 	@Path("/update")
 	@Produces(MediaType.TEXT_HTML)
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@RolesAllowed({"SOURCE_EDIT", "SOURCE_EDIT_MINE"})
 	public Response update(Source entity) {
 		return handleUpdate(entity, service);
 	}
@@ -224,6 +232,7 @@ public class SourceController extends AbstractColoredController<ISource> {
 	@GET
 	@Path("/delete/{uid}/{empty}")
 	@Produces(MediaType.TEXT_HTML)
+	@RolesAllowed({"SOURCE_DELETE", "SOURCE_DELETE_MINE"})
 	public Response delete(@PathParam("uid") String uid, @PathParam("empty") String empty) {
 		return handleDelete(empty, service.findById(service.convertUidToId(uid)), service);
 	}
@@ -231,6 +240,7 @@ public class SourceController extends AbstractColoredController<ISource> {
 	@GET
 	@Path("/search")
 	@Produces(MediaType.APPLICATION_JSON)
+	@PermitAll //TODO: ACL
 	public String search(@QueryParam("s") String term) {
 		// json array to hold hits
 		JSONArray jsonArray = new JSONArray();

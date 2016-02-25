@@ -5,7 +5,6 @@ import com.google.inject.servlet.RequestScoped;
 import com.sun.jersey.api.view.Viewable;
 import org.segrada.controller.base.AbstractBaseController;
 import org.segrada.model.Color;
-import org.segrada.model.Source;
 import org.segrada.model.prototype.IColor;
 import org.segrada.service.ColorService;
 

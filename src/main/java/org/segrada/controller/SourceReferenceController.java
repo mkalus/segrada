@@ -16,6 +16,7 @@ import org.segrada.service.util.PaginationInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -63,6 +64,7 @@ public class SourceReferenceController extends AbstractBaseController<ISourceRef
 
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
+	@RolesAllowed("SOURCE_REFERENCE")
 	public String index() {
 		return "Not implemented.";
 	}
@@ -70,6 +72,7 @@ public class SourceReferenceController extends AbstractBaseController<ISourceRef
 	@GET
 	@Path("/edit/{uid}")
 	@Produces(MediaType.TEXT_HTML)
+	@RolesAllowed({"SOURCE_REFERENCE_ADD", "SOURCE_REFERENCE_EDIT", "SOURCE_REFERENCE_EDIT_MINE"})
 	public Viewable edit(
 			@PathParam("uid") String uid,
 			@QueryParam("backUrl") String backUrl
@@ -93,6 +96,7 @@ public class SourceReferenceController extends AbstractBaseController<ISourceRef
 	@GET
 	@Path("/delete/{uid}")
 	@Produces(MediaType.TEXT_HTML)
+	@RolesAllowed({"SOURCE_REFERENCE_DELETE", "SOURCE_REFERENCE_DELETE_MINE"})
 	public Response delete(@PathParam("uid") String uid, @QueryParam("backUrl") String backUrl) {
 		if (!service.delete(service.findById(service.convertUidToId(uid)))) {
 			return Response.ok(new Viewable("error", "DELETE failed.")).build();
@@ -104,6 +108,7 @@ public class SourceReferenceController extends AbstractBaseController<ISourceRef
 
 	@POST
 	@Path("/update")
+	@RolesAllowed({"SOURCE_REFERENCE_ADD", "SOURCE_REFERENCE_EDIT", "SOURCE_REFERENCE_EDIT_MINE"})
 	public Response update(
 			@FormParam("id") String id,
 			@FormParam("referenceId") String referenceId,
@@ -173,6 +178,7 @@ public class SourceReferenceController extends AbstractBaseController<ISourceRef
 	@GET
 	@Path("/by_reference/{model}/{uid}")
 	@Produces(MediaType.TEXT_HTML)
+	//TODO: ACL
 	public Viewable byReference(
 			@PathParam("uid") String referenceUid,
 			@PathParam("model") String referenceModel,
@@ -214,6 +220,7 @@ public class SourceReferenceController extends AbstractBaseController<ISourceRef
 	@GET
 	@Path("/by_source/{uid}")
 	@Produces(MediaType.TEXT_HTML)
+	//TODO: ACL
 	public Viewable bySource(
 			@PathParam("uid") String sourceUid,
 			@QueryParam("page") int page,

@@ -11,13 +11,14 @@ import org.segrada.model.Node;
 import org.segrada.model.prototype.INode;
 import org.segrada.model.prototype.IRelation;
 import org.segrada.model.prototype.ITag;
-import org.segrada.model.prototype.SegradaTaggable;
 import org.segrada.rendering.json.JSONConverter;
 import org.segrada.service.NodeService;
 import org.segrada.service.RelationService;
 import org.segrada.service.TagService;
 
 import javax.annotation.Nullable;
+import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -62,6 +63,7 @@ public class NodeController extends AbstractColoredController<INode> {
 
 	@GET
 	@Produces(MediaType.TEXT_HTML)
+	@RolesAllowed("NODE")
 	public Viewable index(
 			@QueryParam("page") int page,
 			@QueryParam("entriesPerPage") int entriesPerPage,
@@ -79,6 +81,7 @@ public class NodeController extends AbstractColoredController<INode> {
 	@GET
 	@Path("/by_tag/{tagUid}")
 	@Produces(MediaType.TEXT_HTML)
+	//TODO: ACL
 	public Viewable byTag(
 			@QueryParam("page") int page,
 			@QueryParam("entriesPerPage") int entriesPerPage,
@@ -164,6 +167,7 @@ public class NodeController extends AbstractColoredController<INode> {
 	@GET
 	@Path("/show/{uid}")
 	@Produces(MediaType.TEXT_HTML)
+	@RolesAllowed("NODE")
 	public Viewable show(@PathParam("uid") String uid) {
 		return handleShow(uid, service);
 	}
@@ -171,6 +175,7 @@ public class NodeController extends AbstractColoredController<INode> {
 	@GET
 	@Path("/search")
 	@Produces(MediaType.APPLICATION_JSON)
+	@PermitAll //TODO: ACL
 	public String search(@QueryParam("s") String term, @QueryParam("tags") String tags) {
 		// json array to hold hits
 		JSONArray jsonArray = new JSONArray();
@@ -200,6 +205,7 @@ public class NodeController extends AbstractColoredController<INode> {
 	@GET
 	@Path("/add")
 	@Produces(MediaType.TEXT_HTML)
+	@RolesAllowed("NODE_ADD")
 	public Viewable add() {
 		return handleForm(service.createNewInstance());
 	}
@@ -207,6 +213,7 @@ public class NodeController extends AbstractColoredController<INode> {
 	@GET
 	@Path("/edit/{uid}")
 	@Produces(MediaType.TEXT_HTML)
+	@RolesAllowed({"NODE_EDIT", "NODE_EDIT_MINE"})
 	public Viewable edit(@PathParam("uid") String uid) {
 		return handleForm(service.findById(service.convertUidToId(uid)));
 	}
@@ -215,6 +222,7 @@ public class NodeController extends AbstractColoredController<INode> {
 	@Path("/update")
 	@Produces(MediaType.TEXT_HTML)
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@RolesAllowed({"NODE_EDIT", "NODE_EDIT_MINE"})
 	public Response update(Node entity) {
 		return handleUpdate(entity, service);
 	}
@@ -222,6 +230,7 @@ public class NodeController extends AbstractColoredController<INode> {
 	@GET
 	@Path("/delete/{uid}/{empty}")
 	@Produces(MediaType.TEXT_HTML)
+	@RolesAllowed({"NODE_DELETE", "NODE_DELETE_MINE"})
 	public Response delete(@PathParam("uid") String uid, @PathParam("empty") String empty) {
 		return handleDelete(empty, service.findById(service.convertUidToId(uid)), service);
 	}
@@ -229,6 +238,7 @@ public class NodeController extends AbstractColoredController<INode> {
 	@POST
 	@Path("/graph/{uid}")
 	@Produces(MediaType.APPLICATION_JSON)
+	@RolesAllowed("GRAPH")
 	public String postGraph(@PathParam("uid") String uid, String jsonData) {
 		return graph(uid, jsonData);
 	}
@@ -236,6 +246,7 @@ public class NodeController extends AbstractColoredController<INode> {
 	@GET
 	@Path("/graph/{uid}")
 	@Produces(MediaType.APPLICATION_JSON)
+	@RolesAllowed("GRAPH")
 	public String getGraph(@PathParam("uid") String uid, @QueryParam("data") String jsonData) {
 		return graph(uid, jsonData);
 	}

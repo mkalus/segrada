@@ -3,6 +3,7 @@ package org.segrada.controller;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Ehcache;
 
+import javax.annotation.security.PermitAll;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.GET;
@@ -34,6 +35,7 @@ public class LocaleController {
 	@GET
 	@Path("/{locale}")
 	@Produces(MediaType.TEXT_HTML)
+	@PermitAll
 	public String index(@PathParam("locale") String locale, @Context HttpServletRequest request) {
 		HttpSession session = request.getSession();
 

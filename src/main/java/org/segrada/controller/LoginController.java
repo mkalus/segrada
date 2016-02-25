@@ -10,6 +10,7 @@ import org.segrada.session.ApplicationSettings;
 import org.segrada.session.Identity;
 import org.segrada.util.PasswordEncoder;
 
+import javax.annotation.security.PermitAll;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -191,6 +192,7 @@ public class LoginController {
 	@GET
 	@Path("/logout")
 	@Produces(MediaType.TEXT_HTML)
+	@PermitAll
 	public Response logout(@Context HttpServletRequest servletRequest, @Context HttpServletResponse servletResponse) {
 		// test application if login is allowed
 		String requireLogin = applicationSettings.getSetting("requireLogin");

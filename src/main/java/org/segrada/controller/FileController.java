@@ -19,6 +19,7 @@ import org.segrada.service.base.AbstractRepositoryService;
 import org.segrada.session.CSRFTokenManager;
 
 import javax.annotation.Nullable;
+import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
@@ -71,6 +72,7 @@ public class FileController extends AbstractColoredController<IFile> {
 
 	@GET
 	@Produces(MediaType.TEXT_HTML)
+	@RolesAllowed("FILE")
 	public Viewable index(
 			@QueryParam("page") int page,
 			@QueryParam("entriesPerPage") int entriesPerPage,
@@ -88,6 +90,7 @@ public class FileController extends AbstractColoredController<IFile> {
 	@GET
 	@Path("/by_tag/{tagUid}")
 	@Produces(MediaType.TEXT_HTML)
+	//TODO: ACL
 	public Viewable byTag(
 			@QueryParam("page") int page,
 			@QueryParam("entriesPerPage") int entriesPerPage,
@@ -180,6 +183,7 @@ public class FileController extends AbstractColoredController<IFile> {
 	@GET
 	@Path("/by_file/{uid}/{model}")
 	@Produces(MediaType.TEXT_HTML)
+	//TODO: ACL
 	public Viewable byFile(
 			@PathParam("uid") String fileUid,
 			@PathParam("model") String referenceModel,
@@ -230,6 +234,7 @@ public class FileController extends AbstractColoredController<IFile> {
 	@GET
 	@Path("/by_reference/{model}/{uid}")
 	@Produces(MediaType.TEXT_HTML)
+	//TODO: ACL
 	public Viewable byReference(
 			@PathParam("uid") String referenceUid,
 			@PathParam("model") String referenceModel,
@@ -284,6 +289,7 @@ public class FileController extends AbstractColoredController<IFile> {
 	@GET
 	@Path("/add_reference/{model}/{uid}")
 	@Produces(MediaType.TEXT_HTML)
+	//TODO: ACL
 	public Response addReference(@PathParam("uid") String referenceUid, @PathParam("model") String referenceModel, @QueryParam("source") String sourceId) {
 		// create error map
 		Map<String, String> errors = new HashMap<>();
@@ -339,6 +345,7 @@ public class FileController extends AbstractColoredController<IFile> {
 	@GET
 	@Path("/remove_reference/{model}/{uid}/{source}")
 	@Produces(MediaType.TEXT_HTML)
+	//TODO: ACL
 	public Response removeReference(@PathParam("uid") String referenceUid, @PathParam("model") String referenceModel, @PathParam("source") String sourceUid) {
 		// find source
 		IFile source = service.findById(service.convertUidToId(sourceUid));
@@ -374,6 +381,7 @@ public class FileController extends AbstractColoredController<IFile> {
 	@GET
 	@Path("/show/{uid}")
 	@Produces(MediaType.TEXT_HTML)
+	@RolesAllowed("FILE")
 	public Viewable show(@PathParam("uid") String uid) {
 		return handleShow(uid, service);
 	}
@@ -381,6 +389,7 @@ public class FileController extends AbstractColoredController<IFile> {
 	@GET
 	@Path("/search")
 	@Produces(MediaType.APPLICATION_JSON)
+	@PermitAll //TODO: ACL
 	public String search(@QueryParam("s") String term, @QueryParam("tags") String tags) {
 		// json array to hold hits
 		JSONArray jsonArray = new JSONArray();
@@ -409,12 +418,14 @@ public class FileController extends AbstractColoredController<IFile> {
 
 	@GET
 	@Path("/file/{uid}")
+	@PermitAll //TODO: ACL for full view?
 	public Response download(@PathParam("uid") String uid) {
 		return getImage(uid, false);
 	}
 
 	@GET
 	@Path("/thumbnail/{uid}")
+	@PermitAll
 	public Response getThumbnail(@PathParam("uid") String uid) {
 		return getImage(uid, true);
 	}

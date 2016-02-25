@@ -9,6 +9,7 @@ import org.pegdown.PegDownProcessor;
 import org.pegdown.ast.ExpImageNode;
 import org.pegdown.ast.ExpLinkNode;
 
+import javax.annotation.security.PermitAll;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.GET;
@@ -49,12 +50,14 @@ import java.util.Map;
 public class PageController {
 	@GET
 	@Produces(MediaType.TEXT_HTML)
+	@PermitAll
 	public Viewable index(@Context HttpServletRequest request) {
 		return getPage("index", request);
 	}
 
 	@GET
 	@Path("/img/{image}")
+	@PermitAll
 	public Response getImage(@PathParam("image") String image, @Context HttpServletRequest request) {
 		HttpSession session = request.getSession();
 
@@ -96,6 +99,7 @@ public class PageController {
 	@GET
 	@Path("/{page}")
 	@Produces(MediaType.TEXT_HTML)
+	@PermitAll
 	public Viewable show(@PathParam("page") String page, @Context HttpServletRequest request) {
 		return getPage(page, request);
 	}

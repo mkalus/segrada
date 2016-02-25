@@ -34,23 +34,7 @@ import java.util.Set;
  *
  * Method interceptor to test authentication (injected via AOP)
  *
- * Roles:
- * ADMIN
- * CLEAR_CACHE
- * COLOR
- * COLOR_ADD
- * COLOR_EDIT
- * COLOR_EDIT_MINE
- * COLOR_DELETE
- * COLOR_DELETE_MINE
- * ...
- * FILE
- * ... stuff
- *
- * USER
- * GROUP
- *
- * special: MYPROFILE -> uid must be that of identity
+ * For a list of Roles see org.segrada.controller.UserGroupController
  */
 @SessionScoped
 public class CheckAuthentication implements MethodInterceptor {

@@ -16,6 +16,7 @@ import org.segrada.service.RelationTypeService;
 import org.segrada.service.TagService;
 
 import javax.annotation.Nullable;
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -66,6 +67,7 @@ public class RelationController extends AbstractColoredController<IRelation> {
 
 	@GET
 	@Produces(MediaType.TEXT_HTML)
+	@RolesAllowed("RELATION")
 	public Viewable index(
 			@QueryParam("page") int page,
 			@QueryParam("entriesPerPage") int entriesPerPage,
@@ -83,6 +85,7 @@ public class RelationController extends AbstractColoredController<IRelation> {
 	@GET
 	@Path("/by_tag/{tagUid}")
 	@Produces(MediaType.TEXT_HTML)
+	//TODO: ACL
 	public Viewable byTag(
 			@QueryParam("page") int page,
 			@QueryParam("entriesPerPage") int entriesPerPage,
@@ -168,6 +171,7 @@ public class RelationController extends AbstractColoredController<IRelation> {
 	@GET
 	@Path("/by_relation_type/{uid}")
 	@Produces(MediaType.TEXT_HTML)
+	//TODO: ACL
 	public Viewable byRelationType(@PathParam("uid") String relationTypeUid, @QueryParam("page") int page, @QueryParam("entriesPerPage") int entriesPerPage) {
 		Map<String, Object> filters = new HashMap<>();
 
@@ -187,6 +191,7 @@ public class RelationController extends AbstractColoredController<IRelation> {
 	@GET
 	@Path("/by_node/{uid}")
 	@Produces(MediaType.TEXT_HTML)
+	//TODO: ACL
 	public Viewable byNode(@PathParam("uid") String nodeUid, @QueryParam("page") int page, @QueryParam("entriesPerPage") int entriesPerPage) {
 		Map<String, Object> filters = new HashMap<>();
 
@@ -207,6 +212,7 @@ public class RelationController extends AbstractColoredController<IRelation> {
 	@GET
 	@Path("/show/{uid}")
 	@Produces(MediaType.TEXT_HTML)
+	@RolesAllowed("RELATION")
 	public Viewable show(@PathParam("uid") String uid) {
 		return handleShow(uid, service);
 	}
@@ -214,6 +220,7 @@ public class RelationController extends AbstractColoredController<IRelation> {
 	@GET
 	@Path("/add")
 	@Produces(MediaType.TEXT_HTML)
+	@RolesAllowed("RELATION_ADD")
 	public Viewable add(
 			@QueryParam("relationTypeUid") String relationTypeUid,
 			@QueryParam("fromEntityUid") String fromEntityUid,
@@ -235,6 +242,7 @@ public class RelationController extends AbstractColoredController<IRelation> {
 	@GET
 	@Path("/edit/{uid}")
 	@Produces(MediaType.TEXT_HTML)
+	@RolesAllowed({"RELATION_EDIT", "RELATION_EDIT_MINE"})
 	public Viewable edit(@PathParam("uid") String uid) {
 		return handleForm(service.findById(service.convertUidToId(uid)));
 	}
@@ -243,6 +251,7 @@ public class RelationController extends AbstractColoredController<IRelation> {
 	@Path("/update")
 	@Produces(MediaType.TEXT_HTML)
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@RolesAllowed({"RELATION_EDIT", "RELATION_EDIT_MINE"})
 	public Response update(Relation entity) {
 		return handleUpdate(entity, service);
 	}
@@ -250,6 +259,7 @@ public class RelationController extends AbstractColoredController<IRelation> {
 	@GET
 	@Path("/delete/{uid}/{empty}")
 	@Produces(MediaType.TEXT_HTML)
+	@RolesAllowed({"RELATION_DELETE", "RELATION_DELETE_MINE"})
 	public Response delete(@PathParam("uid") String uid, @PathParam("empty") String empty) {
 		return handleDelete(empty, service.findById(service.convertUidToId(uid)), service);
 	}
@@ -264,6 +274,7 @@ public class RelationController extends AbstractColoredController<IRelation> {
 	@POST
 	@Path("/graph/{uid}")
 	@Produces(MediaType.APPLICATION_JSON)
+	@RolesAllowed("GRAPH")
 	public String postGraph(@PathParam("uid") String uid, String jsonData) {
 		return graph(uid, jsonData);
 	}
@@ -271,6 +282,7 @@ public class RelationController extends AbstractColoredController<IRelation> {
 	@GET
 	@Path("/graph/{uid}")
 	@Produces(MediaType.APPLICATION_JSON)
+	@RolesAllowed("GRAPH")
 	public String getGraph(@PathParam("uid") String uid, @QueryParam("data") String jsonData) {
 		return graph(uid, jsonData);
 	}

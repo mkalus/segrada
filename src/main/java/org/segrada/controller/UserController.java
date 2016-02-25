@@ -62,7 +62,7 @@ public class UserController extends AbstractBaseController<IUser> {
 	@GET
 	@Path("/show/{uid}")
 	@Produces(MediaType.TEXT_HTML)
-	@RolesAllowed({"USER", "MYPROFILE"})
+	@RolesAllowed({"USER", "MY_PROFILE"})
 	public Viewable show(@PathParam("uid") String uid) {
 		return handleShow(uid, service);
 	}

@@ -16,6 +16,8 @@ import org.segrada.service.base.AbstractRepositoryService;
 import org.segrada.service.repository.prototype.CRUDRepository;
 import org.segrada.util.Sluggify;
 
+import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -59,6 +61,7 @@ public class TagController extends AbstractBaseController<ITag> {
 
 	@GET
 	@Produces(MediaType.TEXT_HTML)
+	@RolesAllowed("TAG")
 	public Viewable index(
 			@QueryParam("page") int page,
 			@QueryParam("entriesPerPage") int entriesPerPage,
@@ -93,6 +96,7 @@ public class TagController extends AbstractBaseController<ITag> {
 	@GET
 	@Path("/show/{uid}")
 	@Produces(MediaType.TEXT_HTML)
+	@RolesAllowed("TAG")
 	public Viewable show(
 			@PathParam("uid") String uid
 	) {
@@ -102,6 +106,7 @@ public class TagController extends AbstractBaseController<ITag> {
 	@GET
 	@Path("/by_title/{title}")
 	@Produces(MediaType.TEXT_HTML)
+	//TODO: ACL
 	public Viewable showByTitle(
 			@PathParam("title") String title
 	) {
@@ -131,6 +136,7 @@ public class TagController extends AbstractBaseController<ITag> {
 	@GET
 	@Path("/add")
 	@Produces(MediaType.TEXT_HTML)
+	@RolesAllowed("TAG_ADD")
 	public Viewable add() {
 		return handleForm(service.createNewInstance());
 	}
@@ -138,6 +144,7 @@ public class TagController extends AbstractBaseController<ITag> {
 	@GET
 	@Path("/edit/{uid}")
 	@Produces(MediaType.TEXT_HTML)
+	@RolesAllowed({"TAG_EDIT_MINE", "TAG_EDIT"})
 	public Viewable edit(@PathParam("uid") String uid) {
 		return handleForm(service.findById(service.convertUidToId(uid)));
 	}
@@ -146,6 +153,7 @@ public class TagController extends AbstractBaseController<ITag> {
 	@Path("/update")
 	@Produces(MediaType.TEXT_HTML)
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@RolesAllowed({"TAG_EDIT_MINE", "TAG_EDIT"})
 	public Response update(Tag entity) {
 		return handleUpdate(entity, service);
 	}
@@ -218,6 +226,7 @@ public class TagController extends AbstractBaseController<ITag> {
 	@GET
 	@Path("/remove_tag/{model}/{uid}/{source}")
 	@Produces(MediaType.TEXT_HTML)
+	//TODO: ACL
 	public Response removeTag(@PathParam("uid") String referenceUid, @PathParam("model") String referenceModel, @PathParam("source") String tagUid) {
 		ITag tag = service.findById(service.convertUidToId(tagUid));
 
@@ -241,6 +250,7 @@ public class TagController extends AbstractBaseController<ITag> {
 	@GET
 	@Path("/delete/{uid}/{empty}")
 	@Produces(MediaType.TEXT_HTML)
+	@RolesAllowed({"TAG_DELETE_MINE", "TAG_DELETE"})
 	public Response delete(@PathParam("uid") String uid, @PathParam("empty") String empty) {
 		return handleDelete(empty, service.findById(service.convertUidToId(uid)), service);
 	}
@@ -248,6 +258,7 @@ public class TagController extends AbstractBaseController<ITag> {
 	@GET
 	@Path("/search")
 	@Produces(MediaType.APPLICATION_JSON)
+	@PermitAll
 	public String search(@QueryParam("s") String term) {
 		// json array to hold hits
 		JSONArray jsonArray = new JSONArray();
@@ -271,6 +282,7 @@ public class TagController extends AbstractBaseController<ITag> {
 	@POST
 	@Path("/graph/{uid}")
 	@Produces(MediaType.APPLICATION_JSON)
+	@RolesAllowed("GRAPH")
 	public String postGraph(@PathParam("uid") String uid, String jsonData) {
 		return graph(uid, jsonData);
 	}
@@ -278,6 +290,7 @@ public class TagController extends AbstractBaseController<ITag> {
 	@GET
 	@Path("/graph/{uid}")
 	@Produces(MediaType.APPLICATION_JSON)
+	@RolesAllowed("GRAPH")
 	public String getGraph(@PathParam("uid") String uid, @QueryParam("data") String jsonData) {
 		return graph(uid, jsonData);
 	}

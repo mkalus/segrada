@@ -15,6 +15,8 @@ import org.segrada.model.prototype.IPictogram;
 import org.segrada.service.PictogramService;
 import org.segrada.session.CSRFTokenManager;
 
+import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -58,12 +60,14 @@ public class PictogramController extends AbstractBaseController<IPictogram> {
 
 	@GET
 	@Produces(MediaType.TEXT_HTML)
+	@RolesAllowed("PICTOGRAM")
 	public Viewable index() {
 		return handleShowAll(service);
 	}
 
 	@GET
 	@Path("/show/{uid}")
+	@RolesAllowed("PICTOGRAM")
 	@Produces(MediaType.TEXT_HTML)
 	public Viewable show(@PathParam("uid") String uid) {
 		return handleShow(uid, service);
@@ -71,6 +75,7 @@ public class PictogramController extends AbstractBaseController<IPictogram> {
 
 	@GET
 	@Path("/file/{uid}")
+	@PermitAll
 	public Response download(@PathParam("uid") String uid) {
 		try {
 			IPictogram entity = service.findById(service.convertUidToId(uid));
@@ -104,6 +109,7 @@ public class PictogramController extends AbstractBaseController<IPictogram> {
 
 	@GET
 	@Path("/by_ref")
+	@PermitAll //TODO: ACL
 	public Response downloadRaw(@QueryParam("ref") String iconFileIdentifier) {
 		try {
 			final InputStream in = service.getBinaryDataAsStream(iconFileIdentifier);
@@ -131,6 +137,7 @@ public class PictogramController extends AbstractBaseController<IPictogram> {
 	@GET
 	@Path("/search")
 	@Produces(MediaType.APPLICATION_JSON)
+	@PermitAll
 	public String search(@QueryParam("s") String term) {
 		// json array to hold hits
 		JSONArray jsonArray = new JSONArray();
@@ -155,6 +162,7 @@ public class PictogramController extends AbstractBaseController<IPictogram> {
 	@GET
 	@Path("/add")
 	@Produces(MediaType.TEXT_HTML)
+	@RolesAllowed("PICTOGRAM_ADD")
 	public Viewable add() {
 		return handleForm(service.createNewInstance());
 	}
@@ -162,6 +170,7 @@ public class PictogramController extends AbstractBaseController<IPictogram> {
 	@GET
 	@Path("/edit/{uid}")
 	@Produces(MediaType.TEXT_HTML)
+	@RolesAllowed({"PICTOGRAM_EDIT_MINE", "PICTOGRAM_EDIT"})
 	public Viewable edit(@PathParam("uid") String uid) {
 		return handleForm(service.findById(service.convertUidToId(uid)));
 	}
@@ -170,6 +179,7 @@ public class PictogramController extends AbstractBaseController<IPictogram> {
 	@Path("/update")
 	@Produces(MediaType.TEXT_PLAIN)
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	@RolesAllowed({"PICTOGRAM_EDIT_MINE", "PICTOGRAM_EDIT"})
 	public Response update(@FormDataParam("_csrf") final String csrf, // _csrf checked locally
 	                       @FormDataParam("id") final String id,
 	                       @FormDataParam("title") final String title,
@@ -239,6 +249,7 @@ public class PictogramController extends AbstractBaseController<IPictogram> {
 	@GET
 	@Path("/delete/{uid}/{empty}")
 	@Produces(MediaType.TEXT_HTML)
+	@RolesAllowed({"PICTOGRAM_DELETE_MINE", "PICTOGRAM_DELETE"})
 	public Response delete(@PathParam("uid") String uid, @PathParam("empty") String empty) {
 		return handleDelete(empty, service.findById(service.convertUidToId(uid)), service);
 	}

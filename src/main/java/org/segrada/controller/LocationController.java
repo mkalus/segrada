@@ -14,6 +14,7 @@ import org.segrada.service.NodeService;
 import org.segrada.service.RelationService;
 import org.segrada.service.base.AbstractRepositoryService;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.HashMap;
@@ -55,6 +56,7 @@ public class LocationController extends AbstractBaseController<ILocation> {
 
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
+	@RolesAllowed("LOCATION")
 	public String index() {
 		return "Not implemented.";
 	}
@@ -62,6 +64,7 @@ public class LocationController extends AbstractBaseController<ILocation> {
 	@POST
 	@Path("/add/{model}/{uid}")
 	@Produces(MediaType.TEXT_HTML)
+	@RolesAllowed("LOCATION_ADD")
 	public Viewable add(
 			@PathParam("model") String parentModel,
 			@PathParam("uid") String parentUid,
@@ -121,6 +124,7 @@ public class LocationController extends AbstractBaseController<ILocation> {
 	@GET
 	@Path("/delete/{uid}")
 	@Produces(MediaType.TEXT_HTML)
+	@RolesAllowed({"LOCATION_DELETE", "LOCATION_DELETE_MINE"})
 	public Viewable delete(@PathParam("uid") String uid) {
 		boolean error = false;
 
@@ -155,4 +159,7 @@ public class LocationController extends AbstractBaseController<ILocation> {
 		model.put("error", error);
 		return new Viewable(getBasePath() + "show", model);
 	}
+
+	//TODO: Edit location
+	//TODO: @RolesAllowed({"LOCATION_EDIT", "LOCATION_EDIT_MINE"})
 }

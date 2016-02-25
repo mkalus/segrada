@@ -13,6 +13,7 @@ import org.segrada.service.PeriodService;
 import org.segrada.service.RelationService;
 import org.segrada.service.base.AbstractRepositoryService;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -55,6 +56,7 @@ public class PeriodController extends AbstractBaseController<IPeriod> {
 
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
+	@RolesAllowed("PERIOD")
 	public String index() {
 		return "Not implemented.";
 	}
@@ -62,6 +64,7 @@ public class PeriodController extends AbstractBaseController<IPeriod> {
 	@POST
 	@Path("/add/{model}/{uid}")
 	@Produces(MediaType.TEXT_HTML)
+	@RolesAllowed("PERIOD_ADD")
 	public Viewable add(
 			@PathParam("model") String parentModel,
 			@PathParam("uid") String parentUid,
@@ -165,6 +168,7 @@ public class PeriodController extends AbstractBaseController<IPeriod> {
 	@GET
 	@Path("/delete/{uid}")
 	@Produces(MediaType.TEXT_HTML)
+	@RolesAllowed({"PERIOD_DELETE", "PERIOD_DELETE_MINE"})
 	public Response delete(@PathParam("uid") String uid) {
 		// get entity
 		IPeriod entity = service.findById(service.convertUidToId(uid));
@@ -193,4 +197,7 @@ public class PeriodController extends AbstractBaseController<IPeriod> {
 		// empty response
 		return Response.ok().build();
 	}
+
+	//TODO: Edit period
+	//TODO: @RolesAllowed({"PERIOD_EDIT", "PERIOD_EDIT_MINE"})
 }
