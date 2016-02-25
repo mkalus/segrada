@@ -101,6 +101,7 @@ public class PaginationInfo<BEAN extends SegradaEntity> {
 		switch (total) {
 			case 0: return "paginationNone";
 			case 1: return "paginationOne";
+			default: break;
 		}
 
 		return "pagination";

@@ -206,6 +206,8 @@ public class SegradaLauncher extends JFrame implements ApplicationStatusChangedL
 			case SegradaApplication.STATUS_STOPPED:
 				restartApplication();
 				break;
+			default:
+				break;
 		}
 	}
 
@@ -333,6 +335,8 @@ public class SegradaLauncher extends JFrame implements ApplicationStatusChangedL
 				startStopButton.setEnabled(false);
 				browserButton.setEnabled(false);
 				changeDirectoryButton.setEnabled(false);
+				break;
+			default:
 				break;
 		}
 
