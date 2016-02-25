@@ -19,7 +19,11 @@ import javax.annotation.Nullable;
  *
  * Precondition checking - stolen from Guava
  */
-public class Preconditions {
+public final class Preconditions {
+	private Preconditions() throws InstantiationException{
+		throw new InstantiationException("The class is not created for instantiation");
+	}
+
 	/**
 	 * Ensures that an object reference passed as a parameter to the calling method is not null.
 	 *

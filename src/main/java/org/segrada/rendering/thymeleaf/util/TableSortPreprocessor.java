@@ -20,7 +20,11 @@ import java.util.Map;
  *
  * Table sorting helper/preprocessor for thymeleaf
  */
-public class TableSortPreprocessor {
+public final class TableSortPreprocessor {
+	private TableSortPreprocessor() throws InstantiationException{
+		throw new InstantiationException("The class is not created for instantiation");
+	}
+
 	/**
 	 * method to create sort link map
 	 * @param baseUrl base url

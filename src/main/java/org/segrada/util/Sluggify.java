@@ -32,7 +32,7 @@ import static com.google.common.collect.Iterables.transform;
  * Sluggify library - taken from https://github.com/otto-de/sluggify
  * and adapted
  */
-public class Sluggify {
+public final class Sluggify {
 	private static final LoadingCache<String, String> slugifyCache = CacheBuilder.<String,String> newBuilder()
 			.maximumSize(10000)
 			.expireAfterWrite(10, TimeUnit.MINUTES)
@@ -42,6 +42,10 @@ public class Sluggify {
 					return doSlugify(key);
 				}
 			});
+
+	private Sluggify() throws InstantiationException{
+		throw new InstantiationException("The class is not created for instantiation");
+	}
 
 	public static boolean isEmpty(String stringToCheck) {
 		return stringToCheck == null || stringToCheck.isEmpty();

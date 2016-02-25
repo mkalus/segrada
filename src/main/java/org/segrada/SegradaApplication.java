@@ -29,7 +29,7 @@ import java.util.*;
  *
  * Segrada application standalone server
  */
-public class SegradaApplication {
+public final class SegradaApplication {
 	private static final Logger logger = LoggerFactory.getLogger(SegradaApplication.class);
 
 	/**
@@ -56,6 +56,10 @@ public class SegradaApplication {
 	 * port to listen to
 	 */
 	private static int port = 8080;
+
+	private SegradaApplication() throws InstantiationException{
+		throw new InstantiationException("The class is not created for instantiation");
+	}
 
 	/**
 	 * prepare context data - get port and contextRoot from environmental variables or properties

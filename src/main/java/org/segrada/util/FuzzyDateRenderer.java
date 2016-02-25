@@ -17,7 +17,11 @@ package org.segrada.util;
  *
  * Fuzzy Date Renderer to print out fuzzy dates nicely
  */
-public class FuzzyDateRenderer {
+public final class FuzzyDateRenderer {
+	private FuzzyDateRenderer() throws InstantiationException{
+		throw new InstantiationException("The class is not created for instantiation");
+	}
+
 	/**
 	 * basic date rendering
 	 * @param julianDate JD value of date
