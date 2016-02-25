@@ -34,6 +34,7 @@ public class UserGroupTest {
 		final UserGroup userGroup = new UserGroup();
 		userGroup.setTitle("test");
 		userGroup.setActive(false);
+		userGroup.setSpecial("ADMIN");
 		Set<ConstraintViolation<UserGroup>> constraintViolations = validator.validate(userGroup);
 		assertTrue("UserGroup not valid", constraintViolations.size() == 0);
 	}

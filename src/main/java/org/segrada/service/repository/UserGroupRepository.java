@@ -21,4 +21,10 @@ import org.segrada.service.repository.prototype.CRUDRepository;
  * User Group Repository
  */
 public interface UserGroupRepository extends CRUDRepository<IUserGroup> {
+	/**
+	 * find special user group
+	 * @param special type of group
+	 * @return single user group or null
+	 */
+	IUserGroup findSpecial(String special);
 }

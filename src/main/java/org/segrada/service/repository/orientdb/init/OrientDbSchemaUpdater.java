@@ -273,7 +273,8 @@ public class OrientDbSchemaUpdater {
 						.field("roles", roles)
 						.field("created", now)
 						.field("modified", now)
-						.field("active", true);
+						.field("active", true)
+						.field("special", "ADMIN");
 				db.save(doc);
 
 				// promote all users to admins
@@ -285,17 +286,16 @@ public class OrientDbSchemaUpdater {
 			// user group
 			try {
 				roles = new HashMap<>();
-				roles.put("ADMIN", "1");
-
-				//TODO: update this to correct groups
+				// by default, anonymous user does not get any privileges
 
 				doc = new ODocument("UserGroup")
-						.field("title", "User")
-						.field("titleasc", "user")
+						.field("title", "Anonymous")
+						.field("titleasc", "anonymous")
 						.field("roles", roles)
 						.field("created", now)
 						.field("modified", now)
-						.field("active", true);
+						.field("active", true)
+						.field("special", "ANONYMOUS");
 				db.save(doc);
 			} catch (Exception e) {
 				logger.error("Could not update UserGroup: " + e.getMessage());

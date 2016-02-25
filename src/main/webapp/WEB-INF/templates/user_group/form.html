@@ -26,6 +26,18 @@
 
             <div th:replace="partials/form :: formCheckbox (name='active',field=${entity.active},label=#{field.active},id=${tempId},errors=${errors},required=false)"></div>
 
+            <div class="col-sm-offset-2 col-sm-10"><h4 th:text="#{field.privileges}">Privileges</h4></div>
+
+            <div class="form-group" th:each="privilege : ${privileges}">
+                <label class="col-sm-2 control-label" th:text="#{${'privilege_group.' + privilege.key}}">Privilege</label>
+                <div class="col-sm-10 form-pad">
+                    <label th:each="name : ${privilege.value}" th:for="${'privilege-' + name + '-' + entity.uid}" th:title="#{${'privilege.' + name + '.hint'}}">
+                        <input th:unless="${noHiddenField}" th:name="${'privilege.' + name}" type="hidden" value="0" />
+                        <input th:id="${'privilege-' + name + '-' + id}" th:name="${'privilege.' + name}" type="checkbox" th:checked="${entity.hasRole(name)}" value="1" /> <span th:text="#{${'privilege.' + name}}"></span>
+                    </label>
+                </div>
+            </div>
+
             <input type="hidden" name="id" th:value="${entity.id}" th:if="${entity.id}" />
 
             <div th:replace="partials/form :: submit (isNewEntity=${isNewEntity})"></div>

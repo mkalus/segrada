@@ -2,7 +2,6 @@ package org.segrada.auth;
 
 import com.google.inject.Injector;
 import com.google.inject.servlet.SessionScoped;
-import com.sun.jersey.api.view.Viewable;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.segrada.session.Identity;
@@ -14,7 +13,9 @@ import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Copyright 2016 Maximilian Kalus [segrada@auxnet.de]
@@ -31,7 +32,25 @@ import java.util.*;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Method interceptor to test authentication
+ * Method interceptor to test authentication (injected via AOP)
+ *
+ * Roles:
+ * ADMIN
+ * CLEAR_CACHE
+ * COLOR
+ * COLOR_ADD
+ * COLOR_EDIT
+ * COLOR_EDIT_MINE
+ * COLOR_DELETE
+ * COLOR_DELETE_MINE
+ * ...
+ * FILE
+ * ... stuff
+ *
+ * USER
+ * GROUP
+ *
+ * special: MYPROFILE -> uid must be that of identity
  */
 @SessionScoped
 public class CheckAuthentication implements MethodInterceptor {
@@ -84,6 +103,9 @@ public class CheckAuthentication implements MethodInterceptor {
                 }
             }
         } else if (identity == null) return returnAccessDenied(); // permit all will still check the existence of identity
+
+        // special tests
+        //TODO
 
         if (logger.isDebugEnabled())
             logger.debug("Authentication passed.");

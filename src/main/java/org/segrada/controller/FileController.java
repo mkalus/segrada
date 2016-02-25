@@ -19,6 +19,7 @@ import org.segrada.service.base.AbstractRepositoryService;
 import org.segrada.session.CSRFTokenManager;
 
 import javax.annotation.Nullable;
+import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -459,6 +460,7 @@ public class FileController extends AbstractColoredController<IFile> {
 	@GET
 	@Path("/add")
 	@Produces(MediaType.TEXT_HTML)
+	@RolesAllowed("FILE_ADD")
 	public Viewable add() {
 		return handleForm(service.createNewInstance());
 	}
@@ -466,6 +468,7 @@ public class FileController extends AbstractColoredController<IFile> {
 	@GET
 	@Path("/edit/{uid}")
 	@Produces(MediaType.TEXT_HTML)
+	@RolesAllowed({"FILE_EDIT", "FILE_EDIT_MINE"})
 	public Viewable edit(@PathParam("uid") String uid) {
 		return handleForm(service.findById(service.convertUidToId(uid)));
 	}
@@ -474,6 +477,7 @@ public class FileController extends AbstractColoredController<IFile> {
 	@Path("/update")
 	@Produces(MediaType.TEXT_PLAIN)
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	@RolesAllowed({"FILE_EDIT", "FILE_EDIT_MINE"})
 	public Response update(@FormDataParam("_csrf") final String csrf, // _csrf checked locally
 	                       @FormDataParam("id") final String id,
 	                       @FormDataParam("title") final String title,
@@ -582,6 +586,7 @@ public class FileController extends AbstractColoredController<IFile> {
 	@GET
 	@Path("/delete/{uid}/{empty}")
 	@Produces(MediaType.TEXT_HTML)
+	@RolesAllowed({"FILE_DELETE", "FILE_DELETE_MINE"})
 	public Response delete(@PathParam("uid") String uid, @PathParam("empty") String empty) {
 		return handleDelete(empty, service.findById(service.convertUidToId(uid)), service);
 	}

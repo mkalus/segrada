@@ -38,6 +38,11 @@ public class UserGroup extends AbstractSegradaEntity implements IUserGroup {
 	private Boolean active;
 
 	/**
+	 * special type of group?
+	 */
+	private String special;
+
+	/**
 	 * keeps roles
 	 */
 	private Map<String, Integer> roles;
@@ -101,5 +106,15 @@ public class UserGroup extends AbstractSegradaEntity implements IUserGroup {
 	@Override
 	public void setActive(Boolean active) {
 		this.active = active;
+	}
+
+	@Override
+	public String getSpecial() {
+		return special;
+	}
+
+	@Override
+	public void setSpecial(String special) {
+		this.special = special;
 	}
 }

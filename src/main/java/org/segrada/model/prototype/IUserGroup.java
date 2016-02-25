@@ -67,4 +67,10 @@ public interface IUserGroup extends SegradaEntity {
 	 */
 	Boolean getActive();
 	void setActive(Boolean active);
+
+	/**
+	 * special types of groups have this property set
+	 */
+	String getSpecial();
+	void setSpecial(String special);
 }

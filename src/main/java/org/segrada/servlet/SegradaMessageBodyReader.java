@@ -165,7 +165,7 @@ public class SegradaMessageBodyReader implements MessageBodyReader<SegradaEntity
 						// multiple values -> test for "1" or true and the like
 						value = false;
 						for (String v : values)
-							if (v != null && (v.equals("1") || v.equalsIgnoreCase("t") || v.equalsIgnoreCase("truw"))) {
+							if (v != null && (v.equals("1") || v.equalsIgnoreCase("t") || v.equalsIgnoreCase("true"))) {
 								value = true;
 								break;
 							}

@@ -77,7 +77,7 @@ public class OrientDbUserGroupRepositoryTest {
 		ODocument document = new ODocument("UserGroup").field("title", "title")
 				.field("titleasc", "titleasc").field("roles", roles)
 				.field("created", 1L).field("modified", 2L)
-				.field("lastLogin", 3L).field("active", true);
+				.field("lastLogin", 3L).field("active", true).field("special", "ADMIN");
 
 		IUserGroup userGroup = repository.convertToEntity(document);
 
@@ -88,6 +88,7 @@ public class OrientDbUserGroupRepositoryTest {
 		assertEquals(new Long(1L), userGroup.getCreated());
 		assertEquals(new Long(2L), userGroup.getModified());
 		assertEquals(true, userGroup.getActive());
+		assertEquals("ADMIN", userGroup.getSpecial());
 
 		// check if groups are still the same after saving
 		document.save();
@@ -107,6 +108,7 @@ public class OrientDbUserGroupRepositoryTest {
 		userGroup.setActive(false);
 		userGroup.setCreated(1L);
 		userGroup.setModified(2L);
+		userGroup.setSpecial("ADMIN");
 
 		userGroup.setRole("Test");
 		userGroup.setRole("Test3", -1);
@@ -119,6 +121,7 @@ public class OrientDbUserGroupRepositoryTest {
 		assertFalse(document.field("active"));
 		assertEquals(new Long(1L), document.field("created", Long.class));
 		assertEquals(new Long(2L), document.field("modified", Long.class));
+		assertEquals("ADMIN", document.field("special"));
 
 		// check roles
 		Map<String, String> roles = document.field("roles", OType.EMBEDDEDMAP);
@@ -144,5 +147,62 @@ public class OrientDbUserGroupRepositoryTest {
 	public void testGetDefaultOrder() throws Exception {
 		assertEquals(" ORDER BY titleasc", repository.getDefaultOrder(true));
 		assertEquals(" titleasc", repository.getDefaultOrder(false));
+	}
+
+	@Test
+	public void testFindSpecial() throws Exception {
+		// sanity
+		assertNull(repository.findSpecial(null));
+		assertNull(repository.findSpecial(""));
+
+		// no previously defined group?
+		assertNull(repository.findSpecial("ADMIN"));
+
+		Map<String, String> roles = new HashMap<>();
+		roles.put("Test", "1");
+		roles.put("Test3", "-1");
+		roles.put("Test5", "xxx"); // test robustness of code
+
+		ODocument document = new ODocument("UserGroup").field("title", "title")
+				.field("titleasc", "titleasc").field("roles", roles)
+				.field("created", 1L).field("modified", 2L)
+				.field("lastLogin", 3L).field("active", true).field("special", "ADMIN");
+		document.save();
+
+		assertNotNull(repository.findSpecial("ADMIN"));
+		assertEquals(document.getIdentity().toString(), repository.findSpecial("ADMIN").getId());
+	}
+
+	@Test
+	public void testDelete() throws Exception {
+		IUserGroup userGroup = new UserGroup();
+
+		userGroup.setTitle("title");
+		userGroup.setActive(false);
+		userGroup.setCreated(1L);
+		userGroup.setModified(2L);
+
+		userGroup.setRole("Test");
+		userGroup.setRole("Test3", -1);
+
+		// delete non-saved group?
+		assertTrue(repository.delete(null));
+		assertTrue(repository.delete(userGroup));
+
+		// set special group
+		userGroup.setSpecial("ADMIN");
+
+		repository.save(userGroup);
+
+		// disallow deletion
+		assertFalse(repository.delete(userGroup));
+
+		// set special group
+		userGroup.setSpecial(null);
+
+		repository.save(userGroup);
+
+		// disallow deletion
+		assertTrue(repository.delete(userGroup));
 	}
 }

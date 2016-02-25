@@ -63,7 +63,7 @@ public class AdminController {
 
 	@GET
 	@Produces(MediaType.TEXT_HTML)
-	@RolesAllowed("admin")
+	@RolesAllowed("ADMIN")
 	public String index() {
 		return "Not implemented.";
 	}
@@ -71,7 +71,7 @@ public class AdminController {
 	@GET
 	@Path("/reindex")
 	@Produces(MediaType.TEXT_HTML)
-	@RolesAllowed("admin")
+	@RolesAllowed("ADMIN")
 	public String reindex(@Context ServletContext context) {
 		clearCache(context); // delete caches
 
@@ -110,7 +110,7 @@ public class AdminController {
 	@GET
 	@Path("/clear_cache")
 	@Produces(MediaType.TEXT_HTML)
-	@RolesAllowed("admin")
+	@RolesAllowed("CLEAR_CACHE")
 	public String clearCache(@Context ServletContext context) {
 		// delete caches
 		Ehcache cache = CacheManager.getInstance().getEhcache("SimplePageCachingFilter");

@@ -46,7 +46,7 @@
 				<label class="col-sm-2 control-label" th:for="${'group-' + id}"><span th:text="#{field.group}"></span><span class="text-danger"> *</span></label>
 				<div class="col-sm-10">
 					<select th:id="${'group-' + id}" name="group" class="form-control">
-						<option value="GROUP" th:each="userGroup : ${userGroups}" th:text="${userGroup.title}" th:value="${userGroup.id}" th:selected="${userGroup.uid == entity.group.uid}">Group</option>
+						<option value="GROUP" th:each="userGroup : ${userGroups}" th:text="${userGroup.title}" th:value="${userGroup.id}" th:selected="${entity.group and userGroup.uid == entity.group.uid}">Group</option>
 					</select>
 					<span class="help-block" th:text="${errors}?(${errors['group']}?${#messages.msg(errors['group'])})">Error</span>
 				</div>

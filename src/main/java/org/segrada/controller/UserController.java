@@ -10,6 +10,7 @@ import org.segrada.service.UserGroupService;
 import org.segrada.service.UserService;
 import org.segrada.util.PasswordEncoder;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -53,6 +54,7 @@ public class UserController extends AbstractBaseController<IUser> {
 
 	@GET
 	@Produces(MediaType.TEXT_HTML)
+	@RolesAllowed("USER")
 	public Viewable index() {
 		return handleShowAll(service);
 	}
@@ -60,6 +62,7 @@ public class UserController extends AbstractBaseController<IUser> {
 	@GET
 	@Path("/show/{uid}")
 	@Produces(MediaType.TEXT_HTML)
+	@RolesAllowed({"USER", "MYPROFILE"})
 	public Viewable show(@PathParam("uid") String uid) {
 		return handleShow(uid, service);
 	}
@@ -67,6 +70,7 @@ public class UserController extends AbstractBaseController<IUser> {
 	@GET
 	@Path("/add")
 	@Produces(MediaType.TEXT_HTML)
+	@RolesAllowed("ADMIN")
 	public Viewable add() {
 		return handleForm(service.createNewInstance());
 	}
@@ -74,9 +78,12 @@ public class UserController extends AbstractBaseController<IUser> {
 	@GET
 	@Path("/edit/{uid}")
 	@Produces(MediaType.TEXT_HTML)
+	@RolesAllowed("ADMIN")
 	public Viewable edit(@PathParam("uid") String uid) {
 		return handleForm(service.findById(service.convertUidToId(uid)));
 	}
+
+	//TODO: add edit own profile setting -> can only edit certain fields
 
 	@Override
 	protected void enrichModelForEditingAndSaving(Map<String, Object> model) {
@@ -88,6 +95,7 @@ public class UserController extends AbstractBaseController<IUser> {
 	@Path("/update")
 	@Produces(MediaType.TEXT_HTML)
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@RolesAllowed("ADMIN")
 	public Response update(User entity) {
 		return handleUpdate(entity, service);
 	}
@@ -95,12 +103,15 @@ public class UserController extends AbstractBaseController<IUser> {
 	@GET
 	@Path("/delete/{uid}/{empty}")
 	@Produces(MediaType.TEXT_HTML)
+	@RolesAllowed("ADMIN")
 	public Response delete(@PathParam("uid") String uid, @PathParam("empty") String empty) {
 		return handleDelete(empty, service.findById(service.convertUidToId(uid)), service);
 	}
 
 	@Override
 	protected void validateExtra(Map<String, String> errors, IUser entity) {
+		//TODO: allow changes in certain fields only as admin
+
 		// check login
 		if (!entity.getLogin().isEmpty()) {
 			entity.setLogin(entity.getLogin().toLowerCase());

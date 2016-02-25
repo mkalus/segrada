@@ -9,6 +9,7 @@ import org.segrada.model.Source;
 import org.segrada.model.prototype.IColor;
 import org.segrada.service.ColorService;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -43,6 +44,7 @@ public class ColorController extends AbstractBaseController<IColor> {
 
 	@GET
 	@Produces(MediaType.TEXT_HTML)
+	@RolesAllowed("COLOR")
 	public Viewable index() {
 		return handleShowAll(service);
 	}
@@ -50,6 +52,7 @@ public class ColorController extends AbstractBaseController<IColor> {
 	@GET
 	@Path("/show/{uid}")
 	@Produces(MediaType.TEXT_HTML)
+	@RolesAllowed("COLOR")
 	public Viewable show(@PathParam("uid") String uid) {
 		return handleShow(uid, service);
 	}
@@ -57,6 +60,7 @@ public class ColorController extends AbstractBaseController<IColor> {
 	@GET
 	@Path("/add")
 	@Produces(MediaType.TEXT_HTML)
+	@RolesAllowed("COLOR_ADD")
 	public Viewable add() {
 		return handleForm(service.createNewInstance());
 	}
@@ -64,6 +68,7 @@ public class ColorController extends AbstractBaseController<IColor> {
 	@GET
 	@Path("/edit/{uid}")
 	@Produces(MediaType.TEXT_HTML)
+	@RolesAllowed({"COLOR_EDIT", "COLOR_EDIT_MINE"})
 	public Viewable edit(@PathParam("uid") String uid) {
 		return handleForm(service.findById(service.convertUidToId(uid)));
 	}
@@ -72,6 +77,7 @@ public class ColorController extends AbstractBaseController<IColor> {
 	@Path("/update")
 	@Produces(MediaType.TEXT_HTML)
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@RolesAllowed({"COLOR_EDIT", "COLOR_EDIT_MINE"})
 	public Response update(Color entity) {
 		return handleUpdate(entity, service);
 	}
@@ -79,6 +85,7 @@ public class ColorController extends AbstractBaseController<IColor> {
 	@GET
 	@Path("/delete/{uid}/{empty}")
 	@Produces(MediaType.TEXT_HTML)
+	@RolesAllowed({"COLOR_DELETE", "COLOR_DELETE_MINE"})
 	public Response delete(@PathParam("uid") String uid, @PathParam("empty") String empty) {
 		return handleDelete(empty, service.findById(service.convertUidToId(uid)), service);
 	}

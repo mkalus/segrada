@@ -8,6 +8,7 @@ create property UserGroup.modified Datetime
 create property UserGroup.creator Link<User>
 create property UserGroup.modifier Link<User>
 create property UserGroup.active Boolean
+create property UserGroup.special String
 alter property UserGroup.title MANDATORY true
 alter property UserGroup.title COLLATE ci
 alter property UserGroup.titleasc MANDATORY true
@@ -15,8 +16,10 @@ alter property UserGroup.roles MANDATORY true
 alter property UserGroup.created MANDATORY true
 alter property UserGroup.modified MANDATORY true
 alter property UserGroup.active MANDATORY true
+alter property UserGroup.special COLLATE ci
 create index UserGroup.title UNIQUE_HASH_INDEX
 create index UserGroup.titleasc NOTUNIQUE
+create index UserGroup.special NOTUNIQUE
 
 
 ######################################################################################################################

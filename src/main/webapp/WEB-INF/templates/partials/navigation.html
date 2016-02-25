@@ -70,7 +70,7 @@
 						<li><a class="sg-data-add" href="#" th:href="@{/color/add}" th:inline="text"><span class="fa fa-tint"></span> [[#{Color}]]</a></li>
 						<li th:if="${showLogout}" class="divider"></li>
 						<li th:if="${showLogout}"><a class="sg-data-add" href="#" th:href="@{/user/add}" th:inline="text"><span class="fa fa-user"></span> [[#{User}]]</a></li>
-						<li th:if="${showLogout}"><a class="sg-control-set" href="#" th:href="@{/user_group/add}" th:inline="text"><span class="fa fa-users"></span> [[#{UserGroup}]]</a></li>
+						<li th:if="${showLogout}"><a class="sg-data-add" href="#" th:href="@{/user_group/add}" th:inline="text"><span class="fa fa-users"></span> [[#{UserGroup}]]</a></li>
 					</ul>
 				</li>
 				<li><a href="#" id="sg-toggle-graph" type="button" th:title="#{nav.toggleGraph}"><span class="fa fa-share-alt" aria-hidden="true"></span> <span class="hidden-md hidden-lg hidden-sm" th:text="#{nav.toggleGraph}"></span></a></li>
