@@ -133,16 +133,16 @@ public class OrientDbSchemaUpdater {
 	 */
 	public void buildOrUpdateSchema() {
 		// get version of database
-		int version = getConfigVersion();
+		int versionLocal = getConfigVersion();
 
 		// no version update needed => just return
-		if (version >= CURRENT_VERSION) return;
+		if (versionLocal >= CURRENT_VERSION) return;
 
 		// open database
 		ODatabaseDocumentTx db = orientGraphFactory.getDatabase();
 
 		// run schema update scripts per version number
-		for (int i = version; i < CURRENT_VERSION; i++)
+		for (int i = versionLocal; i < CURRENT_VERSION; i++)
 			runSchemaScript("/orientdb/schema_version_" + i + ".sql", db);
 
 		// close db
@@ -196,16 +196,16 @@ public class OrientDbSchemaUpdater {
 	 */
 	public void populateWithData(@Nullable PasswordEncoder passwordEncoder) {
 		// get version of database
-		int version = getConfigVersion();
+		int versionLocal = getConfigVersion();
 
 		// no version update needed => just return
-		if (version >= CURRENT_VERSION) return;
+		if (versionLocal >= CURRENT_VERSION) return;
 
 		// open database
 		ODatabaseDocumentTx db = orientGraphFactory.getDatabase();
 
 		// version 0 => 1
-		if (version <= 0) {
+		if (versionLocal <= 0) {
 			// create default password
 			String password = "password";
 			if (passwordEncoder != null)
@@ -241,23 +241,23 @@ public class OrientDbSchemaUpdater {
 			}
 
 			// version bump to 1
-			version = 1;
+			versionLocal = 1;
 
 			logger.info("Schema data updated to version 1.");
 		}
 
 		// no database population here, just update
-		if (version <= 1) {
-			version = 2;
+		if (versionLocal <= 1) {
+			versionLocal = 2;
 		}
 
 		// no database population here, just update
-		if (version <= 2) {
-			version = 3;
+		if (versionLocal <= 2) {
+			versionLocal = 3;
 		}
 
 		// update group stuff
-		if (version <= 3) {
+		if (versionLocal <= 3) {
 			long now = System.currentTimeMillis();
 
 			// create new groups: admin group
@@ -304,19 +304,19 @@ public class OrientDbSchemaUpdater {
 			// drop old property
 			db.command(new OCommandSQL("drop property User.role FORCE")).execute();
 
-			version = 4;
+			versionLocal = 4;
 
 			logger.info("Schema data updated to version 4.");
 		}
 
 		// upsert config defaults
-		String query = "UPDATE Config SET key = 'version', value = '" + Integer.toString(version) + "' UPSERT WHERE key = 'version'";
+		String query = "UPDATE Config SET key = 'version', value = '" + Integer.toString(versionLocal) + "' UPSERT WHERE key = 'version'";
 		db.command(new OCommandSQL(query)).execute();
 
 		// copy local version to instance version
-		this.version = version;
+		this.version = versionLocal;
 
-		logger.info("Schema update finished: Version number of database is now " + version);
+		logger.info("Schema update finished: Version number of database is now " + versionLocal);
 
 		// close db
 		db.close();
