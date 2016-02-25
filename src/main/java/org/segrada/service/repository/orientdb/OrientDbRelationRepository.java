@@ -65,8 +65,6 @@ public class OrientDbRelationRepository extends AbstractCoreOrientDbRepository<I
 
 	@Override
 	public IRelation convertToEntity(ODocument document) {
-		Relation relation = new Relation();
-
 		// load relation link
 		ODocument relationLink = getRelationLink(document, true);
 		if (relationLink == null) {
@@ -75,6 +73,7 @@ public class OrientDbRelationRepository extends AbstractCoreOrientDbRepository<I
 			return null; // exact error was logged below
 		}
 
+		Relation relation = new Relation();
 		// get from/to - slim entities, just title and id
 		relation.setFromEntity(getRelatedEntity(relationLink, "out"));
 		relation.setToEntity(getRelatedEntity(relationLink, "in"));

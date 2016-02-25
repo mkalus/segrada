@@ -173,8 +173,6 @@ public class SegradaUpdateChecker {
 		private int toNumericVersion(String version) {
 			if (version == null) return 0;
 
-			int v = 0;
-
 			// cut off "v"
 			version = version.substring(1);
 
@@ -182,6 +180,7 @@ public class SegradaUpdateChecker {
 			String parts[] = version.split("\\.");
 			if (parts.length != 3) return -1;
 
+			int v = 0;
 			for (int i = 0; i < 3; i++)
 				v = v * 100 + Integer.parseInt(parts[i]);
 

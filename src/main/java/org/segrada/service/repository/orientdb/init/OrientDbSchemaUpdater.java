@@ -198,11 +198,11 @@ public class OrientDbSchemaUpdater {
 		// get version of database
 		int version = getConfigVersion();
 
-		// open database
-		ODatabaseDocumentTx db = orientGraphFactory.getDatabase();
-
 		// no version update needed => just return
 		if (version >= CURRENT_VERSION) return;
+
+		// open database
+		ODatabaseDocumentTx db = orientGraphFactory.getDatabase();
 
 		// version 0 => 1
 		if (version <= 0) {
