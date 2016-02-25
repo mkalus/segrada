@@ -249,10 +249,10 @@ public class OrientDbNodeRepository extends AbstractCoreOrientDbRepository<INode
 			if (termPart.contains(".")) termPart = "\"" + termPart + "\"";
 			else if (!termPart.startsWith("\"") || !termPart.endsWith("\"")) termPart += "*";
 			if (first) first = false;
-			else sb.append(" ");
+			else sb.append(' ');
 			sb.append(termPart);
 		}
-		sb.append("'");
+		sb.append('\'');
 
 		return sb.toString();
 	}

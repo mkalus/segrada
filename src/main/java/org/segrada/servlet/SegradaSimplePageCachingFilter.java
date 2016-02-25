@@ -171,7 +171,7 @@ public class SegradaSimplePageCachingFilter extends SimplePageCachingFilter {
 				if (encodedName.equals("page") && encodedValue.equals("1")) continue;
 				if (queryString.length() > 0)
 					queryString.append('&');
-				queryString.append(encodedName).append("=").append(encodedValue);
+				queryString.append(encodedName).append('=').append(encodedValue);
 			} catch (Exception e) {
 				logger.warn("Could not encode field " + entry.getKey() + " with value " + entry.getValue(), e);
 			}

@@ -67,7 +67,7 @@ public class SearchController {
 			boolean first = true;
 			for (ITag tag : tagService.findTagsByTitles(tags.toArray(tagTitles))) {
 				if (first) first = false;
-				else sb.append(",");
+				else sb.append(',');
 				sb.append(tag.getId());
 			}
 

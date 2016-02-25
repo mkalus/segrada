@@ -160,7 +160,7 @@ public class PageController {
 			BufferedReader in = new BufferedReader(new InputStreamReader(is));
 
 			while((line = in.readLine()) != null) {
-				sb.append(line).append("\n");
+				sb.append(line).append('\n');
 			}
 			in.close();
 		} catch (IOException e) {

@@ -100,7 +100,7 @@ public class OrientDbRelationTypeRepository extends AbstractColoredOrientDbRepos
 			for (ODocument tag : list) {
 				if (tag != null) {
 					titles.add(tag.field("title", OType.STRING));
-					if (i++ > 0) tagIds.append(",");
+					if (i++ > 0) tagIds.append(',');
 					tagIds.append(tag.getIdentity().toString());
 				} else logger.warn("Tag was null (probably deleted).");
 			}
@@ -235,8 +235,8 @@ public class OrientDbRelationTypeRepository extends AbstractColoredOrientDbRepos
 			boolean first = true;
 			for (String tag : (String[]) filters.get("tags")) {
 				if (first) first = false;
-				else sb.append(",");
-				sb.append("'").append(OrientStringEscape.escapeOrientSql(tag)).append("'");
+				else sb.append(',');
+				sb.append('\'').append(OrientStringEscape.escapeOrientSql(tag)).append('\'');
 			}
 
 			constraints.add(sb.append("]").toString());
@@ -271,10 +271,10 @@ public class OrientDbRelationTypeRepository extends AbstractColoredOrientDbRepos
 			if (termPart.contains(".")) termPart = "\"" + termPart + "\"";
 			else if (!termPart.startsWith("\"") || !termPart.endsWith("\"")) termPart += "*";
 			if (first) first = false;
-			else sb.append(" ");
+			else sb.append(' ');
 			sb.append(termPart);
 		}
-		sb.append("'");
+		sb.append('\'');
 
 		return sb.toString();
 	}

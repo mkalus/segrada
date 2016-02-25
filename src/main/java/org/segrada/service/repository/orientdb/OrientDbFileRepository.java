@@ -253,8 +253,8 @@ public class OrientDbFileRepository extends AbstractAnnotatedOrientDbRepository<
 				TermQuery termQuery2 = new TermQuery(new Term("filename", termPart + "*"));
 				if (first) first = false;
 				else sb.append(" AND ");
-				sb.append("(").append(termQuery1.toString()).append(" OR ")
-						.append(termQuery2.toString()).append(")");
+				sb.append('(').append(termQuery1.toString()).append(" OR ")
+						.append(termQuery2.toString()).append(')');
 			}
 
 			// execute query
@@ -319,10 +319,10 @@ public class OrientDbFileRepository extends AbstractAnnotatedOrientDbRepository<
 			if (termPart.contains(".")) termPart = "\"" + termPart + "\"";
 			else if (!termPart.startsWith("\"") || !termPart.endsWith("\"")) termPart += "*";
 			if (first) first = false;
-			else sb.append(" ");
+			else sb.append(' ');
 			sb.append(termPart);
 		}
-		sb.append("'");
+		sb.append('\'');
 
 		return sb.toString();
 	}
