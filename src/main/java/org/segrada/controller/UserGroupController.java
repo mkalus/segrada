@@ -43,21 +43,21 @@ public class UserGroupController extends AbstractBaseController<IUserGroup> {
 	/**
 	 * keeps list of privileges to show in form
 	 */
-	public static final SortedMap<String, String[]> PRIVILEGES = new TreeMap<String, String[]>() {{
-		put("NODE", new String[]{ "NODE", "NODE_ADD", "NODE_EDIT_MINE", "NODE_EDIT", "NODE_DELETE_MINE", "NODE_DELETE" });
-		put("SOURCE", new String[]{ "SOURCE", "SOURCE_ADD", "SOURCE_EDIT_MINE", "SOURCE_EDIT", "SOURCE_DELETE_MINE", "SOURCE_DELETE" });
-		put("FILE", new String[]{ "FILE", "FILE_ADD", "FILE_EDIT_MINE", "FILE_EDIT", "FILE_DELETE_MINE", "FILE_DELETE" });
-		put("RELATION", new String[]{ "RELATION", "RELATION_ADD", "RELATION_EDIT_MINE", "RELATION_EDIT", "RELATION_DELETE_MINE", "RELATION_DELETE" });
-		put("RELATION_TYPE", new String[]{ "RELATION_TYPE", "RELATION_TYPE_ADD", "RELATION_TYPE_EDIT_MINE", "RELATION_TYPE_EDIT", "RELATION_TYPE_DELETE_MINE", "RELATION_TYPE_DELETE" });
-		put("SOURCE_REFERENCE", new String[]{ "SOURCE_REFERENCE", "SOURCE_REFERENCE_ADD", "SOURCE_REFERENCE_EDIT_MINE", "SOURCE_REFERENCE_EDIT", "SOURCE_REFERENCE_DELETE_MINE", "SOURCE_REFERENCE_DELETE" });
-		put("LOCATION", new String[]{ "LOCATION", "LOCATION_ADD", "LOCATION_EDIT_MINE", "LOCATION_EDIT", "LOCATION_DELETE_MINE", "LOCATION_DELETE" });
-		put("PERIOD", new String[]{ "PERIOD", "PERIOD_ADD", "PERIOD_EDIT_MINE", "PERIOD_EDIT", "PERIOD_DELETE_MINE", "PERIOD_DELETE" });
-		put("PICTOGRAM", new String[]{ "PICTOGRAM", "PICTOGRAM_ADD", "PICTOGRAM_EDIT_MINE", "PICTOGRAM_EDIT", "PICTOGRAM_DELETE_MINE", "PICTOGRAM_DELETE" });
-		put("TAG", new String[]{ "TAG", "TAG_ADD", "TAG_EDIT_MINE", "TAG_EDIT", "TAG_DELETE_MINE", "TAG_DELETE" });
-		put("COLOR", new String[]{ "COLOR", "COLOR_ADD", "COLOR_EDIT_MINE", "COLOR_EDIT", "COLOR_DELETE_MINE", "COLOR_DELETE" });
-		put("GRAPH", new String[]{ "GRAPH" });
-		put("ADMIN", new String[]{ "ADMIN", "CLEAR_CACHE" });
-		put("USER", new String[]{ "USER", "GROUP", "MY_PROFILE" });
+	public static final Map<String, String[]> PRIVILEGES = new LinkedHashMap<String, String[]>() {{
+		put("Nodes", new String[]{ "NODE", "NODE_ADD", "NODE_EDIT_MINE", "NODE_EDIT", "NODE_DELETE_MINE", "NODE_DELETE" });
+		put("Sources", new String[]{ "SOURCE", "SOURCE_ADD", "SOURCE_EDIT_MINE", "SOURCE_EDIT", "SOURCE_DELETE_MINE", "SOURCE_DELETE" });
+		put("Files", new String[]{ "FILE", "FILE_ADD", "FILE_EDIT_MINE", "FILE_EDIT", "FILE_DELETE_MINE", "FILE_DELETE" });
+		put("Relations", new String[]{ "RELATION", "RELATION_ADD", "RELATION_EDIT_MINE", "RELATION_EDIT", "RELATION_DELETE_MINE", "RELATION_DELETE" });
+		put("Relation_Types", new String[]{ "RELATION_TYPE", "RELATION_TYPE_ADD", "RELATION_TYPE_EDIT_MINE", "RELATION_TYPE_EDIT", "RELATION_TYPE_DELETE_MINE", "RELATION_TYPE_DELETE" });
+		put("SourceReferences", new String[]{ "SOURCE_REFERENCE", "SOURCE_REFERENCE_ADD", "SOURCE_REFERENCE_EDIT_MINE", "SOURCE_REFERENCE_EDIT", "SOURCE_REFERENCE_DELETE_MINE", "SOURCE_REFERENCE_DELETE" });
+		put("Locations", new String[]{ "LOCATION", "LOCATION_ADD", "LOCATION_EDIT_MINE", "LOCATION_EDIT", "LOCATION_DELETE_MINE", "LOCATION_DELETE" });
+		put("Periods", new String[]{ "PERIOD", "PERIOD_ADD", "PERIOD_EDIT_MINE", "PERIOD_EDIT", "PERIOD_DELETE_MINE", "PERIOD_DELETE" });
+		put("Pictograms", new String[]{ "PICTOGRAM", "PICTOGRAM_ADD", "PICTOGRAM_EDIT_MINE", "PICTOGRAM_EDIT", "PICTOGRAM_DELETE_MINE", "PICTOGRAM_DELETE" });
+		put("Tags", new String[]{ "TAG", "TAG_ADD", "TAG_EDIT_MINE", "TAG_EDIT", "TAG_DELETE_MINE", "TAG_DELETE" });
+		put("Colors", new String[]{ "COLOR", "COLOR_ADD", "COLOR_EDIT_MINE", "COLOR_EDIT", "COLOR_DELETE_MINE", "COLOR_DELETE" });
+		put("Graphs", new String[]{ "GRAPH" });
+		put("Administration", new String[]{ "ADMIN", "CLEAR_CACHE" });
+		put("Users", new String[]{ "USER", "GROUP", "MY_PROFILE" });
 	}};
 
 	/**
@@ -79,6 +79,31 @@ public class UserGroupController extends AbstractBaseController<IUserGroup> {
 			"ADMIN", "CLEAR_CACHE",
 			"USER", "GROUP", "MY_PROFILE"
 	));
+
+	/**
+	 * translation helper for privileges
+	 */
+	public static final Map<String, String> PRIVILEGES_TRANSLATION = new HashMap<String, String>() {{
+		final String[] prepopulate = new String[]{
+				"NODE", "ACCESS", "NODE_ADD", "ADD", "NODE_EDIT_MINE", "EDIT_MINE", "NODE_EDIT", "EDIT", "NODE_DELETE_MINE", "DELETE_MINE", "NODE_DELETE", "DELETE",
+				"SOURCE", "ACCESS", "SOURCE_ADD", "ADD", "SOURCE_EDIT_MINE", "EDIT_MINE", "SOURCE_EDIT", "EDIT", "SOURCE_DELETE_MINE", "DELETE_MINE", "SOURCE_DELETE", "DELETE",
+				"FILE", "ACCESS", "FILE_ADD", "ADD", "FILE_EDIT_MINE", "EDIT_MINE", "FILE_EDIT", "EDIT", "FILE_DELETE_MINE", "DELETE_MINE", "FILE_DELETE", "DELETE",
+				"RELATION", "ACCESS", "RELATION_ADD", "ADD", "RELATION_EDIT_MINE", "EDIT_MINE", "RELATION_EDIT", "EDIT", "RELATION_DELETE_MINE", "DELETE_MINE", "RELATION_DELETE", "DELETE",
+				"RELATION_TYPE", "ACCESS", "RELATION_TYPE_ADD", "ADD", "RELATION_TYPE_EDIT_MINE", "EDIT_MINE", "RELATION_TYPE_EDIT", "EDIT", "RELATION_TYPE_DELETE_MINE", "DELETE_MINE", "RELATION_TYPE_DELETE", "DELETE",
+				"SOURCE_REFERENCE", "ACCESS", "SOURCE_REFERENCE_ADD", "ADD", "SOURCE_REFERENCE_EDIT_MINE", "EDIT_MINE", "SOURCE_REFERENCE_EDIT", "EDIT", "SOURCE_REFERENCE_DELETE_MINE", "DELETE_MINE", "SOURCE_REFERENCE_DELETE", "DELETE",
+				"LOCATION", "ACCESS", "LOCATION_ADD", "ADD", "LOCATION_EDIT_MINE", "EDIT_MINE", "LOCATION_EDIT", "EDIT", "LOCATION_DELETE_MINE", "DELETE_MINE", "LOCATION_DELETE", "DELETE",
+				"PERIOD", "ACCESS", "PERIOD_ADD", "ADD", "PERIOD_EDIT_MINE", "EDIT_MINE", "PERIOD_EDIT", "EDIT", "PERIOD_DELETE_MINE", "DELETE_MINE", "PERIOD_DELETE", "DELETE",
+				"PICTOGRAM", "ACCESS", "PICTOGRAM_ADD", "ADD", "PICTOGRAM_EDIT_MINE", "EDIT_MINE", "PICTOGRAM_EDIT", "EDIT", "PICTOGRAM_DELETE_MINE", "DELETE_MINE", "PICTOGRAM_DELETE", "DELETE",
+				"TAG", "ACCESS", "TAG_ADD", "ADD", "TAG_EDIT_MINE", "EDIT_MINE", "TAG_EDIT", "EDIT", "TAG_DELETE_MINE", "DELETE_MINE", "TAG_DELETE", "DELETE",
+				"COLOR", "ACCESS", "COLOR_ADD", "ADD", "COLOR_EDIT_MINE", "EDIT_MINE", "COLOR_EDIT", "EDIT", "COLOR_DELETE_MINE", "DELETE_MINE", "COLOR_DELETE", "DELETE",
+				"GRAPH", "GRAPH",
+				"ADMIN", "ADMIN", "CLEAR_CACHE", "CLEAR_CACHE",
+				"USER", "USER_ACCESS", "GROUP", "GROUP_ACCESS", "MY_PROFILE", "MY_PROFILE"
+		};
+
+		for (int i = 0; i < prepopulate.length; i+=2)
+			put(prepopulate[i], prepopulate[i+1]);
+	}};
 
 	@Inject
 	private UserGroupService service;
@@ -105,6 +130,7 @@ public class UserGroupController extends AbstractBaseController<IUserGroup> {
 
 		model.put("entity", service.findById(service.convertUidToId(uid)));
 		model.put("privileges", PRIVILEGES);
+		model.put("privilegesTranslation", PRIVILEGES_TRANSLATION);
 
 		return new Viewable(getBasePath() + "show", model);
 	}
@@ -128,6 +154,7 @@ public class UserGroupController extends AbstractBaseController<IUserGroup> {
 	@Override
 	protected void enrichModelForEditingAndSaving(Map<String, Object> model) {
 		model.put("privileges", PRIVILEGES);
+		model.put("privilegesTranslation", PRIVILEGES_TRANSLATION);
 	}
 
 	@POST
