@@ -8,6 +8,7 @@ import net.sf.ehcache.Ehcache;
 import org.segrada.model.prototype.SegradaEntity;
 import org.segrada.service.ColorService;
 import org.segrada.service.base.AbstractRepositoryService;
+import org.segrada.service.base.SegradaService;
 import org.segrada.service.repository.prototype.CRUDRepository;
 import org.segrada.service.repository.prototype.PaginatingRepositoryOrService;
 
@@ -315,4 +316,10 @@ abstract public class AbstractBaseController<BEAN extends SegradaEntity> {
 			cache.removeAll(); // flush whole cache
 		}
 	}
+
+	/**
+	 * get attached Segrada service
+	 * @return attached Segrada service or null
+	 */
+	abstract public SegradaService getService();
 }

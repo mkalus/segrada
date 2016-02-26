@@ -12,6 +12,7 @@ import org.segrada.model.prototype.SegradaAnnotatedEntity;
 import org.segrada.service.SourceReferenceService;
 import org.segrada.service.SourceService;
 import org.segrada.service.base.AbstractRepositoryService;
+import org.segrada.service.base.SegradaService;
 import org.segrada.service.util.PaginationInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,6 +61,11 @@ public class SourceReferenceController extends AbstractBaseController<ISourceRef
 	@Override
 	protected String getBasePath() {
 		return "/source_reference/";
+	}
+
+	@Override
+	public SegradaService getService() {
+		return service;
 	}
 
 	@GET

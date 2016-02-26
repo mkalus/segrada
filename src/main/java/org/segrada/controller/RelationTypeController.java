@@ -7,6 +7,7 @@ import org.segrada.controller.base.AbstractColoredController;
 import org.segrada.model.RelationType;
 import org.segrada.model.prototype.IRelationType;
 import org.segrada.service.RelationTypeService;
+import org.segrada.service.base.SegradaService;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;
@@ -42,6 +43,11 @@ public class RelationTypeController extends AbstractColoredController<IRelationT
 	@Override
 	protected String getBasePath() {
 		return "/relation_type/";
+	}
+
+	@Override
+	public SegradaService getService() {
+		return service;
 	}
 
 	@GET

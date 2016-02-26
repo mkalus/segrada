@@ -8,6 +8,7 @@ import org.segrada.model.User;
 import org.segrada.model.prototype.IUser;
 import org.segrada.service.UserGroupService;
 import org.segrada.service.UserService;
+import org.segrada.service.base.SegradaService;
 import org.segrada.util.PasswordEncoder;
 
 import javax.annotation.security.RolesAllowed;
@@ -50,6 +51,11 @@ public class UserController extends AbstractBaseController<IUser> {
 	@Override
 	protected String getBasePath() {
 		return "/user/";
+	}
+
+	@Override
+	public SegradaService getService() {
+		return service;
 	}
 
 	@GET

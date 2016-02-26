@@ -13,6 +13,7 @@ import org.segrada.controller.base.AbstractBaseController;
 import org.segrada.model.Pictogram;
 import org.segrada.model.prototype.IPictogram;
 import org.segrada.service.PictogramService;
+import org.segrada.service.base.SegradaService;
 import org.segrada.session.CSRFTokenManager;
 
 import javax.annotation.security.PermitAll;
@@ -56,6 +57,11 @@ public class PictogramController extends AbstractBaseController<IPictogram> {
 	@Override
 	protected String getBasePath() {
 		return "/pictogram/";
+	}
+
+	@Override
+	public SegradaService getService() {
+		return service;
 	}
 
 	@GET
@@ -180,12 +186,12 @@ public class PictogramController extends AbstractBaseController<IPictogram> {
 	@Produces(MediaType.TEXT_PLAIN)
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@RolesAllowed({"PICTOGRAM_EDIT_MINE", "PICTOGRAM_EDIT"})
-	public Response update(@FormDataParam("_csrf") final String csrf, // _csrf checked locally
-	                       @FormDataParam("id") final String id,
+	public Response update(@FormDataParam("id") final String id,
 	                       @FormDataParam("title") final String title,
 	                       @FormDataParam("uploadedImage") final byte[] uploadedImage,
 	                       @FormDataParam("uploadedImage") final FormDataContentDisposition uploadedImageDetail,
 	                       @FormDataParam("uploadedImage") final FormDataBodyPart uploadedImagePart,
+	                       @FormDataParam("_csrf") final String csrf, // _csrf checked locally
 	                       @Context HttpServletRequest request) {
 		// check csrf
 		String sessionToken = CSRFTokenManager.getTokenForSession(request.getSession());

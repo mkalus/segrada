@@ -13,6 +13,7 @@ import org.segrada.service.LocationService;
 import org.segrada.service.NodeService;
 import org.segrada.service.RelationService;
 import org.segrada.service.base.AbstractRepositoryService;
+import org.segrada.service.base.SegradaService;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;
@@ -52,6 +53,11 @@ public class LocationController extends AbstractBaseController<ILocation> {
 	@Override
 	protected String getBasePath() {
 		return "/location/";
+	}
+
+	@Override
+	public SegradaService getService() {
+		return service;
 	}
 
 	@GET

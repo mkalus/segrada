@@ -16,6 +16,7 @@ import org.segrada.service.FileService;
 import org.segrada.service.PictogramService;
 import org.segrada.service.TagService;
 import org.segrada.service.base.AbstractRepositoryService;
+import org.segrada.service.base.SegradaService;
 import org.segrada.session.CSRFTokenManager;
 
 import javax.annotation.Nullable;
@@ -68,6 +69,11 @@ public class FileController extends AbstractColoredController<IFile> {
 	@Override
 	protected String getBasePath() {
 		return "/file/";
+	}
+
+	@Override
+	public SegradaService getService() {
+		return service;
 	}
 
 	@GET
@@ -489,8 +495,7 @@ public class FileController extends AbstractColoredController<IFile> {
 	@Produces(MediaType.TEXT_PLAIN)
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@RolesAllowed({"FILE_EDIT", "FILE_EDIT_MINE"})
-	public Response update(@FormDataParam("_csrf") final String csrf, // _csrf checked locally
-	                       @FormDataParam("id") final String id,
+	public Response update(@FormDataParam("id") final String id,
 	                       @FormDataParam("title") final String title,
 	                       @FormDataParam("description") final String description,
 	                       @FormDataParam("descriptionMarkup") final String descriptionMarkup,
@@ -504,6 +509,7 @@ public class FileController extends AbstractColoredController<IFile> {
 	                       @FormDataParam("uploadedFile") final byte[] uploadedFile,
 	                       @FormDataParam("uploadedFile") final FormDataContentDisposition uploadedFileDetail,
 	                       @FormDataParam("uploadedFile") final FormDataBodyPart uploadedFilePart,
+	                       @FormDataParam("_csrf") final String csrf, // _csrf checked locally
 	                       @Context HttpServletRequest request) {
 		// check csrf
 		String sessionToken = CSRFTokenManager.getTokenForSession(request.getSession());

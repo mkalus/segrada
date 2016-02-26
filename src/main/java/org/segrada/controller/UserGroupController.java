@@ -7,6 +7,7 @@ import org.segrada.controller.base.AbstractBaseController;
 import org.segrada.model.UserGroup;
 import org.segrada.model.prototype.IUserGroup;
 import org.segrada.service.UserGroupService;
+import org.segrada.service.base.SegradaService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -111,6 +112,11 @@ public class UserGroupController extends AbstractBaseController<IUserGroup> {
 	@Override
 	protected String getBasePath() {
 		return "/user_group/";
+	}
+
+	@Override
+	public SegradaService getService() {
+		return service;
 	}
 
 	@GET

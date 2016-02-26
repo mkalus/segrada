@@ -13,6 +13,7 @@ import org.segrada.model.prototype.ISource;
 import org.segrada.model.prototype.ITag;
 import org.segrada.service.SourceService;
 import org.segrada.service.TagService;
+import org.segrada.service.base.SegradaService;
 
 import javax.annotation.Nullable;
 import javax.annotation.security.PermitAll;
@@ -54,6 +55,11 @@ public class SourceController extends AbstractColoredController<ISource> {
 	@Override
 	protected String getBasePath() {
 		return "/source/";
+	}
+
+	@Override
+	public SegradaService getService() {
+		return service;
 	}
 
 	@GET

@@ -15,6 +15,7 @@ import org.segrada.rendering.json.JSONConverter;
 import org.segrada.service.NodeService;
 import org.segrada.service.RelationService;
 import org.segrada.service.TagService;
+import org.segrada.service.base.SegradaService;
 
 import javax.annotation.Nullable;
 import javax.annotation.security.PermitAll;
@@ -59,6 +60,11 @@ public class NodeController extends AbstractColoredController<INode> {
 	@Override
 	protected String getBasePath() {
 		return "/node/";
+	}
+
+	@Override
+	public SegradaService getService() {
+		return service;
 	}
 
 	@GET

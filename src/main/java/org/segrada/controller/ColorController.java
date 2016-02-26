@@ -7,6 +7,7 @@ import org.segrada.controller.base.AbstractBaseController;
 import org.segrada.model.Color;
 import org.segrada.model.prototype.IColor;
 import org.segrada.service.ColorService;
+import org.segrada.service.base.SegradaService;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;
@@ -39,6 +40,11 @@ public class ColorController extends AbstractBaseController<IColor> {
 	@Override
 	protected String getBasePath() {
 		return "/color/";
+	}
+
+	@Override
+	public SegradaService getService() {
+		return service;
 	}
 
 	@GET

@@ -5,6 +5,7 @@ import com.google.inject.servlet.RequestScoped;
 import org.segrada.controller.base.AbstractColoredController;
 import org.segrada.model.prototype.IComment;
 import org.segrada.service.CommentService;
+import org.segrada.service.base.SegradaService;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -37,6 +38,11 @@ public class CommentController extends AbstractColoredController<IComment> {
 	@Override
 	protected String getBasePath() {
 		return "/comment/";
+	}
+
+	@Override
+	public SegradaService getService() {
+		return service;
 	}
 
 	@GET

@@ -4,6 +4,9 @@ import com.google.inject.Injector;
 import com.google.inject.servlet.SessionScoped;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
+import org.segrada.controller.base.AbstractBaseController;
+import org.segrada.model.prototype.IUser;
+import org.segrada.model.prototype.SegradaEntity;
 import org.segrada.session.Identity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -76,20 +79,62 @@ public class CheckAuthentication implements MethodInterceptor {
 
                     // check multiple roles
                     boolean matched = false;
+	                boolean isAllEdit = false;
+	                boolean isAllDelete = false;
+	                boolean isOwnEdit = false;
+	                boolean isOwnDelete = false;
                     for (String role : rolesSet)
                         if (identity.getRoles().containsKey(role)) {
                             matched = true;
-                            break;
+	                        if (role.endsWith("_EDIT_MINE")) isOwnEdit = true;
+	                        else if (role.endsWith("_EDIT")) isAllEdit = true;
+	                        else if (role.endsWith("_DELETE_MINE")) isOwnDelete = true;
+	                        else if (role.endsWith("_DELETE")) isAllDelete = true;
                         }
 
                     if (!matched)
                         return returnAccessDenied();
+
+	                // check if we have to check own edit/delete, but not all edit/delete -> check entity!
+	                if ((isOwnEdit && !isAllEdit) || (isOwnDelete && !isAllDelete)) {
+		                try {
+			                // get type of first parameter passed to method
+			                Object argument = invocation.getArguments()[0];
+
+			                if (argument instanceof SegradaEntity) {
+				                SegradaEntity entity = (SegradaEntity) argument;
+				                IUser creator = entity.getCreator();
+
+				                // does creator id match session id?
+				                if (creator == null || !creator.getId().matches(identity.getId()))
+					                return returnAccessDenied();
+			                } else if (argument instanceof String) {
+				                String id = (String) argument;
+
+				                // get class instance
+				                AbstractBaseController controller = (AbstractBaseController)invocation.getThis();
+
+				                // is this an uid?
+				                String realId = controller.getService().convertUidToId(id);
+				                if (realId != null) id = realId; // replace!
+
+				                SegradaEntity entity = controller.getService().findById(id);
+				                IUser creator = entity!=null?entity.getCreator():null;
+
+				                // does creator id match session id?
+				                if (creator == null || !creator.getId().matches(identity.getId()))
+					                return returnAccessDenied();
+			                }
+
+			                // no match -> disallow access
+			                return returnAccessDenied();
+		                } catch (Exception e) {
+			                return returnAccessDenied();
+		                }
+	                }
                 }
             }
         } else if (identity == null) return returnAccessDenied(); // permit all will still check the existence of identity
-
-        // special tests
-        //TODO
 
         if (logger.isDebugEnabled())
             logger.debug("Authentication passed.");

@@ -71,11 +71,7 @@ abstract public class AbstractRepositoryService<BEAN extends SegradaEntity, REPO
 		return repository.count();
 	}
 
-	/**
-	 * convert generic uid to specific repository id
-	 * @param uid
-	 * @return
-	 */
+	@Override
 	public String convertUidToId(String uid) {
 		return repository.convertUidToId(uid);
 	}

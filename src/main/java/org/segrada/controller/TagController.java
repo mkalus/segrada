@@ -13,6 +13,7 @@ import org.segrada.model.prototype.SegradaTaggable;
 import org.segrada.rendering.json.JSONConverter;
 import org.segrada.service.TagService;
 import org.segrada.service.base.AbstractRepositoryService;
+import org.segrada.service.base.SegradaService;
 import org.segrada.service.repository.prototype.CRUDRepository;
 import org.segrada.util.Sluggify;
 
@@ -57,6 +58,11 @@ public class TagController extends AbstractBaseController<ITag> {
 	@Override
 	protected String getBasePath() {
 		return "/tag/";
+	}
+
+	@Override
+	public SegradaService getService() {
+		return service;
 	}
 
 	@GET

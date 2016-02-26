@@ -14,6 +14,7 @@ import org.segrada.service.NodeService;
 import org.segrada.service.RelationService;
 import org.segrada.service.RelationTypeService;
 import org.segrada.service.TagService;
+import org.segrada.service.base.SegradaService;
 
 import javax.annotation.Nullable;
 import javax.annotation.security.RolesAllowed;
@@ -63,6 +64,11 @@ public class RelationController extends AbstractColoredController<IRelation> {
 	@Override
 	protected String getBasePath() {
 		return "/relation/";
+	}
+
+	@Override
+	public SegradaService getService() {
+		return service;
 	}
 
 	@GET

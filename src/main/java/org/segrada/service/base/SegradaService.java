@@ -43,4 +43,11 @@ public interface SegradaService<BEAN extends SegradaEntity> {
 	List<BEAN> findAll();
 
 	long count();
+
+	/**
+	 * convert generic uid to specific repository id
+	 * @param uid generic id
+	 * @return id or null (if not matched)
+	 */
+	String convertUidToId(String uid);
 }
