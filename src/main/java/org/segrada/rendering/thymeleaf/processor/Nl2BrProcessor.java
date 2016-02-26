@@ -3,7 +3,7 @@ package org.segrada.rendering.thymeleaf.processor;
 import org.thymeleaf.Arguments;
 import org.thymeleaf.Configuration;
 import org.thymeleaf.dom.Element;
-import org.thymeleaf.processor.attr.AbstractTextChildModifierAttrProcessor;
+import org.thymeleaf.processor.attr.AbstractUnescapedTextChildModifierAttrProcessor;
 import org.thymeleaf.standard.expression.IStandardExpression;
 import org.thymeleaf.standard.expression.IStandardExpressionParser;
 import org.thymeleaf.standard.expression.StandardExpressions;
@@ -29,7 +29,7 @@ import static org.apache.commons.lang.StringEscapeUtils.escapeHtml;
  *
  * Usage: th:nl2br="'Text'"
  */
-public class Nl2BrProcessor extends AbstractTextChildModifierAttrProcessor {
+public class Nl2BrProcessor extends AbstractUnescapedTextChildModifierAttrProcessor {
 	public Nl2BrProcessor() {
 		super("nl2br");
 	}
