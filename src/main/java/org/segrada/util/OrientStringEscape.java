@@ -21,7 +21,11 @@ import javax.annotation.Nullable;
  *
  * Simple String escape util inspired by deprecated commons method
  */
-public class OrientStringEscape {
+public final class OrientStringEscape {
+	private OrientStringEscape() throws InstantiationException{
+		throw new InstantiationException("The class is not created for instantiation");
+	}
+
 	/**
 	 * <p>Escapes the characters in a <code>String</code> to be suitable to pass to
 	 * an SQL query.</p>

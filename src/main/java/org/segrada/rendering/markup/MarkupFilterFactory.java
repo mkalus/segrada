@@ -22,6 +22,10 @@ import java.util.logging.Logger;
 public class MarkupFilterFactory {
 	private static Logger logger = Logger.getLogger(MarkupFilterFactory.class.getName());
 
+	private MarkupFilterFactory() throws InstantiationException{
+		throw new InstantiationException("The class is not created for instantiation");
+	}
+
 	/**
 	 * poduce a markup filter instance or throw exception
 	 * @param type of markup filter, e.g. "default", null will mean default
