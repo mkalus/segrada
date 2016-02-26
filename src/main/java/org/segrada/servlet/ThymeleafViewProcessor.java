@@ -20,6 +20,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.ext.Provider;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -102,6 +103,15 @@ public class ThymeleafViewProcessor implements ViewProcessor<String> {
 
 		// Define _csrf token
 		context.setVariable("_csrf", CSRFTokenManager.getTokenForSession(context.getHttpSession()));
+		// get identity from session and save it as variable for easy access in frontend
+		Enumeration<String> elements = context.getHttpSession().getAttributeNames();
+		while (elements.hasMoreElements()) {
+			String key = elements.nextElement();
+			if (key.contains("org.segrada.session.Identity")) {
+				context.setVariable("identity", context.getHttpSession().getAttribute(key));
+				break;
+			}
+		}
 
 		// set fixed variables?
 		//context.setVariable("numberFormatter", new NumberFormatter());
