@@ -137,7 +137,9 @@ function escapeHTML(myString) {
 				e2.preventDefault();
 				modal.modal('hide');
 			});
-		});
+		}).fail(function() {
+			alert("ERROR");
+		});;
 	}
 
 	/**
@@ -162,6 +164,8 @@ function escapeHTML(myString) {
 			$('html, body').animate({
 				scrollTop: addedChild.offset().top
 			}, 500);
+		}).fail(function() {
+			alert("ERROR");
 		});
 	}
 
@@ -255,7 +259,9 @@ function escapeHTML(myString) {
 				container.html(data); // replace html in container
 				// call after AJAX event
 				afterAjax(container);
-			});
+			}).fail(function() {
+				alert("ERROR");
+			});;
 			e.preventDefault();
 		});
 
@@ -280,7 +286,9 @@ function escapeHTML(myString) {
 				$('html, body').animate({
 					scrollTop: addedChild.offset().top
 				}, 500);
-			});
+			}).fail(function() {
+				alert("ERROR");
+			});;
 		});
 
 		// *******************************************************
@@ -299,7 +307,9 @@ function escapeHTML(myString) {
 					row.slideUp('fast', function() {
 						row.remove();
 					});
-				});
+				}).fail(function() {
+					alert("ERROR");
+				});;
 			}
 			e.preventDefault();
 		});
@@ -315,7 +325,9 @@ function escapeHTML(myString) {
 				$content.html(content);
 				// call after AJAX event
 				afterAjax($content);
-			});
+			}).fail(function() {
+				alert("ERROR");
+			});;
 
 			// unbind action
 			$(this).removeClass('sg-replace-content');
@@ -413,7 +425,9 @@ function escapeHTML(myString) {
 						alert("Error " + responseText.status + "\n" + responseText.statusText);
 					}
 				});
-			});
+			}).fail(function() {
+				alert("ERROR");
+			});;
 		}).on('hidden.bs.modal', function () {
 			$(".modal-body", $(this)).html($('#sg-wait').html()); // replace by waiting icon
 		});
@@ -999,7 +1013,9 @@ function escapeHTML(myString) {
 				var url = $('#sg-base').html();
 				// reload base url
 				if (data != '') window.location.href = url;
-			});
+			}).fail(function() {
+				alert("ERROR");
+			});;
 			e.preventDefault();
 		});
 
