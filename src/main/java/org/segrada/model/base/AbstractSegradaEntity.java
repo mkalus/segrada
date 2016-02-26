@@ -102,9 +102,9 @@ abstract public class AbstractSegradaEntity implements SegradaEntity {
 	public String getUid() {
 		// cache uid
 		if (this.uid == null) {
-			String uid = convertOrientIdToUid(id);
+			String uidLocal = convertOrientIdToUid(id);
 
-			this.uid = uid==null?"":uid;
+			this.uid = uidLocal==null?"":uidLocal;
 		}
 		return this.uid;
 	}

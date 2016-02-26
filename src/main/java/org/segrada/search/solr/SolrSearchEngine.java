@@ -186,8 +186,8 @@ public class SolrSearchEngine implements SearchEngine {
 				// split tags into array
 				String[] tags = filters.get("tags").split(",");
 				BooleanQuery booleanQuery = new BooleanQuery();
-				for (String tag : tags) {
-					booleanQuery.add(new TermQuery(new Term("tag", tag.trim())), BooleanClause.Occur.SHOULD);
+				for (String tagLocal : tags) {
+					booleanQuery.add(new TermQuery(new Term("tag", tagLocal.trim())), BooleanClause.Occur.SHOULD);
 				}
 				query.addFilterQuery(this.tag, booleanQuery.toString());
 			}
@@ -302,9 +302,9 @@ public class SolrSearchEngine implements SearchEngine {
 		}
 
 		// color
-		Object color = doc.get("color");
-		if (color != null && !(color instanceof String)) color = color.toString();
-		searchHit.setColor(color!=null?new Integer((String)color):null);
+		Object colorLocal = doc.get("color");
+		if (colorLocal != null && !(colorLocal instanceof String)) colorLocal = colorLocal.toString();
+		searchHit.setColor(colorLocal!=null?new Integer((String)colorLocal):null);
 
 		searchHit.setIconFileIdentifier(getOneValueFromField(doc, this.icon));
 

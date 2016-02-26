@@ -47,12 +47,12 @@ public class BinaryDataServiceFile implements BinaryDataService {
 		logger.info("BinaryDataServiceFile implemented as BinaryDataService.");
 
 		// construct save path from settings
-		String savePath = checkNotNull(applicationSettings.getSetting("savePath"), "savePath");
+		String savePathLocal = checkNotNull(applicationSettings.getSetting("savePath"), "savePath");
 
-		if (!savePath.endsWith(File.separator)) savePath += File.separator;
-		savePath += "binary" + File.separator;
+		if (!savePathLocal.endsWith(File.separator)) savePathLocal += File.separator;
+		savePathLocal += "binary" + File.separator;
 
-		this.savePath = new File(savePath);
+		this.savePath = new File(savePathLocal);
 
 		createPath();
 	}
