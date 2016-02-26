@@ -58,7 +58,6 @@ public class OrientDbUserGroupRepository extends AbstractSegradaOrientDbReposito
 		// populate with data
 		document.field("title", entity.getTitle())
 				.field("titleasc", Sluggify.sluggify(entity.getTitle()))
-				.field("active", entity.getActive())
 				.field("roles", entity.getRoles())
 				.field("special", entity.getSpecial());
 

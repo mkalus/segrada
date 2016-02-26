@@ -63,12 +63,6 @@ public interface IUserGroup extends SegradaEntity {
 	Map<String, Integer> getRoles();
 
 	/**
-	 * @return true, if group is active
-	 */
-	Boolean getActive();
-	void setActive(Boolean active);
-
-	/**
 	 * special types of groups have this property set
 	 */
 	String getSpecial();

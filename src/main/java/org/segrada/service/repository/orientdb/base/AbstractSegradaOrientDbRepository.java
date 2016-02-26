@@ -226,7 +226,6 @@ abstract public class AbstractSegradaOrientDbRepository<T extends SegradaEntity>
 		UserGroup userGroup = new UserGroup();
 
 		userGroup.setTitle(document.field("title", String.class));
-		userGroup.setActive(document.field("active", Boolean.class));
 		userGroup.setSpecial(document.field("special", String.class));
 		Map<String, String> roles = document.field("roles", OType.EMBEDDEDMAP);
 		for (Object key : roles.keySet()) {

@@ -77,7 +77,7 @@ public class OrientDbUserGroupRepositoryTest {
 		ODocument document = new ODocument("UserGroup").field("title", "title")
 				.field("titleasc", "titleasc").field("roles", roles)
 				.field("created", 1L).field("modified", 2L)
-				.field("lastLogin", 3L).field("active", true).field("special", "ADMIN");
+				.field("lastLogin", 3L).field("special", "ADMIN");
 
 		IUserGroup userGroup = repository.convertToEntity(document);
 
@@ -87,7 +87,6 @@ public class OrientDbUserGroupRepositoryTest {
 		assertEquals(-1, userGroup.getRole("Test3"));
 		assertEquals(new Long(1L), userGroup.getCreated());
 		assertEquals(new Long(2L), userGroup.getModified());
-		assertEquals(true, userGroup.getActive());
 		assertEquals("ADMIN", userGroup.getSpecial());
 
 		// check if groups are still the same after saving
@@ -105,7 +104,6 @@ public class OrientDbUserGroupRepositoryTest {
 		IUserGroup userGroup = new UserGroup();
 
 		userGroup.setTitle("title");
-		userGroup.setActive(false);
 		userGroup.setCreated(1L);
 		userGroup.setModified(2L);
 		userGroup.setSpecial("ADMIN");
@@ -118,7 +116,6 @@ public class OrientDbUserGroupRepositoryTest {
 
 		assertEquals("title", document.field("title"));
 		assertEquals("title", document.field("titleasc"));
-		assertFalse(document.field("active"));
 		assertEquals(new Long(1L), document.field("created", Long.class));
 		assertEquals(new Long(2L), document.field("modified", Long.class));
 		assertEquals("ADMIN", document.field("special"));
@@ -178,7 +175,6 @@ public class OrientDbUserGroupRepositoryTest {
 		IUserGroup userGroup = new UserGroup();
 
 		userGroup.setTitle("title");
-		userGroup.setActive(false);
 		userGroup.setCreated(1L);
 		userGroup.setModified(2L);
 

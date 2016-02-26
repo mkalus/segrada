@@ -35,8 +35,6 @@ public class UserGroup extends AbstractSegradaEntity implements IUserGroup {
 	@Size(min=1, message = "error.notEmpty")
 	private String title = "";
 
-	private Boolean active;
-
 	/**
 	 * special type of group?
 	 */
@@ -53,7 +51,6 @@ public class UserGroup extends AbstractSegradaEntity implements IUserGroup {
 	public UserGroup() {
 		setCreated(System.currentTimeMillis());
 		setModified(System.currentTimeMillis());
-		active = true;
 		roles = new HashMap<>();
 	}
 
@@ -94,18 +91,9 @@ public class UserGroup extends AbstractSegradaEntity implements IUserGroup {
 		return title;
 	}
 
+	@Override
 	public void setTitle(String title) {
 		this.title = title;
-	}
-
-	@Override
-	public Boolean getActive() {
-		return active;
-	}
-
-	@Override
-	public void setActive(Boolean active) {
-		this.active = active;
 	}
 
 	@Override

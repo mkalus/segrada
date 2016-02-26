@@ -283,7 +283,7 @@ public class AbstractSegradaOrientDbRepositoryTest {
 		ODocument document = new ODocument("UserGroup").field("title", "title")
 				.field("titleasc", "titleasc").field("roles", roles)
 				.field("created", 1L).field("modified", 2L)
-				.field("lastLogin", 3L).field("active", true).field("special", "ADMIN");
+				.field("lastLogin", 3L).field("special", "ADMIN");
 
 		IUserGroup userGroup = mockOrientDbRepository.convertToUserGroup(document);
 
@@ -293,7 +293,6 @@ public class AbstractSegradaOrientDbRepositoryTest {
 		assertEquals(-1, userGroup.getRole("Test3"));
 		assertEquals(new Long(1L), userGroup.getCreated());
 		assertEquals(new Long(2L), userGroup.getModified());
-		assertTrue(userGroup.getActive());
 		assertEquals("ADMIN", userGroup.getSpecial());
 
 		// check if groups are still the same after saving
