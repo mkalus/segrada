@@ -228,7 +228,7 @@ public class NodeController extends AbstractColoredController<INode> {
 	@Path("/update")
 	@Produces(MediaType.TEXT_HTML)
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	@RolesAllowed({"NODE_EDIT", "NODE_EDIT_MINE"})
+	@RolesAllowed({"NODE_ADD", "NODE_EDIT", "NODE_EDIT_MINE"})
 	public Response update(Node entity) {
 		return handleUpdate(entity, service);
 	}

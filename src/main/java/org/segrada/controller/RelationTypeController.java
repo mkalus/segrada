@@ -112,7 +112,7 @@ public class RelationTypeController extends AbstractColoredController<IRelationT
 	@Path("/update")
 	@Produces(MediaType.TEXT_HTML)
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	@RolesAllowed({"RELATION_TYPE_EDIT", "RELATION_TYPE_EDIT_MINE"})
+	@RolesAllowed({"RELATION_TYPE_ADD", "RELATION_TYPE_EDIT", "RELATION_TYPE_EDIT_MINE"})
 	public Response update(RelationType entity) {
 		return handleUpdate(entity, service);
 	}

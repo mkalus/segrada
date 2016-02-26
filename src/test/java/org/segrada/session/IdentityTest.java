@@ -211,4 +211,14 @@ public class IdentityTest {
 		// should return false again
 		assertNull(identity.getRoles());
 	}
+
+	@Test
+	public void textHasEditAccess() throws Exception {
+		//TODO create test
+	}
+
+	@Test
+	public void textHasDeleteAccess() throws Exception {
+		//TODO create test
+	}
 }

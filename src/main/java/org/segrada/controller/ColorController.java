@@ -82,7 +82,7 @@ public class ColorController extends AbstractBaseController<IColor> {
 	@Path("/update")
 	@Produces(MediaType.TEXT_HTML)
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	@RolesAllowed({"COLOR_EDIT", "COLOR_EDIT_MINE"})
+	@RolesAllowed({"COLOR_ADD", "COLOR_EDIT", "COLOR_EDIT_MINE"})
 	public Response update(Color entity) {
 		return handleUpdate(entity, service);
 	}

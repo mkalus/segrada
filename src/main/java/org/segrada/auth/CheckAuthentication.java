@@ -83,6 +83,7 @@ public class CheckAuthentication implements MethodInterceptor {
 	                boolean isAllDelete = false;
 	                boolean isOwnEdit = false;
 	                boolean isOwnDelete = false;
+	                boolean isAdd = false;
                     for (String role : rolesSet)
                         if (identity.getRoles().containsKey(role)) {
                             matched = true;
@@ -90,46 +91,30 @@ public class CheckAuthentication implements MethodInterceptor {
 	                        else if (role.endsWith("_EDIT")) isAllEdit = true;
 	                        else if (role.endsWith("_DELETE_MINE")) isOwnDelete = true;
 	                        else if (role.endsWith("_DELETE")) isAllDelete = true;
+	                        else if (role.endsWith("_ADD")) isAdd = true;
                         }
 
                     if (!matched)
                         return returnAccessDenied();
 
-	                // check if we have to check own edit/delete, but not all edit/delete -> check entity!
-	                if ((isOwnEdit && !isAllEdit) || (isOwnDelete && !isAllDelete)) {
-		                try {
-			                // get type of first parameter passed to method
-			                Object argument = invocation.getArguments()[0];
+	                // method had add/own edit or own delete set
+	                if (isAdd || isOwnEdit || isOwnDelete) {
+		                // new entity? Must have add right!
+		                if (isNewSegradaEntity(invocation)) {
+			                if (!isAdd) return returnAccessDenied();
+			                // add right will pass here
+		                } else if ((isOwnEdit && !isAllEdit) || (isOwnDelete && !isAllDelete)) {
+			                // check if we have to check own edit/delete, but not all edit/delete -> check entity!
 
-			                if (argument instanceof SegradaEntity) {
-				                SegradaEntity entity = (SegradaEntity) argument;
-				                IUser creator = entity.getCreator();
+			                // get entity
+			                SegradaEntity entity = getSegradaEntityFromFirstArgument(invocation);
+			                // try to get creator
+			                IUser creator = entity!=null?entity.getCreator():null;
 
-				                // does creator id match session id?
-				                if (creator == null || !creator.getId().matches(identity.getId()))
-					                return returnAccessDenied();
-			                } else if (argument instanceof String) {
-				                String id = (String) argument;
-
-				                // get class instance
-				                AbstractBaseController controller = (AbstractBaseController)invocation.getThis();
-
-				                // is this an uid?
-				                String realId = controller.getService().convertUidToId(id);
-				                if (realId != null) id = realId; // replace!
-
-				                SegradaEntity entity = controller.getService().findById(id);
-				                IUser creator = entity!=null?entity.getCreator():null;
-
-				                // does creator id match session id?
-				                if (creator == null || !creator.getId().matches(identity.getId()))
-					                return returnAccessDenied();
-			                }
-
-			                // no match -> disallow access
-			                return returnAccessDenied();
-		                } catch (Exception e) {
-			                return returnAccessDenied();
+			                // does creator id match session id?
+			                if (creator == null || !creator.getId().matches(identity.getId()))
+				                return returnAccessDenied();
+			                // all other cases pass
 		                }
 	                }
                 }
@@ -141,6 +126,64 @@ public class CheckAuthentication implements MethodInterceptor {
 
         return invocation.proceed();
     }
+
+	/**
+	 * get segrada entity from method invoction's first agrument
+	 * @param invocation method invocation
+	 * @return entity or null, if nothing found
+	 */
+	private static SegradaEntity getSegradaEntityFromFirstArgument(MethodInvocation invocation) {
+		// sanity checks
+		if (invocation.getArguments() == null || invocation.getArguments().length == 0) return null;
+
+		// get first argument
+		Object argument = invocation.getArguments()[0];
+
+		// check type of argument
+		if (argument instanceof SegradaEntity) // SegradaEntity -> easy
+			return (SegradaEntity) argument;
+		if (argument instanceof String) { // String, might be id or uid
+			String id = (String) argument;
+			if (id.isEmpty()) return null; // empty string = empty entity
+
+			// get class instance
+			AbstractBaseController controller = (AbstractBaseController) invocation.getThis();
+
+			// is this an uid?
+			String realId = controller.getService().convertUidToId(id);
+			if (realId != null) id = realId; // replace!
+
+			return controller.getService().findById(id);
+		}
+
+		// all other cases => null entity
+		return null;
+	}
+
+	/**
+	 * check if entity in first argument is new
+	 * @param invocation method invocation
+	 * @return true on new entity
+	 */
+	private static boolean isNewSegradaEntity(MethodInvocation invocation) {
+		// no arguments -> this is new entity, because this happens only in add methods
+		if (invocation.getArguments() == null || invocation.getArguments().length == 0) return true;
+
+		// get first argument
+		Object argument = invocation.getArguments()[0];
+
+		// check type of argument
+		if (argument instanceof SegradaEntity) {
+			SegradaEntity entity = (SegradaEntity) argument;
+			return entity.getId() == null || entity.getId().isEmpty(); // true on empty id
+		}
+		if (argument instanceof String)
+			return ((String)argument).isEmpty(); // true on empty string
+		if (argument == null) return true;
+
+		// in all other cases
+		return false;
+	}
 
     /**
      * helper to return access denied

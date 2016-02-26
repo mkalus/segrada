@@ -10,7 +10,7 @@
 <body>
 <h1>Search within file partial</h1>
 
-<div th:fragment="withinFile (file, uid)" th:unless="${#strings.isEmpty(file.fullText)}" class="sg-search-within-file">
+<div th:if="${identity.hasAccess('SEARCH')}" th:fragment="withinFile (file, uid)" th:unless="${#strings.isEmpty(file.fullText)}" class="sg-search-within-file">
 	<form class="sg-margin-top sg-simple-form" action="#" method="get" th:action="@{/search/in_document}" th:attr="data-id=${'s-' + uid + '-' + file.uid + '-content'}">
 		<div class="form-group">
 			<label for="s" th:for="${'s-' + uid + '-' + file.uid}" th:text="#{field.searchWithinDocument}">Search within full text of document</label>

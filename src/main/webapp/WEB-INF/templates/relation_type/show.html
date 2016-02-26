@@ -12,7 +12,7 @@
 
 <div class="container">
 	<div class="sg-data sg-source" th:id="${'relation-type-' + entity.uid}">
-		<div th:replace="partials/common :: headerboxright (type=#{Relation_Type},base='relation_type',uid=${entity.uid})"></div>
+		<div th:replace="partials/common :: headerboxright (type=#{Relation_Type},base='relation_type',entity=${entity},access='RELATION_TYPE')"></div>
 		<div th:replace="partials/common :: taglist (tags=${entity.tags})"></div>
 		<h4 class="sg-data-header">
 			<span class="fa fa-paperclip" th:title="#{Relation_Type}"></span>

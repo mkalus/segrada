@@ -215,7 +215,7 @@ public class SourceController extends AbstractColoredController<ISource> {
 	@Path("/update")
 	@Produces(MediaType.TEXT_HTML)
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	@RolesAllowed({"SOURCE_EDIT", "SOURCE_EDIT_MINE"})
+	@RolesAllowed({"SOURCE_ADD", "SOURCE_EDIT", "SOURCE_EDIT_MINE"})
 	public Response update(Source entity) {
 		return handleUpdate(entity, service);
 	}

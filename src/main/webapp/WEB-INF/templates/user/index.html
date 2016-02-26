@@ -34,8 +34,8 @@
 				<td class="text-right">
 					<div class="sg-data-icon-bar" role="group" aria-label="Actions" th:strip-whitespace="shallow">
 						<a class="sg-data-icon sg-data-add" href="#" th:title="#{Show}" th:href="@{/user/show/{uid}(uid=${entity.uid})}"><i class="fa fa-eye"></i></a>
-						<a class="sg-data-icon sg-data-add" href="#" th:title="#{Edit}" th:href="@{/user/edit/{uid}(uid=${entity.uid})}"><i class="fa fa-pencil"></i></a>
-						<a class="sg-data-icon sg-control-confirm" href="#" th:title="#{Delete}" th:href="@{/user/delete/{uid}/0(uid=${entity.uid})}" th:attr="data-confirm=${#messages.msg('ReallyDelete', entity.title)}"><i class="fa fa-times-circle-o"></i></a>
+						<a th:if="${identity.hasAccess('ADMIN')}" class="sg-data-icon sg-data-add" href="#" th:title="#{Edit}" th:href="@{/user/edit/{uid}(uid=${entity.uid})}"><i class="fa fa-pencil"></i></a>
+						<a th:if="${identity.hasAccess('ADMIN')}" class="sg-data-icon sg-control-confirm" href="#" th:title="#{Delete}" th:href="@{/user/delete/{uid}/0(uid=${entity.uid})}" th:attr="data-confirm=${#messages.msg('ReallyDelete', entity.title)}"><i class="fa fa-times-circle-o"></i></a>
 					</div>
 				</td>
 			</tr>

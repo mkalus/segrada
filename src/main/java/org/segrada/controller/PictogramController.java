@@ -185,7 +185,7 @@ public class PictogramController extends AbstractBaseController<IPictogram> {
 	@Path("/update")
 	@Produces(MediaType.TEXT_PLAIN)
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
-	@RolesAllowed({"PICTOGRAM_EDIT_MINE", "PICTOGRAM_EDIT"})
+	@RolesAllowed({"PICTOGRAM_ADD", "PICTOGRAM_EDIT_MINE", "PICTOGRAM_EDIT"})
 	public Response update(@FormDataParam("id") final String id,
 	                       @FormDataParam("title") final String title,
 	                       @FormDataParam("uploadedImage") final byte[] uploadedImage,

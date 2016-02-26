@@ -159,7 +159,7 @@ public class TagController extends AbstractBaseController<ITag> {
 	@Path("/update")
 	@Produces(MediaType.TEXT_HTML)
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	@RolesAllowed({"TAG_EDIT_MINE", "TAG_EDIT"})
+	@RolesAllowed({"TAG_ADD", "TAG_EDIT_MINE", "TAG_EDIT"})
 	public Response update(Tag entity) {
 		return handleUpdate(entity, service);
 	}

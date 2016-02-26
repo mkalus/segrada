@@ -12,7 +12,7 @@
 
 <div class="container">
 	<div class="sg-data sg-relation" th:id="${'relation-' + entity.uid}">
-		<div th:replace="partials/common :: headerboxright (type=#{Relation},base='relation',uid=${entity.uid},graphUrl=@{/relation/graph/{uid}(uid=${entity.uid})})"></div>
+		<div th:replace="partials/common :: headerboxright (type=#{Relation},base='relation',entity=${entity},graphUrl=@{/relation/graph/{uid}(uid=${entity.uid})},access='RELATION')"></div>
 		<div th:replace="partials/common :: taglist (prefixTags=${entity.relationType.tags},tags=${entity.tags})"></div>
 		<h4 class="sg-data-header">
 			<span class="fa fa-chain" th:title="#{Relation}"></span>

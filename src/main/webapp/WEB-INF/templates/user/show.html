@@ -12,7 +12,7 @@
 
 <div class="container">
 	<div class="sg-data sg-user" th:id="${'user-' + entity.uid}">
-		<div th:replace="partials/common :: headerboxright (type=#{User},base='user',uid=${entity.uid})"></div>
+		<div th:replace="partials/common :: headerboxright (type=#{User},base='user',entity=${entity},access='ADMIN')"></div>
 		<h4 class="sg-data-header"><span class="fa fa-user" th:title="#{User}"></span> <span th:text="${entity.name}">User</span></h4>
 
 		<div class="sg-user-data sg-margin-top sg-margin-bottom">

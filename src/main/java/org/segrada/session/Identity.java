@@ -5,6 +5,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.segrada.model.prototype.IUser;
 import org.segrada.model.prototype.IUserGroup;
+import org.segrada.model.prototype.SegradaEntity;
 
 import java.io.Serializable;
 import java.util.Map;
@@ -56,7 +57,7 @@ public class Identity implements Serializable {
 	}
 
 	public boolean hasRole(String role) {
-		return this.user != null && this.user.getGroup().hasRole(role);
+		return isAuthenticated() && this.user.getGroup().hasRole(role);
 	}
 
 	/**
@@ -79,7 +80,45 @@ public class Identity implements Serializable {
 	 * @return true if any role matches or is admin
 	 */
 	public boolean hasAccess(String roles) {
-		return hasRole("ADMIN") || hasAnyRole(roles);
+		return isAuthenticated() && (hasRole("ADMIN") || hasAnyRole(roles));
+	}
+
+	/**
+	 * return true if edit access for this entity
+	 * @param entity to check
+	 * @param type of entity, e.g. NODE
+	 * @return true if edit access available
+	 */
+	public boolean hasEditAccess(SegradaEntity entity, String type) {
+		return hasXAccess(entity, type + "_EDIT");
+	}
+
+	/**
+	 * return true if delete access for this entity
+	 * @param entity to check
+	 * @param type of entity, e.g. NODE
+	 * @return true if delete access available
+	 */
+	public boolean hasDeleteAccess(SegradaEntity entity, String type) {
+		return hasXAccess(entity, type + "_DELETE");
+	}
+
+	/**
+	 * helper for hasEditAccess and hasDeleteAccess
+	 * @param entity to check
+	 * @param action of entity, e.g. NODE
+	 * @return true if access granted
+	 */
+	private boolean hasXAccess(SegradaEntity entity, String action) {
+		if (entity == null || !isAuthenticated()) return false;
+		if (hasRole("ADMIN") || hasRole(action)) return true;
+
+		if (hasRole(action + "_MINE")) {
+			IUser creator = entity.getCreator();
+
+			return creator != null && creator.getId().matches(getId());
+		}
+		return false;
 	}
 
 	public int getRole(String role) {

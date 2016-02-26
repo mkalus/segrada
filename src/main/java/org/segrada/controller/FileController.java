@@ -494,7 +494,7 @@ public class FileController extends AbstractColoredController<IFile> {
 	@Path("/update")
 	@Produces(MediaType.TEXT_PLAIN)
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
-	@RolesAllowed({"FILE_EDIT", "FILE_EDIT_MINE"})
+	@RolesAllowed({"FILE_ADD", "FILE_EDIT", "FILE_EDIT_MINE"})
 	public Response update(@FormDataParam("id") final String id,
 	                       @FormDataParam("title") final String title,
 	                       @FormDataParam("description") final String description,
