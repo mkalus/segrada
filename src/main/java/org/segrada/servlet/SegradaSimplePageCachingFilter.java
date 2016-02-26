@@ -177,23 +177,37 @@ public class SegradaSimplePageCachingFilter extends SimplePageCachingFilter {
 			}
 		}
 
-		// convert query string to md5
-		String qs = queryString.toString();
-		// do we actually need to convert to md5? qs are not so long in general
-		if (!qs.isEmpty())
+		// get session id - make session dependent
+		Identity identity = injector.getInstance(Identity.class);
+		String id;
+		// not logged in/no session
+		if (identity == null || !identity.isAuthenticated() || identity.getId() == null)
+			id = "NOTLOGGEDIN";
+		// admin view? all admins get the same view
+		else if (identity.hasRole("ADMIN"))
+			id = "ADMIN";
+		// single user cache - might have access to certain elements only
+		else id = identity.getId();
+
+		// create key
+		return httpRequest.getMethod() + language + urlPart + id + encode(queryString);
+	}
+
+	/**
+	 * encode (md5) string builder
+	 * @param sb string builder to encode
+	 * @return encoded string
+	 */
+	private String encode(StringBuilder sb) {
+		String encoded = sb.toString();
+		// do we actually need to convert to md5?
+		if (!encoded.isEmpty())
 			try {
 				MessageDigest md = MessageDigest.getInstance("MD5");
-				qs = Hex.encodeHexString(md.digest(qs.getBytes("UTF-8")));
+				encoded = Hex.encodeHexString(md.digest(encoded.getBytes("UTF-8")));
 			} catch (Exception e) {
 				// do nothing - just use query string as it is
 			}
-
-		// get session id
-		//Identity identity = injector.getInstance(Identity.class);
-		//identity.getId()
-		//TODO: add this later after we have added ACLs - not all users see the same stuff
-
-		// create key
-		return httpRequest.getMethod() + language + urlPart + qs;
+		return encoded;
 	}
 }
