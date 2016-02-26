@@ -55,7 +55,7 @@ public class UserGroupController extends AbstractBaseController<IUserGroup> {
 		put("Pictograms", new String[]{ "PICTOGRAM", "PICTOGRAM_ADD", "PICTOGRAM_EDIT_MINE", "PICTOGRAM_EDIT", "PICTOGRAM_DELETE_MINE", "PICTOGRAM_DELETE" });
 		put("Tags", new String[]{ "TAG", "TAG_ADD", "TAG_EDIT_MINE", "TAG_EDIT", "TAG_DELETE_MINE", "TAG_DELETE" });
 		put("Colors", new String[]{ "COLOR", "COLOR_ADD", "COLOR_EDIT_MINE", "COLOR_EDIT", "COLOR_DELETE_MINE", "COLOR_DELETE" });
-		put("Graphs", new String[]{ "GRAPH" });
+		put("Data", new String[]{ "SEARCH", "GRAPH" });
 		put("Administration", new String[]{ "ADMIN", "CLEAR_CACHE" });
 		put("Users", new String[]{ "USER", "GROUP", "MY_PROFILE" });
 	}};
@@ -75,7 +75,7 @@ public class UserGroupController extends AbstractBaseController<IUserGroup> {
 			"PICTOGRAM", "PICTOGRAM_ADD", "PICTOGRAM_EDIT_MINE", "PICTOGRAM_EDIT", "PICTOGRAM_DELETE_MINE", "PICTOGRAM_DELETE",
 			"TAG", "TAG_ADD", "TAG_EDIT_MINE", "TAG_EDIT", "TAG_DELETE_MINE", "TAG_DELETE",
 			"COLOR", "COLOR_ADD", "COLOR_EDIT_MINE", "COLOR_EDIT", "COLOR_DELETE_MINE", "COLOR_DELETE",
-			"GRAPH",
+			"SEARCH", "GRAPH",
 			"ADMIN", "CLEAR_CACHE",
 			"USER", "GROUP", "MY_PROFILE"
 	));
@@ -96,7 +96,7 @@ public class UserGroupController extends AbstractBaseController<IUserGroup> {
 				"PICTOGRAM", "ACCESS", "PICTOGRAM_ADD", "ADD", "PICTOGRAM_EDIT_MINE", "EDIT_MINE", "PICTOGRAM_EDIT", "EDIT", "PICTOGRAM_DELETE_MINE", "DELETE_MINE", "PICTOGRAM_DELETE", "DELETE",
 				"TAG", "ACCESS", "TAG_ADD", "ADD", "TAG_EDIT_MINE", "EDIT_MINE", "TAG_EDIT", "EDIT", "TAG_DELETE_MINE", "DELETE_MINE", "TAG_DELETE", "DELETE",
 				"COLOR", "ACCESS", "COLOR_ADD", "ADD", "COLOR_EDIT_MINE", "EDIT_MINE", "COLOR_EDIT", "EDIT", "COLOR_DELETE_MINE", "DELETE_MINE", "COLOR_DELETE", "DELETE",
-				"GRAPH", "GRAPH",
+				"SEARCH", "SEARCH", "GRAPH", "GRAPH",
 				"ADMIN", "ADMIN", "CLEAR_CACHE", "CLEAR_CACHE",
 				"USER", "USER_ACCESS", "GROUP", "GROUP_ACCESS", "MY_PROFILE", "MY_PROFILE"
 		};
