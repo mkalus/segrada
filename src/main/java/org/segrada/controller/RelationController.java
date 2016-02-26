@@ -328,9 +328,6 @@ public class RelationController extends AbstractColoredController<IRelation> {
 
 			response.put("nodes", nodes);
 			response.put("edges", edges);
-			//response.put("removeNodes", new JSONArray());
-			//response.put("removeEdges", new JSONArray());
-			//response.put("highlightNode", null);
 			response.put("highlightEdge", relation.getId());
 
 			return response.toString();

@@ -38,14 +38,7 @@ public class SegradaMessageResolutionUtils {
 	private static final Logger logger = LoggerFactory.getLogger(StandardMessageResolutionUtils.class);
 
 	private static final Object[] EMPTY_MESSAGE_PARAMETERS = new Object[0];
-
-	/*private static final String THYMELEAF_MARKUP_SUFFIX = ".thtml";
-	private static final String XML_SUFFIX = ".xml";
-	private static final String XHTML_SUFFIX = ".xhtml";
-	private static final String HTML_SUFFIX = ".html";
-	private static final String HTM_SUFFIX = ".htm";
-	private static final String JSP_SUFFIX = ".jsp";*/
-
+	
 	private static final String TEMPLATE_CACHE_PREFIX = "{template_msg}";
 
 	public static String resolveMessageForTemplate(
@@ -57,8 +50,7 @@ public class SegradaMessageResolutionUtils {
 		Validate.notNull(key, "Message key cannot be null");
 
 		final Locale locale = arguments.getContext().getLocale();
-
-		//final String templateName = arguments.getTemplateResolution().getTemplateName();
+		
 		final String templateName = "messages";
 		final String cacheKey = TEMPLATE_CACHE_PREFIX + templateName + '_' + locale.toString();
 
@@ -107,12 +99,9 @@ public class SegradaMessageResolutionUtils {
 
 		Validate.notNull(arguments, "Arguments cannot be null");
 		Validate.notNull(arguments.getContext().getLocale(), "Locale in context cannot be null");
-
-		//final String resourceName = arguments.getTemplateResolution().getResourceName();
+		
 		final IResourceResolver resourceResolver = arguments.getTemplateResolution().getResourceResolver();
 		final Locale locale = arguments.getContext().getLocale();
-
-		//final String templateBaseName = getTemplateFileNameBase(resourceName);
 
 		final String templateBaseName = "/WEB-INF/i18n/messages";
 
@@ -120,34 +109,6 @@ public class SegradaMessageResolutionUtils {
 				arguments, resourceResolver, templateBaseName, locale, defaultMessages);
 
 	}
-
-
-
-
-	/*private static String getTemplateFileNameBase(final String templateFileName) {
-		if (templateFileName.endsWith(THYMELEAF_MARKUP_SUFFIX)) {
-			return templateFileName.substring(0, templateFileName.length() - THYMELEAF_MARKUP_SUFFIX.length());
-		}
-		if (templateFileName.endsWith(HTML_SUFFIX)) {
-			return templateFileName.substring(0, templateFileName.length() - HTML_SUFFIX.length());
-		}
-		if (templateFileName.endsWith(XHTML_SUFFIX)) {
-			return templateFileName.substring(0, templateFileName.length() - XHTML_SUFFIX.length());
-		}
-		if (templateFileName.endsWith(HTM_SUFFIX)) {
-			return templateFileName.substring(0, templateFileName.length() - HTM_SUFFIX.length());
-		}
-		if (templateFileName.endsWith(XML_SUFFIX)) {
-			return templateFileName.substring(0, templateFileName.length() - XML_SUFFIX.length());
-		}
-		if (templateFileName.endsWith(JSP_SUFFIX)) {
-			return templateFileName.substring(0, templateFileName.length() - JSP_SUFFIX.length());
-		}
-		return templateFileName;
-	}*/
-
-
-
 
 	private SegradaMessageResolutionUtils() {
 		super();

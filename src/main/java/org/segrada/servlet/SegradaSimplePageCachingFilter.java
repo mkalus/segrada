@@ -89,7 +89,6 @@ public class SegradaSimplePageCachingFilter extends SimplePageCachingFilter {
 			PageInfo pageInfo = this.buildPage(servletRequest, servletResponse, filterChain);
 			if(pageInfo.isOk()) {
 				if(!servletResponse.isCommitted()) {
-					//throw new AlreadyCommittedException("Response already committed after doing buildPage but before writing response from PageInfo.");
 					this.writeResponse(servletRequest, servletResponse, pageInfo);
 				}
 			}

@@ -320,10 +320,7 @@ public class NodeController extends AbstractColoredController<INode> {
 
 			response.put("nodes", nodes);
 			response.put("edges", edges);
-			//response.put("removeNodes", new JSONArray());
-			//response.put("removeEdges", new JSONArray());
 			response.put("highlightNode", node.getId());
-			//response.put("highlightEdge", null);
 
 			return response.toString();
 		} catch (Exception e) {

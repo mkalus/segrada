@@ -18,7 +18,6 @@ package org.segrada.model.prototype;
  * Color model interface
  */
 public interface IColor extends SegradaEntity {
-	//String getTitle();
 	void setTitle(String title);
 
 	Integer getColor();

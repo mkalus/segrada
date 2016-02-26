@@ -83,7 +83,6 @@ public class DateTimeFormatProcessor extends AbstractMarkupSubstitutionElementPr
 		if (number == null || format == null || format.isEmpty()) {
 			text = "";
 		} else {
-			//Instant instant = new Instant(number);
 			DateTimeFormatter formatter = DateTimeFormat.forPattern(format);
 			text = formatter.print(number);
 		}

@@ -55,9 +55,6 @@ public final class TableSortPreprocessor {
 						icon = getIcon(false);
 						if (!field.equals(defaultField)) // only if not default field
 							url = createSortUrl(baseUrl, field, "none");
-					} else {
-						//icon = getIcon(false);
-						//url = createSortUrl(baseUrl, field, "asc"); // not changed
 					}
 				}
 			} else if (sortDirection != null && sortDirection.equals("none") && field.equals(defaultField)) {

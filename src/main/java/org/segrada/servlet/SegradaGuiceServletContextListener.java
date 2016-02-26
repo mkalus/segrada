@@ -44,8 +44,6 @@ public class SegradaGuiceServletContextListener extends GuiceServletContextListe
 				new ServletModule() {
 					@Override
 					protected void configureServlets() {
-						//getServletContext().setInitParameter("javax.ws.rs.Application", "org.segrada.SegradaApplication");
-
 						bind(MainController.class);
 						bind(ColorController.class);
 						bind(CommentController.class);
