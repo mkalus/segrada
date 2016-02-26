@@ -526,8 +526,8 @@ public class OrientDbTagRepository extends AbstractSegradaOrientDbRepository<ITa
 			boolean first = true;
 			for (String tag : (String[]) filters.get("tags")) {
 				if (first) first = false;
-				else sb.append(",");
-				sb.append("'").append(OrientStringEscape.escapeOrientSql(tag)).append("'");
+				else sb.append(',');
+				sb.append('\'').append(OrientStringEscape.escapeOrientSql(tag)).append('\'');
 			}
 
 			constraints.add(sb.append("]").toString());

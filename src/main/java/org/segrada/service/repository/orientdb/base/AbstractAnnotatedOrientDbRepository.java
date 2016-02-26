@@ -197,10 +197,10 @@ abstract public class AbstractAnnotatedOrientDbRepository<T extends SegradaAnnot
 			boolean first = true;
 			for (String tag : tags) {
 				if (first) first = false;
-				else sb.append(",");
-				sb.append("'").append(OrientStringEscape.escapeOrientSql(tag)).append("'");
+				else sb.append(',');
+				sb.append('\'').append(OrientStringEscape.escapeOrientSql(tag)).append('\'');
 			}
-			sb.append("]");
+			sb.append(']');
 
 			// with sub tags?
 			if (withSubTags) {
@@ -223,7 +223,7 @@ abstract public class AbstractAnnotatedOrientDbRepository<T extends SegradaAnnot
 				first = true;
 				for (String tagId : subTagIds) {
 					if (first) first = false;
-					else sb.append(",");
+					else sb.append(',');
 					sb.append(tagId);
 				}
 
