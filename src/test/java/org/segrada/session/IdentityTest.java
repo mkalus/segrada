@@ -145,19 +145,19 @@ public class IdentityTest {
 		user.setName("Testini");
 		user.setGroup(group);
 
-		assertFalse(identity.hasAnyRole("Test3", "Test"));
-		assertFalse(identity.hasAnyRole("Test5", "Test2"));
+		assertFalse(identity.hasAnyRole("Test3,Test"));
+		assertFalse(identity.hasAnyRole("Test5,Test2"));
 
 		identity.setUser(user);
 
-		assertTrue(identity.hasAnyRole("Test3", "Test"));
-		assertFalse(identity.hasAnyRole("Test5", "Test2"));
+		assertTrue(identity.hasAnyRole("Test3,Test"));
+		assertFalse(identity.hasAnyRole("Test5,Test2"));
 
 		// logout
 		identity.logout();
 
 		// should return false again
-		assertFalse(identity.hasAnyRole("Test3", "Test"));
+		assertFalse(identity.hasAnyRole("Test3,Test"));
 	}
 
 	@Test

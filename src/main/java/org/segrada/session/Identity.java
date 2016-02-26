@@ -61,14 +61,25 @@ public class Identity implements Serializable {
 
 	/**
 	 * checks whether any role fits
-	 * @param role list of possible roles
+	 * @param roles comma separated list of possible roles
 	 * @return true if any role matches
 	 */
-	public boolean hasAnyRole(String... role) {
+	public boolean hasAnyRole(String roles) {
+		String role[] = roles.split(",");
+
 		for(int i=0; i<role.length; i++){
 			if (hasRole(role[i])) return true;
 		}
 		return false;
+	}
+
+	/**
+	 * check access, also include admin check
+	 * @param roles comma separated list of possible roles
+	 * @return true if any role matches or is admin
+	 */
+	public boolean hasAccess(String roles) {
+		return hasRole("ADMIN") || hasAnyRole(roles);
 	}
 
 	public int getRole(String role) {
