@@ -12,7 +12,7 @@
 
 <div class="container">
 	<div class="sg-control-content sg-node" th:with="myurl=@{${baseUrl}?${baseUrl}:'/node'}">
-		<div class="pull-right">
+		<div class="pull-right" th:if="${identity.hasAccess('NODE_ADD')}">
 			<a href="#" th:href="@{/node/add}" th:title="#{add.node}" class="btn btn-success btn-sm sg-data-add"><i class="fa fa-plus"></i></a>
 		</div>
 

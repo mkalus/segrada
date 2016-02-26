@@ -12,7 +12,7 @@
 
 <div class="container">
     <div class="sg-control-content sg-user-group">
-        <div class="pull-right">
+        <div class="pull-right" th:if="${identity.hasAccess('ADMIN')}">
             <a href="#" th:href="@{/user_group/add}" th:title="#{add.userGroup}" class="btn btn-success btn-sm sg-data-add"><i class="fa fa-plus"></i></a>
         </div>
 

@@ -12,7 +12,7 @@
 
 <div class="container">
 	<div class="sg-control-content sg-source" th:with="myurl=@{${baseUrl}?${baseUrl}:'/source'}">
-		<div class="pull-right">
+		<div class="pull-right" th:if="${identity.hasAccess('SOURCE_ADD')}">
 			<a href="#" th:href="@{/source/add}" th:title="#{add.source}" class="btn btn-success btn-sm sg-data-add"><i class="fa fa-plus"></i></a>
 		</div>
 

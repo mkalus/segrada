@@ -12,7 +12,7 @@
 
 <div class="container">
 	<div class="sg-control-content sg-file" th:with="myurl=@{${baseUrl}?${baseUrl}:'/file'}">
-		<div class="pull-right">
+		<div class="pull-right" th:if="${identity.hasAccess('FILE_ADD')}">
 			<a href="#" th:href="@{/file/add}" th:title="#{add.file}" class="btn btn-success btn-sm sg-data-add"><i class="fa fa-plus"></i></a>
 		</div>
 

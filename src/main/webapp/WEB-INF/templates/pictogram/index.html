@@ -12,7 +12,7 @@
 
 <div class="container">
 	<div class="sg-control-content sg-pictogram">
-		<div class="pull-right">
+		<div class="pull-right" th:if="${identity.hasAccess('PICTOGRAM_ADD')}">
 			<a href="#" th:href="@{/pictogram/add}" th:title="#{add.pictogram}" class="btn btn-success btn-sm sg-data-add"><i class="fa fa-plus"></i></a>
 		</div>
 
