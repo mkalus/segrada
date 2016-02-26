@@ -59,6 +59,18 @@ public class Identity implements Serializable {
 		return this.user != null && this.user.getGroup().hasRole(role);
 	}
 
+	/**
+	 * checks whether any role fits
+	 * @param role list of possible roles
+	 * @return true if any role matches
+	 */
+	public boolean hasAnyRole(String... role) {
+		for(int i=0; i<role.length; i++){
+			if (hasRole(role[i])) return true;
+		}
+		return false;
+	}
+
 	public int getRole(String role) {
 		return this.user==null?0:this.user.getGroup().getRole(role);
 	}

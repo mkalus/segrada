@@ -132,6 +132,34 @@ public class IdentityTest {
 		assertFalse(identity.hasRole("Test"));
 	}
 
+
+	@Test
+	public void testHasAnyRole() throws Exception {
+		Identity identity = new Identity();
+		IUserGroup group = new UserGroup();
+		group.setTitle("Test");
+		group.setRole("Test");
+		group.setRole("Test1");
+		IUser user = new User();
+		user.setId("#99:99");
+		user.setName("Testini");
+		user.setGroup(group);
+
+		assertFalse(identity.hasAnyRole("Test3", "Test"));
+		assertFalse(identity.hasAnyRole("Test5", "Test2"));
+
+		identity.setUser(user);
+
+		assertTrue(identity.hasAnyRole("Test3", "Test"));
+		assertFalse(identity.hasAnyRole("Test5", "Test2"));
+
+		// logout
+		identity.logout();
+
+		// should return false again
+		assertFalse(identity.hasAnyRole("Test3", "Test"));
+	}
+
 	@Test
 	public void testGetRole() throws Exception {
 		Identity identity = new Identity();
