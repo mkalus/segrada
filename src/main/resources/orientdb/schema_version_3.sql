@@ -2,6 +2,7 @@
 create class UserGroup
 create property UserGroup.title String
 create property UserGroup.titleasc String
+create property UserGroup.description String
 create property UserGroup.roles EMBEDDEDMAP<String, Integer>
 create property UserGroup.created Datetime
 create property UserGroup.modified Datetime

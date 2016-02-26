@@ -33,6 +33,7 @@ public class UserGroupTest {
 	public void testValidUserGroup() throws Exception {
 		final UserGroup userGroup = new UserGroup();
 		userGroup.setTitle("test");
+		userGroup.setDescription("description");
 		userGroup.setSpecial("ADMIN");
 		Set<ConstraintViolation<UserGroup>> constraintViolations = validator.validate(userGroup);
 		assertTrue("UserGroup not valid", constraintViolations.size() == 0);

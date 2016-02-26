@@ -283,11 +283,12 @@ public class AbstractSegradaOrientDbRepositoryTest {
 		ODocument document = new ODocument("UserGroup").field("title", "title")
 				.field("titleasc", "titleasc").field("roles", roles)
 				.field("created", 1L).field("modified", 2L)
-				.field("lastLogin", 3L).field("special", "ADMIN");
+				.field("lastLogin", 3L).field("special", "ADMIN").field("description", "description");
 
 		IUserGroup userGroup = mockOrientDbRepository.convertToUserGroup(document);
 
 		assertEquals("title", userGroup.getTitle());
+		assertEquals("description", userGroup.getDescription());
 		assertEquals(1, userGroup.getRole("Test"));
 		assertEquals(0, userGroup.getRole("Test2"));
 		assertEquals(-1, userGroup.getRole("Test3"));

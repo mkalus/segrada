@@ -23,6 +23,9 @@ public interface IUserGroup extends SegradaEntity {
 	//String getTitle();
 	void setTitle(String title);
 
+	String getDescription();
+	void setDescription(String description);
+
 	/**
 	 * define user role
 	 * @param role to set
