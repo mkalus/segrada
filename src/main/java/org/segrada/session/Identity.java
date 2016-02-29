@@ -66,7 +66,7 @@ public class Identity implements Serializable {
 	 * @return true if any role matches
 	 */
 	public boolean hasAnyRole(String roles) {
-		String role[] = roles.split(",");
+		String[] role = roles.split(",");
 
 		for(int i=0; i<role.length; i++){
 			if (hasRole(role[i])) return true;

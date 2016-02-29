@@ -534,7 +534,7 @@ public class FileController extends AbstractColoredController<IFile> {
 			for (FormDataBodyPart part : tagParts)
 				tagList.add(part.getValueAs(String.class));
 		} else tagList = new ArrayList<>(0);
-		String tags[] = new String[tagList.size()];
+		String[] tags = new String[tagList.size()];
 		tagList.toArray(tags);
 
 		// add data

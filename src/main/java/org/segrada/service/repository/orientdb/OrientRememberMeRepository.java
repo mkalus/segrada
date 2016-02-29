@@ -197,7 +197,7 @@ public class OrientRememberMeRepository implements RememberMeRepository {
 
 		Token(String token) {
 			if (token != null && !token.isEmpty()) {
-				String parts[] = token.split(":");
+				String[] parts = token.split(":");
 				if (parts.length == 2) {
 					this.selector = parts[0];
 					String hashedToken;
