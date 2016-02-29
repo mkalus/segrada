@@ -31,6 +31,29 @@ abstract public class AbstractSegradaEntity implements SegradaEntity {
 	public static final Pattern PATTERN_UID = Pattern.compile("^(\\d+)-(\\d+)$");
 
 	/**
+	 * document version (may be 0)
+	 */
+	private int version = 0;
+
+	/**
+	 * document id (may be null)
+	 */
+	private String id = null;
+
+	/**
+	 * cached uid
+	 */
+	private String uid = null;
+
+	private Long created = 0L;
+
+	private Long modified = 0L;
+
+	private IUser creator;
+
+	private IUser modifier;
+
+	/**
 	 * Convert an orient id (#99:0) to generic id (99-0)
 	 * @param orientId string representation of id
 	 * @return generic id or null
@@ -53,29 +76,6 @@ abstract public class AbstractSegradaEntity implements SegradaEntity {
 		if (!matcher.find()) return null;
 		return matcher.replaceAll("#$1:$2");
 	}
-
-	/**
-	 * document version (may be 0)
-	 */
-	private int version = 0;
-
-	/**
-	 * document id (may be null)
-	 */
-	private String id = null;
-
-	/**
-	 * cached uid
-	 */
-	private String uid = null;
-
-	private Long created = 0L;
-
-	private Long modified = 0L;
-
-	private IUser creator;
-
-	private IUser modifier;
 
 	@Override
 	public int getVersion() {

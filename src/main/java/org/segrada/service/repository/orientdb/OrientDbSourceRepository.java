@@ -37,6 +37,11 @@ import java.util.*;
  */
 public class OrientDbSourceRepository extends AbstractAnnotatedOrientDbRepository<ISource> implements SourceRepository {
 	/**
+	 * keep allowed sorting fields here
+	 */
+	private static final Set<String> allowedSorts = new HashSet<>(Arrays.asList(new String[]{"shortTitleAsc", "shortRef"}));
+
+	/**
 	 * Constructor
 	 */
 	@Inject
@@ -179,12 +184,7 @@ public class OrientDbSourceRepository extends AbstractAnnotatedOrientDbRepositor
 
 		return hits;
 	}
-
-	/**
-	 * keep allowed sorting fields here
-	 */
-	private static final Set<String> allowedSorts = new HashSet<>(Arrays.asList(new String[]{"shortTitleAsc", "shortRef"}));
-
+	
 	@Override
 	public PaginationInfo<ISource> paginate(int page, int entriesPerPage, Map<String, Object> filters) {
 		// avoid NPEs

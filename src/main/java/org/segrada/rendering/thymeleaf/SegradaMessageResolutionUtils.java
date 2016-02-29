@@ -41,6 +41,10 @@ public class SegradaMessageResolutionUtils {
 	
 	private static final String TEMPLATE_CACHE_PREFIX = "{template_msg}";
 
+	private SegradaMessageResolutionUtils() {
+		super();
+	}
+
 	public static String resolveMessageForTemplate(
 			final Arguments arguments, final String key, final Object[] messageParameters,
 			final Properties defaultMessages) {
@@ -110,7 +114,4 @@ public class SegradaMessageResolutionUtils {
 
 	}
 
-	private SegradaMessageResolutionUtils() {
-		super();
-	}
 }

@@ -51,6 +51,11 @@ public class OrientDbRelationRepository extends AbstractCoreOrientDbRepository<I
 	private static final Logger logger = LoggerFactory.getLogger(OrientDbRelationRepository.class);
 
 	/**
+	 * keep allowed sorting fields here
+	 */
+	private static final Set<String> allowedSorts = new HashSet<>(Arrays.asList(new String[]{"minJD", "maxJD"}));
+
+	/**
 	 * Constructor
 	 */
 	@Inject
@@ -62,7 +67,7 @@ public class OrientDbRelationRepository extends AbstractCoreOrientDbRepository<I
 	public String getModelClassName() {
 		return "Relation";
 	}
-
+	
 	@Override
 	public IRelation convertToEntity(ODocument document) {
 		// load relation link
@@ -331,12 +336,7 @@ public class OrientDbRelationRepository extends AbstractCoreOrientDbRepository<I
 			document.delete();
 		}
 	}
-
-	/**
-	 * keep allowed sorting fields here
-	 */
-	private static final Set<String> allowedSorts = new HashSet<>(Arrays.asList(new String[]{"minJD", "maxJD"}));
-
+	
 	@Override
 	public PaginationInfo<IRelation> paginate(int page, int entriesPerPage, Map<String, Object> filters) {
 		// avoid NPEs

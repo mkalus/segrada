@@ -34,11 +34,7 @@ public class DefaultMarkupFilter extends MarkupFilter {
 	 * reference to injector
 	 */
 	public static Injector injector;
-
-	public static void setInjector(Injector injector) {
-		DefaultMarkupFilter.injector = injector;
-	}
-
+	
 	/**
 	 * reference to source service
 	 */
@@ -49,13 +45,7 @@ public class DefaultMarkupFilter extends MarkupFilter {
 	 * TODO: use different cache, because otherwise this might fill up memory eventually, rather unlikely, but there is no deletion of old keys here
 	 */
 	private static final Map<String, String> sourceReferenceCache = new HashMap<>();
-
-	public DefaultMarkupFilter() {
-		if (injector != null)
-			sourceService = injector.getInstance(SourceService.class);
-		else sourceService = null;
-	}
-
+	
 	/**
 	 * replacement entities
 	 */
@@ -72,6 +62,18 @@ public class DefaultMarkupFilter extends MarkupFilter {
 			"=&gt;", "&rArr;",
 			"-&gt;", "&rarr;",
 	};
+
+	private static final Pattern bibRefPattern = Pattern.compile("\\[\\[([a-zA-Z0-9]+:[a-zA-Z0-9]+)\\]\\]");
+
+	public DefaultMarkupFilter() {
+		if (injector != null)
+			sourceService = injector.getInstance(SourceService.class);
+		else sourceService = null;
+	}
+
+	public static void setInjector(Injector injector) {
+		DefaultMarkupFilter.injector = injector;
+	}
 
 	@Override
 	public String toHTML(String markupText) {
@@ -130,8 +132,6 @@ public class DefaultMarkupFilter extends MarkupFilter {
 
 		return text;
 	}
-
-	private static final Pattern bibRefPattern = Pattern.compile("\\[\\[([a-zA-Z0-9]+:[a-zA-Z0-9]+)\\]\\]");
 
 	/**
 	 * replace text parts with bibliographic annotations

@@ -24,6 +24,8 @@ final public class CSRFTokenManager {
 	 */
 	private final static String CSRF_TOKEN_FOR_SESSION_ATTR_NAME = CSRFTokenManager.class.getName() + ".tokenval";
 
+	private CSRFTokenManager() {};
+
 	public static String getTokenForSession(HttpSession session) {
 		String token;
 		// I cannot allow more than one token on a session - in the case of two requests trying to
@@ -50,6 +52,5 @@ final public class CSRFTokenManager {
 		}
 		return request.getParameter(CSRF_PARAM_NAME);
 	}
-
-	private CSRFTokenManager() {};
+	
 }

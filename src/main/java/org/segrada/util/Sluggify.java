@@ -43,6 +43,8 @@ public final class Sluggify {
 				}
 			});
 
+	private static final Pattern SPECIAL_CHARACTERS_REGEX = Pattern.compile("\\W");
+
 	private Sluggify() throws InstantiationException{
 		throw new InstantiationException("The class is not created for instantiation");
 	}
@@ -50,8 +52,6 @@ public final class Sluggify {
 	public static boolean isEmpty(String stringToCheck) {
 		return stringToCheck == null || stringToCheck.isEmpty();
 	}
-
-	private static final Pattern SPECIAL_CHARACTERS_REGEX = Pattern.compile("\\W");
 
 	public static String removeSpecialCharactersAndConvertToLowercase(String input, boolean ascii) {
 		StringBuilder result = new StringBuilder();

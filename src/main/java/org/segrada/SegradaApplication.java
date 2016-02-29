@@ -57,6 +57,16 @@ public final class SegradaApplication {
 	 */
 	private static int port = 8080;
 
+	/**
+	 * listeners for application status changes
+	 */
+	private static List<ApplicationStatusChangedListener> applicationStatusChangedListeners;
+
+	/**
+	 * server instance
+	 */
+	private static Server server;
+
 	private SegradaApplication() throws InstantiationException{
 		throw new InstantiationException("The class is not created for instantiation");
 	}
@@ -104,12 +114,7 @@ public final class SegradaApplication {
 	public static int getPort() {
 		return port;
 	}
-
-	/**
-	 * listeners for application status changes
-	 */
-	private static List<ApplicationStatusChangedListener> applicationStatusChangedListeners;
-
+	
 	/**
 	 * @return serverStatus
 	 */
@@ -144,12 +149,7 @@ public final class SegradaApplication {
 
 		applicationStatusChangedListeners.add(listener);
 	}
-
-	/**
-	 * server instance
-	 */
-	private static Server server;
-
+	
 	/**
 	 * start server
 	 * @throws Exception
