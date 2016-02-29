@@ -75,7 +75,7 @@ abstract public class AbstractColoredOrientDbRepository<T extends SegradaColored
 	protected IPictogram lazyLoadPictogram(final ORecordId id) {
 		try {
 			return (IPictogram) java.lang.reflect.Proxy.newProxyInstance(
-					IPictogram.class.getClassLoader(),
+					Thread.currentThread().getContextClassLoader(),
 					new Class[]{IPictogram.class},
 					new AbstractLazyLoadedObject() {
 						@Override

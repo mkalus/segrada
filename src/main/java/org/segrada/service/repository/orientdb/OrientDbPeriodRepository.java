@@ -143,7 +143,7 @@ public class OrientDbPeriodRepository extends AbstractSegradaOrientDbRepository<
 		final PeriodRepository repository = this;
 		try {
 			return (IPeriod) java.lang.reflect.Proxy.newProxyInstance(
-					IPeriod.class.getClassLoader(),
+					Thread.currentThread().getContextClassLoader(),
 					new Class[]{IPeriod.class},
 					new AbstractLazyLoadedObject() {
 						@Override

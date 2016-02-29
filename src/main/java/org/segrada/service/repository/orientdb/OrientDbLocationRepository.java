@@ -122,7 +122,7 @@ public class OrientDbLocationRepository extends AbstractSegradaOrientDbRepositor
 		final LocationRepository repository = this;
 		try {
 			return (ILocation) java.lang.reflect.Proxy.newProxyInstance(
-					ILocation.class.getClassLoader(),
+					Thread.currentThread().getContextClassLoader(),
 					new Class[]{ILocation.class},
 					new AbstractLazyLoadedObject() {
 						@Override
