@@ -21,26 +21,26 @@ import java.util.List;
  *
  * Base service class
  */
-public interface SegradaService<BEAN extends SegradaEntity> {
+public interface SegradaService<T extends SegradaEntity> {
 	/**
-	 * Create a new instance of BEAN
+	 * Create a new instance of T
 	 * @return new instance
 	 */
-	BEAN createNewInstance();
+	T createNewInstance();
 
 	/**
 	 * get class reference of model class
 	 * @return class
 	 */
-	Class<BEAN> getModelClass();
+	Class<T> getModelClass();
 
-	BEAN findById(String id);
+	T findById(String id);
 
-	boolean save(BEAN entity);
+	boolean save(T entity);
 
-	boolean delete(BEAN entity);
+	boolean delete(T entity);
 
-	List<BEAN> findAll();
+	List<T> findAll();
 
 	long count();
 

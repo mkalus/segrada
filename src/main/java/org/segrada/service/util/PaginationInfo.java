@@ -21,7 +21,7 @@ import java.util.List;
  *
  * Class holding pagination information of a certain set
  */
-public class PaginationInfo<BEAN extends SegradaEntity> {
+public class PaginationInfo<T extends SegradaEntity> {
 	/**
 	 * current page to show
 	 */
@@ -45,12 +45,12 @@ public class PaginationInfo<BEAN extends SegradaEntity> {
 	/**
 	 * hits
 	 */
-	public final List<BEAN> entities;
+	public final List<T> entities;
 
 	/**
 	 * constructor
 	 */
-	public PaginationInfo(int page, int pages, int total, int entriesPerPage, List<BEAN> entities) {
+	public PaginationInfo(int page, int pages, int total, int entriesPerPage, List<T> entities) {
 		this.page = page;
 		this.pages = pages;
 		this.total = total;
