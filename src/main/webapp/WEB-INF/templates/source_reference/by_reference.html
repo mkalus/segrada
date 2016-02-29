@@ -29,8 +29,8 @@
 				<td th:text="${entity.referenceText}">Text</td>
 				<td class="text-right">
 					<div class="sg-data-icon-bar" role="group" aria-label="Actions" th:strip-whitespace="shallow">
-						<a class="sg-data-icon sg-source-ref-editor" href="#" th:href="@{/source_reference/edit/{uid}(uid=${entity.uid},backUrl=@{/source_reference/by_reference/{model}/{uid}(model=${model},uid=${uid})})}" th:title="#{Edit}" th:attr="data-id=${'edit-source-ref-' + uid}"><i class="fa fa-pencil"></i></a>
-						<a class="sg-data-icon" href="#" th:title="#{Unlink}" th:href="@{/source_reference/delete/{uid}(uid=${entity.uid},backUrl=@{/source_reference/by_reference/{model}/{uid}(model=${model},uid=${uid})})}" th:attr="data-confirm=${#messages.msg('ReallyUnlink', entity.title, referenceEntity.title)}"><i class="fa fa-unlink"></i></a>
+						<a th:if="${identity.hasEditAccess(entity, 'SOURCE_REFERENCE')}" class="sg-data-icon sg-source-ref-editor" href="#" th:href="@{/source_reference/edit/{uid}(uid=${entity.uid},backUrl=@{/source_reference/by_reference/{model}/{uid}(model=${model},uid=${uid})})}" th:title="#{Edit}" th:attr="data-id=${'edit-source-ref-' + uid}"><i class="fa fa-pencil"></i></a>
+						<a th:if="${identity.hasDeleteAccess(entity, 'SOURCE_REFERENCE')}" class="sg-data-icon" href="#" th:title="#{Unlink}" th:href="@{/source_reference/delete/{uid}(uid=${entity.uid},backUrl=@{/source_reference/by_reference/{model}/{uid}(model=${model},uid=${uid})})}" th:attr="data-confirm=${#messages.msg('ReallyUnlink', entity.title, referenceEntity.title)}"><i class="fa fa-unlink"></i></a>
 					</div>
 				</td>
 			</tr>
@@ -52,7 +52,7 @@
 
 		<div th:replace="partials/pagination :: pagination (paginationInfo=${paginationInfo},base=${'source_reference/by_reference/' + referenceEntity.uid})"></div>
 
-		<div class="sg-stop-flow">
+		<div class="sg-stop-flow" th:if="${identity.hasAccess('SOURCE_REFERENCE_ADD')}">
 			<h4 th:text="#{add.sourceReference}">Add source reference</h4>
 
 			<div th:if="${error}" th:text="#{${error}}" class="alert alert-danger">Error</div>

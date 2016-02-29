@@ -87,7 +87,7 @@ public class NodeController extends AbstractColoredController<INode> {
 	@GET
 	@Path("/by_tag/{tagUid}")
 	@Produces(MediaType.TEXT_HTML)
-	//TODO: ACL
+	@RolesAllowed({"NODE", "TAG"})
 	public Viewable byTag(
 			@QueryParam("page") int page,
 			@QueryParam("entriesPerPage") int entriesPerPage,

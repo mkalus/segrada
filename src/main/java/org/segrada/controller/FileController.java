@@ -96,7 +96,7 @@ public class FileController extends AbstractColoredController<IFile> {
 	@GET
 	@Path("/by_tag/{tagUid}")
 	@Produces(MediaType.TEXT_HTML)
-	//TODO: ACL
+	@RolesAllowed({"FILE", "TAG"})
 	public Viewable byTag(
 			@QueryParam("page") int page,
 			@QueryParam("entriesPerPage") int entriesPerPage,
@@ -189,7 +189,7 @@ public class FileController extends AbstractColoredController<IFile> {
 	@GET
 	@Path("/by_file/{uid}/{model}")
 	@Produces(MediaType.TEXT_HTML)
-	//TODO: ACL
+	@RolesAllowed({"FILE"})
 	public Viewable byFile(
 			@PathParam("uid") String fileUid,
 			@PathParam("model") String referenceModel,
@@ -240,7 +240,7 @@ public class FileController extends AbstractColoredController<IFile> {
 	@GET
 	@Path("/by_reference/{model}/{uid}")
 	@Produces(MediaType.TEXT_HTML)
-	//TODO: ACL
+	@RolesAllowed("FILE")
 	public Viewable byReference(
 			@PathParam("uid") String referenceUid,
 			@PathParam("model") String referenceModel,

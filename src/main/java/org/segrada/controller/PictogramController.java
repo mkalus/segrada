@@ -115,7 +115,7 @@ public class PictogramController extends AbstractBaseController<IPictogram> {
 
 	@GET
 	@Path("/by_ref")
-	@PermitAll //TODO: ACL
+	@PermitAll
 	public Response downloadRaw(@QueryParam("ref") String iconFileIdentifier) {
 		try {
 			final InputStream in = service.getBinaryDataAsStream(iconFileIdentifier);

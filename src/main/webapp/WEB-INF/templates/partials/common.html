@@ -86,15 +86,15 @@ Common fragments.
 			<td th:text="${myPeriod.comment}">Comment</td>
 			<td class="text-right">
 				<div class="sg-data-icon-bar" role="group" aria-label="Actions">
-					<a class="sg-data-icon" href="#" th:title="#{Delete}" th:href="@{/period/delete/{uid}(uid=${myPeriod.uid})}" th:attr="data-confirm=${#messages.msg('ReallyDelete', myPeriod.title)}"><i class="fa fa-times-circle-o"></i></a>
+					<a th:if="${identity.hasDeleteAccess(myPeriod, 'PERIOD')}" class="sg-data-icon" href="#" th:title="#{Delete}" th:href="@{/period/delete/{uid}(uid=${myPeriod.uid})}" th:attr="data-confirm=${#messages.msg('ReallyDelete', myPeriod.title)}"><i class="fa fa-times-circle-o"></i></a>
 				</div>
 			</td>
 		</tr>
 	</table>
 
-	<div class="sg-margin-top-sm" th:unless="${period}"><a href="#" class="btn btn-success sg-period-add"><i class="fa fa-plus"></i> <span th:text="#{add.period}">Add period</span></a></div>
+	<div class="sg-margin-top-sm" th:if="${identity.hasAccess('PERIOD_ADD')}" th:unless="${period}"><a href="#" class="btn btn-success sg-period-add"><i class="fa fa-plus"></i> <span th:text="#{add.period}">Add period</span></a></div>
 
-	<form action="#" th:action="@{/period/add/{model}/{uid}(model=${entity.modelName},uid=${entity.uid})}" method="post" class="sg-margin-top-sm sg-period-form sg-period-form-add" style="display: none;" th:style="${period and isNewEntity}?'':'display:none;'">
+	<form th:if="${identity.hasAccess('PERIOD_ADD')}" action="#" th:action="@{/period/add/{model}/{uid}(model=${entity.modelName},uid=${entity.uid})}" method="post" class="sg-margin-top-sm sg-period-form sg-period-form-add" style="display: none;" th:style="${period and isNewEntity}?'':'display:none;'">
 		<input type="hidden" name="_csrf" th:value="${_csrf}" />
 
 		<div th:replace="partials/common :: periodform (entity=${entity},errors=${errors},period=${period},hidePeriod=${hidePeriod})"></div>
@@ -120,7 +120,7 @@ Common fragments.
 
 <h4>Period form</h4>
 
-<div th:fragment="periodform">
+<div th:fragment="periodform" th:if="${identity.hasAccess('PERIOD_ADD,PERIOD_EDIT,PERIOD_EDIT_MINE')}">
 	<div class="row">
 		<div class="col-md-3" th:classappend="${errors} and (${errors['fromLowerEqualThanTo']} or ${errors['fromJD']})?'has-error has-feedback'">
 			<input name="fromEntry" class="form-control" type="text" placeholder="Start" th:placeholder="#{field.fromEntry}" th:value="${period}?${period.fromEntry}" />
@@ -196,12 +196,12 @@ Common fragments.
 	<div class="hidden" th:replace="partials/common :: listlocationmarkers (entity=${entity})">Markers</div>
 	<div class="hidden" th:id="${'locations-' + entity.uid + '-delete'}" th:text="#{Delete}">Delete</div>
 	<div class="hidden" th:id="${'locations-' + entity.uid + '-delete-confirm'}" th:text="#{ReallyDelete}">Really delete?</div>
-	<div class="sg-margin-top-sm">
+	<div class="sg-margin-top-sm" th:if="${identity.hasAccess('LOCATION_ADD')}">
 		<a href="#" class="btn btn-success sg-map-add-marker"><i class="fa fa-plus"></i> <span th:text="#{add.location}">Add location</span></a>
 		<span th:text="#{add.location_dblClick}" class="sg-location-dbl-click" th:attr="data-confirm=#{add.location_dblClick_question}">Double click hint</span>
 	</div>
 
-	<form action="#" th:action="@{/location/add/{model}/{uid}(model=${entity.modelName},uid=${entity.uid})}" method="post" class="sg-margin-top-sm sg-map-form" th:id="${'locations-' + entity.uid + '-form'}" style="display: none;">
+	<form th:if="${identity.hasAccess('LOCATION_ADD')}" action="#" th:action="@{/location/add/{model}/{uid}(model=${entity.modelName},uid=${entity.uid})}" method="post" class="sg-margin-top-sm sg-map-form" th:id="${'locations-' + entity.uid + '-form'}" style="display: none;">
 		<input type="hidden" name="_csrf" th:value="${_csrf}" />
 
 		<div class="row">
@@ -228,8 +228,8 @@ Common fragments.
 	</form>
 </div>
 
-<div th:fragment="listlocationmarkers (entity)" class="hidden" th:if="${entity != null}" th:id="${'locations-' + entity.uid + '-markers'}">
-	<div class="sg-location-marker" th:each="location : ${entity.locations}" th:text="${location.id}" th:attr="data-lng=${location.longitude},data-lat=${location.latitude},data-comment=${location.comment},data-delete=@{/location/delete/{uid}(uid=${location.uid})},data-id=${'locations-marker-' + location.uid}"></div>
+<div th:fragment="listlocationmarkers (entity)" class="hidden" th:if="${entity != null and identity.hasAccess('LOCATION')}" th:id="${'locations-' + entity.uid + '-markers'}">
+	<div class="sg-location-marker" th:each="location : ${entity.locations}" th:text="${location.id}" th:attr="data-lng=${location.longitude},data-lat=${location.latitude},data-comment=${location.comment},data-delete-ok=${identity.hasDeleteAccess(location, 'LOCATION')}?'1':'0',data-delete=@{/location/delete/{uid}(uid=${location.uid})},data-id=${'locations-marker-' + location.uid}"></div>
 </div>
 
 

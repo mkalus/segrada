@@ -83,7 +83,7 @@ public class SourceController extends AbstractColoredController<ISource> {
 	@GET
 	@Path("/by_tag/{tagUid}")
 	@Produces(MediaType.TEXT_HTML)
-	//TODO: ACL
+	@RolesAllowed({"SOURCE", "TAG"})
 	public Viewable byTag(
 			@QueryParam("page") int page,
 			@QueryParam("entriesPerPage") int entriesPerPage,

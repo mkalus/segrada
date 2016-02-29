@@ -91,7 +91,7 @@ public class RelationController extends AbstractColoredController<IRelation> {
 	@GET
 	@Path("/by_tag/{tagUid}")
 	@Produces(MediaType.TEXT_HTML)
-	//TODO: ACL
+	@RolesAllowed({"RELATION", "TAG"})
 	public Viewable byTag(
 			@QueryParam("page") int page,
 			@QueryParam("entriesPerPage") int entriesPerPage,
@@ -177,7 +177,7 @@ public class RelationController extends AbstractColoredController<IRelation> {
 	@GET
 	@Path("/by_relation_type/{uid}")
 	@Produces(MediaType.TEXT_HTML)
-	//TODO: ACL
+	@RolesAllowed({"RELATION", "RELATION_TYPE"})
 	public Viewable byRelationType(@PathParam("uid") String relationTypeUid, @QueryParam("page") int page, @QueryParam("entriesPerPage") int entriesPerPage) {
 		Map<String, Object> filters = new HashMap<>();
 
@@ -197,7 +197,7 @@ public class RelationController extends AbstractColoredController<IRelation> {
 	@GET
 	@Path("/by_node/{uid}")
 	@Produces(MediaType.TEXT_HTML)
-	//TODO: ACL
+	@RolesAllowed({"RELATION", "NODE"})
 	public Viewable byNode(@PathParam("uid") String nodeUid, @QueryParam("page") int page, @QueryParam("entriesPerPage") int entriesPerPage) {
 		Map<String, Object> filters = new HashMap<>();
 

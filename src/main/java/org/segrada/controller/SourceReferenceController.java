@@ -184,7 +184,7 @@ public class SourceReferenceController extends AbstractBaseController<ISourceRef
 	@GET
 	@Path("/by_reference/{model}/{uid}")
 	@Produces(MediaType.TEXT_HTML)
-	//TODO: ACL
+	@RolesAllowed("SOURCE_REFERENCE")
 	public Viewable byReference(
 			@PathParam("uid") String referenceUid,
 			@PathParam("model") String referenceModel,
@@ -226,7 +226,7 @@ public class SourceReferenceController extends AbstractBaseController<ISourceRef
 	@GET
 	@Path("/by_source/{uid}")
 	@Produces(MediaType.TEXT_HTML)
-	//TODO: ACL
+	@RolesAllowed({"SOURCE_REFERENCE", "SOURCE"})
 	public Viewable bySource(
 			@PathParam("uid") String sourceUid,
 			@QueryParam("page") int page,

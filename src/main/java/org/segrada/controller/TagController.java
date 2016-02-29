@@ -112,7 +112,7 @@ public class TagController extends AbstractBaseController<ITag> {
 	@GET
 	@Path("/by_title/{title}")
 	@Produces(MediaType.TEXT_HTML)
-	//TODO: ACL
+	@RolesAllowed("TAG")
 	public Viewable showByTitle(
 			@PathParam("title") String title
 	) {

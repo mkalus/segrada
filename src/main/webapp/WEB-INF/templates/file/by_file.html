@@ -35,8 +35,8 @@
 				<td class="text-right">
 					<div class="sg-data-icon-bar" role="group" aria-label="Actions" th:strip-whitespace="shallow">
 						<a class="sg-data-icon sg-data-add" href="#" th:title="#{Show}" th:href="@{/{model}/show/{uid}(model=${model},uid=${entity.uid})}"><i class="fa fa-eye"></i></a>
-						<a class="sg-data-icon sg-data-add" href="#" th:title="#{Edit}" th:href="@{/{model}/edit/{uid}(model=${model},uid=${entity.uid})}"><i class="fa fa-pencil"></i></a>
-						<a class="sg-data-icon" href="#" th:title="#{Unlink}" th:href="@{/file/remove_reference/{model}/{source}/{uid}(model=${model},uid=${uid},source=${entity.uid})}" th:attr="data-confirm=${#messages.msg('ReallyUnlink', file.title, entity.title)}"><i class="fa fa-unlink"></i></a>
+						<a th:if="${identity.hasEditAccess(entity, 'FILE')}" class="sg-data-icon sg-data-add" href="#" th:title="#{Edit}" th:href="@{/{model}/edit/{uid}(model=${model},uid=${entity.uid})}"><i class="fa fa-pencil"></i></a>
+						<a th:if="${identity.hasDeleteAccess(entity, 'FILE')}" class="sg-data-icon" href="#" th:title="#{Unlink}" th:href="@{/file/remove_reference/{model}/{source}/{uid}(model=${model},uid=${uid},source=${entity.uid})}" th:attr="data-confirm=${#messages.msg('ReallyUnlink', file.title, entity.title)}"><i class="fa fa-unlink"></i></a>
 					</div>
 				</td>
 			</tr>

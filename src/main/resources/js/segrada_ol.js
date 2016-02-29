@@ -44,6 +44,7 @@
 			data_id: $this.html(),
 			lat: lat,
 			lng: lng,
+			delete_ok: $this.attr('data-delete-ok')==='1',
 			delete_url: $this.attr('data-delete'),
 			comment: comment
 		});
@@ -134,7 +135,8 @@
 
 					var content = '<p>' + feature.get('lat') + ',' + feature.get('lng') + '</p>';
 					content += feature.get('comment');
-					content += '<p><a href="' + feature.get('delete_url') + '" id="x' + feature.get('data_id') + '-delete" data-action="delete">' + deleteText + '</a></p>';
+					if (feature.get('delete_ok').length)
+						content += '<p><a href="' + feature.get('delete_url') + '" id="x' + feature.get('data_id') + '-delete" data-action="delete">' + deleteText + '</a></p>';
 					popup.show(feature.getGeometry().getCoordinates(), content);
 
 					popup.getElement().addEventListener('click', function(e) {
@@ -160,28 +162,31 @@
 			});
 
 			map.on('dblclick', function(evt) {
-				var coordinates = ol.proj.transform(evt.coordinate, 'EPSG:3857', 'EPSG:4326');
-				var question = $('.sg-location-dbl-click', container).attr('data-confirm').replace('{0}', coordinates[1] + ',' + coordinates[0]);
+				var dbClickElement = $('.sg-location-dbl-click', container);
+				if (dbClickElement.length > 0) {
+					var question = dbClickElement.attr('data-confirm').replace('{0}', coordinates[1] + ',' + coordinates[0]);
+					var coordinates = ol.proj.transform(evt.coordinate, 'EPSG:3857', 'EPSG:4326');
 
-				if (confirm(question)) {
-					// get url from form
-					var action = form.attr('action');
-					// get security token
-					var csrf = $('input[name=_csrf]').val();
-					// AJAX post
-					$.post(action, {
-						_csrf: csrf,
-						lng: coordinates[0],
-						lat: coordinates[1],
-						comment: ''
-					}, function(responseText, textStatus,jqXHR) {
-						markerContainer.replaceWith(responseText);
-						markerContainer = $('#' + id + '-markers', container);
-						// update map
-						updateMap(markerContainer, vectorSource);
-					});
-					//
-					evt.preventDefault();
+					if (confirm(question)) {
+						// get url from form
+						var action = form.attr('action');
+						// get security token
+						var csrf = $('input[name=_csrf]').val();
+						// AJAX post
+						$.post(action, {
+							_csrf: csrf,
+							lng: coordinates[0],
+							lat: coordinates[1],
+							comment: ''
+						}, function (responseText, textStatus, jqXHR) {
+							markerContainer.replaceWith(responseText);
+							markerContainer = $('#' + id + '-markers', container);
+							// update map
+							updateMap(markerContainer, vectorSource);
+						});
+						//
+						evt.preventDefault();
+					}
 				}
 			});
 
