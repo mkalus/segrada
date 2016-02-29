@@ -3,7 +3,9 @@ package org.segrada.controller;
 import com.google.inject.Inject;
 import com.google.inject.servlet.RequestScoped;
 import com.sun.jersey.api.view.Viewable;
+import org.segrada.model.User;
 import org.segrada.model.prototype.IUser;
+import org.segrada.service.UserGroupService;
 import org.segrada.service.UserService;
 import org.segrada.service.repository.RememberMeRepository;
 import org.segrada.session.ApplicationSettings;
@@ -55,6 +57,9 @@ public class LoginController {
 	private UserService service;
 
 	@Inject
+	private UserGroupService userGroupService;
+
+	@Inject
 	private Identity identity;
 
 	@Inject
@@ -65,11 +70,7 @@ public class LoginController {
 	public Response login(@QueryParam("logout") String logout,
 	                      @Context HttpServletRequest servletRequest,
 	                      @Context HttpServletResponse servletResponse) {
-		// test application if login is allowed
-		String requireLogin = applicationSettings.getSetting("requireLogin");
-		if (requireLogin == null || requireLogin.isEmpty() || !requireLogin.equalsIgnoreCase("true")) {
-			return Response.ok(new Viewable("error", "Login not allowed")).build();
-		}
+		if (!requireLoginSet()) return loginNotAllowed();
 
 		// remove remember me cookie, if needed
 		if (logout != null && logout.equals("1")) {
@@ -101,6 +102,9 @@ public class LoginController {
 		// create model map
 		Map<String, Object> model = new HashMap<>();
 		model.put("defaultAdminActive", defaultAdminActive);
+		// define whether anonymous login is allowed
+		String anonymousLoginSetting = applicationSettings.getSetting("allowAnonymous");
+		model.put("anonymousLogin", anonymousLoginSetting != null && !anonymousLoginSetting.isEmpty() && anonymousLoginSetting.equalsIgnoreCase("true"));
 
 		return Response.ok(new Viewable("login", model)).build();
 	}
@@ -113,11 +117,7 @@ public class LoginController {
 			@FormParam("rememberMe") String rememberMe,
 			@Context HttpServletResponse servletResponse
 		) {
-		// test application if login is allowed
-		String requireLogin = applicationSettings.getSetting("requireLogin");
-		if (requireLogin == null || requireLogin.isEmpty() || !requireLogin.equalsIgnoreCase("true")) {
-			return Response.ok(new Viewable("error", "Login not allowed")).build();
-		}
+		if (!requireLoginSet()) return loginNotAllowed();
 
 		// already logged in?
 		if (identity.getName() != null)
@@ -190,15 +190,42 @@ public class LoginController {
 	}
 
 	@GET
+	@Path("/anonymous")
+	public Response anonymousLogin() {
+		if (!requireLoginSet()) return loginNotAllowed();
+
+		// anonymous login allowed?
+		String anonymousLoginSetting = applicationSettings.getSetting("allowAnonymous");
+		if (anonymousLoginSetting == null || anonymousLoginSetting.isEmpty() || !anonymousLoginSetting.equalsIgnoreCase("true"))
+			return loginNotAllowed();
+
+		// simulate user
+		IUser user = new User();
+		user.setId(""); // must be "" in order to work properly!!
+		user.setLogin("anonymous");
+		user.setName("Anonymus"); // prefer the latin name
+		user.setPassword("");
+		user.setActive(true);
+		// set anonymous user group
+		user.setGroup(userGroupService.findSpecial("anonymous"));
+
+		// save identity in session
+		identity.setUser(user);
+
+		//redirect to index
+		try {
+			return Response.seeOther(new URI("/")).build();
+		} catch (URISyntaxException e) {
+			return Response.ok(new Viewable("error", e.getMessage())).build();
+		}
+	}
+
+	@GET
 	@Path("/logout")
 	@Produces(MediaType.TEXT_HTML)
 	@PermitAll
 	public Response logout(@Context HttpServletRequest servletRequest, @Context HttpServletResponse servletResponse) {
-		// test application if login is allowed
-		String requireLogin = applicationSettings.getSetting("requireLogin");
-		if (requireLogin == null || requireLogin.isEmpty() || !requireLogin.equalsIgnoreCase("true")) {
-			return Response.ok(new Viewable("error", "Login not allowed")).build();
-		}
+		if (!requireLoginSet()) return loginNotAllowed();
 
 		// reset identity
 		identity.logout();
@@ -224,5 +251,23 @@ public class LoginController {
 		} catch (URISyntaxException e) {
 			return Response.ok(new Viewable("error", e.getMessage())).build();
 		}
+	}
+
+	/**
+	 * Check whether requireLogin has been set in settings
+	 * @return true if requireLogin has been set
+	 */
+	private boolean requireLoginSet() {
+		// test application if login is allowed
+		String requireLogin = applicationSettings.getSetting("requireLogin");
+		return requireLogin != null && !requireLogin.isEmpty() && requireLogin.equalsIgnoreCase("true");
+	}
+
+	/**
+	 * error response
+	 * @return error response
+	 */
+	private Response loginNotAllowed() {
+		return Response.ok(new Viewable("error", "Login not allowed")).build();
 	}
 }

@@ -25,6 +25,7 @@ Example:
 * `solr.server` If specified use remote Solr server to index search instead of local Lucene (default: empty)
 * `lucene.analyzer` Lucene analyser to use (default: org.apache.lucene.analysis.standard.StandardAnalyzer)
 * `requireLogin` Require login? (default: false, meaning autologin as admin)
+* `allowAnonymous` Allow anonymous login, if requireLogin is true (default: false)
 * `uploads.storage` Type of storage used when uploading files, MEMORY or FILE (default: MEMORY)
 * `uploads.maximum_upload_size` Maximum upload size (default: 52428800 aka 50 MB)
 
@@ -57,5 +58,6 @@ Mappings to command line parameters above:
 * `SEGRADA_SOLR_SERVER` -> `solr.server`
 * `SEGRADA_LUCENE_ANALYZER` -> `lucene.analyzer`
 * `SEGRADA_REQUIRE_LOGIN` -> `requireLogin`
+* `SEGRADA_ALLOW_ANONYMOUS` -> `allowAnonymous`
 * `SEGRADA_UPLOADS_STORAGE` -> `uploads.storage`
 * `SEGRADA_UPLOADS_MAX_SIZE` -> `uploads.maximum_upload_size`

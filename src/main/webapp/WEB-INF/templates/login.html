@@ -30,6 +30,8 @@
 		<button class="btn btn-lg btn-primary btn-block" type="submit" th:text="#{Login.btn}">Sign in</button>
 
 		<div class="alert alert-info sg-margin-top" role="alert" th:if="${defaultAdminActive}" th:utext="#{Login.note}"><strong>Note:</strong> You can login with the following credentials:<br />Login: <code>admin</code><br />Password: <code>password</code></div>
+
+		<a th:if="${anonymousLogin}" href="#" th:href="@{/login/anonymous}" class="btn btn-lg btn-default btn-block" th:text="#{Login.anonymous}">Anonymous login</a>
 	</form>
 </div>
 

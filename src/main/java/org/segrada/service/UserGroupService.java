@@ -43,4 +43,13 @@ public class UserGroupService extends AbstractRepositoryService<IUserGroup, User
 	public Class<IUserGroup> getModelClass() {
 		return IUserGroup.class;
 	}
+
+	/**
+	 * find special user group
+	 * @param special type of group
+	 * @return single user group or null
+	 */
+	public IUserGroup findSpecial(String special) {
+		return repository.findSpecial(special);
+	}
 }

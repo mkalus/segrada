@@ -280,7 +280,7 @@ abstract public class AbstractSegradaOrientDbRepository<T extends SegradaEntity>
 			entity.setCreated(System.currentTimeMillis());
 
 			// identity known?
-			if (identity != null && identity.isAuthenticated())
+			if (identity != null && identity.isAuthenticated() && !identity.getUser().getId().isEmpty()) // getId must be "" in order to work properly!!
 				entity.setCreator(identity.getUser());
 		}
 
@@ -288,7 +288,7 @@ abstract public class AbstractSegradaOrientDbRepository<T extends SegradaEntity>
 		entity.setModified(System.currentTimeMillis());
 
 		// identity known?
-		if (identity != null && identity.isAuthenticated())
+		if (identity != null && identity.isAuthenticated() && !identity.getUser().getId().isEmpty()) // getId must be "" in order to work properly!!
 			entity.setModifier(identity.getUser());
 		else entity.setModifier(null);
 
