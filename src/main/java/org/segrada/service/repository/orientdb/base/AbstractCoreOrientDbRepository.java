@@ -143,7 +143,7 @@ abstract public class AbstractCoreOrientDbRepository<T extends SegradaCoreEntity
 	public List<ILocation> lazyLoadLocations(final SegradaCoreEntity entity) {
 		try {
 			return (List<ILocation>) java.lang.reflect.Proxy.newProxyInstance(
-					List.class.getClassLoader(),
+					Thread.currentThread().getContextClassLoader(),
 					new Class[]{List.class},
 					new AbstractLazyLoadedObject() {
 						@Override
@@ -170,7 +170,7 @@ abstract public class AbstractCoreOrientDbRepository<T extends SegradaCoreEntity
 	public List<IPeriod> lazyLoadPeriods(final SegradaCoreEntity entity) {
 		try {
 			return (List<IPeriod>) java.lang.reflect.Proxy.newProxyInstance(
-					List.class.getClassLoader(),
+					Thread.currentThread().getContextClassLoader(),
 					new Class[]{List.class},
 					new AbstractLazyLoadedObject() {
 						@Override

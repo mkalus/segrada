@@ -89,7 +89,7 @@ abstract public class AbstractSegradaOrientDbRepository<T extends SegradaEntity>
 	protected IUser lazyLoadUser(final ORecordId id) {
 		try {
 			return (IUser) java.lang.reflect.Proxy.newProxyInstance(
-					IUser.class.getClassLoader(),
+					Thread.currentThread().getContextClassLoader(),
 					new Class[]{IUser.class},
 					new AbstractLazyLoadedObject() {
 						@Override
@@ -112,7 +112,7 @@ abstract public class AbstractSegradaOrientDbRepository<T extends SegradaEntity>
 	protected IUserGroup lazyLoadUserGroup(final ORecordId id) {
 		try {
 			return (IUserGroup) java.lang.reflect.Proxy.newProxyInstance(
-					IUserGroup.class.getClassLoader(),
+					Thread.currentThread().getContextClassLoader(),
 					new Class[]{IUserGroup.class},
 					new AbstractLazyLoadedObject() {
 						@Override

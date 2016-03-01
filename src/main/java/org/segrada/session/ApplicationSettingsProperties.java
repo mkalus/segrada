@@ -67,7 +67,7 @@ public class ApplicationSettingsProperties implements ApplicationSettings {
 
 		InputStream input;
 
-		ClassLoader classLoader = getClass().getClassLoader();
+		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 
 		try {
 			input = classLoader.getResourceAsStream("application.properties");

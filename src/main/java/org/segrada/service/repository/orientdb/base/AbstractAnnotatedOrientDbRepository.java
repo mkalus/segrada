@@ -78,7 +78,7 @@ abstract public class AbstractAnnotatedOrientDbRepository<T extends SegradaAnnot
 	public List<ISourceReference> lazyLoadSourceReferences(final SegradaAnnotatedEntity entity, final int page, final int entriesPerPage) {
 		try {
 			return (List<ISourceReference>) java.lang.reflect.Proxy.newProxyInstance(
-					List.class.getClassLoader(),
+					Thread.currentThread().getContextClassLoader(),
 					new Class[]{List.class},
 					new AbstractLazyLoadedObject() {
 						@Override
@@ -108,7 +108,7 @@ abstract public class AbstractAnnotatedOrientDbRepository<T extends SegradaAnnot
 	public List<IComment> lazyLoadComments(final SegradaAnnotatedEntity entity) {
 		try {
 			return (List<IComment>) java.lang.reflect.Proxy.newProxyInstance(
-					List.class.getClassLoader(),
+					Thread.currentThread().getContextClassLoader(),
 					new Class[]{List.class},
 					new AbstractLazyLoadedObject() {
 						@Override
@@ -135,7 +135,7 @@ abstract public class AbstractAnnotatedOrientDbRepository<T extends SegradaAnnot
 	public List<IFile> lazyLoadFiles(final SegradaAnnotatedEntity entity) {
 		try {
 			return (List<IFile>) java.lang.reflect.Proxy.newProxyInstance(
-					List.class.getClassLoader(),
+					Thread.currentThread().getContextClassLoader(),
 					new Class[]{List.class},
 					new AbstractLazyLoadedObject() {
 						@Override
