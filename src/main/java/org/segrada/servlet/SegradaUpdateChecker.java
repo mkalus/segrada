@@ -177,7 +177,7 @@ public class SegradaUpdateChecker {
 			version = version.substring(1);
 
 			// split between "."
-			String parts[] = version.split("\\.");
+			String[] parts = version.split("\\.");
 			if (parts.length != 3) return -1;
 
 			int v = 0;

@@ -294,7 +294,7 @@ public class SolrSearchEngine implements SearchEngine {
 			Object o = doc.get(this.tag);
 			if (o instanceof List) {
 				List<String> l = (List<String>) o;
-				String tags[] = new String[l.size()];
+				String[] tags = new String[l.size()];
 				tags = l.toArray(tags);
 				searchHit.setTagIds(tags);
 			} else
