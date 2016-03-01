@@ -19,15 +19,15 @@
 			<span class="sg-color-icon" th:style="'background-color: ' + ${entity.colorCode}" th:if="${entity.color}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
 			<img src="#" th:src="@{/pictogram/file/{uid}(uid=${entity.pictogram.uid})}" th:alt-title="${entity.pictogram.title}" alt="" width="24" height="24" th:if="${entity.pictogram}"/>
 			<span th:text="${entity.title}">Relation</span>
-			<small th:utext="${@org.segrada.util.FuzzyDateRenderer@renderFromTo(entity.minJD,entity.minEntry,entity.minEntryCalendar,entity.fuzzyMinFlags, entity.maxJD,entity.maxEntry,entity.maxEntryCalendar,entity.fuzzyMaxFlags)}">0000 &ndash; 9999</small>
+			<small th:if="${identity.hasAccess('PERIOD')}" th:utext="${@org.segrada.util.FuzzyDateRenderer@renderFromTo(entity.minJD,entity.minEntry,entity.minEntryCalendar,entity.fuzzyMinFlags, entity.maxJD,entity.maxEntry,entity.maxEntryCalendar,entity.fuzzyMaxFlags)}">0000 &ndash; 9999</small>
 		</h4>
 
 		<ul class="nav nav-tabs" role="tablist">
 			<li role="presentation" class="active"><a href="#tab1" th:href="${'#tab-1-' + entity.uid}" aria-controls="home" role="tab" data-toggle="tab" th:text="#{Description}">Description</a></li>
-			<li role="presentation"><a href="#tab2" class="sg-periodtab" th:href="${'#periods-' + entity.uid}" aria-controls="times" role="tab" data-toggle="tab" th:text="#{Instants_Periods}">Instants/Periods</a></li>
-			<li role="presentation"><a href="#tab3" class="sg-geotab" th:attr="data-locations-id=${'locations-' + entity.uid}" th:href="${'#tab-3-' + entity.uid}" aria-controls="times" role="tab" data-toggle="tab" th:text="#{Geo_Locations}">Geo Locations</a></li>
-			<li role="presentation"><a href="#source-ref" class="sg-replace-content" th:attr="data-url=@{/source_reference/by_reference/relation/{uid}(uid=${entity.uid})}" th:href="${'#sources-by-ref-' + entity.uid}" aria-controls="sources" role="tab" data-toggle="tab" th:text="#{Sources}">Sources</a></li>
-			<li role="presentation"><a href="#file-ref" class="sg-replace-content" th:attr="data-url=@{/file/by_reference/relation/{uid}(uid=${entity.uid})}" th:href="${'#files-by-ref-' + entity.uid}" aria-controls="times" role="tab" data-toggle="tab" th:text="#{Files}">Files</a></li>
+			<li th:if="${identity.hasAccess('PERIOD')}" role="presentation"><a href="#tab2" class="sg-periodtab" th:href="${'#periods-' + entity.uid}" aria-controls="times" role="tab" data-toggle="tab" th:text="#{Instants_Periods}">Instants/Periods</a></li>
+			<li th:if="${identity.hasAccess('LOCATION')}" role="presentation"><a href="#tab3" class="sg-geotab" th:attr="data-locations-id=${'locations-' + entity.uid}" th:href="${'#tab-3-' + entity.uid}" aria-controls="times" role="tab" data-toggle="tab" th:text="#{Geo_Locations}">Geo Locations</a></li>
+			<li th:if="${identity.hasAccess('SOURCE')}" role="presentation"><a href="#source-ref" class="sg-replace-content" th:attr="data-url=@{/source_reference/by_reference/relation/{uid}(uid=${entity.uid})}" th:href="${'#sources-by-ref-' + entity.uid}" aria-controls="sources" role="tab" data-toggle="tab" th:text="#{Sources}">Sources</a></li>
+			<li th:if="${identity.hasAccess('FILE')}" role="presentation"><a href="#file-ref" class="sg-replace-content" th:attr="data-url=@{/file/by_reference/relation/{uid}(uid=${entity.uid})}" th:href="${'#files-by-ref-' + entity.uid}" aria-controls="times" role="tab" data-toggle="tab" th:text="#{Files}">Files</a></li>
 			<!--/*<li role="presentation"><a href="#tab6" th:href="${'#tab-5-' + entity.uid}" aria-controls="times" role="tab" data-toggle="tab" th:text="#{Comments}">Comments</a></li>*/-->
 		</ul>
 
@@ -74,16 +74,16 @@
 
 				<div th:replace="partials/common :: datafooter (entity=${entity})"></div>
 			</div>
-			<div role="tabpanel" class="tab-pane" id="tab2" th:id="${'periods-' + entity.uid}">
+			<div th:if="${identity.hasAccess('PERIOD')}" role="tabpanel" class="tab-pane" id="tab2" th:id="${'periods-' + entity.uid}">
 				<div th:replace="partials/common :: listperiods (entity=${entity})"></div>
 			</div>
-			<div role="tabpanel" class="tab-pane" id="tab3" th:id="${'tab-3-' + entity.uid}">
+			<div th:if="${identity.hasAccess('LOCATION')}" role="tabpanel" class="tab-pane" id="tab3" th:id="${'tab-3-' + entity.uid}">
 				<div th:replace="partials/common :: listlocations (entity=${entity})"></div>
 			</div>
-			<div role="tabpanel" class="tab-pane" id="source-ref" th:id="${'sources-by-ref-' + entity.uid}">
+			<div th:if="${identity.hasAccess('SOURCE')}" role="tabpanel" class="tab-pane" id="source-ref" th:id="${'sources-by-ref-' + entity.uid}">
 				<div th:replace="partials/common :: loadingicon"></div>
 			</div>
-			<div role="tabpanel" class="tab-pane" id="file-ref" th:id="${'files-by-ref-' + entity.uid}">
+			<div th:if="${identity.hasAccess('FILE')}" role="tabpanel" class="tab-pane" id="file-ref" th:id="${'files-by-ref-' + entity.uid}">
 				<div th:replace="partials/common :: loadingicon"></div>
 			</div>
 			<!--/*<div role="tabpanel" class="tab-pane" id="tab6" th:id="${'tab-5-' + entity.uid}">
