@@ -95,16 +95,9 @@ public class LoginController {
 				return Response.ok(new Viewable("error", e.getMessage())).build();
 			}
 
-		// is there a login named admin?
-		IUser user = service.findByLogin("admin");
-		boolean defaultAdminActive = user != null && passwordEncoder.matches("password", user.getPassword());
-
 		// create model map
 		Map<String, Object> model = new HashMap<>();
-		model.put("defaultAdminActive", defaultAdminActive);
-		// define whether anonymous login is allowed
-		String anonymousLoginSetting = applicationSettings.getSetting("allowAnonymous");
-		model.put("anonymousLogin", anonymousLoginSetting != null && !anonymousLoginSetting.isEmpty() && anonymousLoginSetting.equalsIgnoreCase("true"));
+		enrichLoginModel(model);
 
 		return Response.ok(new Viewable("login", model)).build();
 	}
@@ -185,8 +178,25 @@ public class LoginController {
 		model.put("login", login);
 		model.put("rememberMe", rememberMeValue);
 		model.put("error", error);
+		enrichLoginModel(model);
 
 		return Response.ok(new Viewable("login", model)).build();
+	}
+
+	/**
+	 * helper to add some default values to model
+	 * @param model
+	 */
+	private void enrichLoginModel(Map<String, Object> model) {
+		// is there a login named admin?
+		IUser user = service.findByLogin("admin");
+		boolean defaultAdminActive = user != null && passwordEncoder.matches("password", user.getPassword());
+
+		model.put("defaultAdminActive", defaultAdminActive);
+
+		// define whether anonymous login is allowed
+		String anonymousLoginSetting = applicationSettings.getSetting("allowAnonymous");
+		model.put("anonymousLogin", anonymousLoginSetting != null && !anonymousLoginSetting.isEmpty() && anonymousLoginSetting.equalsIgnoreCase("true"));
 	}
 
 	@GET
