@@ -23,7 +23,7 @@
 
 		<ul class="nav nav-tabs" role="tablist">
 			<li role="presentation" class="active"><a href="#tab1" th:href="${'#tab-1-' + entity.uid}" aria-controls="home" role="tab" data-toggle="tab" th:text="#{Description}">Description</a></li>
-			<li role="presentation"><a href="#tab2" class="sg-replace-content" th:attr="data-url=@{/relation/by_relation_type/{uid}(uid=${entity.uid})}" th:href="${'#relations-by-type-' + entity.uid}" aria-controls="relations" role="tab" data-toggle="tab" th:text="#{Relations}">Relations</a></li>
+			<li th:if="${identity.hasAccess('RELATION')}" role="presentation"><a href="#tab2" class="sg-replace-content" th:attr="data-url=@{/relation/by_relation_type/{uid}(uid=${entity.uid})}" th:href="${'#relations-by-type-' + entity.uid}" aria-controls="relations" role="tab" data-toggle="tab" th:text="#{Relations}">Relations</a></li>
 		</ul>
 
 		<div class="tab-content">
@@ -41,7 +41,7 @@
 
 				<div th:replace="partials/common :: datafooter (entity=${entity})"></div>
 			</div>
-			<div role="tabpanel" class="tab-pane" id="tab2" th:id="${'relations-by-type-' + entity.uid}">
+			<div th:if="${identity.hasAccess('RELATION')}" role="tabpanel" class="tab-pane" id="tab2" th:id="${'relations-by-type-' + entity.uid}">
 				<div th:replace="partials/common :: loadingicon"></div>
 			</div>
 		</div>
