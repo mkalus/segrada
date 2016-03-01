@@ -111,6 +111,11 @@ public class Identity implements Serializable {
 	 */
 	private boolean hasXAccess(SegradaEntity entity, String action) {
 		if (entity == null || !isAuthenticated()) return false;
+
+		// special user group ADMIN may not be edited or deleted
+		if (entity.getModelName().equals("UserGroup") &&
+				"ADMIN".equals(((IUserGroup) entity).getSpecial())) return false;
+
 		if (hasRole("ADMIN") || hasRole(action)) return true;
 
 		if (hasRole(action + "_MINE")) {

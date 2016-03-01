@@ -6,6 +6,7 @@ import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.segrada.controller.base.AbstractBaseController;
 import org.segrada.model.prototype.IUser;
+import org.segrada.model.prototype.IUserGroup;
 import org.segrada.model.prototype.SegradaEntity;
 import org.segrada.session.Identity;
 import org.slf4j.Logger;
@@ -69,6 +70,15 @@ public class CheckAuthentication implements MethodInterceptor {
             //Access denied for all
             if (method.isAnnotationPresent(DenyAll.class))
                 return returnAccessDenied();
+
+	        // if admin group edit disallowed, check if this is attempted
+	        if (method.isAnnotationPresent(DenyAdminGroupEdit.class)) {
+		        SegradaEntity entity = getSegradaEntityFromFirstArgument(invocation);
+
+		        // check if special group admin
+		        if (entity != null && entity.getModelName().equals("UserGroup") &&
+				        "ADMIN".equals(((IUserGroup) entity).getSpecial())) return returnAccessDenied();
+	        }
 
             // is admin?
             if (!identity.hasRole("ADMIN")) {

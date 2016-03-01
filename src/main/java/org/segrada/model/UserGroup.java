@@ -38,7 +38,7 @@ public class UserGroup extends AbstractSegradaEntity implements IUserGroup {
 	private String description = "";
 
 	/**
-	 * special type of group?
+	 * special type of group? ADMIN or ANONYMOUS allowed currently
 	 */
 	private String special;
 

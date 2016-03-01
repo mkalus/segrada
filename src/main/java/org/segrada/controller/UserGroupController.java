@@ -3,6 +3,7 @@ package org.segrada.controller;
 import com.google.inject.Inject;
 import com.google.inject.servlet.RequestScoped;
 import com.sun.jersey.api.view.Viewable;
+import org.segrada.auth.DenyAdminGroupEdit;
 import org.segrada.controller.base.AbstractBaseController;
 import org.segrada.model.UserGroup;
 import org.segrada.model.prototype.IUserGroup;
@@ -153,6 +154,7 @@ public class UserGroupController extends AbstractBaseController<IUserGroup> {
 	@Path("/edit/{uid}")
 	@Produces(MediaType.TEXT_HTML)
 	@RolesAllowed("ADMIN")
+	@DenyAdminGroupEdit
 	public Viewable edit(@PathParam("uid") String uid) {
 		return handleForm(service.findById(service.convertUidToId(uid)));
 	}
@@ -168,6 +170,7 @@ public class UserGroupController extends AbstractBaseController<IUserGroup> {
 	@Produces(MediaType.TEXT_HTML)
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@RolesAllowed("ADMIN")
+	@DenyAdminGroupEdit
 	public Response update(UserGroup entity, @Context HttpServletRequest servletRequest) {
 		// get all parameters in order to map array-parameters
 		final Map<String, String[]> params = servletRequest.getParameterMap();
@@ -197,6 +200,7 @@ public class UserGroupController extends AbstractBaseController<IUserGroup> {
 	@Path("/delete/{uid}/{empty}")
 	@Produces(MediaType.TEXT_HTML)
 	@RolesAllowed("ADMIN")
+	@DenyAdminGroupEdit
 	public Response delete(@PathParam("uid") String uid, @PathParam("empty") String empty) {
 		return handleDelete(empty, service.findById(service.convertUidToId(uid)), service);
 	}
