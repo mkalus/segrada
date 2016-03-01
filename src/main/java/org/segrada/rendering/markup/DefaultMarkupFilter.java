@@ -21,6 +21,7 @@ package org.segrada.rendering.markup;
 import com.google.inject.Injector;
 import org.segrada.model.prototype.ISource;
 import org.segrada.service.SourceService;
+import org.segrada.session.Identity;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -146,7 +147,10 @@ public class DefaultMarkupFilter extends MarkupFilter {
 	 * @return output text
 	 */
 	protected String annotateBibliographies(String text) {
-		if (sourceService != null) { // skipped in tests
+		// check identity, if injector has been set
+		Identity identity = injector!=null?injector.getInstance(Identity.class):null;
+
+		if (sourceService != null && identity != null && identity.hasRole("SOURCE")) { // skipped in tests and if source not allowed
 			// bibliographic references
 			Matcher matcher = bibRefPattern.matcher(text);
 			StringBuffer sb = new StringBuffer(text.length());
