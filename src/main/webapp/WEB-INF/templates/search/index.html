@@ -51,11 +51,7 @@
 					<label for="searchDetailClass" th:text="#{SearchClass}">Search in type</label>
 					<select id="searchDetailClass" name="class" class="form-control">
 						<option value="" th:text="#{SearchClass.all}">all</option>
-						<option value="Node" th:text="#{Node}" th:selected="${filters.class == 'Node'}">Node</option>
-						<option value="Relation" th:text="#{Relation}" th:selected="${filters.class == 'Relation'}">Relation</option>
-						<option value="File" th:text="#{File}" th:selected="${filters.class == 'File'}">File</option>
-						<option value="Source" th:text="#{Source}" th:selected="${filters.class == 'Source'}">Source</option>
-						<!--/*<option value="Comment" th:text="#{Comment}" th:selected="${filters.class == 'Comment'}">Comment</option>*/-->
+						<option th:each="clazz : ${searchClasses}" th:if="${identity.hasAccess(#strings.toUpperCase(clazz))}" th:value="${clazz}" th:selected="${filters.class == clazz}" th:text="#{${clazz}}">Class</option>
 					</select>
 				</div>
 			</div>
@@ -73,7 +69,7 @@
 			</div>
 		</div>
 
-		<div class="row">
+		<div class="row" th:if="${identity.hasAccess('TAG')}">
 			<div class="col-md-12">
 				<div class="form-group">
 					<label for="searchDetailTags" th:text="#{Tags}">Tags</label>

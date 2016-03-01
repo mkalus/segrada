@@ -6,6 +6,7 @@ import com.sun.jersey.api.view.Viewable;
 import org.segrada.model.prototype.ITag;
 import org.segrada.search.SearchEngine;
 import org.segrada.service.TagService;
+import org.segrada.session.Identity;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.GET;
@@ -37,11 +38,21 @@ import java.util.Map;
 @Path("/search")
 @RequestScoped
 public class SearchController {
+	/**
+	 * Types of classes which can be searched for
+	 */
+	private static final String[] SEARCH_CLASSES = {
+			"Node", "Relation", "File", "Source"
+	};
+
 	@Inject
 	private SearchEngine searchEngine;
 
 	@Inject
 	private TagService tagService;
+
+	@Inject
+	private Identity identity;
 
 	@GET
 	@Produces(MediaType.TEXT_HTML)
@@ -60,7 +71,21 @@ public class SearchController {
 		if (page != null && !page.isEmpty()) filters.put("page", page);
 		if (fields != null && !fields.isEmpty()) filters.put("fields", fields);
 		if (operator != null && !operator.isEmpty()) filters.put("operator", operator);
-		if (clazz != null && !clazz.isEmpty()) filters.put("class", clazz);
+		if (clazz != null && !clazz.isEmpty()) {
+			if (identity.hasAccess(clazz.toUpperCase()))
+				filters.put("class", clazz);
+			else filters.put("class", "dummy*"); // non valid dummy to find nothing
+		} else if (!identity.hasAccess("ADMIN")) {
+			String classes = ""; // add allowed classes for this user only
+			for (String searchClass : SEARCH_CLASSES) {
+				if (identity.hasAccess(searchClass.toUpperCase())) {
+					if (!classes.isEmpty()) classes += ",";
+					classes += searchClass;
+				}
+			}
+			if (classes.isEmpty()) filters.put("class", "dummy*"); // non valid dummy to find nothing
+			else filters.put("class", classes);
+		}
 		if (tags != null && !tags.isEmpty()) {
 			String[] tagTitles = new String[tags.size()];
 			StringBuilder sb = new StringBuilder();
@@ -84,6 +109,7 @@ public class SearchController {
 		if (tags != null && !tags.isEmpty()) {
 			model.put("tags", tags);
 		}
+		model.put("searchClasses", SEARCH_CLASSES);
 		return new Viewable("search/index", model);
 	}
 

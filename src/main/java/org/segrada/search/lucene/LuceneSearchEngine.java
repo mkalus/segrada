@@ -200,8 +200,21 @@ public class LuceneSearchEngine implements SearchEngine {
 
 			// class filter
 			if (filters.containsKey("class") && !filters.get("class").isEmpty()) {
-				TermQuery categoryQuery = new TermQuery(new Term("className", filters.get("class")));
-				searchFilters.add(new QueryWrapperFilter(categoryQuery));
+				// multiple classes?
+				String[] classes = filters.get("class").split(",");
+
+				// single class
+				if (classes.length <= 1) {
+					TermQuery categoryQuery = new TermQuery(new Term("className", filters.get("class")));
+					searchFilters.add(new QueryWrapperFilter(categoryQuery));
+				} else { // multiple classes
+					Filter[] categories = new Filter[classes.length];
+					for (int i = 0; i < classes.length; i++) {
+						categories[i] = new QueryWrapperFilter(new TermQuery(new Term("className", classes[i].trim())));
+					}
+					// add chained filter
+					searchFilters.add(new ChainedFilter(categories, ChainedFilter.OR));
+				}
 			}
 
 			// tag filter

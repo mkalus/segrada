@@ -148,6 +148,12 @@ public class LuceneSearchEngineTest {
 		searchResult = searchEngine.search("title", filter);
 		assertEquals(0, searchResult.total);
 
+		// test multiple classes
+		filter.clear();
+		filter.put("class", "DummyClass,AnotherDummyClass");
+		searchResult = searchEngine.search("title", filter);
+		assertEquals(2, searchResult.total);
+
 		// limit filter
 		filter.clear();
 		filter.put("limit", "1");

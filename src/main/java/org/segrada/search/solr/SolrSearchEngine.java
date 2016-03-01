@@ -22,7 +22,10 @@ import org.segrada.session.ApplicationSettings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Copyright 2016 Maximilian Kalus [segrada@auxnet.de]
@@ -174,11 +177,23 @@ public class SolrSearchEngine implements SearchEngine {
 			}
 
 			// filters for query
-
 			SolrQuery query = new SolrQuery();
 			// class filter
 			if (filters.containsKey("class") && !filters.get("class").isEmpty()) {
-				query.addFilterQuery(this.className, filters.get("class"));
+				// multiple classes?
+				String[] classes = filters.get("class").split(",");
+
+				// single class
+				if (classes.length <= 1) {
+					query.addFilterQuery(this.className, filters.get("class"));
+				} else { // multiple classes
+					String chained = "(";
+					for (int i = 0; i < classes.length; i++) {
+						if (i > 0) chained += " OR ";
+						chained += "className:" + classes[i].trim();
+					}
+					query.addFilterQuery(this.className, chained + ")");
+				}
 			}
 
 			// tag filter
