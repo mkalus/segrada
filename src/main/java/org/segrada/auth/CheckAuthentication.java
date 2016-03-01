@@ -69,7 +69,7 @@ public class CheckAuthentication implements MethodInterceptor {
         if (!method.isAnnotationPresent(PermitAll.class)) {
             //Access denied for all
             if (method.isAnnotationPresent(DenyAll.class))
-                return returnAccessDenied();
+                return accessDenied();
 
 	        // if admin group edit disallowed, check if this is attempted
 	        if (method.isAnnotationPresent(DenyAdminGroupEdit.class)) {
@@ -77,11 +77,22 @@ public class CheckAuthentication implements MethodInterceptor {
 
 		        // check if special group admin
 		        if (entity != null && entity.getModelName().equals("UserGroup") &&
-				        "ADMIN".equals(((IUserGroup) entity).getSpecial())) return returnAccessDenied();
+				        "ADMIN".equals(((IUserGroup) entity).getSpecial())) return accessDenied();
 	        }
 
             // is admin?
             if (!identity.hasRole("ADMIN")) {
+	            // if second paremeter has to be checked for model name
+	            if (method.isAnnotationPresent(CheckSecondParameterForModelName.class)) {
+		            // sanity checks - too few arguments
+		            if (invocation.getArguments() == null || invocation.getArguments().length < 2)
+			            return accessDenied();
+
+		            // get second argument and check access
+		            if (!identity.hasAccess(invocation.getArguments()[1].toString().toUpperCase()))
+			            return accessDenied();
+	            }
+
                 //Verify user access
                 if (method.isAnnotationPresent(RolesAllowed.class)) {
                     RolesAllowed rolesAnnotation = method.getAnnotation(RolesAllowed.class);
@@ -105,13 +116,13 @@ public class CheckAuthentication implements MethodInterceptor {
                         }
 
                     if (!matched)
-                        return returnAccessDenied();
+                        return accessDenied();
 
 	                // method had add/own edit or own delete set
 	                if (isAdd || isOwnEdit || isOwnDelete) {
 		                // new entity? Must have add right!
 		                if (isNewSegradaEntity(invocation)) {
-			                if (!isAdd) return returnAccessDenied();
+			                if (!isAdd) return accessDenied();
 			                // add right will pass here
 		                } else if ((isOwnEdit && !isAllEdit) || (isOwnDelete && !isAllDelete)) {
 			                // check if we have to check own edit/delete, but not all edit/delete -> check entity!
@@ -123,13 +134,13 @@ public class CheckAuthentication implements MethodInterceptor {
 
 			                // does creator id match session id?
 			                if (creator == null || !creator.getId().matches(identity.getId()))
-				                return returnAccessDenied();
+				                return accessDenied();
 			                // all other cases pass
 		                }
 	                }
                 }
             }
-        } else if (identity == null) return returnAccessDenied(); // permit all will still check the existence of identity
+        } else if (identity == null) return accessDenied(); // permit all will still check the existence of identity
 
         if (logger.isDebugEnabled())
             logger.debug("Authentication passed.");
@@ -200,7 +211,7 @@ public class CheckAuthentication implements MethodInterceptor {
      * @return null
      * @throws Exception on IO errors
      */
-    private static Object returnAccessDenied() throws Exception {
+    private static Object accessDenied() throws Exception {
         logger.info("ACCESS DENIED!");
 
         HttpServletResponse response = injector.getInstance(HttpServletResponse.class);

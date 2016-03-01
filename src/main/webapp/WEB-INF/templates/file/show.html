@@ -78,7 +78,7 @@
 			<div role="tabpanel" class="tab-pane" id="node-ref" th:id="${'refs-by-file-' + entity.uid + '-node'}" th:if="${identity.hasAccess('NODE')}">
 				<div th:replace="partials/common :: loadingicon"></div>
 			</div>
-			<div role="tabpanel" class="tab-pane" id="relation-ref" th:id="${'refs-by-file-' + entity.uid + '-relation'}" th:if="${identity.hasAccess('NODE,RELATION')}">
+			<div role="tabpanel" class="tab-pane" id="relation-ref" th:id="${'refs-by-file-' + entity.uid + '-relation'}" th:if="${identity.hasAccess('RELATION')}">
 				<div th:replace="partials/common :: loadingicon"></div>
 			</div>
 			<div role="tabpanel" class="tab-pane" id="source-ref" th:id="${'refs-by-file-' + entity.uid + '-source'}" th:if="${identity.hasAccess('SOURCE')}">

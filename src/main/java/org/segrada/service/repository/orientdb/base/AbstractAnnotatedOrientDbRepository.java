@@ -87,7 +87,7 @@ abstract public class AbstractAnnotatedOrientDbRepository<T extends SegradaAnnot
 									repositoryFactory.produceRepository(OrientDbSourceReferenceRepository.class);
 
 							if (sourceReferenceRepository != null) {
-								PaginationInfo<ISourceReference> paginationInfo = sourceReferenceRepository.findByReference(entity.getId(), page, entriesPerPage);
+								PaginationInfo<ISourceReference> paginationInfo = sourceReferenceRepository.findByReference(entity.getId(), page, entriesPerPage, null); //TODO limit to access
 								return paginationInfo.entities;
 							} else throw new NullPointerException("NULL sourceReferenceRepository");
 						}
@@ -143,7 +143,7 @@ abstract public class AbstractAnnotatedOrientDbRepository<T extends SegradaAnnot
 							FileRepository fileRepository =
 									repositoryFactory.produceRepository(OrientDbFileRepository.class);
 
-							return fileRepository.findByReference(entity.getId(), entity.getModelName().equals("File"));
+							return fileRepository.findByReference(entity.getId(), entity.getModelName().equals("File")); //TODO limit to access
 						}
 					}
 			);

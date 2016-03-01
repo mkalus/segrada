@@ -47,18 +47,24 @@ public class SourceReferenceService extends AbstractRepositoryService<ISourceRef
 	/**
 	 * Find entities by source id
 	 * @param id source id
+	 * @param page page
+	 * @param entriesPerPage entries per page
+	 * @param referencedClass class to limit to (or null)
 	 * @return list of entities or null
 	 */
-	public PaginationInfo<ISourceReference> findBySource(String id, int page, int entriesPerPage) {
-		return repository.findBySource(id, page, entriesPerPage);
+	public PaginationInfo<ISourceReference> findBySource(String id, int page, int entriesPerPage, String referencedClass) {
+		return repository.findBySource(id, page, entriesPerPage, referencedClass);
 	}
 
 	/**
 	 * Find entities by reference id
 	 * @param id reference id
+	 * @param page page
+	 * @param entriesPerPage entries per page
+	 * @param referencedClass class to limit to (or null)
 	 * @return list of entities or null
 	 */
-	public PaginationInfo<ISourceReference> findByReference(String id, int page, int entriesPerPage) {
-		return repository.findByReference(id, page, entriesPerPage);
+	public PaginationInfo<ISourceReference> findByReference(String id, int page, int entriesPerPage, String referencedClass) {
+		return repository.findByReference(id, page, entriesPerPage, referencedClass);
 	}
 }

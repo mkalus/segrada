@@ -20,9 +20,9 @@ import java.lang.annotation.Target;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Annotation to check if admin group is edited
+ * Annotation to check if second parameter is model name we have access to
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE, ElementType.METHOD})
-public @interface DenyAdminGroupEdit {
+public @interface CheckSecondParameterForModelName {
 }

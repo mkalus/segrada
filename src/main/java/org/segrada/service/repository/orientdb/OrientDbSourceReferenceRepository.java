@@ -108,22 +108,23 @@ public class OrientDbSourceReferenceRepository extends AbstractSegradaOrientDbRe
 	}
 
 	@Override
-	public PaginationInfo<ISourceReference> findBySource(String id, int page, int entriesPerPage) {
-		return findByX(id, "source", page, entriesPerPage);
+	public PaginationInfo<ISourceReference> findBySource(String id, int page, int entriesPerPage, String referencedClass) {
+		return findByX(id, "source", page, entriesPerPage, referencedClass);
 	}
 
 	@Override
-	public PaginationInfo<ISourceReference> findByReference(String id, int page, int entriesPerPage) {
-		return findByX(id, "reference", page, entriesPerPage);
+	public PaginationInfo<ISourceReference> findByReference(String id, int page, int entriesPerPage, String referencedClass) {
+		return findByX(id, "reference", page, entriesPerPage, referencedClass);
 	}
 
 	/**
 	 * helper function for both methods above
 	 * @param id of entity
 	 * @param direction either "in" or "out"
+	 * @param referencedClass referenced class to limit search to (or null)
 	 * @return list of source references found
 	 */
-	private PaginationInfo<ISourceReference> findByX(String id, String direction, int page, int entriesPerPage) {
+	private PaginationInfo<ISourceReference> findByX(String id, String direction, int page, int entriesPerPage, String referencedClass) {
 		List<ISourceReference> list = new ArrayList<>();
 
 		// empty?
@@ -135,10 +136,16 @@ public class OrientDbSourceReferenceRepository extends AbstractSegradaOrientDbRe
 				list // list of entities
 		);
 
+		// limit to certain class?
+		String limitToClass;
+		if (referencedClass != null && !referencedClass.isEmpty()) {
+			limitToClass = " AND reference.@class = '" + referencedClass + "'";
+		} else limitToClass = "";
+
 		initDb();
 
 		// first, do a count of the entities
-		OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>("select count(*) from SourceReference where " + direction + " = ?");
+		OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>("select count(*) from SourceReference where " + direction + " = ?" + limitToClass);
 		List<ODocument> result = db.command(query).execute(new ORecordId(id));
 		int total = result.get(0).field("count", Integer.class);
 
@@ -165,7 +172,7 @@ public class OrientDbSourceReferenceRepository extends AbstractSegradaOrientDbRe
 				.concat(" LIMIT ").concat(Integer.toString(entriesPerPage));
 
 		// create query itself and fetch entities
-		query = new OSQLSynchQuery<>("select * from SourceReference where " + direction + " = ?" + getDefaultOrder() + skipLimit);
+		query = new OSQLSynchQuery<>("select * from SourceReference where " + direction + " = ?" + limitToClass + getDefaultOrder() + skipLimit);
 		result = db.command(query).execute(new ORecordId(id));
 
 		for (ODocument document : result) {

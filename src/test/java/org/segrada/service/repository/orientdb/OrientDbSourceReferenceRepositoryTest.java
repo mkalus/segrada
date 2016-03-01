@@ -186,11 +186,11 @@ public class OrientDbSourceReferenceRepositoryTest {
 		repository.save(sourceReference);
 
 		// do not find anything when dummy searching
-		PaginationInfo<ISourceReference> list = repository.findBySource("99:99", 1, 15);
+		PaginationInfo<ISourceReference> list = repository.findBySource("99:99", 1, 15, null);
 		assertTrue(list.entities.isEmpty());
 
 		// find by reference
-		list = repository.findBySource(source.getId(), 1, 15);
+		list = repository.findBySource(source.getId(), 1, 15, null);
 		assertTrue(list.entities.size() == 1);
 		assertEquals(sourceReference.getId(), list.entities.get(0).getId());
 	}
@@ -220,11 +220,11 @@ public class OrientDbSourceReferenceRepositoryTest {
 		repository.save(sourceReference);
 
 		// do not find anything when dummy searching
-		PaginationInfo<ISourceReference> list = repository.findByReference("99:99", 1, 15);
+		PaginationInfo<ISourceReference> list = repository.findByReference("99:99", 1, 15, null);
 		assertTrue(list.entities.isEmpty());
 
 		// find by reference
-		list = repository.findByReference(comment.getId(), 1, 15);
+		list = repository.findByReference(comment.getId(), 1, 15, null);
 		assertTrue(list.entities.size() == 1);
 		assertEquals(sourceReference.getId(), list.entities.get(0).getId());
 	}

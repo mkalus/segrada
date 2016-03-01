@@ -9,6 +9,7 @@ import com.sun.jersey.multipart.FormDataParam;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
+import org.segrada.auth.CheckSecondParameterForModelName;
 import org.segrada.controller.base.AbstractColoredController;
 import org.segrada.model.File;
 import org.segrada.model.prototype.*;
@@ -190,6 +191,7 @@ public class FileController extends AbstractColoredController<IFile> {
 	@Path("/by_file/{uid}/{model}")
 	@Produces(MediaType.TEXT_HTML)
 	@RolesAllowed({"FILE"})
+	@CheckSecondParameterForModelName
 	public Viewable byFile(
 			@PathParam("uid") String fileUid,
 			@PathParam("model") String referenceModel,

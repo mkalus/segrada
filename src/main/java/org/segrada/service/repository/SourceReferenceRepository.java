@@ -25,14 +25,20 @@ public interface SourceReferenceRepository extends CRUDRepository<ISourceReferen
 	/**
 	 * Find entities by source id
 	 * @param id source id
+	 * @param page page
+	 * @param entriesPerPage entries per page
+	 * @param referencedClass class to limit to (or null)
 	 * @return list of entities or null
 	 */
-	PaginationInfo<ISourceReference> findBySource(String id, int page, int entriesPerPage);
+	PaginationInfo<ISourceReference> findBySource(String id, int page, int entriesPerPage, String referencedClass);
 
 	/**
 	 * Find entities by reference id
 	 * @param id reference id
+	 * @param page page
+	 * @param entriesPerPage entries per page
+	 * @param referencedClass class to limit to (or null)
 	 * @return list of entities or null
 	 */
-	PaginationInfo<ISourceReference> findByReference(String id, int page, int entriesPerPage);
+	PaginationInfo<ISourceReference> findByReference(String id, int page, int entriesPerPage, String referencedClass);
 }

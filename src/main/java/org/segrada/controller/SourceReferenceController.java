@@ -14,6 +14,7 @@ import org.segrada.service.SourceService;
 import org.segrada.service.base.AbstractRepositoryService;
 import org.segrada.service.base.SegradaService;
 import org.segrada.service.util.PaginationInfo;
+import org.segrada.session.Identity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,6 +58,9 @@ public class SourceReferenceController extends AbstractBaseController<ISourceRef
 
 	@Inject
 	private Map<String, AbstractRepositoryService> annotatedServices;
+
+	@Inject
+	private Identity identity;
 
 	@Override
 	protected String getBasePath() {
@@ -202,8 +206,11 @@ public class SourceReferenceController extends AbstractBaseController<ISourceRef
 			referenceEntity = (SegradaAnnotatedEntity) referenceService.findById(service.convertUidToId(referenceUid));
 		}
 
+		// not admin and not both node and relation access
+		String limitToClass = getAccessLimit();
+
 		// get references
-		PaginationInfo<ISourceReference> paginationInfo = service.findByReference(service.convertUidToId(referenceUid), page, entriesPerPage);
+		PaginationInfo<ISourceReference> paginationInfo = service.findByReference(service.convertUidToId(referenceUid), page, entriesPerPage, limitToClass);
 
 		// create model map
 		Map<String, Object> model = new HashMap<>();
@@ -237,8 +244,11 @@ public class SourceReferenceController extends AbstractBaseController<ISourceRef
 		ISource source = sourceService.findById(sourceService.convertUidToId(sourceUid));
 		if (source == null) return new Viewable("error", "source not found");
 
+		// not admin and not both node and relation access
+		String limitToClass = getAccessLimit();
+
 		// get references
-		PaginationInfo<ISourceReference> paginationInfo = service.findBySource(source.getId(), page, entriesPerPage);
+		PaginationInfo<ISourceReference> paginationInfo = service.findBySource(source.getId(), page, entriesPerPage, limitToClass);
 
 		// create model map
 		Map<String, Object> model = new HashMap<>();
@@ -249,5 +259,15 @@ public class SourceReferenceController extends AbstractBaseController<ISourceRef
 		model.put("error", error);
 
 		return new Viewable("source_reference/by_source", model);
+	}
+
+	/**
+	 * helper that returns access limits, if needed
+	 * @return null or class access is limited to
+	 */
+	private String getAccessLimit() {
+		// either admin or all required access rights
+		if (identity.hasAccess("ADMIN") || (identity.hasAccess("NODE") && identity.hasAccess("RELATION"))) return null;
+		return identity.hasAccess("NODE")?"Node":"Relation";
 	}
 }
