@@ -26,14 +26,14 @@
 					<th class="text-center"><i class="fa fs-file"></i></th>
 					<th></th>
 					<th th:with="sortHelper=${@org.segrada.rendering.thymeleaf.util.TableSortPreprocessor@createSortLink(myurl, 'title', 'title', 'asc', filters)}"><a href="#" class="sg-control-set" th:href="${sortHelper.url}" th:utext="|#{field.title}${sortHelper.icon}|">Title</a></th>
-					<th class="col-xs-1" th:text="#{field.tags}">Tags</th>
+					<th th:if="${identity.hasAccess('TAG')}" class="col-xs-1" th:text="#{field.tags}">Tags</th>
 					<th></th>
 				</tr>
 				<tr>
 					<td class="text-center"><a class="sg-control-set btn btn-sm btn-link" href="#" th:href="@{${myurl}(reset=1)}" th:title="#{reset}" th:attr="data-target-id=${targetId}"><i class="fa fa-eraser"></i></a></td>
 					<td></td>
 					<td><input type="text" class="form-control" th:value="${filters.search}" name="search" th:placeholder="#{field.filter_title}" title="#{field.filter_title}" /></td>
-					<td>
+					<td th:if="${identity.hasAccess('TAG')}">
 						<input type="hidden" name="clearTags" value="1" />
 						<select multiple="multiple" type="text" name="tags" class="sg-tags">
 							<option th:each="tag : ${filters.tags}" selected="selected" th:value="${tag}" th:text="${tag}">Tag</option>
@@ -51,7 +51,7 @@
 						<span th:unless="${#strings.isEmpty(fileType)}" class="fa fa-file-o fa-2x" th:class="${'fa fa-file-' + entity.fileType + '-o fa-2x'}"></span><span th:if="${#strings.isEmpty(fileType)}" class="fa fa-file-o fa-2x"></span>
 					</td>
 					<td th:text="${entity.title}">Title</td>
-					<td class="sg-taglist-contract">
+					<td th:if="${identity.hasAccess('TAG')}" class="sg-taglist-contract">
 						<div th:replace="partials/common :: taglist (tags=${entity.tags})"></div>
 					</td>
 					<td class="text-right">
