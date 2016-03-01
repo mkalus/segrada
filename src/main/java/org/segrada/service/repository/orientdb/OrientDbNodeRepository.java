@@ -45,6 +45,11 @@ public class OrientDbNodeRepository extends AbstractCoreOrientDbRepository<INode
 	private static final Logger logger = LoggerFactory.getLogger(OrientDbNodeRepository.class);
 
 	/**
+	 * keep allowed sorting fields here
+	 */
+	private static final Set<String> allowedSorts = new HashSet<>(Arrays.asList(new String[]{"titleasc", "minJD", "maxJD"}));
+
+	/**
 	 * Constructor
 	 */
 	@Inject
@@ -176,12 +181,7 @@ public class OrientDbNodeRepository extends AbstractCoreOrientDbRepository<INode
 
 		return hits;
 	}
-
-	/**
-	 * keep allowed sorting fields here
-	 */
-	private static final Set<String> allowedSorts = new HashSet<>(Arrays.asList(new String[]{"titleasc", "minJD", "maxJD"}));
-
+	
 	@Override
 	public PaginationInfo<INode> paginate(int page, int entriesPerPage, @Nullable Map<String, Object> filters) {
 		// avoid NPEs

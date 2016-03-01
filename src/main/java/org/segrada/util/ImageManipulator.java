@@ -37,6 +37,11 @@ public class ImageManipulator {
 	 */
 	private BufferedImage image;
 
+	public ImageManipulator(byte[] imageBytes, String mime) {
+		this.mime = mime;
+		this.image = getBufferedImageFromBytes(imageBytes);
+	}
+
 	/**
 	 * getter
 	 * @return
@@ -64,12 +69,7 @@ public class ImageManipulator {
 			return null;
 		}
 	}
-
-	public ImageManipulator(byte[] imageBytes, String mime) {
-		this.mime = mime;
-		this.image = getBufferedImageFromBytes(imageBytes);
-	}
-
+	
 	/**
 	 * Read image from bytes
 	 * @param imageBytes

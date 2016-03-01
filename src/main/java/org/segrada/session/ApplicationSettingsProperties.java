@@ -32,16 +32,7 @@ public class ApplicationSettingsProperties implements ApplicationSettings {
 	 * singleton reference
 	 */
 	private static ApplicationSettings instance;
-
-	/**
-	 * singleton getter
-	 * @return
-	 */
-	public static ApplicationSettings getInstance() {
-		if (instance == null) instance = new ApplicationSettingsProperties();
-		return instance;
-	}
-
+	
 	/**
 	 * holds mapping of environmental variables to properties
 	 */
@@ -116,6 +107,15 @@ public class ApplicationSettingsProperties implements ApplicationSettings {
 					logger.info("Property set from command line: " + key + ": " + value);
 			}
 		}
+	}
+
+	/**
+	 * singleton getter
+	 * @return
+	 */
+	public static ApplicationSettings getInstance() {
+		if (instance == null) instance = new ApplicationSettingsProperties();
+		return instance;
 	}
 
 	/**
