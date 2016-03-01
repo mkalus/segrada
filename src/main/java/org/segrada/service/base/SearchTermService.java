@@ -21,6 +21,6 @@ import java.util.List;
  *
  * Service implementing a search term method
  */
-public interface SearchTermService<BEAN extends SegradaEntity> {
-	List<BEAN> search(String term);
+public interface SearchTermService<T extends SegradaEntity> {
+	List<T> search(String term);
 }

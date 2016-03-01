@@ -23,7 +23,7 @@ import java.util.Map;
  *
  * Abstract colored base controller - injects services for colors and pictograms in controller
  */
-abstract public class AbstractColoredController<BEAN extends SegradaEntity> extends AbstractBaseController<BEAN> {
+public abstract class AbstractColoredController<T extends SegradaEntity> extends AbstractBaseController<T> {
 	@Inject
 	protected ColorService colorService;
 

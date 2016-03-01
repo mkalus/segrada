@@ -21,7 +21,7 @@ import java.io.InputStream;
  *
  * Service handling filess
  */
-public interface BinaryDataHandler<BEAN extends SegradaEntity> {
+public interface BinaryDataHandler<T extends SegradaEntity> {
 	/**
 	 * move/map/save binary data of entity to binary data service
 	 *
@@ -29,21 +29,21 @@ public interface BinaryDataHandler<BEAN extends SegradaEntity> {
 	 *
 	 * @param entity containing binary data
 	 */
-	void saveBinaryDataToService(BEAN entity);
+	void saveBinaryDataToService(T entity);
 
 	/**
 	 * delete binary data from service
 	 *
 	 * @param entity containing binary data
 	 */
-	void removeBinaryDataFromService(BEAN entity);
+	void removeBinaryDataFromService(T entity);
 
 	/**
 	 * return data as stream
 	 * @param entity containing binary data
 	 * @return input stream for data
 	 */
-	InputStream getBinaryDataAsStream(BEAN entity);
+	InputStream getBinaryDataAsStream(T entity);
 
 	/**
 	 * return data as stream

@@ -3,11 +3,8 @@ package org.segrada.service.base;
 import org.segrada.model.prototype.SegradaEntity;
 import org.segrada.service.repository.factory.RepositoryFactory;
 import org.segrada.service.repository.prototype.CRUDRepository;
-import org.segrada.service.repository.prototype.SegradaRepository;
 
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]
@@ -26,7 +23,7 @@ import java.util.regex.Pattern;
  *
  * Abstract CRUD service
  */
-abstract public class AbstractRepositoryService<BEAN extends SegradaEntity, REPOSITORY extends CRUDRepository<BEAN>> implements SegradaService<BEAN> {
+public abstract class AbstractRepositoryService<T extends SegradaEntity, E extends CRUDRepository<T>> implements SegradaService<T> {
 	/**
 	 * reference to factory
 	 */
@@ -35,7 +32,7 @@ abstract public class AbstractRepositoryService<BEAN extends SegradaEntity, REPO
 	/**
 	 * reference to repository
 	 */
-	protected final REPOSITORY repository;
+	protected final E repository;
 
 	/**
 	 * Constructor
@@ -43,26 +40,26 @@ abstract public class AbstractRepositoryService<BEAN extends SegradaEntity, REPO
 	@SuppressWarnings("unchecked")
 	public AbstractRepositoryService(RepositoryFactory repositoryFactory, Class clazz) {
 		this.repositoryFactory = repositoryFactory;
-		this.repository = (REPOSITORY) repositoryFactory.produceRepository(clazz);
+		this.repository = (E) repositoryFactory.produceRepository(clazz);
 	}
 
 	@Override
-	public BEAN findById(String id) {
+	public T findById(String id) {
 		return repository.find(id);
 	}
 
 	@Override
-	public boolean save(BEAN entity) {
+	public boolean save(T entity) {
 		return repository.save(entity);
 	}
 
 	@Override
-	public boolean delete(BEAN entity) {
+	public boolean delete(T entity) {
 		return repository.delete(entity);
 	}
 
 	@Override
-	public List<BEAN> findAll() {
+	public List<T> findAll() {
 		return repository.findAll();
 	}
 

@@ -2,11 +2,9 @@ package org.segrada.controller.base;
 
 import com.google.inject.Inject;
 import com.sun.jersey.api.view.Viewable;
-import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Ehcache;
 import org.segrada.model.prototype.SegradaEntity;
-import org.segrada.service.ColorService;
 import org.segrada.service.base.AbstractRepositoryService;
 import org.segrada.service.base.SegradaService;
 import org.segrada.service.repository.prototype.CRUDRepository;
@@ -41,7 +39,7 @@ import java.util.Map;
  *
  * Abstract base controller
  */
-abstract public class AbstractBaseController<BEAN extends SegradaEntity> {
+public abstract class AbstractBaseController<T extends SegradaEntity> {
 	@Inject
 	HttpSession session;
 
@@ -51,7 +49,7 @@ abstract public class AbstractBaseController<BEAN extends SegradaEntity> {
 	 * @param <E> type of repository
 	 * @return view with list of entities set
 	 */
-	protected <E extends CRUDRepository<BEAN>> Viewable handleShowAll(AbstractRepositoryService<BEAN, E> service) {
+	protected <E extends CRUDRepository<T>> Viewable handleShowAll(AbstractRepositoryService<T, E> service) {
 		// create model map
 		Map<String, Object> model = new HashMap<>();
 
@@ -68,7 +66,7 @@ abstract public class AbstractBaseController<BEAN extends SegradaEntity> {
 	 * @param filters filter options
 	 * @return view with paginationInfo set
 	 */
-	protected Viewable handlePaginatedIndex(PaginatingRepositoryOrService<BEAN> service, int page, int entriesPerPage, Map<String, Object> filters) {
+	protected Viewable handlePaginatedIndex(PaginatingRepositoryOrService<T> service, int page, int entriesPerPage, Map<String, Object> filters) {
 		return handlePaginatedIndex(service, page, entriesPerPage, filters, null, null);
 	}
 
@@ -82,7 +80,7 @@ abstract public class AbstractBaseController<BEAN extends SegradaEntity> {
 	 * @param model model to fill in (can be null to create new model object)
 	 * @return view with paginationInfo set
 	 */
-	protected Viewable handlePaginatedIndex(PaginatingRepositoryOrService<BEAN> service, int page, int entriesPerPage, Map<String, Object> filters, @Nullable String viewName, @Nullable Map<String, Object> model) {
+	protected Viewable handlePaginatedIndex(PaginatingRepositoryOrService<T> service, int page, int entriesPerPage, Map<String, Object> filters, @Nullable String viewName, @Nullable Map<String, Object> model) {
 		// define default values
 		if (viewName == null) viewName = "index";
 		if (model == null) model = new HashMap<>();
@@ -148,7 +146,7 @@ abstract public class AbstractBaseController<BEAN extends SegradaEntity> {
 	 * @param <E> type of repository
 	 * @return view with detail of entity
 	 */
-	protected <E extends CRUDRepository<BEAN>> Viewable handleShow(String uid, AbstractRepositoryService<BEAN, E> service) {
+	protected <E extends CRUDRepository<T>> Viewable handleShow(String uid, AbstractRepositoryService<T, E> service) {
 		// create model map
 		Map<String, Object> model = new HashMap<>();
 
@@ -183,7 +181,7 @@ abstract public class AbstractBaseController<BEAN extends SegradaEntity> {
 	 * @param <E> type of repository
 	 * @return response, either form view or redirect
 	 */
-	protected <E extends CRUDRepository<BEAN>> Response handleUpdate(BEAN entity, AbstractRepositoryService<BEAN, E> service) {
+	protected <E extends CRUDRepository<T>> Response handleUpdate(T entity, AbstractRepositoryService<T, E> service) {
 		// validate entity
 		Map<String, String> errors = validate(entity);
 		// extra validation
@@ -225,7 +223,7 @@ abstract public class AbstractBaseController<BEAN extends SegradaEntity> {
 	 * @param <E> type of repository
 	 * @return response failed view
 	 */
-	protected <E extends CRUDRepository<BEAN>> Response displayUpdateError(BEAN entity, AbstractRepositoryService<BEAN, E> service) {
+	protected <E extends CRUDRepository<T>> Response displayUpdateError(T entity, AbstractRepositoryService<T, E> service) {
 		return Response.ok(new Viewable("error", "SAVE failed.")).build();
 	}
 
@@ -237,7 +235,7 @@ abstract public class AbstractBaseController<BEAN extends SegradaEntity> {
 	 * @param <E> type of repository
 	 * @return response, either empty response or list
 	 */
-	protected <E extends CRUDRepository<BEAN>> Response handleDelete(String empty, BEAN entity, AbstractRepositoryService<BEAN, E> service) {
+	protected <E extends CRUDRepository<T>> Response handleDelete(String empty, T entity, AbstractRepositoryService<T, E> service) {
 
 		if (!service.delete(entity)) {
 			return Response.ok(new Viewable("error", "DELETE failed.")).build();
@@ -260,24 +258,24 @@ abstract public class AbstractBaseController<BEAN extends SegradaEntity> {
 	}
 
 	/**
-	 * validate bean
+	 * validate T
 	 * @param entity to validate
 	 * @return map containing property and one error message
 	 */
-	protected Map<String, String> validate(BEAN entity) {
+	protected Map<String, String> validate(T entity) {
 		return validate(entity, new HashMap<>());
 	}
 
 	/**
-	 * validate bean
+	 * validate T
 	 * @param entity to validate
 	 * @param errors defined errors already added (may be overwritten)
 	 * @return map containing property and one error message
 	 */
-	protected Map<String, String> validate(BEAN entity, Map<String, String> errors) {
+	protected Map<String, String> validate(T entity, Map<String, String> errors) {
 		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
 		Validator validator = factory.getValidator();
-		for (ConstraintViolation<BEAN> error : validator.validate(entity)) {
+		for (ConstraintViolation<T> error : validator.validate(entity)) {
 			errors.put(error.getPropertyPath().toString(), error.getMessage());
 		}
 
@@ -294,7 +292,7 @@ abstract public class AbstractBaseController<BEAN extends SegradaEntity> {
 	 * @param errors error map
 	 * @param entity to validate
 	 */
-	protected void validateExtra(Map<String, String> errors, BEAN entity) {
+	protected void validateExtra(Map<String, String> errors, T entity) {
 		//Do nothing by default
 	}
 

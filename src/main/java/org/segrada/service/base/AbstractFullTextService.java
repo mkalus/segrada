@@ -28,7 +28,7 @@ import javax.annotation.Nullable;
  *
  * Abstract service supporting full text search
  */
-abstract public class AbstractFullTextService<BEAN extends SegradaEntity, REPOSITORY extends CRUDRepository<BEAN>> extends AbstractRepositoryService<BEAN, REPOSITORY> {
+abstract public class AbstractFullTextService<T extends SegradaEntity, E extends CRUDRepository<T>> extends AbstractRepositoryService<T, E> {
 	private static final Logger logger = LoggerFactory.getLogger(AbstractFullTextService.class);
 
 	/**
@@ -45,7 +45,7 @@ abstract public class AbstractFullTextService<BEAN extends SegradaEntity, REPOSI
 	}
 
 	@Override
-	public boolean save(BEAN entity) {
+	public boolean save(T entity) {
 		if (super.save(entity)) {
 			indexEntity(entity);
 
@@ -55,7 +55,7 @@ abstract public class AbstractFullTextService<BEAN extends SegradaEntity, REPOSI
 	}
 
 	@Override
-	public boolean delete(BEAN entity) {
+	public boolean delete(T entity) {
 		removeFromSearchIndex(entity);
 		return super.delete(entity);
 	}
@@ -71,7 +71,7 @@ abstract public class AbstractFullTextService<BEAN extends SegradaEntity, REPOSI
 	 * worker to index entity
 	 * @param entity to index
 	 */
-	protected void indexEntity(BEAN entity) {
+	protected void indexEntity(T entity) {
 		SearchIndexEntity searchIndexEntity = prepareIndexEntity(entity);
 		if (searchIndexEntity != null)
 			saveToSearchIndex(searchIndexEntity);
@@ -82,7 +82,7 @@ abstract public class AbstractFullTextService<BEAN extends SegradaEntity, REPOSI
 	 * @param entity to be indexed
 	 * @return SearchIndexEntity or null
 	 */
-	abstract protected @Nullable SearchIndexEntity prepareIndexEntity(BEAN entity);
+	abstract protected @Nullable SearchIndexEntity prepareIndexEntity(T entity);
 
 	/**
 	 * commit converted entity (prepareEntityForSearch) to search index - called by save method
@@ -122,7 +122,7 @@ abstract public class AbstractFullTextService<BEAN extends SegradaEntity, REPOSI
 	 * remove entity from search index
 	 * @param entity to remove from index
 	 */
-	protected void removeFromSearchIndex(@Nullable BEAN entity) {
+	protected void removeFromSearchIndex(@Nullable T entity) {
 		if (entity != null) {
 			searchEngine.remove(entity.getId());
 			if (logger.isInfoEnabled())
