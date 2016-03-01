@@ -295,7 +295,7 @@ public class FileController extends AbstractColoredController<IFile> {
 	@GET
 	@Path("/add_reference/{model}/{uid}")
 	@Produces(MediaType.TEXT_HTML)
-	//TODO: ACL
+	@RolesAllowed("FILE_REFERENCE_ADD")
 	public Response addReference(@PathParam("uid") String referenceUid, @PathParam("model") String referenceModel, @QueryParam("source") String sourceId) {
 		// create error map
 		Map<String, String> errors = new HashMap<>();
@@ -351,7 +351,7 @@ public class FileController extends AbstractColoredController<IFile> {
 	@GET
 	@Path("/remove_reference/{model}/{uid}/{source}")
 	@Produces(MediaType.TEXT_HTML)
-	//TODO: ACL
+	@RolesAllowed("FILE_REFERENCE_DELETE")
 	public Response removeReference(@PathParam("uid") String referenceUid, @PathParam("model") String referenceModel, @PathParam("source") String sourceUid) {
 		// find source
 		IFile source = service.findById(service.convertUidToId(sourceUid));

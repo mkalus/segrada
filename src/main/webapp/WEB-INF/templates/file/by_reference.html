@@ -36,13 +36,13 @@
 					<div class="sg-data-icon-bar" role="group" aria-label="Actions" th:strip-whitespace="shallow">
 						<a class="sg-data-icon sg-data-add" href="#" th:title="#{Show}" th:href="@{/file/show/{uid}(uid=${entity.uid})}"><i class="fa fa-eye"></i></a>
 						<a th:if="${identity.hasEditAccess(entity, 'FILE')}" class="sg-data-icon sg-data-add" href="#" th:title="#{Edit}" th:href="@{/file/edit/{uid}(uid=${entity.uid})}"><i class="fa fa-pencil"></i></a>
-						<a th:if="${identity.hasDeleteAccess(entity, 'FILE')}" class="sg-data-icon" href="#" th:title="#{Unlink}" th:href="@{/file/remove_reference/{model}/{uid}/{source}(model=${model},uid=${uid},source=${entity.uid})}" th:attr="data-confirm=${#messages.msg('ReallyUnlink', entity.title, referenceEntity.title)}"><i class="fa fa-unlink"></i></a>
+						<a th:if="${identity.hasAccess('FILE_REFERENCE_DELETE')}" class="sg-data-icon" href="#" th:title="#{Unlink}" th:href="@{/file/remove_reference/{model}/{uid}/{source}(model=${model},uid=${uid},source=${entity.uid})}" th:attr="data-confirm=${#messages.msg('ReallyUnlink', entity.title, referenceEntity.title)}"><i class="fa fa-unlink"></i></a>
 					</div>
 				</td>
 			</tr>
 		</table>
 
-		<div class="sg-margin-bottom sg-stop-flow" th:if="${identity.hasAccess('FILE_ADD')}">
+		<div class="sg-margin-bottom sg-stop-flow" th:if="${identity.hasAccess('FILE_REFERENCE_ADD')}">
 			<h4 th:text="#{add.file_reference}">New File Reference</h4>
 
 			<form th:id="${'add-file-ref-' + uid}" action="#" th:action="${baseUrl}?${baseUrl}:@{/file/add_reference/{model}/{uid}(model=${model},uid=${uid})}" class="sg-control-form" th:attr="data-target-id=${targetId}">
