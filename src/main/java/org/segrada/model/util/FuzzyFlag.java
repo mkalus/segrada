@@ -1,6 +1,7 @@
 package org.segrada.model.util;
 
 import java.util.EnumSet;
+import java.util.Set;
 
 /**
  * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]
@@ -53,7 +54,7 @@ public enum FuzzyFlag {
 	 * @param flagContainer to be set
 	 * @return changed container
 	 */
-	public static EnumSet<FuzzyFlag> addFuzzyFlag(char flag, EnumSet<FuzzyFlag> flagContainer) {
+	public static Set<FuzzyFlag> addFuzzyFlag(char flag, Set<FuzzyFlag> flagContainer) {
 		FuzzyFlag f = FuzzyFlag.translateCharToFuzzyFlag(flag);
 		if (f != null) {
 			// null container? return new one
@@ -70,7 +71,7 @@ public enum FuzzyFlag {
 	 * @param flagContainer to be set
 	 * @return changed container
 	 */
-	public static EnumSet<FuzzyFlag> deleteFuzzyFlag(char flag, EnumSet<FuzzyFlag> flagContainer) {
+	public static Set<FuzzyFlag> deleteFuzzyFlag(char flag, Set<FuzzyFlag> flagContainer) {
 		FuzzyFlag f = FuzzyFlag.translateCharToFuzzyFlag(flag);
 		if (f != null && flagContainer != null) {
 			// remove from container set
@@ -87,7 +88,7 @@ public enum FuzzyFlag {
 	 * @param flagContainer to be checked
 	 * @return true, if flag is in container
 	 */
-	public static boolean hasFuzzyFlag(char flag, EnumSet<FuzzyFlag> flagContainer) {
+	public static boolean hasFuzzyFlag(char flag, Set<FuzzyFlag> flagContainer) {
 		FuzzyFlag f = FuzzyFlag.translateCharToFuzzyFlag(flag);
 		return f != null && flagContainer != null && flagContainer.contains(f);
 	}
@@ -97,7 +98,7 @@ public enum FuzzyFlag {
 	 * @param flagContainer to be extracted
 	 * @return list of flags, can be empty array
 	 */
-	public static char[] getFuzzyFlags(EnumSet<FuzzyFlag> flagContainer) {
+	public static char[] getFuzzyFlags(Set<FuzzyFlag> flagContainer) {
 		// empty? return empty
 		if (flagContainer == null || flagContainer.isEmpty()) return new char[0];
 		char[] values = new char[flagContainer.size()];
