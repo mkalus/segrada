@@ -9,6 +9,8 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import java.util.Set;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.segrada.test.PropertyAsserter.assertBasicGetterSetterBehavior;
 
@@ -19,6 +21,16 @@ public class RelationTypeTest {
 	public static void setUp() throws Exception {
 		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
 		validator = factory.getValidator();
+	}
+
+	@Test
+	public void defaultValues() throws Exception {
+		final RelationType relationType = new RelationType();
+
+		assertEquals("", relationType.getFromTitle());
+		assertEquals("", relationType.getToTitle());
+		assertEquals("", relationType.getDescription());
+		assertNotNull(relationType.getDescriptionMarkup());
 	}
 
 	@Test

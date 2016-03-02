@@ -7,12 +7,9 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
-
 import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.segrada.test.PropertyAsserter.assertBasicGetterSetterBehavior;
 
 public class UserGroupTest {
@@ -22,6 +19,14 @@ public class UserGroupTest {
 	public static void setUp() throws Exception {
 		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
 		validator = factory.getValidator();
+	}
+
+	@Test
+	public void defaultValues() throws Exception {
+		final UserGroup userGroup = new UserGroup();
+
+		assertEquals("", userGroup.getTitle());
+		assertEquals("", userGroup.getDescription());
 	}
 
 	@Test

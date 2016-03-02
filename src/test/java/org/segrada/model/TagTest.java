@@ -9,6 +9,7 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import java.util.Set;
 
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.segrada.test.PropertyAsserter.assertBasicGetterSetterBehavior;
 
@@ -19,6 +20,13 @@ public class TagTest {
 	public static void setUp() throws Exception {
 		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
 		validator = factory.getValidator();
+	}
+
+	@Test
+	public void defaultValues() throws Exception {
+		final Tag tag = new Tag();
+
+		assertNull(tag.getTitle());
 	}
 
 	@Test
