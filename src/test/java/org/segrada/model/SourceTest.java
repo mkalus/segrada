@@ -45,7 +45,7 @@ public class SourceTest {
 	}
 
 	@Test
-	public void testValidColor() throws Exception {
+	public void testValidSource() throws Exception {
 		final Source source = new Source();
 		source.setShortTitle("Example title");
 		source.setShortRef("ex");
