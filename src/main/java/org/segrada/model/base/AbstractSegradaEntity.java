@@ -33,21 +33,21 @@ abstract public class AbstractSegradaEntity implements SegradaEntity {
 	/**
 	 * document version (may be 0)
 	 */
-	private int version = 0;
+	private int version;
 
 	/**
 	 * document id (may be null)
 	 */
-	private String id = null;
+	private String id;
 
 	/**
 	 * cached uid
 	 */
-	private String uid = null;
+	private String uid;
 
-	private Long created = 0L;
+	private Long created;
 
-	private Long modified = 0L;
+	private Long modified;
 
 	private IUser creator;
 

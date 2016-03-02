@@ -192,8 +192,8 @@ public class OrientRememberMeRepository implements RememberMeRepository {
 	 * Token representer
 	 */
 	private class Token {
-		private String selector = null;
-		private String token = null;
+		private String selector;
+		private String token;
 
 		Token(String token) {
 			if (token != null && !token.isEmpty()) {
