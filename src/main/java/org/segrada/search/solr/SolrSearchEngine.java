@@ -63,14 +63,14 @@ public class SolrSearchEngine implements SearchEngine {
 	/**
 	 * mappings to field names
 	 */
-	private final String id = "id";
-	private final String className = "className_s";
-	private final String title = "title_t";
-	private final String subTitles = "subTitles_t";
-	private final String content = "content_t";
-	private final String tag = "tag_ss";
-	private final String color = "color_s"; // should be stored only
-	private final String icon = "icon_s"; // should be stored only
+	private static final String ID = "id";
+	private static final String CLASS_NAME = "className_s";
+	private static final String TITLE = "title_t";
+	private static final String SUB_TITLES = "subTitles_t";
+	private static final String CONTENT = "content_t";
+	private static final String TAG = "tag_ss";
+	private static final String COLOR = "color_s"; // should be stored only
+	private static final String ICON = "icon_s"; // should be stored only
 
 	/**
 	 * Constructor
@@ -103,32 +103,32 @@ public class SolrSearchEngine implements SearchEngine {
 		try {
 			SolrInputDocument doc = new SolrInputDocument();
 
-			doc.addField(this.id, id);
-			doc.addField(this.className, className);
+			doc.addField(ID, id);
+			doc.addField(CLASS_NAME, className);
 
 			if (title != null)
-				doc.addField(this.title, title, 10f * weight);
+				doc.addField(TITLE, title, 10f * weight);
 
 			if (subTitles != null)
-				doc.addField(this.subTitles, subTitles, 6f * weight);
+				doc.addField(SUB_TITLES, subTitles, 6f * weight);
 
 			// add content
 			if (content == null) content = "";
-			doc.addField(this.content, content, weight);
+			doc.addField(CONTENT, content, weight);
 
 			// add tagIds
 			if (tagIds != null)
 				for (String tagId : tagIds) {
-					doc.addField(this.tag, tagId, weight);
+					doc.addField(TAG, tagId, weight);
 				}
 
 			// add color and icon - just stored
 			if (color != null)
-				doc.addField(this.color, color, 0);
+				doc.addField(COLOR, color, 0);
 
 			// add color and icon - just stored
 			if (iconFileIdentifier != null)
-				doc.addField(this.icon, iconFileIdentifier, 0);
+				doc.addField(ICON, iconFileIdentifier, 0);
 
 			// add document
 			UpdateResponse response = solr.add(doc);
@@ -159,13 +159,13 @@ public class SolrSearchEngine implements SearchEngine {
 			// do we have a filter to contain to certain fields?
 			if (filters.containsKey("fields")) {
 				String fields = filters.get("fields");
-				if (fields.isEmpty()) containFields = new String[]{this.title, this.subTitles, this.content};
-				else if (fields.equalsIgnoreCase(this.title)) containFields = new String[]{this.title};
-				else if (fields.equalsIgnoreCase(this.subTitles)) containFields = new String[]{this.subTitles};
-				else if (fields.equalsIgnoreCase(this.content)) containFields = new String[]{this.content};
-				else if (fields.equalsIgnoreCase("allTitles")) containFields = new String[]{this.title, this.subTitles};
+				if (fields.isEmpty()) containFields = new String[]{TITLE, SUB_TITLES, CONTENT};
+				else if (fields.equalsIgnoreCase(TITLE)) containFields = new String[]{TITLE};
+				else if (fields.equalsIgnoreCase(SUB_TITLES)) containFields = new String[]{SUB_TITLES};
+				else if (fields.equalsIgnoreCase(CONTENT)) containFields = new String[]{CONTENT};
+				else if (fields.equalsIgnoreCase("allTitles")) containFields = new String[]{TITLE, SUB_TITLES};
 				else throw new RuntimeException("fields-Filter " + fields + " is not known.");
-			} else containFields = new String[]{this.title, this.subTitles, this.content};
+			} else containFields = new String[]{TITLE, SUB_TITLES, CONTENT};
 			parser = new MultiFieldQueryParser(Version.LUCENE_47, containFields, analyzer);
 
 			// which operator do we use?
@@ -185,14 +185,14 @@ public class SolrSearchEngine implements SearchEngine {
 
 				// single class
 				if (classes.length <= 1) {
-					query.addFilterQuery(this.className, filters.get("class"));
+					query.addFilterQuery(CLASS_NAME, filters.get("class"));
 				} else { // multiple classes
 					String chained = "(";
 					for (int i = 0; i < classes.length; i++) {
 						if (i > 0) chained += " OR ";
 						chained += "className:" + classes[i].trim();
 					}
-					query.addFilterQuery(this.className, chained + ")");
+					query.addFilterQuery(CLASS_NAME, chained + ")");
 				}
 			}
 
@@ -204,7 +204,7 @@ public class SolrSearchEngine implements SearchEngine {
 				for (String tagLocal : tags) {
 					booleanQuery.add(new TermQuery(new Term("tag", tagLocal.trim())), BooleanClause.Occur.SHOULD);
 				}
-				query.addFilterQuery(this.tag, booleanQuery.toString());
+				query.addFilterQuery(TAG, booleanQuery.toString());
 			}
 
 			// define query
@@ -243,7 +243,7 @@ public class SolrSearchEngine implements SearchEngine {
 
 			// define highlighting
 			query.setHighlight(true);
-			query.addHighlightField(this.content);
+			query.addHighlightField(CONTENT);
 			query.setHighlightFragsize(18);
 			query.setHighlightSnippets(10);
 			query.setHighlightSimplePre("<b>");
@@ -270,7 +270,7 @@ public class SolrSearchEngine implements SearchEngine {
 				// get highlighted components
 				if (searchTerm != null) {
 					if (response.getHighlighting().get(searchHit.getId()) != null) {
-						List<String> fragments = response.getHighlighting().get(searchHit.getId()).get(this.content);
+						List<String> fragments = response.getHighlighting().get(searchHit.getId()).get(CONTENT);
 						String[] bestFragments = new String[fragments.size() > 10?10:fragments.size()];
 						for (int i = 0; i < bestFragments.length; i++)
 							bestFragments[i] = fragments.get(i);
@@ -299,21 +299,21 @@ public class SolrSearchEngine implements SearchEngine {
 	 */
 	private SearchHit createHitFromDocument(SolrDocument doc) {
 		SearchHit searchHit = new SearchHit();
-		searchHit.setId((String) doc.get(this.id));
-		searchHit.setClassName((String) doc.get(this.className));
-		searchHit.setTitle(getOneValueFromField(doc, this.title));
-		searchHit.setSubTitles(getOneValueFromField(doc, this.subTitles));
+		searchHit.setId((String) doc.get(ID));
+		searchHit.setClassName((String) doc.get(CLASS_NAME));
+		searchHit.setTitle(getOneValueFromField(doc, TITLE));
+		searchHit.setSubTitles(getOneValueFromField(doc, SUB_TITLES));
 
 		// get tags
-		if (doc.containsKey(this.tag)) {
-			Object o = doc.get(this.tag);
+		if (doc.containsKey(TAG)) {
+			Object o = doc.get(TAG);
 			if (o instanceof List) {
 				List<String> l = (List<String>) o;
 				String[] tags = new String[l.size()];
 				tags = l.toArray(tags);
 				searchHit.setTagIds(tags);
 			} else
-				logger.warn("Unknown type " + o.getClass() + " for field " + this.tag);
+				logger.warn("Unknown type " + o.getClass() + " for field " + TAG);
 		}
 
 		// color
@@ -321,7 +321,7 @@ public class SolrSearchEngine implements SearchEngine {
 		if (colorLocal != null && !(colorLocal instanceof String)) colorLocal = colorLocal.toString();
 		searchHit.setColor(colorLocal!=null?new Integer((String)colorLocal):null);
 
-		searchHit.setIconFileIdentifier(getOneValueFromField(doc, this.icon));
+		searchHit.setIconFileIdentifier(getOneValueFromField(doc, ICON));
 
 		return searchHit;
 	}
@@ -367,7 +367,7 @@ public class SolrSearchEngine implements SearchEngine {
 
 			// define highlighting
 			query.setHighlight(true);
-			query.addHighlightField(this.content);
+			query.addHighlightField(CONTENT);
 			query.setHighlightFragsize(100);
 			query.setHighlightSnippets(100);
 			query.setHighlightSimplePre("<b>");
@@ -379,7 +379,7 @@ public class SolrSearchEngine implements SearchEngine {
 
 			if (!results.isEmpty()) {
 				if (response.getHighlighting().get(id) != null) {
-					List<String> fragments = response.getHighlighting().get(id).get(this.content);
+					List<String> fragments = response.getHighlighting().get(id).get(CONTENT);
 					String[] bestFragments = new String[fragments.size() > 100?100:fragments.size()];
 					for (int i = 0; i < bestFragments.length; i++)
 						bestFragments[i] = fragments.get(i);
@@ -408,7 +408,7 @@ public class SolrSearchEngine implements SearchEngine {
 		try {
 			SolrDocument doc = solr.getById(id);
 			SearchHit searchHit = createHitFromDocument(doc);
-			searchHit.setHighlightText(new String[]{getOneValueFromField(doc, this.content)});
+			searchHit.setHighlightText(new String[]{getOneValueFromField(doc, CONTENT)});
 
 			return searchHit;
 		} catch (Exception e) {
