@@ -44,22 +44,22 @@ abstract public class AbstractCoreModel extends AbstractAnnotatedModel implement
 	/**
 	 * minimum entry of periods above
 	 */
-	private String minEntry = null;
+	private String minEntry;
 
 	/**
 	 * maximum entry of periods above
 	 */
-	private String maxEntry = null;
+	private String maxEntry;
 
 	/**
 	 * minimum entry calendar of periods above
 	 */
-	private String minEntryCalendar = null;
+	private String minEntryCalendar;
 
 	/**
 	 * maximum entry calendar of periods above
 	 */
-	private String maxEntryCalendar = null;
+	private String maxEntryCalendar;
 
 	/**
 	 * minimum JD date of periods above
