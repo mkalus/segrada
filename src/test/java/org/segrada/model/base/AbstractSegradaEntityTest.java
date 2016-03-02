@@ -7,6 +7,18 @@ import static org.junit.Assert.*;
 
 public class AbstractSegradaEntityTest {
 	@Test
+	public void defaultValues() throws Exception {
+		MockEntity entity1 = new MockEntity();
+
+		assertEquals(new Long(0L), entity1.getCreated());
+		assertEquals(new Long(0L), entity1.getModified());
+		assertEquals(0, entity1.getVersion());
+		assertNull(entity1.getId());
+		assertNull(entity1.getCreator());
+		assertNull(entity1.getModifier());
+	}
+
+	@Test
 	public void testEquals() throws Exception {
 		MockEntity entity1 = new MockEntity();
 		MockEntity entity2 = new MockEntity();

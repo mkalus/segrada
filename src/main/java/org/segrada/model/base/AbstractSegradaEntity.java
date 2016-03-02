@@ -45,9 +45,9 @@ abstract public class AbstractSegradaEntity implements SegradaEntity {
 	 */
 	private String uid;
 
-	private Long created;
+	private Long created = 0L; // force zero default value
 
-	private Long modified;
+	private Long modified = 0L; // force zero default value
 
 	private IUser creator;
 

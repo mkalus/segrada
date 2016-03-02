@@ -9,8 +9,7 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.segrada.test.PropertyAsserter.assertBasicGetterSetterBehavior;
 
 public class FileTest {
@@ -27,6 +26,21 @@ public class FileTest {
 	@Test
 	public void testProperties() {
 		assertBasicGetterSetterBehavior(new File());
+	}
+
+	@Test
+	public void defaultValues() throws Exception {
+		final File file = new File();
+
+		assertEquals("", file.getTitle());
+		assertNull(file.getFilename());
+		assertEquals("", file.getDescription());
+		assertNotNull(file.getDescriptionMarkup());
+		assertEquals("", file.getCopyright());
+		assertNull(file.getMimeType());
+		assertEquals("", file.getLocation());
+		assertNull(file.getFullText());
+		assertEquals(new Long(0L), file.getFileSize());
 	}
 
 	@Test
