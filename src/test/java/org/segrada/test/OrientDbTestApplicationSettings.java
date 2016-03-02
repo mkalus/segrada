@@ -28,6 +28,12 @@ public class OrientDbTestApplicationSettings implements ApplicationSettings {
 	}
 
 	@Override
+	public String getSetting(String key, String defaultValue) {
+		if (defaultValue != null && !defaultValue.isEmpty()) return defaultValue;
+		return "admin";
+	}
+
+	@Override
 	public void setSetting(String key, String newValue) {
 		//ignore
 	}

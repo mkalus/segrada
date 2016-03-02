@@ -4,6 +4,7 @@ import com.google.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nullable;
 import java.io.InputStream;
 import java.util.*;
 
@@ -123,9 +124,17 @@ public class ApplicationSettingsProperties implements ApplicationSettings {
 	 * @param key to query for
 	 * @return string or null
 	 */
+	@Nullable
 	@Override
 	public String getSetting(String key) {
 		return settings.getProperty(key);
+	}
+
+	@Nullable
+	@Override
+	public String getSetting(String key, @Nullable String defaultValue) {
+		String value = getSetting(key);
+		return value==null||value.isEmpty()?defaultValue:value;
 	}
 
 	@Override

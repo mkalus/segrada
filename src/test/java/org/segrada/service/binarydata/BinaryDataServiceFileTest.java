@@ -10,6 +10,7 @@ import org.segrada.model.base.AbstractSegradaEntity;
 import org.segrada.model.prototype.SegradaEntity;
 import org.segrada.session.ApplicationSettings;
 
+import javax.annotation.Nullable;
 import java.io.File;
 import java.io.InputStream;
 import java.nio.charset.Charset;
@@ -74,6 +75,12 @@ public class BinaryDataServiceFileTest {
 		binaryDataServiceFile = new BinaryDataServiceFile(new ApplicationSettings() {
 			@Override
 			public String getSetting(String key) {
+				return savePath;
+			}
+
+			@Nullable
+			@Override
+			public String getSetting(String key, @Nullable String defaultValue) {
 				return savePath;
 			}
 

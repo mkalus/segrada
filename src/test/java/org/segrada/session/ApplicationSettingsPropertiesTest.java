@@ -27,6 +27,15 @@ public class ApplicationSettingsPropertiesTest {
 	}
 
 	@Test
+	public void testGetSettingWithDefault() throws Exception {
+		assertEquals("TEST", applicationSettings.getSetting("environment"));
+
+		assertEquals("memory:segradatest", applicationSettings.getSetting("orientDB.url", "default"));
+		assertEquals("default", applicationSettings.getSetting("orientDB.urlxx", "default"));
+		assertNull(applicationSettings.getSetting("orientDB.urlxx", null));
+	}
+
+	@Test
 	public void testSetSetting() throws Exception {
 		assertNull(applicationSettings.getSetting("dummy"));
 

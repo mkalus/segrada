@@ -29,6 +29,14 @@ public interface ApplicationSettings {
 	@Nullable String getSetting(String key);
 
 	/**
+	 * retrieve a setting from the settings - with default value
+	 * @param key to look for
+	 * @param defaultValue to set if setting is null or empty
+	 * @return value retrieved or default (may be null)
+	 */
+	@Nullable String getSetting(String key, @Nullable String defaultValue);
+
+	/**
 	 * persist setting
 	 * @param key to look for
 	 * @param newValue new value to be saved
