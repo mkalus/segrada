@@ -23,7 +23,7 @@
 		<joda.version>2.9.2</joda.version>
 		<lucene.version>4.7.0</lucene.version>
 		<!-- upgradeable? -->
-		<orientdb.version>2.1.11</orientdb.version>
+		<orientdb.version>2.1.12</orientdb.version>
 		<tika.version>1.11</tika.version>
 	</properties>
 
