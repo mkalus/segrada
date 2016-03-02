@@ -10,6 +10,7 @@ import org.segrada.model.util.FuzzyFlag;
 import javax.annotation.Nullable;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Set;
 
 import static org.segrada.model.util.FuzzyFlag.*;
 
@@ -71,9 +72,9 @@ abstract public class AbstractCoreModel extends AbstractAnnotatedModel implement
 	 */
 	private Long maxJD = Long.MAX_VALUE;
 
-	private EnumSet<FuzzyFlag> minFuzzyFlags;
+	private Set<FuzzyFlag> minFuzzyFlags;
 
-	private EnumSet<FuzzyFlag> maxFuzzyFlags;
+	private Set<FuzzyFlag> maxFuzzyFlags;
 
 	@Override
 	public @Nullable List<ILocation> getLocations() {

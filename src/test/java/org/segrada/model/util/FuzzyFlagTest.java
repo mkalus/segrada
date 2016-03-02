@@ -3,6 +3,7 @@ package org.segrada.model.util;
 import org.junit.Test;
 
 import java.util.EnumSet;
+import java.util.Set;
 
 import static org.junit.Assert.*;
 
@@ -28,7 +29,7 @@ public class FuzzyFlagTest {
 		assertNull(FuzzyFlag.addFuzzyFlag('a', null));
 
 		// add valid value to null container
-		EnumSet<FuzzyFlag> testContainer = FuzzyFlag.addFuzzyFlag('c', null);
+		Set<FuzzyFlag> testContainer = FuzzyFlag.addFuzzyFlag('c', null);
 		assertNotNull(testContainer);
 		assertTrue(testContainer.size() == 1);
 		assertTrue(testContainer.contains(FuzzyFlag.FUZZY_CA));
@@ -54,7 +55,7 @@ public class FuzzyFlagTest {
 		assertNull(FuzzyFlag.deleteFuzzyFlag('a', null));
 		assertNull(FuzzyFlag.deleteFuzzyFlag('c', null));
 
-		EnumSet<FuzzyFlag> testContainer = EnumSet.of(FuzzyFlag.FUZZY_CA, FuzzyFlag.FUZZY_UNKNOWN);
+		Set<FuzzyFlag> testContainer = EnumSet.of(FuzzyFlag.FUZZY_CA, FuzzyFlag.FUZZY_UNKNOWN);
 
 		// remove invalid from container
 		testContainer = FuzzyFlag.deleteFuzzyFlag('a', testContainer);

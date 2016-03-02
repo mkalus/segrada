@@ -8,7 +8,7 @@ import org.segrada.util.FlexibleDateParser;
 import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
-import java.util.EnumSet;
+import java.util.Set;
 
 import static org.segrada.model.util.FuzzyFlag.hasFuzzyFlag;
 
@@ -58,9 +58,9 @@ public class Period extends AbstractSegradaEntity implements IPeriod {
 
 	private String comment = "";
 
-	private EnumSet<FuzzyFlag> fromFuzzyFlags;
+	private Set<FuzzyFlag> fromFuzzyFlags;
 
-	private EnumSet<FuzzyFlag> toFuzzyFlags;
+	private Set<FuzzyFlag> toFuzzyFlags;
 
 	/**
 	 * dummy check to make sure that from is lower or equal to to
