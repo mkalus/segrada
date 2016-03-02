@@ -65,7 +65,7 @@ public class File extends AbstractAnnotatedModel implements IFile {
 	/**
 	 * length of file
 	 */
-	private Long fileSize = 0L;
+	private Long fileSize;
 
 	/**
 	 * should full text of file be saved in database for search?
