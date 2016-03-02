@@ -1,0 +1,73 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" th:lang="${#locale.language}">
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<title th:text="#{identity.name}">My Profile</title>
+	<div th:include="partials/common :: head" th:remove="tag"></div>
+</head>
+
+<body>
+<div th:replace="partials/common :: browser"></div>
+
+<div class="container">
+	<div class="sg-data sg-user" id="user-my-profile">
+		<div class="sg-headbox-right">
+			<a href="#" type="button" class="close sg-data-close" aria-label="Edit"><i class="fa fa-times"></i></a>
+		</div>
+		<h4 class="sg-data-header" th:text="${identity.name}">User Name</h4>
+
+		<div class="sg-user-data sg-margin-top sg-margin-bottom">
+			<div class="row">
+				<div class="col-xs-3"><strong th:text="#{field.login}">Login</strong></div>
+				<div class="col-xs-9"><code th:text="${identity.user.login}">login</code></div>
+			</div>
+			<div class="row">
+				<div class="col-xs-3"><strong th:text="#{field.name}">Name</strong></div>
+				<div class="col-xs-9" th:text="${identity.name}">Name</div>
+			</div>
+			<div class="row" th:if="${identity.hasAccess('GROUP')}">
+				<div class="col-xs-3"><strong th:text="#{field.group}">Group</strong></div>
+				<div class="col-xs-9"><span th:text="${identity.userGroup.title}">Group</span> <a href="#" th:href="@{/user_group/show/{uid}(uid=${identity.userGroup.uid})}" class="sg-data-icon sg-data-add" th:title="#{Show}"><i class="fa fa-eye"></i></a></div>
+			</div>
+			<div class="row" th:unless="${identity.user.lastLogin}">
+				<div class="col-xs-3"><strong th:text="#{field.lastLogin}">Last login</strong></div>
+				<div class="col-xs-9"><th:datetimeformat millis="${identity.user.lastLogin}" format="#{datetime}" /></div>
+			</div>
+		</div>
+
+		<h4 th:text="#{ChangePassword}">Change Password</h4>
+
+		<div th:if="${successMessage}" class="alert alert-success" role="alert" th:text="#{passwordChanged}">Password successfully changed.</div>
+
+		<form th:unless="${successMessage}" method="post" action="#" th:action="@{/user/profile}" th:object="${identity.user}" class="form-horizontal sg-data-form sg-data-content" data-id="user-my-profile">
+			<input type="hidden" name="_csrf" th:value="${_csrf}" />
+
+			<div class="form-group" th:classappend="${errors}?(${#maps.containsKey(errors, 'password')}?'has-error has-feedback')">
+				<label class="col-sm-2 control-label" th:for="${'password-' + id}"><span th:text="#{field.password}"></span><span class="text-danger"> *</span></label>
+				<div class="col-sm-10">
+					<input type="password" th:id="${'password-' + id}" name="password" class="form-control" th:placeholder="#{field.password}" />
+					<span class="help-block" th:text="${errors}?(${errors['password']}?${#messages.msg(errors['password'])})">Error</span>
+				</div>
+			</div>
+
+			<div class="form-group" th:classappend="${errors}?(${#maps.containsKey(errors, 'confirmPassword')}?'has-error has-feedback')">
+				<label class="col-sm-2 control-label" th:for="${'confirmPassword-' + id}"><span th:text="#{field.confirmPassword}"></span><span class="text-danger"> *</span></label>
+				<div class="col-sm-10">
+					<input type="password" th:id="${'confirmPassword-' + id}" name="confirmPassword" class="form-control" th:placeholder="#{field.confirmPassword}" />
+					<span class="help-block" th:text="${errors}?(${errors['confirmPassword']}?${#messages.msg(errors['confirmPassword'])})">Error</span>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<div class="col-sm-offset-2 col-sm-10">
+					<button type="submit" class="btn btn-primary" th:text="#{ChangePassword}">Change Password</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+
+<div th:replace="partials/common :: footer"></div>
+</body>
+</html>

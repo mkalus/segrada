@@ -41,7 +41,7 @@ import java.util.Map;
  */
 public abstract class AbstractBaseController<T extends SegradaEntity> {
 	@Inject
-	HttpSession session;
+	protected HttpSession session;
 
 	/**
 	 * Handle non paginated index

@@ -9,14 +9,15 @@ import org.segrada.model.prototype.IUser;
 import org.segrada.service.UserGroupService;
 import org.segrada.service.UserService;
 import org.segrada.service.base.SegradaService;
+import org.segrada.session.Identity;
 import org.segrada.util.PasswordEncoder;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -47,6 +48,9 @@ public class UserController extends AbstractBaseController<IUser> {
 
 	@Inject
 	private PasswordEncoder passwordEncoder;
+
+	@Inject
+	Identity identity;
 
 	@Override
 	protected String getBasePath() {
@@ -89,8 +93,6 @@ public class UserController extends AbstractBaseController<IUser> {
 		return handleForm(service.findById(service.convertUidToId(uid)));
 	}
 
-	//TODO: add edit own profile setting -> can only edit certain fields
-
 	@Override
 	protected void enrichModelForEditingAndSaving(Map<String, Object> model) {
 		// add list of user groups
@@ -104,6 +106,51 @@ public class UserController extends AbstractBaseController<IUser> {
 	@RolesAllowed("ADMIN")
 	public Response update(User entity) {
 		return handleUpdate(entity, service);
+	}
+
+	@GET
+	@Path("/profile")
+	@Produces(MediaType.TEXT_HTML)
+	@RolesAllowed("MY_PROFILE")
+	public Viewable showMyProfile() {
+		return new Viewable(getBasePath() + "profile");
+	}
+
+	@POST
+	@Path("/profile")
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@Produces(MediaType.TEXT_HTML)
+	@RolesAllowed("MY_PROFILE")
+	public Viewable updateMyProfile(
+			@FormParam("password") final String password,
+			@FormParam("confirmPassword") final String confirmPassword
+	) {
+		// get current user
+		User user = (User) identity.getUser();
+		// set new password
+		user.setPassword(password);
+		user.setConfirmPassword(confirmPassword);
+
+		// validate entity
+		Map<String, String> errors = validate(user);
+		// extra validation: check password change
+		validatePasswordChange(errors, user);
+
+		// create model map
+		Map<String, Object> model = new HashMap<>();
+
+		// no validation errors: save entity
+		if (errors.isEmpty()) {
+			if (service.save(user)) {
+				clearCache(); // delete caches
+
+				model.put("successMessage", true);
+			}
+		}
+
+		model.put("errors", errors);
+
+		return new Viewable(getBasePath() + "profile", model);
 	}
 
 	@GET
@@ -134,16 +181,7 @@ public class UserController extends AbstractBaseController<IUser> {
 			User user = (User) entity;
 
 			// now check passwords
-			if (user.getPassword().isEmpty() || user.getConfirmPassword().isEmpty()) {
-				// empty: add error for second field
-				errors.put("confirmPassword", "error.notEmpty");
-			} else if (!user.getPassword().equals(user.getConfirmPassword())) {
-				// passwords do not match
-
-			} else {
-				// set new password
-				entity.setPassword(passwordEncoder.encode(entity.getPassword()));
-			}
+			validatePasswordChange(errors, user);
 
 			// validate if there is a double entry of user names
 			if (!entity.getLogin().isEmpty() && service.findByLogin(entity.getLogin()) != null) {
@@ -178,6 +216,24 @@ public class UserController extends AbstractBaseController<IUser> {
 			if (!entity.getLogin().isEmpty() && !entity.getLogin().equals(originalEntity.getLogin()) && service.findByLogin(entity.getLogin()) != null) {
 				errors.put("login", "error.double");
 			}
+		}
+	}
+
+	/**
+	 * helper to detect password changes
+	 * @param errors error map
+	 * @param user to check passwords from
+	 */
+	protected void validatePasswordChange(Map<String, String> errors, User user) {
+		if (user.getPassword().isEmpty() || user.getConfirmPassword().isEmpty()) {
+			// empty: add error for second field
+			errors.put("confirmPassword", "error.notEmpty");
+		} else if (!user.getPassword().equals(user.getConfirmPassword())) {
+			// passwords do not match
+			errors.put("confirmPassword", "error.passwordsNoMatch");
+		} else {
+			// set new password
+			user.setPassword(passwordEncoder.encode(user.getPassword()));
 		}
 	}
 }
