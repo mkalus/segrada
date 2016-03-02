@@ -63,14 +63,14 @@ public class SolrSearchEngine implements SearchEngine {
 	/**
 	 * mappings to field names
 	 */
-	private final String id = "id";
-	private final String className = "className_s";
-	private final String title = "title_t";
-	private final String subTitles = "subTitles_t";
-	private final String content = "content_t";
-	private final String tag = "tag_ss";
-	private final String color = "color_s"; // should be stored only
-	private final String icon = "icon_s"; // should be stored only
+	private final String id;
+	private final String className;
+	private final String title;
+	private final String subTitles;
+	private final String content;
+	private final String tag;
+	private final String color; // should be stored only
+	private final String icon; // should be stored only
 
 	/**
 	 * Constructor
@@ -79,6 +79,16 @@ public class SolrSearchEngine implements SearchEngine {
 	 */
 	public SolrSearchEngine(ApplicationSettings settings, Analyzer luceneAnalyzer) {
 		this.analyzer = luceneAnalyzer;
+
+		// define field values from settings
+		id = settings.getSetting("solr.field_id", "id");
+		className = settings.getSetting("solr.field_className", "className_s");
+		title = settings.getSetting("solr.field_title", "title_t");
+		subTitles = settings.getSetting("solr.field_subTitles", "subTitles_t");
+		content = settings.getSetting("solr.field_content", "content_t");
+		tag = settings.getSetting("solr.field_tag", "tag_ss");
+		color = settings.getSetting("solr.field_color", "color_s");
+		icon = settings.getSetting("solr.field_icon", "icon_s");
 
 		String url = settings.getSetting("solr.server");
 		if (url == null || url.isEmpty()) {
