@@ -106,7 +106,9 @@ starten. Hier ein Beispielskript:
     docker pull ronix/segrada
     docker run -d -e "SEGRADA_ORIENTDB_LOGIN=admin" -e "SEGRADA_ORIENTDB_URL=remote:localhost/Segrada" \
         -v "$(pwd)/segrada_data:/usr/local/segrada/segrada_data" \
-        -e "SEGRADA_ORIENTDB_PASSWORD=admin" --net="host" -p 8080:8080 ronix/segrada
+        -e "SEGRADA_ORIENTDB_PASSWORD=admin" \
+        -e "SEGRADA_SOLR_SERVER=http://localhost:8983/solr/segrada" \
+        --net="host" -p 8080:8080 ronix/segrada
 
 Nun müssen Sie nur noch die Verteilung von hochgeladenen Dateien zwischen den einzelnen Knoten angehen. Sie können
 dafür ein (verteiltes) Netzwerk-Dateisystem verwenden z.B. NFS, Gluster oder Ceph. Eine andere Option wäre die

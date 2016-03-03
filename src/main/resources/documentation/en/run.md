@@ -95,7 +95,9 @@ If you want to test Segrada in a distributed environment, you can run OrientDb a
     docker pull ronix/segrada
     docker run -d -e "SEGRADA_ORIENTDB_LOGIN=admin" -e "SEGRADA_ORIENTDB_URL=remote:localhost/Segrada" \
         -v "$(pwd)/segrada_data:/usr/local/segrada/segrada_data" \
-        -e "SEGRADA_ORIENTDB_PASSWORD=admin" --net="host" -p 8080:8080 ronix/segrada
+        -e "SEGRADA_ORIENTDB_PASSWORD=admin" \
+        -e "SEGRADA_SOLR_SERVER=http://localhost:8983/solr/segrada" \
+        --net="host" -p 8080:8080 ronix/segrada
 
 Now you only have to cope with the issue of distributing uploading files. You can use a network and/or distributed file
 system for this, like NFS, Gluster, or Ceph. Another option would be to synchronize files between nodes. BitTorrentSync
