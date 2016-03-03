@@ -103,6 +103,8 @@ Now you only have to cope with the issue of distributing uploading files. You ca
 system for this, like NFS, Gluster, or Ceph. Another option would be to synchronize files between nodes. BitTorrentSync
 or syncthing would be choices here.
 
+You can also user `docker-compose up` in the folder `deploy/compose` to create and start a Segrada cluster.
+
 
 ## Deploying Segrada as Servlet
 

@@ -115,6 +115,9 @@ dafür ein (verteiltes) Netzwerk-Dateisystem verwenden z.B. NFS, Gluster oder Ce
 Synchronisation der Dateien zwischen den Knoten. BitTorrentSync oder syncthing können hier beispielsweise verwendet
 werden.
 
+Sie können auch `docker-compose up` im Ordner `deploy/compose` ausführen, um automatische einen Segrada-Cluster zu
+erstellen und zu starten.
+
 
 ## Segrada im Servlet-Kontext
 
