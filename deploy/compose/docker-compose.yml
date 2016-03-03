@@ -1,0 +1,37 @@
+# Compose file to create distributed docker instance with Segrada, Solr and OrientDB Server.
+version: '2'
+services:
+  solr:
+    build: ./solr/.
+    expose:
+      - "8983"
+    container_name: solr
+
+  orientdb:
+    image: orientdb/orientdb
+    expose:
+      - "2424"
+      - "2480"
+    container_name: orientdb
+    environment:
+      ORIENTDB_ROOT_PASSWORD: 12345
+
+  segrada:
+    build: ./segrada/.
+    ports:
+      - "8080:8080"
+    container_name: segrada
+    depends_on:
+      - orientdb
+      - solr
+    links:
+      - orientdb
+      - solr
+    environment:
+      SEGRADA_ORIENTDB_LOGIN: admin
+      SEGRADA_ORIENTDB_URL: remote:orientdb/Segrada
+      SEGRADA_ORIENTDB_PASSWORD: admin
+      SEGRADA_SOLR_SERVER: http://solr:8983/solr/segrada
+# only needed in creation process
+      SEGRADA_ORIENTDB_REMOTE_ROOT: root
+      SEGRADA_ORIENTDB_REMOTE_PASSWORD: 12345

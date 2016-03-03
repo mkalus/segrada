@@ -1,5 +1,6 @@
 ############################################################
 # Dockerfile to run Segrada Containers - get locally created image e.g. via maven
+#
 # Based on JRE8 Image
 # Get Docker image via "docker pull ronix/segrada"
 # You can mount a volume /segrada_data to make data persistent

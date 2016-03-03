@@ -1,19 +1,10 @@
 ############################################################
-# Dockerfile to run Segrada Containers - get image from Web
+# Docker file to run Segrada Containers - get image from Web
 #
-# This is a variant of the Dockerfile contained in the root of this project.
-# It will load Segrada and the empty database from the Web and create an image from these.
+# It will load Segrada and create a server instance (no local db image created).
+# Used in Compose file.
 #
 # Based on JRE8 Image
-# Get Docker image via "docker pull ronix/segrada"
-# You can mount a volume /segrada_data to make data persistent
-# Build using docker build --rm -t ronix/segrada .
-# Run like this:
-# docker run --name segrada -p 8080:8080 ronix/segrada
-# or
-# docker run --name segrada -p 8080:8080 -v path_to/segrada_data:/usr/local/segrada/segrada_data ronix/segrada
-# or (using environmental variables)
-# docker run -e "SEGRADA_ORIENTDB_URL=remote:localhost/Segrada" ronix/segrada
 ############################################################
 
 # Set the base image to use to Java 8
@@ -40,20 +31,14 @@ RUN set -xe \
 	done
 
 ENV SEGRADA_TGZ_URL http://segrada.org/fileadmin/downloads/Segrada.tar.gz
-ENV SEGRADA_DB_TGZ_URL http://segrada.org/fileadmin/downloads/SegradaEmptyDB.tar.gz
 
 RUN set -xe \
 	&& curl -SL "$SEGRADA_TGZ_URL" -o Segrada.tar.gz \
 	&& curl -SL "$SEGRADA_TGZ_URL.asc" -o Segrada.tar.gz.asc \
-	&& curl -SL "$SEGRADA_DB_TGZ_URL" -o SegradaEmptyDB.tar.gz \
-	&& curl -SL "$SEGRADA_DB_TGZ_URL.asc" -o SegradaEmptyDB.tar.gz.asc \
 	&& gpg --verify --trust-model always Segrada.tar.gz.asc \
-	&& gpg --verify --trust-model always SegradaEmptyDB.tar.gz.asc \
-	&& tar -xvf SegradaEmptyDB.tar.gz \
 	&& tar -xvf Segrada.tar.gz \
 	&& chown -R segrada:segrada . \
 	&& mv Segrada/* . \
-	&& rmdir Segrada \
 	&& rm Segrada*.tar.gz*
 
 # Variables of Segrada can be set as defined in environmental variables doc.
