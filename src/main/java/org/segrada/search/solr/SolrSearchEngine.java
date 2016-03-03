@@ -281,10 +281,12 @@ public class SolrSearchEngine implements SearchEngine {
 				if (searchTerm != null) {
 					if (response.getHighlighting().get(searchHit.getId()) != null) {
 						List<String> fragments = response.getHighlighting().get(searchHit.getId()).get(this.content);
-						String[] bestFragments = new String[fragments.size() > 10?10:fragments.size()];
-						for (int i = 0; i < bestFragments.length; i++)
-							bestFragments[i] = fragments.get(i);
-						searchHit.setHighlightText(bestFragments);
+						if (fragments != null) {
+							String[] bestFragments = new String[fragments.size() > 10 ? 10 : fragments.size()];
+							for (int i = 0; i < bestFragments.length; i++)
+								bestFragments[i] = fragments.get(i);
+							searchHit.setHighlightText(bestFragments);
+						}
 					}
 				}
 
