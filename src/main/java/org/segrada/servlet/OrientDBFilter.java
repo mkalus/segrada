@@ -90,7 +90,7 @@ public class OrientDBFilter implements Filter {
 		PasswordEncoder passwordEncoder = injector.getInstance(PasswordEncoder.class);
 		ApplicationSettings applicationSettings = injector.getInstance(ApplicationSettings.class);
 		// get and run updater
-		OrientDbSchemaUpdater updater = new OrientDbSchemaUpdater(orientGraphFactory, applicationSettings.getSetting("orientDB.url"));
+		OrientDbSchemaUpdater updater = new OrientDbSchemaUpdater(orientGraphFactory, applicationSettings.getSetting("orientDB.url"), applicationSettings.getSetting("orientDB.remote_root"), applicationSettings.getSetting("orientDB.remote_pw"));
 		updater.initializeDatabase();
 		updater.buildOrUpdateSchema();
 		updater.populateWithData(passwordEncoder);

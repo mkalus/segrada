@@ -1,5 +1,6 @@
 package org.segrada.service.repository.orientdb.init;
 
+import com.orientechnologies.orient.client.remote.OServerAdmin;
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.orientechnologies.orient.core.sql.OCommandSQL;
@@ -53,6 +54,12 @@ public class OrientDbSchemaUpdater {
 	private final String dbPath;
 
 	/**
+	 * needed to remotely create databases
+	 */
+	private final String dbRoot;
+	private final String dbRootPassword;
+
+	/**
 	 * keep config version
 	 */
 	private int version = -1;
@@ -65,6 +72,20 @@ public class OrientDbSchemaUpdater {
 	public OrientDbSchemaUpdater(OrientGraphFactory orientGraphFactory, String dbPath) {
 		this.orientGraphFactory = orientGraphFactory;
 		this.dbPath = dbPath;
+		this.dbRoot = null;
+		this.dbRootPassword = null;
+	}
+
+	/**
+	 * Constructor
+	 * @param orientGraphFactory graph factory instance
+	 * @param dbPath e.g. plocal:/tmp/segrada
+	 */
+	public OrientDbSchemaUpdater(OrientGraphFactory orientGraphFactory, String dbPath, String dbRoot, String dbRootPassword) {
+		this.orientGraphFactory = orientGraphFactory;
+		this.dbPath = dbPath;
+		this.dbRoot = dbRoot;
+		this.dbRootPassword = dbRootPassword;
 	}
 
 	/**
@@ -113,11 +134,18 @@ public class OrientDbSchemaUpdater {
 	 */
 	public void initializeDatabase() {
 		if (dbPath.startsWith("remote:")) {
-			logger.info("Cannot check remote database existence for " + dbPath + ": skipping.");
-			return;
-		}
-
-		if (!orientGraphFactory.exists()) {
+			try {
+				OServerAdmin admin = new OServerAdmin(dbPath);
+				admin.connect(dbRoot, dbRootPassword);
+				if (!admin.existsDatabase()) {
+					logger.info("Attempting to create database " + dbPath + ".");
+					admin.createDatabase("graph", "plocal");
+				}
+			} catch (Exception e) {
+				logger.info("Could connect to " + dbPath + ": exiting.");
+				System.exit(1);
+			}
+		} else if (!orientGraphFactory.exists()) {
 			logger.info("Database " + dbPath + " did not exist: Creating it now.");
 			try {
 				OrientGraph graph = new OrientGraph(dbPath);
@@ -204,6 +232,9 @@ public class OrientDbSchemaUpdater {
 		// open database
 		ODatabaseDocumentTx db = orientGraphFactory.getDatabase();
 
+		// flag to indicate whether user groups have been created already
+		boolean groupCreated = false;
+
 		// version 0 => 1
 		if (versionLocal <= 0) {
 			// create default password
@@ -213,13 +244,28 @@ public class OrientDbSchemaUpdater {
 
 			long now = System.currentTimeMillis();
 
+			// upward compatibility for new databases: create user group
+			Map<String, String> roles = new HashMap<>();
+			roles.put("ADMIN", "1");
+
+			ODocument userGroup = new ODocument("UserGroup")
+					.field("title", "Anonymous")
+					.field("titleasc", "anonymous")
+					.field("roles", roles)
+					.field("created", now)
+					.field("modified", now)
+					.field("active", true)
+					.field("special", "ANONYMOUS");
+			db.save(userGroup);
+			groupCreated = true;
+
 			// create default admin user
 			ODocument doc = new ODocument("User")
 					.field("login", "admin")
 					.field("password", password)
 					.field("name", "Administrator")
 					.field("nameasc", "administrator")
-					.field("role", "ADMIN")
+					.field("group", userGroup)
 					.field("created", now)
 					.field("modified", now)
 					//.field("lastLogin", null)
@@ -263,24 +309,34 @@ public class OrientDbSchemaUpdater {
 			// create new groups: admin group
 			Map<String, String> roles = null;
 			ODocument doc = null;
-			try {
-				roles = new HashMap<>();
-				roles.put("ADMIN", "1");
+			if (!groupCreated) {
+				try {
+					roles = new HashMap<>();
+					roles.put("ADMIN", "1");
 
-				doc = new ODocument("UserGroup")
-						.field("title", "Administrator")
-						.field("titleasc", "administrator")
-						.field("roles", roles)
-						.field("created", now)
-						.field("modified", now)
-						.field("active", true)
-						.field("special", "ADMIN");
-				db.save(doc);
+					doc = new ODocument("UserGroup")
+							.field("title", "Administrator")
+							.field("titleasc", "administrator")
+							.field("roles", roles)
+							.field("created", now)
+							.field("modified", now)
+							.field("active", true)
+							.field("special", "ADMIN");
+					db.save(doc);
+
+					// promote all users to admins
+					db.command(new OCommandSQL("UPDATE User SET group = " + doc.getIdentity().toString())).execute();
+
+					groupCreated = true;
+				} catch (Exception e) {
+					logger.error("Could not update UserGroup: " + e.getMessage());
+				}
+			} else {
+				// get first user group (should be admin)
+				doc = db.browseClass("UserGroup").next();
 
 				// promote all users to admins
 				db.command(new OCommandSQL("UPDATE User SET group = " + doc.getIdentity().toString())).execute();
-			} catch (Exception e) {
-				logger.error("Could not update UserGroup: " + e.getMessage());
 			}
 
 			// user group

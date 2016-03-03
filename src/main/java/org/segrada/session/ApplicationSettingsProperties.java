@@ -46,6 +46,8 @@ public class ApplicationSettingsProperties implements ApplicationSettings {
 		buildMap.put("SEGRADA_ORIENTDB_URL", "orientDB.url");
 		buildMap.put("SEGRADA_ORIENTDB_LOGIN", "orientDB.login");
 		buildMap.put("SEGRADA_ORIENTDB_PASSWORD", "orientDB.password");
+		buildMap.put("SEGRADA_ORIENTDB_REMOTE_ROOT", "orientDB.remote_root");
+		buildMap.put("SEGRADA_ORIENTDB_REMOTE_PASSWORD", "orientDB.remote_pw");
 		buildMap.put("SEGRADA_REQUIRE_LOGIN", "requireLogin");
 		buildMap.put("SEGRADA_LUCENE_ANALYZER", "lucene.analyzer");
 		buildMap.put("SEGRADA_SERVER_PORT", "server.port");
