@@ -98,7 +98,7 @@
 						<li th:if="${showLogout}"><a href="#" th:href="@{/login/logout}" th:inline="text"><span class="fa fa-power-off"></span> [[#{Logout}]]</a></li>
 						<li th:if="${showLogout and identity.hasAccess('CLEAR_CACHE')}" role="separator" class="divider"></li>
 						<li th:if="${identity.hasAccess('ADMIN')}"><a class="sg-control-set" href="#" th:href="@{/admin/reindex}" th:inline="text"><span class="fa fa-recycle"></span> [[#{menu.reindex}]]</a></li>
-						<li th:if="${identity.hasAccess('CLEAR_CACHE')}"><a class="sg-control-set" href="#" th:href="@{/admin/clear_cache}" th:inline="text"><span class="fa fa-refresh"></span>[[#{menu.clearCache}]]</a></li>
+						<li th:if="${identity.hasAccess('CLEAR_CACHE')}"><a class="sg-control-set" href="#" th:href="@{/admin/clear_cache}" th:inline="text"><span class="fa fa-refresh"></span> [[#{menu.clearCache}]]</a></li>
 					</ul>
 				</li>
 			</ul>
