@@ -51,8 +51,13 @@ public class OrientDbPeriodRepository extends AbstractSegradaOrientDbRepository<
 		Period period = new Period();
 		period.setFromEntryCalendar(document.field("fromEntryCalendar", String.class));
 		period.setToEntryCalendar(document.field("toEntryCalendar", String.class));
-		period.setFromEntry(document.field("fromEntry", String.class));
-		period.setToEntry(document.field("toEntry", String.class));
+		try {
+			period.setFromEntry(document.field("fromEntry", String.class)); // ignore parse exceptions
+		} catch (Exception e) {}
+		try {
+			period.setToEntry(document.field("toEntry", String.class)); // ignore parse exceptions
+		} catch (Exception e) {}
+
 		period.setParentId(document.field("parentId", String.class));
 		period.setComment(document.field("comment", String.class));
 		//type/from/to set automatically
