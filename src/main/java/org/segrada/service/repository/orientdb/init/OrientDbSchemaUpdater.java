@@ -249,13 +249,13 @@ public class OrientDbSchemaUpdater {
 			roles.put("ADMIN", "1");
 
 			ODocument userGroup = new ODocument("UserGroup")
-					.field("title", "Anonymous")
-					.field("titleasc", "anonymous")
+					.field("title", "Administrator")
+					.field("titleasc", "administrator")
 					.field("roles", roles)
 					.field("created", now)
 					.field("modified", now)
 					.field("active", true)
-					.field("special", "ANONYMOUS");
+					.field("special", "ADMIN");
 			db.save(userGroup);
 			groupCreated = true;
 
