@@ -1,0 +1,23 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" th:lang="${#locale.language}">
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<title th:unless="${error}" th:text="#{Period}">Period</title>
+	<div th:include="partials/common :: head" th:remove="tag"></div>
+</head>
+
+<body>
+<div th:replace="partials/common :: browser"></div>
+
+<div class="container">
+	<div class="alert alert-success" role="alert" th:text="#{periodChanged}">Successfully updated!</div>
+
+	<div class="sg-update-period hidden" th:attr="data-id=${'#sg-period-' + entity.uid}">
+		<div th:utext="${@org.segrada.util.FuzzyDateRenderer@renderOrEmpty(entity.fromJD,entity.fromEntry,entity.fromEntryCalendar,entity.fuzzyFromFlags)}">Start</div>
+		<div th:utext="${@org.segrada.util.FuzzyDateRenderer@renderOrEmpty(entity.toJD,entity.toEntry,entity.toEntryCalendar,entity.fuzzyToFlags)}">Stop</div>
+		<div th:text="${entity.comment}">Comment</div>
+	</div>
+</div>
+</body>
+</html>

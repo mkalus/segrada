@@ -637,11 +637,6 @@ function escapeHTML(myString) {
 
 				e.preventDefault();
 			});
-			$('.sg-period-edit', container).click(function(e) {
-				$(this).hide();
-				$('.sg-period-form-edit', container).show();
-				e.preventDefault();
-			});
 
 			// form submit
 			form.ajaxForm({
@@ -659,7 +654,75 @@ function escapeHTML(myString) {
 					alert("Error " + responseText.status + "\n" + responseText.statusText);
 				}
 			});
-		})
+		});
+
+		// *******************************************************
+		// Generic AJAX modal activator
+		$('.sg-ajax-modal', part).click(function(e) {
+			var $modal = $('#sg-modal');
+			var $content = $('.modal-body-inner', $modal);
+			var $loading = $('.modal-loading', $modal);
+			// set title and body
+			$('h4', $modal).html($(this).attr('data-title'));
+			// clear content, set loading icon
+			$content.html('');
+			$content.hide();
+			$loading.show();
+			$modal.modal('show');
+			// dispatch ajax
+			$.get($(this).attr('href'), function (data) {
+				$loading.hide();
+				$content.html(data);
+				$content.show();
+				afterAjax($content);
+			}).fail(function() {
+				alert("ERROR");
+			});
+			e.preventDefault();
+		});
+
+		// modal ajax form submit
+		$('.sg-ajax-modal-form', part).ajaxForm({
+			beforeSubmit: function(arr, $form, options) {
+				var $modal = $('#sg-modal');
+				var $content = $('.modal-body-inner', $modal);
+				var $loading = $('.modal-loading', $modal);
+				// hide content, set loading icon
+				$content.hide();
+				$loading.show();
+				return true;
+			},
+			success: function (responseText, statusText, xhr, $form) {
+				var $modal = $('#sg-modal');
+				var $content = $('.modal-body-inner', $modal);
+				var $loading = $('.modal-loading', $modal);
+				$content.html(responseText);
+				$content.show();
+				$loading.hide();
+				afterAjax($content);
+
+				// called after modal shown: update period definitions
+				$modal = $('#sg-modal'); // reload html
+				$('.sg-update-period', $modal).each(function() {
+					var ref = $(this).attr('data-id');
+					var target = $(ref);
+					if (target.length > 0) {
+						for (var i = 0; i < 3; i++) {
+							$('td:eq(' + i + ')', target).html($('div:eq(' + i + ')', $(this)).html());
+						}
+					}
+				});
+			},
+			error: function (responseText, statusText, xhr, $form) {
+				var $modal = $('#sg-modal');
+				var $content = $('.modal-body-inner', $modal);
+				var $loading = $('.modal-loading', $modal);
+				$content.html(responseText);
+				$content.show();
+				$loading.hide();
+				afterAjax($content);
+			}
+		});
 
 		// *******************************************************
 		// Graph: load remote data and update graph view
@@ -1015,7 +1078,7 @@ function escapeHTML(myString) {
 				if (data != '') window.location.href = url;
 			}).fail(function() {
 				alert("ERROR");
-			});;
+			});
 			e.preventDefault();
 		});
 

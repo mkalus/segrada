@@ -80,12 +80,13 @@ Common fragments.
 			<th class="col-xs-5" th:text="#{field.comment}">Comment</th>
 			<th></th>
 		</tr>
-		<tr th:each="myPeriod : ${entity.periods}">
+		<tr th:each="myPeriod : ${entity.periods}" th:id="${'sg-period-' + myPeriod.uid}">
 			<td th:utext="${@org.segrada.util.FuzzyDateRenderer@renderOrEmpty(myPeriod.fromJD,myPeriod.fromEntry,myPeriod.fromEntryCalendar,myPeriod.fuzzyFromFlags)}">Start</td>
 			<td th:utext="${@org.segrada.util.FuzzyDateRenderer@renderOrEmpty(myPeriod.toJD,myPeriod.toEntry,myPeriod.toEntryCalendar,myPeriod.fuzzyToFlags)}">Stop</td>
 			<td th:text="${myPeriod.comment}">Comment</td>
 			<td class="text-right">
 				<div class="sg-data-icon-bar" role="group" aria-label="Actions">
+					<a th:if="${identity.hasEditAccess(myPeriod, 'PERIOD')}" class="sg-data-icon sg-ajax-modal" href="#" th:title="#{Edit}" th:href="@{/period/edit/{uid}(uid=${myPeriod.uid})}" th:attr="data-title=#{modal.Period}"><i class="fa fa-pencil"></i></a>
 					<a th:if="${identity.hasDeleteAccess(myPeriod, 'PERIOD')}" class="sg-data-icon" href="#" th:title="#{Delete}" th:href="@{/period/delete/{uid}(uid=${myPeriod.uid})}" th:attr="data-confirm=${#messages.msg('ReallyDelete', myPeriod.title)}"><i class="fa fa-times-circle-o"></i></a>
 				</div>
 			</td>
@@ -97,30 +98,19 @@ Common fragments.
 	<form th:if="${identity.hasAccess('PERIOD_ADD')}" action="#" th:action="@{/period/add/{model}/{uid}(model=${entity.modelName},uid=${entity.uid})}" method="post" class="sg-margin-top-sm sg-period-form sg-period-form-add" style="display: none;" th:style="${period and isNewEntity}?'':'display:none;'">
 		<input type="hidden" name="_csrf" th:value="${_csrf}" />
 
-		<div th:replace="partials/common :: periodform (entity=${entity},errors=${errors},period=${period},hidePeriod=${hidePeriod})"></div>
+		<div th:replace="partials/common :: periodform (errors=${errors},period=${period},hidePeriod=${hidePeriod})"></div>
 		<div class="row sg-margin-top-sm">
 			<div class="col-lg-12">
 				<input type="submit" value="Add period" class="btn btn-primary" th:value="#{add.period}" />
 			</div>
 		</div>
 	</form>
-
-	<!--/*TODO for later
-	<form action="#" th:action="@{/period/update/{model}/{uid}(model=${entity.modelName},uid=${entity.uid})}" method="post" class="sg-margin-top-sm sg-period-form sg-period-form-edit" style="display: none;" th:style="${period and !isNewEntity}?'':'display:none;'">
-		<input type="hidden" name="_csrf" th:value="${_csrf}" />
-		<div th:replace="partials/common :: periodform (entity=${entity},errors=${errors},period=${period},hidePeriod=${hidePeriod})"></div>
-		<div class="row sg-margin-top-sm">
-			<div class="col-lg-12">
-				<input type="submit" value="Update period" class="btn btn-primary" th:value="#{update.period}" />
-			</div>
-		</div>
-	</form>*/-->
 </div>
 
 
 <h4>Period form</h4>
 
-<div th:fragment="periodform" th:if="${identity.hasAccess('PERIOD_ADD,PERIOD_EDIT,PERIOD_EDIT_MINE')}">
+<div th:fragment="periodform (errors,period,hidePeriod)" th:if="${identity.hasAccess('PERIOD_ADD,PERIOD_EDIT,PERIOD_EDIT_MINE')}">
 	<div class="row">
 		<div class="col-md-3" th:classappend="${errors} and (${errors['fromLowerEqualThanTo']} or ${errors['fromJD']})?'has-error has-feedback'">
 			<input name="fromEntry" class="form-control" type="text" placeholder="Start" th:placeholder="#{field.fromEntry}" th:value="${period}?${period.fromEntry}" />
@@ -137,7 +127,7 @@ Common fragments.
 		</div>
 		<div class="col-md-3" th:classappend="${errors} and ${errors['toJD']}?'has-error has-feedback'">
 			<div class="sg-period-toggle" th:style="${hidePeriod}?'display: none;'">
-				<input name="toEntry" class="form-control" type="text" placeholder="End" th:placeholder="#{field.toEntry}" th:value="${period}?${period.fromEntry}" />
+				<input name="toEntry" class="form-control" type="text" placeholder="End" th:placeholder="#{field.toEntry}" th:value="${period}?${period.toEntry}" />
 				<span class="help-block" th:if="${errors} and ${errors['toJD']}" th:text="${errors}?(${errors['toJD']}?#{error.calendar.incorrect})">Error</span>
 			</div>
 		</div>
@@ -284,6 +274,22 @@ Common fragments.
 	<!--/* Vis Graph system */-->
 	<script src="../../../js/vendor/vis.min.js" th:src="@{/js/vendor/vis.min.js}"></script>
 	<script src="../../../js/segrada.min.js" th:src="@{/js/segrada.min.js}"></script>
+
+	<!-- /* Generic modal */-->
+	<div id="sg-modal" class="modal fade" tabindex="-1" role="dialog">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title">Title</h4>
+				</div>
+				<div class="modal-body">
+					<div class="modal-loading"><div th:replace="partials/common :: loadingicon"></div></div>
+					<div class="modal-body-inner">Content</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 </body>
 </html>

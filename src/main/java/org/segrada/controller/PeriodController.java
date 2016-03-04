@@ -5,6 +5,7 @@ import com.google.inject.servlet.RequestScoped;
 import com.sun.jersey.api.view.Viewable;
 import org.segrada.controller.base.AbstractBaseController;
 import org.segrada.model.Period;
+import org.segrada.model.prototype.INode;
 import org.segrada.model.prototype.IPeriod;
 import org.segrada.model.prototype.SegradaCoreEntity;
 import org.segrada.service.ColorService;
@@ -13,6 +14,8 @@ import org.segrada.service.PeriodService;
 import org.segrada.service.RelationService;
 import org.segrada.service.base.AbstractRepositoryService;
 import org.segrada.service.base.SegradaService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;
@@ -41,6 +44,8 @@ import java.util.Map;
 @Path("/period")
 @RequestScoped
 public class PeriodController extends AbstractBaseController<IPeriod> {
+	private static final Logger logger = LoggerFactory.getLogger(PeriodController.class);
+
 	@Inject
 	private PeriodService service;
 
@@ -104,7 +109,12 @@ public class PeriodController extends AbstractBaseController<IPeriod> {
 
 		// period or point of time?
 		boolean hidePeriod = isPeriodValue == null || isPeriodValue.isEmpty() || !isPeriodValue.equals("1");
-		if (hidePeriod) toEntry = fromEntry;
+		if (hidePeriod) {
+			toEntry = fromEntry;
+			toFuzzyFlagsCa = fromFuzzyFlagsCa;
+			toFuzzyFlagsUncertain = fromFuzzyFlagsUncertain;
+			toEntryCalendar = fromEntryCalendar;
+		}
 
 		// pre validation errors
 		Map<String, String> preValidationErrors = new HashMap<>();
@@ -172,6 +182,78 @@ public class PeriodController extends AbstractBaseController<IPeriod> {
 	}
 
 	@GET
+	@Path("/edit/{uid}")
+	@Produces(MediaType.TEXT_HTML)
+	@RolesAllowed({"PERIOD_EDIT", "PERIOD_EDIT_MINE"})
+	public Viewable edit(@PathParam("uid") String uid) {
+		return handleForm(service.findById(service.convertUidToId(uid)));
+	}
+
+	@POST
+	@Path("/update")
+	@Produces(MediaType.TEXT_HTML)
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@RolesAllowed({"PERIOD_EDIT", "PERIOD_EDIT_MINE"})
+	public Response update(
+			Period entity,
+			@FormParam("fromFuzzyFlagsCa") String fromFuzzyFlagsCa,
+			@FormParam("fromFuzzyFlagsUncertain") String fromFuzzyFlagsUncertain,
+			@FormParam("toFuzzyFlagsCa") String toFuzzyFlagsCa,
+			@FormParam("toFuzzyFlagsUncertain") String toFuzzyFlagsUncertain,
+			@FormParam("isPeriod") String isPeriodValue
+	) {
+		// period or point of time?
+		boolean hidePeriod = isPeriodValue == null || isPeriodValue.isEmpty() || !isPeriodValue.equals("1");
+		if (hidePeriod) {
+			entity.setToEntry(entity.getFromEntry());
+			entity.setToEntryCalendar(entity.getFromEntryCalendar());
+			toFuzzyFlagsCa = fromFuzzyFlagsCa;
+			toFuzzyFlagsUncertain = fromFuzzyFlagsUncertain;
+		}
+
+		// fuzzy flags
+		if (fromFuzzyFlagsCa != null) entity.addFuzzyFromFlag('c'); else entity.deleteFuzzyFromFlag('c');
+		if (fromFuzzyFlagsUncertain != null) entity.addFuzzyFromFlag('?'); else entity.deleteFuzzyFromFlag('?');
+		if (toFuzzyFlagsCa != null) entity.addFuzzyToFlag('c'); else entity.deleteFuzzyToFlag('c');
+		if (toFuzzyFlagsUncertain != null) entity.addFuzzyToFlag('?'); else entity.deleteFuzzyToFlag('?');
+
+		Response response = handleUpdate(entity, service);
+		if (response.getStatus() != 200) { // redirect means that element has been saved successfully
+			// update parent model, too - this will update the period of the model
+			if (entity.getParentModel().equals("Node"))
+				nodeService.save(nodeService.findById(entity.getParentId()));
+			else if (entity.getParentModel().equals("Relation"))
+				nodeService.save(nodeService.findById(entity.getParentId()));
+			else logger.error("No such enriched model while updating period: " + entity.getModelName());
+
+			// return "success" response
+			Map<String, Object> model = new HashMap<>();
+			model.put("entity", entity);
+			return Response.ok(new Viewable(getBasePath() + "updateSuccess", model)).build();
+		}
+		return response;
+	}
+
+	@Override
+	protected void validateExtra(Map<String, String> errors, IPeriod entity) {
+		// only check existing entities
+		if (entity.getId() != null && !entity.getId().isEmpty()) {
+			try {
+				entity.setFromEntry(entity.getFromEntry());
+			} catch (Throwable e) {
+				// setting date has failed: add error
+				errors.put("fromJD", "error.calendar.incorrect");
+			}
+			try {
+				entity.setToEntry(entity.getToEntry());
+			} catch (Throwable e) {
+				// setting date has failed: add error
+				errors.put("toJD", "error.calendar.incorrect");
+			}
+		}
+	}
+
+	@GET
 	@Path("/delete/{uid}")
 	@Produces(MediaType.TEXT_HTML)
 	@RolesAllowed({"PERIOD_DELETE", "PERIOD_DELETE_MINE"})
@@ -196,14 +278,11 @@ public class PeriodController extends AbstractBaseController<IPeriod> {
 		if (parentService != null) {
 			if (!parentService.save(parentService.findById(parentId)))
 				return Response.ok(new Viewable("error", "Parent update failed.")).build();
-		}
+		} else logger.error("No such enriched model while deleting period: " + entity.getModelName());
 
 		clearCache(); // delete caches
 
 		// empty response
 		return Response.ok().build();
 	}
-
-	//TODO: Edit period
-	//TODO: @RolesAllowed({"PERIOD_EDIT", "PERIOD_EDIT_MINE"})
 }
