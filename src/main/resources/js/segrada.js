@@ -139,7 +139,7 @@ function escapeHTML(myString) {
 			});
 		}).fail(function() {
 			alert("ERROR");
-		});;
+		});
 	}
 
 	/**
@@ -261,7 +261,7 @@ function escapeHTML(myString) {
 				afterAjax(container);
 			}).fail(function() {
 				alert("ERROR");
-			});;
+			});
 			e.preventDefault();
 		});
 
@@ -288,7 +288,7 @@ function escapeHTML(myString) {
 				}, 500);
 			}).fail(function() {
 				alert("ERROR");
-			});;
+			});
 		});
 
 		// *******************************************************
@@ -309,7 +309,7 @@ function escapeHTML(myString) {
 					});
 				}).fail(function() {
 					alert("ERROR");
-				});;
+				});
 			}
 			e.preventDefault();
 		});
@@ -327,7 +327,7 @@ function escapeHTML(myString) {
 				afterAjax($content);
 			}).fail(function() {
 				alert("ERROR");
-			});;
+			});
 
 			// unbind action
 			$(this).removeClass('sg-replace-content');
@@ -427,7 +427,7 @@ function escapeHTML(myString) {
 				});
 			}).fail(function() {
 				alert("ERROR");
-			});;
+			});
 		}).on('hidden.bs.modal', function () {
 			$(".modal-body", $(this)).html($('#sg-wait').html()); // replace by waiting icon
 		});
