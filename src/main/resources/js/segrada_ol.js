@@ -135,7 +135,7 @@
 
 					var content = '<p>' + feature.get('lat') + ',' + feature.get('lng') + '</p>';
 					content += feature.get('comment');
-					if (feature.get('delete_ok').length)
+					if (feature.get('delete_ok'))
 						content += '<p><a href="' + feature.get('delete_url') + '" id="x' + feature.get('data_id') + '-delete" data-action="delete">' + deleteText + '</a></p>';
 					popup.show(feature.getGeometry().getCoordinates(), content);
 
@@ -164,9 +164,8 @@
 			map.on('dblclick', function(evt) {
 				var dbClickElement = $('.sg-location-dbl-click', container);
 				if (dbClickElement.length > 0) {
-					var question = dbClickElement.attr('data-confirm').replace('{0}', coordinates[1] + ',' + coordinates[0]);
 					var coordinates = ol.proj.transform(evt.coordinate, 'EPSG:3857', 'EPSG:4326');
-
+					var question = dbClickElement.attr('data-confirm').replace('{0}', coordinates[1] + ',' + coordinates[0]);
 					if (confirm(question)) {
 						// get url from form
 						var action = form.attr('action');
