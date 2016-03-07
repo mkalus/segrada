@@ -236,6 +236,7 @@
 					input.val('');
 					$('input[name=lat]', form).val('');
 					$('input[name=lng]', form).val('');
+					$('input[name=comment]', form).val('');
 					$('input[type=submit]', form).hide();
 				},
 				error: function (responseText, statusText, xhr, $form) {
