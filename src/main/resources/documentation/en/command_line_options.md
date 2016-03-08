@@ -31,6 +31,8 @@ Example:
 * `allowAnonymous` Allow anonymous login, if requireLogin is true (default: false)
 * `uploads.storage` Type of storage used when uploading files, MEMORY or FILE (default: MEMORY)
 * `uploads.maximum_upload_size` Maximum upload size (default: 52428800 aka 50 MB)
+* `map.engine` Map engine to use (default: ol for OpenLayers, no other options yet)
+* `binaryDataService` File service use (default: org.segrada.service.binarydata.BinaryDataServiceFile)
 
 ## Environmental variables
 
@@ -73,3 +75,5 @@ Mappings to command line parameters above:
 * `SEGRADA_SOLR_FIELD_TAG` -> `solr.field_tag`
 * `SEGRADA_SOLR_FIELD_COLOR` -> `solr.field_color`
 * `SEGRADA_SOLR_FIELD_ICON` -> `solr.field_icon`
+* `SEGRADA_MAP_ENGINE` -> `map.engine`
+* `SEGRADA_BINARY_DATA_SERVICE` -> `binaryDataService`

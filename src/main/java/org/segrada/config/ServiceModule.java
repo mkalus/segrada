@@ -62,9 +62,6 @@ public class ServiceModule extends AbstractModule {
 		// bind password encoder
 		bind(PasswordEncoder.class).to(PBKDF2WithHmacSHA1PasswordEncoder.class);
 
-		// bind binary data service
-		bind(BinaryDataService.class).to(BinaryDataServiceFile.class);
-
 		// bind repository factory
 		bind(RepositoryFactory.class).to(OrientDbRepositoryFactory.class);
 
@@ -105,6 +102,27 @@ public class ServiceModule extends AbstractModule {
 		annotatedServices.addBinding("Node").to(NodeService.class);
 		annotatedServices.addBinding("Source").to(SourceService.class);
 		annotatedServices.addBinding("Relation").to(RelationService.class);
+	}
+
+	@Provides
+	@Singleton
+	@Inject
+	public BinaryDataService provideBinaryDataService(ApplicationSettings settings) {
+		// service set in settings?
+		String service = settings.getSetting("binaryDataService");
+		try {
+			Class clazz = Class.forName(service);
+			if (!(BinaryDataService.class.isAssignableFrom(clazz))) throw new ClassCastException();
+
+			return (BinaryDataService) clazz.getConstructor(ApplicationSettings.class).newInstance(settings);
+		} catch (ClassNotFoundException e) {
+			logger.error("Class not found: " + service + ". Falling back to standard class org.segrada.service.binarydata.BinaryDataServiceFile");
+		} catch (ClassCastException e) {
+			logger.error("Wrong class type: " + service + ". Falling back to standard class org.segrada.service.binarydata.BinaryDataServiceFile");
+		} catch (Exception e) {
+			logger.error("Constructor could not be instantiated with application settings: " + service + ". Falling back to standard class org.segrada.service.binarydata.BinaryDataServiceFile");
+		}
+		return new BinaryDataServiceFile(settings);
 	}
 
 	@Provides

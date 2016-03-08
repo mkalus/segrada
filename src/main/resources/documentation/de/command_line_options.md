@@ -31,6 +31,9 @@ Beispiel:
 * `allowAnonymous` Anonymen Login erlauben, falls requireLogin wahr ist (Voreinstellung: false)
 * `uploads.storage` Art des Zwischenspeichers für hochgeladene Dateien, MEMORY oder FILE (Voreinstellung: MEMORY)
 * `uploads.maximum_upload_size` Maximum upload size (Voreinstellung: 52428800 aka 50 MB)
+* `map.engine` Verwendeter Kartenserver (Voreinstellung: ol für OpenLayers, keine weiteren Optionen im Moment)
+* `binaryDataService` Verwendeter Dateidienst (Voreinstellung: org.segrada.service.binarydata.BinaryDataServiceFile)
+
 
 ## Umgebungsvariablen
 
@@ -73,3 +76,5 @@ Umgebungsvariablen und ihre Äquivalente von oben:
 * `SEGRADA_SOLR_FIELD_TAG` -> `solr.field_tag`
 * `SEGRADA_SOLR_FIELD_COLOR` -> `solr.field_color`
 * `SEGRADA_SOLR_FIELD_ICON` -> `solr.field_icon`
+* `SEGRADA_MAP_ENGINE` -> `map.engine`
+* `SEGRADA_BINARY_DATA_SERVICE` -> `binaryDataService`

@@ -53,6 +53,15 @@ public class ApplicationSettingsProperties implements ApplicationSettings {
 		buildMap.put("SEGRADA_SERVER_PORT", "server.port");
 		buildMap.put("SEGRADA_SERVER_CONTEXT", "server.context");
 		buildMap.put("SEGRADA_SOLR_SERVER", "solr.server");
+		buildMap.put("SEGRADA_SOLR_FIELD_ID", "solr.field_id");
+		buildMap.put("SEGRADA_SOLR_FIELD_CLASS_NAME", "solr.field_className");
+		buildMap.put("SEGRADA_SOLR_FIELD_TITLE", "solr.field_title");
+		buildMap.put("SEGRADA_SOLR_FIELD_CONTENT", "solr.field_content");
+		buildMap.put("SEGRADA_SOLR_FIELD_TAG", "solr.field_tag");
+		buildMap.put("SEGRADA_SOLR_FIELD_COLOR", "solr.field_color");
+		buildMap.put("SEGRADA_SOLR_FIELD_ICON", "solr.icon");
+		buildMap.put("SEGRADA_MAP_ENGINE", "map.engine");
+		buildMap.put("SEGRADA_BINARY_DATA_SERVICE", "binaryDataService");
 		environmentToProperty = Collections.unmodifiableMap(buildMap);
 	}
 
