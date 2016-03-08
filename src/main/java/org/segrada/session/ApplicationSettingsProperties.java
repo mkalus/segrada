@@ -62,6 +62,10 @@ public class ApplicationSettingsProperties implements ApplicationSettings {
 		buildMap.put("SEGRADA_SOLR_FIELD_ICON", "solr.icon");
 		buildMap.put("SEGRADA_MAP_ENGINE", "map.engine");
 		buildMap.put("SEGRADA_BINARY_DATA_SERVICE", "binaryDataService");
+		buildMap.put("SEGRADA_HADOOP_CONFIGURATION_FILES", "binaryDataService.hadoop.configurationFiles");
+		buildMap.put("SEGRADA_HADOOP_FS_DEFAULT_FS", "binaryDataService.hadoop.fs.defaultFS");
+		buildMap.put("SEGRADA_HADOOP_PATH", "binaryDataService.hadoop.path");
+		//buildMap.put("HADOOP_USER_NAME", "binaryDataService.hadoop.userName");
 		environmentToProperty = Collections.unmodifiableMap(buildMap);
 	}
 

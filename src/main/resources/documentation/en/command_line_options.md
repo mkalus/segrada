@@ -32,7 +32,12 @@ Example:
 * `uploads.storage` Type of storage used when uploading files, MEMORY or FILE (default: MEMORY)
 * `uploads.maximum_upload_size` Maximum upload size (default: 52428800 aka 50 MB)
 * `map.engine` Map engine to use (default: ol for OpenLayers, no other options yet)
-* `binaryDataService` File service use (default: org.segrada.service.binarydata.BinaryDataServiceFile)
+* `binaryDataService` File service use, for Hadoop, set org.segrada.service.binarydata.BinaryDataServiceHadoop (default: org.segrada.service.binarydata.BinaryDataServiceFile)
+* `binaryDataService.hadoop.configurationFiles` Hadoop optional configuration file (comma separated, default: empty)
+* `binaryDataService.hadoop.fs.defaultFS` Hadoop server URI (default: hdfs://localhost:9000/)
+* `binaryDataService.hadoop.path` Path under which Segrada files will be saved in Hadoop (default: /segrada/)
+* `binaryDataService.hadoop.userName` Hadoop user name to set, same as environmental variable HADOOP_USER_NAME (default: empty)
+
 
 ## Environmental variables
 
@@ -77,3 +82,7 @@ Mappings to command line parameters above:
 * `SEGRADA_SOLR_FIELD_ICON` -> `solr.field_icon`
 * `SEGRADA_MAP_ENGINE` -> `map.engine`
 * `SEGRADA_BINARY_DATA_SERVICE` -> `binaryDataService`
+* `SEGRADA_HADOOP_CONFIGURATION_FILES` -> `binaryDataService.hadoop.configurationFiles`
+* `SEGRADA_HADOOP_FS_DEFAULT_FS` -> `binaryDataService.hadoop.fs.defaultFS`
+* `SEGRADA_HADOOP_PATH` -> `binaryDataService.hadoop.path`
+* `HADOOP_USER_NAME` -> `binaryDataService.hadoop.userName`
