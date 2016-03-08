@@ -2,7 +2,6 @@ package org.segrada.service.binarydata;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.permission.FsAction;
 import org.apache.hadoop.fs.permission.FsPermission;
@@ -36,7 +35,7 @@ import java.net.URISyntaxException;
  * Implementation of the service to save data into a Hadoop cluster
  */
 @Singleton
-public class BinaryDataServiceHadoop implements BinaryDataService {
+public class BinaryDataServiceHadoop extends AbstractBinaryDataBaseService {
 	private static final Logger logger = LoggerFactory.getLogger(BinaryDataServiceHadoop.class);
 
 	/**
@@ -88,14 +87,15 @@ public class BinaryDataServiceHadoop implements BinaryDataService {
 		// create and connect client
 		client = new DFSClient(new URI(uri), conf);
 
+		if (logger.isInfoEnabled())
+			logger.info("BinaryDataServiceHadoop connected to " + uri);
+
 		// try to create path - if this fails we know that something went wrong
 		createPath();
 	}
 
-	/**
-	 * create path to save stuff in
-	 */
-	private void createPath() throws IOException {
+	@Override
+	protected void createPath() throws IOException {
 		if (!client.exists(rootPath)) {
 			if (!client.mkdirs(rootPath, new FsPermission(FsAction.ALL, FsAction.ALL, FsAction.ALL), true))
 				logger.warn("Could not create root path " + rootPath);
@@ -131,39 +131,14 @@ public class BinaryDataServiceHadoop implements BinaryDataService {
 
 	@Override
 	public String saveNewReference(SegradaEntity entity, String fileName, String mimeType, byte[] data, @Nullable String oldReferenceToReplace) {
-		// create new filename, if empty
-		if (fileName == null || fileName.isEmpty()) fileName = RandomStringUtils.randomAlphanumeric(8);
-
-		// create prefix and suffix
-		String prefix, suffix;
-		int pos = fileName.lastIndexOf(".");
-		if (pos == -1) {
-			prefix = fileName;
-			suffix = ".bin";
-		} else {
-			prefix = fileName.substring(0, pos);
-			suffix = fileName.substring(pos);
-			if (suffix.length() <= 1) suffix = ".bin";
-		}
-
-		// to lower case and clean file name
-		suffix = suffix.toLowerCase();
-		prefix = prefix.toLowerCase().replaceAll("[^a-zA-Z0-9_\\-\\.]", "_");
-
-		// too short? Make it longer!
-		int prefixLen = prefix.length();
-		if (prefixLen <= 5) prefix += RandomStringUtils.randomAlphanumeric(5-prefixLen);
+		// create unique resource name
+		UniqueResourceName uniqueResourceName = createNewUniqueResourceName(fileName);
 
 		// upload file data
-		String myFile = rootPath + prefix + suffix;
+		String myFile = rootPath + uniqueResourceName.getFileName();
 
 		try {
-			if (client.exists(myFile)) {
-				logger.error("File name collision - should not happen.");
-				return null;
-			}
-
-			OutputStream out = client.create(myFile, false);
+			OutputStream out = client.create(myFile, true);
 			InputStream in = new BufferedInputStream(new ByteArrayInputStream(data));
 
 			byte[] b = new byte[1024];
@@ -198,7 +173,7 @@ public class BinaryDataServiceHadoop implements BinaryDataService {
 			}
 
 			// return file without path
-			return prefix + suffix;
+			return uniqueResourceName.getFileName();
 		} catch (IOException e) {
 			logger.error("Error saving new reference file into Hadoop: " + fileName + " for " + entity.toString() + ".", e);
 			return null;

@@ -2,7 +2,6 @@ package org.segrada.service.binarydata;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.segrada.model.prototype.SegradaEntity;
 import org.segrada.session.ApplicationSettings;
 import org.slf4j.Logger;
@@ -31,7 +30,7 @@ import static org.segrada.util.Preconditions.checkNotNull;
  * Implementation of the service to save data in the file system
  */
 @Singleton
-public class BinaryDataServiceFile implements BinaryDataService {
+public class BinaryDataServiceFile extends AbstractBinaryDataBaseService {
 	private static final Logger logger = LoggerFactory.getLogger(BinaryDataServiceFile.class);
 
 	/**
@@ -57,10 +56,8 @@ public class BinaryDataServiceFile implements BinaryDataService {
 		createPath();
 	}
 
-	/**
-	 * create path to save stuff in
-	 */
-	private void createPath() {
+	@Override
+	protected void createPath() {
 		if (!savePath.exists() && !savePath.mkdirs()) { // create dirs recursively, if needed
 			throw new RuntimeException("Could not create path" + savePath);
 		}
@@ -86,32 +83,12 @@ public class BinaryDataServiceFile implements BinaryDataService {
 
 	@Override
 	public String saveNewReference(SegradaEntity entity, String fileName, String mimeType, byte[] data, @Nullable String oldReferenceToReplace) {
-		// create new filename, if empty
-		if (fileName == null || fileName.isEmpty()) fileName = RandomStringUtils.randomAlphanumeric(8);
-
-		// create prefix and suffix
-		String prefix, suffix;
-		int pos = fileName.lastIndexOf(".");
-		if (pos == -1) {
-			prefix = fileName;
-			suffix = ".bin";
-		} else {
-			prefix = fileName.substring(0, pos);
-			suffix = fileName.substring(pos);
-			if (suffix.length() <= 1) suffix = ".bin";
-		}
-
-		// to lower case and clean file name
-		suffix = suffix.toLowerCase();
-		prefix = prefix.toLowerCase().replaceAll("[^a-zA-Z0-9_\\-\\.]", "_");
-
-		// too short? Make it longer!
-		int prefixLen = prefix.length();
-		if (prefixLen <= 5) prefix += RandomStringUtils.randomAlphanumeric(5-prefixLen);
+		// create unique resource name
+		UniqueResourceName uniqueResourceName = createNewUniqueResourceName(fileName);
 
 		// create temporary filename
 		try {
-			File myFile = File.createTempFile(prefix, suffix, savePath);
+			File myFile = File.createTempFile(uniqueResourceName.prefix, uniqueResourceName.suffix, savePath);
 
 			FileOutputStream fos = new FileOutputStream(myFile);
 			fos.write(data);
