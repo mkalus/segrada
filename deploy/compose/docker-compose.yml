@@ -16,6 +16,12 @@ services:
     environment:
       ORIENTDB_ROOT_PASSWORD: 12345
 
+  hadoop:
+    image: sequenceiq/hadoop-docker
+    expose:
+      - "9000"
+    container_name: hadoop
+
   segrada:
     build: ./segrada/.
     ports:
@@ -24,14 +30,19 @@ services:
     depends_on:
       - orientdb
       - solr
+      - hadoop
     links:
       - orientdb
       - solr
+      - hadoop
     environment:
       SEGRADA_ORIENTDB_LOGIN: admin
       SEGRADA_ORIENTDB_URL: remote:orientdb/Segrada
       SEGRADA_ORIENTDB_PASSWORD: admin
       SEGRADA_SOLR_SERVER: http://solr:8983/solr/segrada
+      SEGRADA_BINARY_DATA_SERVICE: org.segrada.service.binarydata.BinaryDataServiceHadoop
+      SEGRADA_HADOOP_FS_DEFAULT_FS: hdfs://hadoop:9000/
+      HADOOP_USER_NAME: root
 # only needed in creation process
       SEGRADA_ORIENTDB_REMOTE_ROOT: root
       SEGRADA_ORIENTDB_REMOTE_PASSWORD: 12345
