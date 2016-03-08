@@ -62,6 +62,9 @@ public class ServiceModule extends AbstractModule {
 		// bind password encoder
 		bind(PasswordEncoder.class).to(PBKDF2WithHmacSHA1PasswordEncoder.class);
 
+		// bind binary data service
+		//bind(BinaryDataService.class).to(BinaryDataServiceFile.class);
+
 		// bind repository factory
 		bind(RepositoryFactory.class).to(OrientDbRepositoryFactory.class);
 
@@ -116,11 +119,12 @@ public class ServiceModule extends AbstractModule {
 
 			return (BinaryDataService) clazz.getConstructor(ApplicationSettings.class).newInstance(settings);
 		} catch (ClassNotFoundException e) {
-			logger.error("Class not found: " + service + ". Falling back to standard class org.segrada.service.binarydata.BinaryDataServiceFile");
+			logger.error("Class not found: " + service + ". Falling back to standard class org.segrada.service.binarydata.BinaryDataServiceFile.", e);
+			return new BinaryDataServiceFile(settings);
 		} catch (ClassCastException e) {
-			logger.error("Wrong class type: " + service + ". Falling back to standard class org.segrada.service.binarydata.BinaryDataServiceFile");
+			logger.error("Wrong class type: " + service + ". Falling back to standard class org.segrada.service.binarydata.BinaryDataServiceFile.", e);
 		} catch (Exception e) {
-			logger.error("Constructor could not be instantiated with application settings: " + service + ". Falling back to standard class org.segrada.service.binarydata.BinaryDataServiceFile");
+			logger.error("Constructor could not be instantiated with application settings: " + service + ". Falling back to standard class org.segrada.service.binarydata.BinaryDataServiceFile.", e);
 		}
 		return new BinaryDataServiceFile(settings);
 	}
