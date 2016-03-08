@@ -25,6 +25,7 @@ Beispiel:
 * `orientDB.remote_root` Superuser von OrientDB Server (Voreinstellung: null)
 * `orientDB.remote_pw` Superuser-Passwort von OrientDB Server (Voreinstellung: null)
 * `solr.server` Falls angegeben, verwende Solr-Server statt lokalem Lucene (Voreinstellung: leer)
+* `solr.field_*` Definitionen, welche Daten auf welche Felder in Solr abgebildet werden (Voreinstellungen: sollten mit der Standardeinstellung funktionieren)
 * `lucene.analyzer` Verwendeter Lucene-Analyser (Voreinstellung: org.apache.lucene.analysis.standard.StandardAnalyzer)
 * `requireLogin` Login notwendig? (Voreinstellung: false = Autologin als Administrator)
 * `allowAnonymous` Anonymen Login erlauben, falls requireLogin wahr ist (Voreinstellung: false)
@@ -65,3 +66,10 @@ Umgebungsvariablen und ihre Äquivalente von oben:
 * `SEGRADA_ALLOW_ANONYMOUS` -> `allowAnonymous`
 * `SEGRADA_UPLOADS_STORAGE` -> `uploads.storage`
 * `SEGRADA_UPLOADS_MAX_SIZE` -> `uploads.maximum_upload_size`
+* `SEGRADA_SOLR_FIELD_ID` -> `solr.field_id`
+* `SEGRADA_SOLR_FIELD_CLASS_NAME` -> `solr.field_className`
+* `SEGRADA_SOLR_FIELD_TITLE` -> `solr.field_title`
+* `SEGRADA_SOLR_FIELD_CONTENT` -> `solr.field_content`
+* `SEGRADA_SOLR_FIELD_TAG` -> `solr.field_tag`
+* `SEGRADA_SOLR_FIELD_COLOR` -> `solr.field_color`
+* `SEGRADA_SOLR_FIELD_ICON` -> `solr.field_icon`

@@ -25,6 +25,7 @@ Example:
 * `orientDB.remote_root` OrientDB remote database superuser (default: null)
 * `orientDB.remote_pw` OrientDB remote database superuser password (default: null)
 * `solr.server` If specified use remote Solr server to index search instead of local Lucene (default: empty)
+* `solr.field_*` Field settings to map certain types of search fields to specific Solr fields (defaults: should work out of the box)
 * `lucene.analyzer` Lucene analyser to use (default: org.apache.lucene.analysis.standard.StandardAnalyzer)
 * `requireLogin` Require login? (default: false, meaning autologin as admin)
 * `allowAnonymous` Allow anonymous login, if requireLogin is true (default: false)
@@ -65,3 +66,10 @@ Mappings to command line parameters above:
 * `SEGRADA_ALLOW_ANONYMOUS` -> `allowAnonymous`
 * `SEGRADA_UPLOADS_STORAGE` -> `uploads.storage`
 * `SEGRADA_UPLOADS_MAX_SIZE` -> `uploads.maximum_upload_size`
+* `SEGRADA_SOLR_FIELD_ID` -> `solr.field_id`
+* `SEGRADA_SOLR_FIELD_CLASS_NAME` -> `solr.field_className`
+* `SEGRADA_SOLR_FIELD_TITLE` -> `solr.field_title`
+* `SEGRADA_SOLR_FIELD_CONTENT` -> `solr.field_content`
+* `SEGRADA_SOLR_FIELD_TAG` -> `solr.field_tag`
+* `SEGRADA_SOLR_FIELD_COLOR` -> `solr.field_color`
+* `SEGRADA_SOLR_FIELD_ICON` -> `solr.field_icon`
