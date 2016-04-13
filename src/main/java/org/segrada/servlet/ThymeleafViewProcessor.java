@@ -20,10 +20,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.ext.Provider;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]
@@ -46,6 +43,16 @@ import java.util.Map;
 public class ThymeleafViewProcessor implements ViewProcessor<String> {
 	//private static final Logger logger = LoggerFactory.getLogger(ThymeleafViewProcessor.class);
 
+	/**
+	 * keep valid locales
+	 */
+	private static final Set<String> validLocales;
+	static {
+		validLocales = new HashSet<>();
+		validLocales.add("de");
+		validLocales.add("en");
+	}
+
 	@Context
 	ServletContext servletContext;
 
@@ -58,7 +65,7 @@ public class ThymeleafViewProcessor implements ViewProcessor<String> {
 	@Context
 	ThreadLocal<HttpServletResponse> responseInvoker;
 
-	TemplateEngine templateEngine;
+	private TemplateEngine templateEngine;
 
 	/**
 	 * Constructor
@@ -162,6 +169,10 @@ public class ThymeleafViewProcessor implements ViewProcessor<String> {
 
 				context.setLocale(newLocale);
 			}
+
+			// valid locale? If not, fall back to English
+			if (!validLocales.contains(context.getLocale().getLanguage()))
+				context.setLocale(new Locale("en"));
 		}
 	}
 }
