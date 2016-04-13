@@ -44,7 +44,7 @@ import java.util.Map;
  */
 @Provider
 public class ThymeleafViewProcessor implements ViewProcessor<String> {
-	private static final Logger logger = LoggerFactory.getLogger(ThymeleafViewProcessor.class);
+	//private static final Logger logger = LoggerFactory.getLogger(ThymeleafViewProcessor.class);
 
 	@Context
 	ServletContext servletContext;
