@@ -137,41 +137,43 @@ public class OrientDbNodeRepository extends AbstractCoreOrientDbRepository<INode
 		initDb();
 
 		// contain by tag ids - case
-		String queryString = "";
+		StringBuilder queryString;
 		if (tagIds != null && tagIds.length > 0) {
-			queryString = "select * from ( traverse out('IsTagOf') from [";
+			queryString = new StringBuilder("select * from ( traverse out('IsTagOf') from [");
 			boolean first = true;
 			for (String tagId : tagIds) {
 				// parse tag id - avoid sql injections
 				Matcher matcher = AbstractSegradaEntity.PATTERN_ORIENTID.matcher(tagId);
 				if (matcher.find()) {
 					if (first) first = false;
-					else queryString += ",";
-					queryString += tagId;
+					else queryString.append(",");
+					queryString.append(tagId);
 				} else {
 					logger.warn("Could not parse to tagId: " + tagId);
 				}
 			}
-			queryString += "]) where @class = 'Node'";
+			queryString.append("]) where @class = 'Node'");
 
 			// with search term
 			if (term != null && !term.isEmpty()) {
 				String escapedTerm = OrientStringEscape.escapeOrientSql(term);
-				queryString += "and (title LIKE '%" + escapedTerm + "%' OR alternativeTitles LIKE '%" + escapedTerm + "%')";
+				queryString.append("and (title LIKE '%")
+						.append(escapedTerm).append("%' OR alternativeTitles LIKE '%")
+						.append(escapedTerm).append("%')");
 			}
 
-			queryString += " LIMIT " + maximum;
+			queryString.append(" LIMIT ").append(maximum);
 		} else { // no tags, do search in normal way
 			String where;
 			if (term != null && !term.isEmpty()) where = "where " + createSearchTermFullText(term); // create search term
 			else where = getDefaultOrder(true); // no term, just find top X entries
 
 			// create query
-			queryString = "select * from Node " + where + " LIMIT " + maximum;
+			queryString = new StringBuilder().append("select * from Node ").append(where).append(" LIMIT ").append(maximum);
 		}
 
 		// execute query
-		OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>(queryString);
+		OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>(queryString.toString());
 		List<ODocument> result = db.command(query).execute();
 
 		// browse entities

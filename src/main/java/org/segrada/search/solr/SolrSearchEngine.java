@@ -197,10 +197,10 @@ public class SolrSearchEngine implements SearchEngine {
 				if (classes.length <= 1) {
 					query.addFilterQuery(this.className, filters.get("class"));
 				} else { // multiple classes
-					String chained = "(";
+					StringBuilder chained = new StringBuilder("(");
 					for (int i = 0; i < classes.length; i++) {
-						if (i > 0) chained += " OR ";
-						chained += "className:" + classes[i].trim();
+						if (i > 0) chained.append(" OR ");
+						chained.append("className:").append(classes[i].trim());
 					}
 					query.addFilterQuery(this.className, chained + ")");
 				}
