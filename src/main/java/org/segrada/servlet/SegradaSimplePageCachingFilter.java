@@ -87,10 +87,8 @@ public class SegradaSimplePageCachingFilter extends SimplePageCachingFilter {
 
 			// build page info and return gzipped if needed
 			PageInfo pageInfo = this.buildPage(servletRequest, servletResponse, filterChain);
-			if(pageInfo.isOk()) {
-				if(!servletResponse.isCommitted()) {
-					this.writeResponse(servletRequest, servletResponse, pageInfo);
-				}
+			if (pageInfo.isOk() && !servletResponse.isCommitted()) {
+				this.writeResponse(servletRequest, servletResponse, pageInfo);
 			}
 		} else {
 			// included cached filter chain loaded
