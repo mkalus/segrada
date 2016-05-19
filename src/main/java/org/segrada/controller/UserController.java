@@ -140,12 +140,10 @@ public class UserController extends AbstractBaseController<IUser> {
 		Map<String, Object> model = new HashMap<>();
 
 		// no validation errors: save entity
-		if (errors.isEmpty()) {
-			if (service.save(user)) {
-				clearCache(); // delete caches
+		if (errors.isEmpty() && service.save(user)) {
+			clearCache(); // delete caches
 
-				model.put("successMessage", true);
-			}
+			model.put("successMessage", true);
 		}
 
 		model.put("errors", errors);

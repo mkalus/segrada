@@ -132,15 +132,13 @@ public class SegradaMessageBodyReader implements MessageBodyReader<SegradaEntity
 				Object value = firstValue;
 
 				// preprocess values
-				if (value != null && !firstValue.isEmpty()) {
-					if (parameterEntry.getKey().equals("color") && firstValue.startsWith("#")) {
-						try {
-							if (value.equals("#ffffffff")) value = null;
-							else value = Integer.decode(firstValue);
-						} catch (NumberFormatException e) {
-							value = null;
-							// fail silently
-						}
+				if (value != null && !firstValue.isEmpty() && parameterEntry.getKey().equals("color") && firstValue.startsWith("#")) {
+					try {
+						if (value.equals("#ffffffff")) value = null;
+						else value = Integer.decode(firstValue);
+					} catch (NumberFormatException e) {
+						value = null;
+						// fail silently
 					}
 				}
 				// handle segrada entities

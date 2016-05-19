@@ -278,15 +278,13 @@ public class SolrSearchEngine implements SearchEngine {
 					searchHit.setRelevance((float) score);
 
 				// get highlighted components
-				if (searchTerm != null) {
-					if (response.getHighlighting().get(searchHit.getId()) != null) {
-						List<String> fragments = response.getHighlighting().get(searchHit.getId()).get(this.content);
-						if (fragments != null) {
-							String[] bestFragments = new String[fragments.size() > 10 ? 10 : fragments.size()];
-							for (int i = 0; i < bestFragments.length; i++)
-								bestFragments[i] = fragments.get(i);
-							searchHit.setHighlightText(bestFragments);
-						}
+				if (searchTerm != null && response.getHighlighting().get(searchHit.getId()) != null) {
+					List<String> fragments = response.getHighlighting().get(searchHit.getId()).get(this.content);
+					if (fragments != null) {
+						String[] bestFragments = new String[fragments.size() > 10 ? 10 : fragments.size()];
+						for (int i = 0; i < bestFragments.length; i++)
+							bestFragments[i] = fragments.get(i);
+						searchHit.setHighlightText(bestFragments);
 					}
 				}
 
@@ -389,14 +387,12 @@ public class SolrSearchEngine implements SearchEngine {
 			QueryResponse response = solr.query(query);
 			SolrDocumentList results = response.getResults();
 
-			if (!results.isEmpty()) {
-				if (response.getHighlighting().get(id) != null) {
-					List<String> fragments = response.getHighlighting().get(id).get(this.content);
-					String[] bestFragments = new String[fragments.size() > 100?100:fragments.size()];
-					for (int i = 0; i < bestFragments.length; i++)
-						bestFragments[i] = fragments.get(i);
-					return bestFragments;
-				}
+			if (!results.isEmpty() && response.getHighlighting().get(id) != null) {
+				List<String> fragments = response.getHighlighting().get(id).get(this.content);
+				String[] bestFragments = new String[fragments.size() > 100 ? 100 : fragments.size()];
+				for (int i = 0; i < bestFragments.length; i++)
+					bestFragments[i] = fragments.get(i);
+				return bestFragments;
 			}
 		} catch (Throwable e) {
 			logger.error("Error in search.", e);

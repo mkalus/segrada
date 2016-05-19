@@ -96,9 +96,8 @@ public class BinaryDataServiceHadoop extends AbstractBinaryDataBaseService {
 
 	@Override
 	protected void createPath() throws IOException {
-		if (!client.exists(rootPath)) {
-			if (!client.mkdirs(rootPath, new FsPermission(FsAction.ALL, FsAction.ALL, FsAction.ALL), true))
-				logger.warn("Could not create root path " + rootPath);
+		if (!client.exists(rootPath) && !client.mkdirs(rootPath, new FsPermission(FsAction.ALL, FsAction.ALL, FsAction.ALL), true)) {
+			logger.warn("Could not create root path " + rootPath);
 		}
 	}
 
