@@ -17,7 +17,7 @@ final public class CSRFTokenManager {
 	/**
 	 * The token parameter name
 	 */
-	static final String CSRF_PARAM_NAME = "_csrf";
+	private static final String CSRF_PARAM_NAME = "_csrf";
 
 	/**
 	 * The location on the session which stores the token

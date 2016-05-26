@@ -50,7 +50,7 @@ public class UserController extends AbstractBaseController<IUser> {
 	private PasswordEncoder passwordEncoder;
 
 	@Inject
-	Identity identity;
+	private Identity identity;
 
 	@Override
 	protected String getBasePath() {

@@ -25,7 +25,7 @@ import javax.validation.constraints.NotNull;
  * Source reference model implementation
  */
 public class SourceReference extends AbstractSegradaEntity implements ISourceReference {
-	static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	@NotNull(message = "error.notNull")
 	private ISource source;
