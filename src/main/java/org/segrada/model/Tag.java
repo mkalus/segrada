@@ -27,7 +27,7 @@ import javax.validation.constraints.Size;
  * Tag model implementation
  */
 public class Tag extends AbstractSegradaEntity implements ITag {
-	static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Main title

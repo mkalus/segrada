@@ -24,7 +24,7 @@ import javax.validation.constraints.Size;
  * Source model implementation
  */
 public class Source extends AbstractAnnotatedModel implements ISource {
-	static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	@NotNull(message = "error.notNull")
 	@Size(min=1, message = "error.notEmpty")

@@ -54,16 +54,16 @@ public class ThymeleafViewProcessor implements ViewProcessor<String> {
 	}
 
 	@Context
-	ServletContext servletContext;
+	private ServletContext servletContext;
 
 	@Context
-	HttpServletRequest servletRequest;
+	private HttpServletRequest servletRequest;
 
 	@Context
-	ThreadLocal<HttpServletRequest> requestInvoker;
+	private ThreadLocal<HttpServletRequest> requestInvoker;
 
 	@Context
-	ThreadLocal<HttpServletResponse> responseInvoker;
+	private ThreadLocal<HttpServletResponse> responseInvoker;
 
 	private TemplateEngine templateEngine;
 
