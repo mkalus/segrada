@@ -150,7 +150,7 @@ public class DefaultMarkupFilter extends MarkupFilter {
 		// check identity, if injector has been set
 		Identity identity = injector!=null?injector.getInstance(Identity.class):null;
 
-		if (sourceService != null && identity != null && identity.hasRole("SOURCE")) { // skipped in tests and if source not allowed
+		if (sourceService != null && identity != null) { // skipped in tests and if source not allowed
 			// bibliographic references
 			Matcher matcher = bibRefPattern.matcher(text);
 			StringBuffer sb = new StringBuffer(text.length());
