@@ -8,7 +8,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStreamReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileInputStream;
+import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 
 import static org.segrada.util.Preconditions.checkNotNull;
 
@@ -96,9 +105,11 @@ public class BinaryDataServiceFile extends AbstractBinaryDataBaseService {
 
 			// write metadata to file
 			File metadata = new File(myFile.getAbsolutePath() + ".metadata");
-			FileWriter fileWriter = new FileWriter(metadata);
-			fileWriter.write(fileName + "\n" + entity.getModelName() + ":" + entity.getId() + "\n" + mimeType);
-			fileWriter.close();
+			FileOutputStream fileOutputStream = new FileOutputStream(metadata);
+			OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream, StandardCharsets.UTF_8);
+
+			outputStreamWriter.write(fileName + "\n" + entity.getModelName() + ":" + entity.getId() + "\n" + mimeType);
+			outputStreamWriter.close();
 
 			String newFileReference = myFile.getName();
 
@@ -124,16 +135,19 @@ public class BinaryDataServiceFile extends AbstractBinaryDataBaseService {
 			File metadata = new File(new File(savePath, id) + ".metadata");
 
 			// read metadata
-			BufferedReader fileReader = new BufferedReader(new FileReader(metadata));
+			FileInputStream fileInputStream = new FileInputStream(metadata);
+			InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream, StandardCharsets.UTF_8);
+			BufferedReader fileReader = new BufferedReader(inputStreamReader);
 			String fileName = fileReader.readLine().trim();
 			String oldReference = fileReader.readLine().trim();
 			String mimeType = fileReader.readLine().trim();
 			fileReader.close();
 
 			// read first line from metadata
-			FileWriter fileWriter = new FileWriter(metadata);
-			fileWriter.write(fileName + "\n" + entity.getModelName() + ":" + entity.getId() + "\n" + mimeType);
-			fileWriter.close();
+			FileOutputStream fileOutputStream = new FileOutputStream(metadata);
+			OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream, StandardCharsets.UTF_8);
+			outputStreamWriter.write(fileName + "\n" + entity.getModelName() + ":" + entity.getId() + "\n" + mimeType);
+			outputStreamWriter.close();
 
 			if (logger.isInfoEnabled())
 				logger.info("Updated reference id from " + oldReference + " to " + entity.getModelName());
@@ -171,7 +185,9 @@ public class BinaryDataServiceFile extends AbstractBinaryDataBaseService {
 			// read first line from metadata
 			File metadata = new File(new File(savePath, id) + ".metadata");
 
-			BufferedReader fileReader = new BufferedReader(new FileReader(metadata));
+			FileInputStream fileInputStream = new FileInputStream(metadata);
+			InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream, StandardCharsets.UTF_8);
+			BufferedReader fileReader = new BufferedReader(inputStreamReader);
 			String fileName = fileReader.readLine().trim();
 			fileReader.close();
 

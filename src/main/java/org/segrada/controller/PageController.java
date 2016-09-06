@@ -157,7 +157,7 @@ public class PageController {
 		// read lines
 		try {
 			String line;
-			BufferedReader in = new BufferedReader(new InputStreamReader(is));
+			BufferedReader in = new BufferedReader(new InputStreamReader(is, "UTF-8"));
 
 			while((line = in.readLine()) != null) {
 				sb.append(line).append('\n');

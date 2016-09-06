@@ -16,6 +16,7 @@ import javax.annotation.Nullable;
 import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]
@@ -151,7 +152,7 @@ public class BinaryDataServiceHadoop extends AbstractBinaryDataBaseService {
 
 			// write meta data file
 			String metaData = myFile + ".metadata";
-			byte[] metaDataContent = (fileName + "\n" + entity.getModelName() + ":" + entity.getId() + "\n" + mimeType).getBytes();
+			byte[] metaDataContent = (fileName + "\n" + entity.getModelName() + ":" + entity.getId() + "\n" + mimeType).getBytes(StandardCharsets.UTF_8);
 
 			out = client.create(metaData, true);
 			in = new BufferedInputStream(new ByteArrayInputStream(metaDataContent));
