@@ -76,15 +76,15 @@ public class SearchController {
 				filters.put("class", clazz);
 			else filters.put("class", "dummy*"); // non valid dummy to find nothing
 		} else if (!identity.hasAccess("ADMIN")) {
-			String classes = ""; // add allowed classes for this user only
+			StringBuilder classes = new StringBuilder(); // add allowed classes for this user only
 			for (String searchClass : SEARCH_CLASSES) {
 				if (identity.hasAccess(searchClass.toUpperCase())) {
-					if (!classes.isEmpty()) classes += ",";
-					classes += searchClass;
+					if (!classes.isEmpty()) classes.append(",");
+					classes.append(searchClass);
 				}
 			}
 			if (classes.isEmpty()) filters.put("class", "dummy*"); // non valid dummy to find nothing
-			else filters.put("class", classes);
+			else filters.put("class", classes.toString());
 		}
 		if (tags != null && !tags.isEmpty()) {
 			String[] tagTitles = new String[tags.size()];
