@@ -79,11 +79,11 @@ public class SearchController {
 			StringBuilder classes = new StringBuilder(); // add allowed classes for this user only
 			for (String searchClass : SEARCH_CLASSES) {
 				if (identity.hasAccess(searchClass.toUpperCase())) {
-					if (!classes.isEmpty()) classes.append(",");
+					if (classes.length() > 0) classes.append(",");
 					classes.append(searchClass);
 				}
 			}
-			if (classes.isEmpty()) filters.put("class", "dummy*"); // non valid dummy to find nothing
+			if (classes.length() == 0) filters.put("class", "dummy*"); // non valid dummy to find nothing
 			else filters.put("class", classes.toString());
 		}
 		if (tags != null && !tags.isEmpty()) {
