@@ -583,6 +583,10 @@ public class FileController extends AbstractColoredController<IFile> {
 			if (service.save(entity)) {
 				clearCache(); // delete caches
 
+				// remember tags and colors
+				rememberLastTags(tags);
+				rememberLastColor(color);
+
 				//OK - redirect to show
 				try {
 					return Response.seeOther(new URI(getBasePath() + "show/" + entity.getUid())).build();

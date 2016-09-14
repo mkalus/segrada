@@ -4,7 +4,9 @@ import com.google.inject.Inject;
 import com.sun.jersey.api.view.Viewable;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Ehcache;
+import org.segrada.model.prototype.SegradaColoredEntity;
 import org.segrada.model.prototype.SegradaEntity;
+import org.segrada.model.prototype.SegradaTaggable;
 import org.segrada.service.base.AbstractRepositoryService;
 import org.segrada.service.base.SegradaService;
 import org.segrada.service.repository.prototype.CRUDRepository;
@@ -166,8 +168,20 @@ public abstract class AbstractBaseController<T extends SegradaEntity> {
 
 		Map<String, Object> model = new HashMap<>();
 
-		model.put("isNewEntity", entity.getId()==null|| entity.getId().isEmpty());
+		boolean isNewEntity = entity.getId()==null|| entity.getId().isEmpty();
+
+		model.put("isNewEntity", isNewEntity);
 		model.put("entity", entity);
+
+		// new entities will get remembered tags and color by default
+		if (isNewEntity) {
+			if (entity instanceof SegradaTaggable) {
+				((SegradaTaggable) entity).setTags(getRememberedTags());
+			}
+			if (entity instanceof SegradaColoredEntity) {
+				((SegradaColoredEntity) entity).setColorCode(getRememberedColor());
+			}
+		}
 
 		enrichModelForEditingAndSaving(model);
 
@@ -196,6 +210,14 @@ public abstract class AbstractBaseController<T extends SegradaEntity> {
 		if (errors.isEmpty()) {
 			if (service.save(entity)) {
 				clearCache(); // delete caches
+
+				// remember tags and color?
+				if (entity instanceof SegradaTaggable) {
+					rememberLastTags(((SegradaTaggable) entity).getTags());
+				}
+				if (entity instanceof SegradaColoredEntity) {
+					rememberLastColor(((SegradaColoredEntity) entity).getColorCode());
+				}
 
 				//OK - redirect to show
 				try {
@@ -320,4 +342,40 @@ public abstract class AbstractBaseController<T extends SegradaEntity> {
 	 * @return attached Segrada service or null
 	 */
 	abstract public SegradaService getService();
+
+	/**
+	 * Save last tags in session
+	 * @param tags array of tags
+	 */
+	protected void rememberLastTags(String[] tags) {
+		session.setAttribute("lastRememberedTags", tags);
+	}
+
+	/**
+	 * Save last color in session
+	 * @param color code
+	 */
+	protected void rememberLastColor(String color) {
+		session.setAttribute("lastRememberedColor", color);
+	}
+
+	/**
+	 * get remembered tags from session
+	 * @return tags or empty string
+	 */
+	protected String[] getRememberedTags() {
+		Object o = session.getAttribute("lastRememberedTags");
+		if (o != null && o instanceof String[]) return (String[]) o;
+		return new String[]{};
+	}
+
+	/**
+	 * get remembered color from session
+	 * @return color or null
+	 */
+	protected String getRememberedColor() {
+		Object o = session.getAttribute("lastRememberedColor");
+		if (o != null && o instanceof String) return (String) o;
+		return null;
+	}
 }
