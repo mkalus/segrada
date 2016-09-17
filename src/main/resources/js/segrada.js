@@ -314,6 +314,25 @@ function escapeHTML(myString) {
 			e.preventDefault();
 		});
 
+		$('.sg-control-confirm', part).click(function (e) {
+			var $this = $(this);
+
+			if (confirm($this.attr('data-confirm'))) {
+				var target = $('#' + $this.attr('data-target'));
+				target.addClass("sg-disabled");
+
+				// AJAX call
+				$.get($this.attr('href'), function (data) {
+					target.fadeOut('slow', function () {
+						target.remove(); // remove after finishing fading out
+					});
+				}).fail(function() {
+					alert("ERROR");
+				});
+			}
+			e.preventDefault();
+		});
+
 		// *******************************************************
 		// load tab contents dynamically
 		$('.sg-replace-content', part).on('shown.bs.tab', function (e) {
