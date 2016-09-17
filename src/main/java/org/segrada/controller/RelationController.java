@@ -279,7 +279,7 @@ public class RelationController extends AbstractColoredController<IRelation> {
 
 	@POST
 	@Path("/graph/{uid}")
-	@Produces(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
 	@RolesAllowed("GRAPH")
 	public String postGraph(@PathParam("uid") String uid, String jsonData) {
 		return graph(uid, jsonData);
@@ -287,7 +287,7 @@ public class RelationController extends AbstractColoredController<IRelation> {
 
 	@GET
 	@Path("/graph/{uid}")
-	@Produces(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
 	@RolesAllowed("GRAPH")
 	public String getGraph(@PathParam("uid") String uid, @QueryParam("data") String jsonData) {
 		return graph(uid, jsonData);

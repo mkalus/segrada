@@ -142,7 +142,7 @@ public class PictogramController extends AbstractBaseController<IPictogram> {
 
 	@GET
 	@Path("/search")
-	@Produces(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
 	@PermitAll
 	public String search(@QueryParam("s") String term) {
 		// json array to hold hits

@@ -180,7 +180,7 @@ public class NodeController extends AbstractColoredController<INode> {
 
 	@GET
 	@Path("/search")
-	@Produces(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
 	@PermitAll //TODO: ACL
 	public String search(@QueryParam("s") String term, @QueryParam("tags") String tags) {
 		// json array to hold hits
@@ -243,7 +243,7 @@ public class NodeController extends AbstractColoredController<INode> {
 
 	@POST
 	@Path("/graph/{uid}")
-	@Produces(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
 	@RolesAllowed("GRAPH")
 	public String postGraph(@PathParam("uid") String uid, String jsonData) {
 		return graph(uid, jsonData);
@@ -251,7 +251,7 @@ public class NodeController extends AbstractColoredController<INode> {
 
 	@GET
 	@Path("/graph/{uid}")
-	@Produces(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
 	@RolesAllowed("GRAPH")
 	public String getGraph(@PathParam("uid") String uid, @QueryParam("data") String jsonData) {
 		return graph(uid, jsonData);

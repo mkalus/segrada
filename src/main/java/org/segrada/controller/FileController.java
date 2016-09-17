@@ -396,7 +396,7 @@ public class FileController extends AbstractColoredController<IFile> {
 
 	@GET
 	@Path("/search")
-	@Produces(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
 	@PermitAll //TODO: ACL
 	public String search(@QueryParam("s") String term, @QueryParam("tags") String tags) {
 		// json array to hold hits
