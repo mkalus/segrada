@@ -334,4 +334,9 @@ public class OrientDbFileRepository extends AbstractAnnotatedOrientDbRepository<
 
 		return super.processBeforeSaving(entity);
 	}
+
+	@Override
+	protected String getDefaultOrder(boolean addOrderBy) {
+		return (addOrderBy?" ORDER BY":"").concat(" title");
+	}
 }
