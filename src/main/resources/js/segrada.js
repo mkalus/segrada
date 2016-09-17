@@ -580,6 +580,8 @@ function escapeHTML(myString) {
 			beforeSubmit: function (arr, $form, options) {
 				// disable form elements
 				$(":input", $form).attr("disabled", true);
+				// add waiting wheel to button
+				$('button.btn-primary').append(' ' + $('#sg-wait-btn').html());
 
 				return true;
 			},
