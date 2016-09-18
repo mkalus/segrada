@@ -124,7 +124,7 @@ abstract public class AbstractFullTextService<T extends SegradaEntity, E extends
 	 */
 	protected void removeFromSearchIndex(@Nullable T entity) {
 		if (entity != null) {
-			searchEngine.remove(entity.getId());
+			searchEngine.remove(entity.getUid());
 			if (logger.isInfoEnabled())
 				logger.info("Removed entity from search index: " + entity.toString());
 		}
