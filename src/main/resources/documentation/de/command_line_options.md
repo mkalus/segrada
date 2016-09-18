@@ -26,7 +26,7 @@ Beispiel:
 * `orientDB.remote_pw` Superuser-Passwort von OrientDB Server (Voreinstellung: null)
 * `solr.server` Falls angegeben, verwende Solr-Server statt lokalem Lucene (Voreinstellung: leer)
 * `solr.field_*` Definitionen, welche Daten auf welche Felder in Solr abgebildet werden (Voreinstellungen: sollten mit der Standardeinstellung funktionieren)
-* `lucene.analyzer` Verwendeter Lucene-Analyser (Voreinstellung: org.apache.lucene.analysis.standard.StandardAnalyzer)
+* `lucene.analyzer` Verwendeter Lucene-Analyser (Voreinstellung: org.segrada.search.lucene.LuceneSegradaAnalyzer)
 * `requireLogin` Login notwendig? (Voreinstellung: false = Autologin als Administrator)
 * `allowAnonymous` Anonymen Login erlauben, falls requireLogin wahr ist (Voreinstellung: false)
 * `uploads.storage` Art des Zwischenspeichers für hochgeladene Dateien, MEMORY oder FILE (Voreinstellung: MEMORY)

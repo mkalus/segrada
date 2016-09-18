@@ -1,8 +1,6 @@
 package org.segrada.search.lucene;
 
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.store.RAMDirectory;
-import org.apache.lucene.util.Version;
 import org.junit.Before;
 import org.junit.Test;
 import org.segrada.search.SearchHit;
@@ -21,7 +19,7 @@ public class LuceneSearchEngineTest {
 
 	@Before
 	public void setUp() throws Exception {
-		searchEngine = new LuceneSearchEngine(new RAMDirectory(), new StandardAnalyzer(Version.LUCENE_47));
+		searchEngine = new LuceneSearchEngine(new RAMDirectory(), new LuceneSegradaAnalyzer());
 	}
 
 	@Test

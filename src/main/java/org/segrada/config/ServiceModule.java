@@ -9,12 +9,11 @@ import com.google.inject.servlet.RequestScoped;
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 import com.tinkerpop.blueprints.impls.orient.OrientGraphFactory;
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.SimpleFSDirectory;
-import org.apache.lucene.util.Version;
 import org.segrada.search.SearchEngine;
 import org.segrada.search.lucene.LuceneSearchEngine;
+import org.segrada.search.lucene.LuceneSegradaAnalyzer;
 import org.segrada.search.solr.SolrSearchEngine;
 import org.segrada.service.*;
 import org.segrada.service.base.AbstractFullTextService;
@@ -193,14 +192,14 @@ public class ServiceModule extends AbstractModule {
 		String analyzer = checkNotNull(settings.getSetting("lucene.analyzer"), "lucene.analyzer");
 
 		// fallback 1
-		if (analyzer == null || analyzer.isEmpty()) return new StandardAnalyzer(Version.LUCENE_47);
+		if (analyzer == null || analyzer.isEmpty()) return new LuceneSegradaAnalyzer();
 
 		// class for name
 		try {
 			// create new instance of my analyzer
 			return (Analyzer) Class.forName(analyzer).newInstance();
 		} catch (Exception e) {
-			return new StandardAnalyzer(Version.LUCENE_47); // fallback 2
+			return new LuceneSegradaAnalyzer(); // fallback 2
 		}
 	}
 }

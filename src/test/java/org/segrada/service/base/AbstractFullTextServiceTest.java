@@ -5,9 +5,7 @@ import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.orientechnologies.orient.core.sql.OCommandSQL;
 import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.store.RAMDirectory;
-import org.apache.lucene.util.Version;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,6 +14,7 @@ import org.segrada.model.prototype.ISource;
 import org.segrada.search.SearchEngine;
 import org.segrada.search.SearchHit;
 import org.segrada.search.lucene.LuceneSearchEngine;
+import org.segrada.search.lucene.LuceneSegradaAnalyzer;
 import org.segrada.service.repository.SourceRepository;
 import org.segrada.service.repository.TagRepository;
 import org.segrada.service.repository.factory.RepositoryFactory;
@@ -57,7 +56,7 @@ public class AbstractFullTextServiceTest {
 
 	@Before
 	public void setUp() throws Exception {
-		searchEngine = new LuceneSearchEngine(new RAMDirectory(), new StandardAnalyzer(Version.LUCENE_47));
+		searchEngine = new LuceneSearchEngine(new RAMDirectory(), new LuceneSegradaAnalyzer());
 
 		// set up schema if needed
 		orientDBTestInstance.setUpSchemaIfNeeded();
@@ -106,7 +105,7 @@ public class AbstractFullTextServiceTest {
 		assertFalse(result.isEmpty());
 
 		// in index?
-		SearchHit hit = searchEngine.getById(source.getId());
+		SearchHit hit = searchEngine.getById(source.getUid());
 		assertNotNull(hit);
 	}
 
@@ -131,7 +130,7 @@ public class AbstractFullTextServiceTest {
 		assertTrue(result.isEmpty());
 
 		// in index?
-		SearchHit hit = searchEngine.getById(source.getId());
+		SearchHit hit = searchEngine.getById(source.getUid());
 		assertNull(hit);
 	}
 
@@ -148,13 +147,13 @@ public class AbstractFullTextServiceTest {
 
 		searchEngine.clearAllIndexes();
 
-		SearchHit hit = searchEngine.getById(source.getId());
+		SearchHit hit = searchEngine.getById(source.getUid());
 		assertNull(hit);
 
 		service.reindexAll();
 
 		// in index?
-		hit = searchEngine.getById(source.getId());
+		hit = searchEngine.getById(source.getUid());
 		assertNotNull(hit);
 	}
 
@@ -171,13 +170,13 @@ public class AbstractFullTextServiceTest {
 
 		searchEngine.clearAllIndexes();
 
-		SearchHit hit = searchEngine.getById(source.getId());
+		SearchHit hit = searchEngine.getById(source.getUid());
 		assertNull(hit);
 
 		service.indexEntity(source);
 
 		// in index?
-		hit = searchEngine.getById(source.getId());
+		hit = searchEngine.getById(source.getUid());
 		assertNotNull(hit);
 	}
 
@@ -221,7 +220,7 @@ public class AbstractFullTextServiceTest {
 
 		service.saveToSearchIndex(entity);
 
-		SearchHit hit = searchEngine.getById(source.getId());
+		SearchHit hit = searchEngine.getById(source.getUid());
 		assertNotNull(hit);
 	}
 
@@ -236,12 +235,12 @@ public class AbstractFullTextServiceTest {
 
 		service.save(source);
 
-		SearchHit hit = searchEngine.getById(source.getId());
+		SearchHit hit = searchEngine.getById(source.getUid());
 		assertNotNull(hit);
 
 		service.removeFromSearchIndex(source);
 
-		hit = searchEngine.getById(source.getId());
+		hit = searchEngine.getById(source.getUid());
 		assertNull(hit);
 	}
 
@@ -287,7 +286,7 @@ public class AbstractFullTextServiceTest {
 		@Nullable
 		@Override
 		protected SearchIndexEntity prepareIndexEntity(ISource entity) {
-			SearchIndexEntity idxEntity = new SearchIndexEntity(entity.getId());
+			SearchIndexEntity idxEntity = new SearchIndexEntity(entity.getUid());
 			idxEntity.title = entity.getShortTitle();
 			String subTitles = entity.getCitation();
 			if (subTitles == null || subTitles.isEmpty()) subTitles = entity.getTitle();

@@ -26,7 +26,7 @@ Example:
 * `orientDB.remote_pw` OrientDB remote database superuser password (default: null)
 * `solr.server` If specified use remote Solr server to index search instead of local Lucene (default: empty)
 * `solr.field_*` Field settings to map certain types of search fields to specific Solr fields (defaults: should work out of the box)
-* `lucene.analyzer` Lucene analyser to use (default: org.apache.lucene.analysis.standard.StandardAnalyzer)
+* `lucene.analyzer` Lucene analyser to use (default: org.segrada.search.lucene.LuceneSegradaAnalyzer)
 * `requireLogin` Require login? (default: false, meaning autologin as admin)
 * `allowAnonymous` Allow anonymous login, if requireLogin is true (default: false)
 * `uploads.storage` Type of storage used when uploading files, MEMORY or FILE (default: MEMORY)
