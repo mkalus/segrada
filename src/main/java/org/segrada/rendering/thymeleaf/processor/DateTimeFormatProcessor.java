@@ -2,7 +2,6 @@ package org.segrada.rendering.thymeleaf.processor;
 
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-import org.segrada.util.NumberFormatter;
 import org.thymeleaf.Arguments;
 import org.thymeleaf.Configuration;
 import org.thymeleaf.dom.Element;
@@ -37,8 +36,6 @@ import java.util.List;
  *
  */
 public class DateTimeFormatProcessor extends AbstractMarkupSubstitutionElementProcessor {
-	private NumberFormatter numberFormatter;
-
 	public DateTimeFormatProcessor() {
 		super("datetimeformat");
 	}
