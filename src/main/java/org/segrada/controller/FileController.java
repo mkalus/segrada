@@ -425,26 +425,34 @@ public class FileController extends AbstractColoredController<IFile> {
 	}
 
 	@GET
-	@Path("/file/{uid}")
+	@Path("/download/{uid}")
 	@PermitAll //TODO: ACL for full view?
 	public Response download(@PathParam("uid") String uid) {
-		return getImage(uid, false);
+		return getImage(uid, false, true);
+	}
+
+	@GET
+	@Path("/get/{uid}")
+	@PermitAll //TODO: ACL for full view?
+	public Response stream(@PathParam("uid") String uid) {
+		return getImage(uid, false, false);
 	}
 
 	@GET
 	@Path("/thumbnail/{uid}")
 	@PermitAll
 	public Response getThumbnail(@PathParam("uid") String uid) {
-		return getImage(uid, true);
+		return getImage(uid, true, false);
 	}
 
 	/**
 	 * actual worker function for download and getThumbnail
 	 * @param uid of image
 	 * @param thumbnail get thumbnail image?
+	 * @param forceDownload force download?
 	 * @return reponse containing image or error
 	 */
-	private Response getImage(String uid, boolean thumbnail) {
+	private Response getImage(String uid, boolean thumbnail, boolean forceDownload) {
 		try {
 			IFile entity = service.findById(service.convertUidToId(uid));
 			final InputStream in = (entity == null)?
@@ -467,10 +475,19 @@ public class FileController extends AbstractColoredController<IFile> {
 				outputStream.close();
 			};
 
-			// create file name
-			String filename = entity==null?"no_image.png":(thumbnail?"thumb_" + entity.getFilename():entity.getFilename());
+			// build response
+			Response.ResponseBuilder responseBuilder = Response.ok(output, mime);
+			if (entity.getFileSize() != null)
+				responseBuilder.header("Content-Length", String.valueOf(entity.getFileSize()));
 
-			return Response.ok(output, mime).header("Content-Disposition", "attachment; filename=\"" + filename + "\"").build();
+			// if download is forced, add attachment header
+			if (forceDownload) {
+				// create file name
+				String filename = entity==null?"no_image.png":(thumbnail?"thumb_" + entity.getFilename():entity.getFilename());
+				responseBuilder.header("Content-Disposition", "attachment; filename=\"" + filename + "\"");
+			}
+
+			return responseBuilder.build();
 		} catch (Exception e) {
 			return Response.ok(new Viewable("error", e.getMessage())).build();
 		}
