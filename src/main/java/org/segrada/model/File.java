@@ -194,6 +194,8 @@ public class File extends AbstractAnnotatedModel implements IFile {
 			case "wav":
 			case "flac":
 				return "audio";
+			case "txt":
+				return "text";
 			default: break;
 		}
 
