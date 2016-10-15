@@ -101,10 +101,12 @@ abstract public class AbstractFullTextService<T extends SegradaEntity, E extends
 			return;
 		}
 
+		String modelClass = getModelClass().getSimpleName().substring(1);  // clip off the I of the interface
+
 		// to index
 		if (!searchEngine.index(
 				entity.id,
-				getModelClass().getSimpleName().substring(1), // clip off the I of the interface
+				modelClass,
 				entity.title,
 				entity.subTitles,
 				markupFilter.toPlain(entity.content), // convert content to plain, searchable text
@@ -113,9 +115,9 @@ abstract public class AbstractFullTextService<T extends SegradaEntity, E extends
 				entity.iconFileIdentifier,
 				entity.weight
 		))
-			logger.error("Could not write entity to search index: " + entity.getClass().toString() + "/" + entity.id);
+			logger.error("Could not write entity to search index: " + modelClass + "/" + entity.id);
 		else if (logger.isInfoEnabled())
-			logger.info("Indexed entity to search index: " + entity.getClass().toString() + "/" + entity.id);
+			logger.info("Indexed entity to search index: " + modelClass + "/" + entity.id);
 	}
 
 	/**
