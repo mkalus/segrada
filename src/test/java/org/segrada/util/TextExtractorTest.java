@@ -55,5 +55,10 @@ public class TextExtractorTest {
 
 		lang = textExtractor.identifyLanguage(textDe);
 		assertEquals("de", lang);
+
+		String textNone = "zzzz.";
+
+		lang = textExtractor.identifyLanguage(textNone);
+		assertEquals("", lang);
 	}
 }

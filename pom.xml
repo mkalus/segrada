@@ -24,7 +24,7 @@
 		<lucene.version>4.7.0</lucene.version>
 		<!-- upgradeable? -->
 		<orientdb.version>2.1.19</orientdb.version>
-		<tika.version>1.12</tika.version>
+		<tika.version>1.13</tika.version>
 	</properties>
 
 	<dependencies>
@@ -219,6 +219,11 @@
 			<artifactId>tika-parsers</artifactId>
 			<version>${tika.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>com.optimaize.languagedetector</groupId>
+			<artifactId>language-detector</artifactId>
+			<version>0.6</version>
+		</dependency>
 
 		<!-- Caching -->
 		<dependency>
@@ -264,7 +269,7 @@
 		<dependency>
 			<groupId>com.google.code.findbugs</groupId>
 			<artifactId>jsr305</artifactId>
-			<version>3.0.0</version>
+			<version>3.0.1</version>
 		</dependency>
 
 		<!-- Logging -->

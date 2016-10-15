@@ -1,10 +1,20 @@
 package org.segrada.util;
 
+import com.google.common.base.Optional;
+import com.optimaize.langdetect.LanguageDetector;
+import com.optimaize.langdetect.LanguageDetectorBuilder;
+import com.optimaize.langdetect.i18n.LdLocale;
+import com.optimaize.langdetect.ngram.NgramExtractors;
+import com.optimaize.langdetect.profiles.LanguageProfile;
+import com.optimaize.langdetect.profiles.LanguageProfileReader;
+import com.optimaize.langdetect.text.CommonTextObjectFactories;
+import com.optimaize.langdetect.text.TextObject;
+import com.optimaize.langdetect.text.TextObjectFactory;
 import org.apache.tika.Tika;
-import org.apache.tika.language.LanguageIdentifier;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -27,6 +37,33 @@ import java.util.logging.Logger;
  */
 public class TextExtractor {
 	private static final Logger logger = Logger.getLogger(TextExtractor.class.getName());
+
+	/**
+	 * instance of LanguageDetector
+	 */
+	private static LanguageDetector languageDetector;
+
+	/**
+	 * instance of TextObjectFactory
+	 */
+	private static TextObjectFactory textObjectFactory;
+
+	static {
+		try {
+			//load all languages:
+			List<LanguageProfile> languageProfiles = new LanguageProfileReader().readAllBuiltIn();
+
+			//build language detector:
+			languageDetector = LanguageDetectorBuilder.create(NgramExtractors.standard())
+					.withProfiles(languageProfiles)
+					.build();
+
+			//create a text object factory
+			textObjectFactory = CommonTextObjectFactories.forDetectingShortCleanText();
+		} catch (IOException e) {
+			logger.log(Level.SEVERE, "Error loading language in TextExtractor (Silent fallback to English)", e);
+		}
+	}
 
 	/**
 	 * extract text from input document
@@ -61,10 +98,16 @@ public class TextExtractor {
 	/**
 	 * identify language of a text
 	 * @param text inserted
-	 * @return identified language
+	 * @return identified language (or enpty if no language could be detected)
 	 */
 	public String identifyLanguage(String text) {
-		LanguageIdentifier identifier = new LanguageIdentifier(text);
-		return identifier.getLanguage();
+		TextObject textObject = textObjectFactory.forText(text);
+		Optional<LdLocale> lang = languageDetector.detect(textObject);
+
+		// no language present?
+		if (lang.isPresent())
+			return lang.get().getLanguage();
+
+		return ""; // fallback to none
 	}
 }
