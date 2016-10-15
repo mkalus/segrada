@@ -46,7 +46,7 @@ import java.util.Map;
  */
 @Singleton // thread safety should work
 public class SolrSearchEngine implements SearchEngine {
-	//TODO: add test method
+	//TODO: add test method - EmbeddedSolrServer
 
 	private static final Logger logger = LoggerFactory.getLogger(SolrSearchEngine.class);
 
@@ -98,6 +98,36 @@ public class SolrSearchEngine implements SearchEngine {
 
 		// create client
 		solr = new HttpSolrClient(url);
+
+		// try to connect to server
+		try {
+			solr.ping();
+		} catch (Exception e) {
+			solr = null; // remove solr
+			logger.error("Could not connect to Solr server", e);
+		}
+	}
+
+	/**
+	 * Constructor
+	 * @param settings of application
+	 * @param luceneAnalyzer lucene analyzer to use for parsing search queries
+	 * @param client solr client
+	 */
+	public SolrSearchEngine(ApplicationSettings settings, Analyzer luceneAnalyzer, SolrClient client) {
+		this.analyzer = luceneAnalyzer;
+
+		// define field values from settings
+		id = settings.getSetting("solr.field_id", "id");
+		className = settings.getSetting("solr.field_className", "className_s");
+		title = settings.getSetting("solr.field_title", "title_t");
+		subTitles = settings.getSetting("solr.field_subTitles", "subTitles_t");
+		content = settings.getSetting("solr.field_content", "content_t");
+		tag = settings.getSetting("solr.field_tag", "tag_ss");
+		color = settings.getSetting("solr.field_color", "color_s");
+		icon = settings.getSetting("solr.field_icon", "icon_s");
+
+		this.solr = client;
 
 		// try to connect to server
 		try {
