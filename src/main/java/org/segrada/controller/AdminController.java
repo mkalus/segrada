@@ -88,7 +88,7 @@ public class AdminController {
 		// work all services and update index
 		for (Map.Entry<String, AbstractFullTextService> entry : fullTextServiceMap.entrySet()) {
 			if (logger.isDebugEnabled())
-				logger.debug("Started reindexing " + entry.getClass().getSimpleName());
+				logger.debug("Started reindexing " + entry);
 
 			// reindex this batch
 			entry.getValue().reindexAll();
@@ -97,7 +97,7 @@ public class AdminController {
 			done += (float) entry.getValue().count();
 
 			if (logger.isDebugEnabled())
-				logger.debug("Reindexed " + entry.getClass().getSimpleName() + ": " + done + "/" + total);
+				logger.debug("Reindexed " + entry + ": " + done + "/" + total);
 		}
 
 		initI18N(context);
