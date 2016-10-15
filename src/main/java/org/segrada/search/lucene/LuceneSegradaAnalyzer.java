@@ -1,14 +1,13 @@
 package org.segrada.search.lucene;
 
-import com.google.inject.Singleton;
+import org.apache.lucene.analysis.TokenStream;
+import org.apache.lucene.analysis.Tokenizer;
 import org.apache.lucene.analysis.core.LowerCaseFilter;
 import org.apache.lucene.analysis.core.StopFilter;
 import org.apache.lucene.analysis.miscellaneous.ASCIIFoldingFilter;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.analysis.standard.StandardFilter;
 import org.apache.lucene.analysis.standard.StandardTokenizer;
 import org.apache.lucene.analysis.util.StopwordAnalyzerBase;
-import org.apache.lucene.util.Version;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -33,27 +32,26 @@ import java.io.Reader;
 public class LuceneSegradaAnalyzer extends StopwordAnalyzerBase {
 	//TODO add test method
 
-	/**
-	 * Constructor
-	 */
-	public LuceneSegradaAnalyzer() {
-		super(Version.LUCENE_47, StandardAnalyzer.STOP_WORDS_SET);
-	}
-
 	@Override
-	protected TokenStreamComponents createComponents(String s, Reader reader) {
-		final StandardTokenizer src = new StandardTokenizer(this.matchVersion, reader);
-		src.setMaxTokenLength(255);
+	protected TokenStreamComponents createComponents(final String fieldName) {
+		final Tokenizer src;
+		StandardTokenizer t = new StandardTokenizer();
+		t.setMaxTokenLength(255);
+		src = t;
 
-		StandardFilter tok = new StandardFilter(this.matchVersion, src);
-		LowerCaseFilter tok1 = new LowerCaseFilter(this.matchVersion, tok);
-		StopFilter tok2 = new StopFilter(this.matchVersion, tok1, this.stopwords);
-		final ASCIIFoldingFilter tok3 = new ASCIIFoldingFilter(tok2);
-
-		return new TokenStreamComponents(src, tok3) {
-			protected void setReader(Reader reader) throws IOException {
-				src.setMaxTokenLength(255);
-				super.setReader(reader);
+		TokenStream tok = new StandardFilter(src);
+		tok = new LowerCaseFilter(tok);
+		tok = new StopFilter(tok, stopwords);
+		tok = new ASCIIFoldingFilter(tok); // added this
+		return new TokenStreamComponents(src, tok) {
+			@Override
+			protected void setReader(final Reader reader) {
+				((StandardTokenizer)src).setMaxTokenLength(255);
+				try {
+					super.setReader(reader);
+				} catch (IOException e) {
+					//TODO: what to do here?
+				}
 			}
 		};
 	}

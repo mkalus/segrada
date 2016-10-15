@@ -31,6 +31,8 @@ import org.segrada.util.PasswordEncoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.nio.file.Paths;
+
 import static org.segrada.util.Preconditions.checkNotNull;
 
 /**
@@ -179,7 +181,7 @@ public class ServiceModule extends AbstractModule {
 		savePath += "lucene" + java.io.File.separator;
 
 		try {
-			return new SimpleFSDirectory(new java.io.File(savePath));
+			return new SimpleFSDirectory(Paths.get(savePath));
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}

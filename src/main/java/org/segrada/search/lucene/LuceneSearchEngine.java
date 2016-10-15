@@ -5,14 +5,14 @@ import com.google.inject.Singleton;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.document.*;
 import org.apache.lucene.index.*;
-import org.apache.lucene.queries.ChainedFilter;
+import org.apache.lucene.queries.BooleanFilter;
 import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
 import org.apache.lucene.queryparser.classic.QueryParser;
+import org.apache.lucene.queryparser.xml.builders.BooleanFilterBuilder;
 import org.apache.lucene.search.*;
 import org.apache.lucene.search.vectorhighlight.FastVectorHighlighter;
 import org.apache.lucene.search.vectorhighlight.FieldQuery;
 import org.apache.lucene.store.Directory;
-import org.apache.lucene.util.Version;
 import org.segrada.search.SearchEngine;
 import org.segrada.search.SearchHit;
 import org.segrada.service.util.PaginationInfo;
@@ -80,17 +80,15 @@ public class LuceneSearchEngine implements SearchEngine {
 
 		// stored, indexed, but not tokenized
 		simpleIndexType = new FieldType();
-		simpleIndexType.setIndexed(true);
 		simpleIndexType.setStored(true);
-		simpleIndexType.setIndexOptions(FieldInfo.IndexOptions.DOCS_ONLY);
+		simpleIndexType.setIndexOptions(IndexOptions.DOCS);
 		simpleIndexType.setTokenized(false);
 		simpleIndexType.freeze();
 
 		// stored, indexed and searchable text type
 		indexedTextType = new FieldType();
-		indexedTextType.setIndexed(true);
 		indexedTextType.setStored(true);
-		indexedTextType.setIndexOptions(FieldInfo.IndexOptions.DOCS_AND_FREQS_AND_POSITIONS_AND_OFFSETS);
+		indexedTextType.setIndexOptions(IndexOptions.DOCS_AND_FREQS_AND_POSITIONS_AND_OFFSETS);
 		indexedTextType.setStoreTermVectors(true);
 		indexedTextType.setStoreTermVectorOffsets(true);
 		indexedTextType.setStoreTermVectorPositions(true);
@@ -101,7 +99,7 @@ public class LuceneSearchEngine implements SearchEngine {
 	public synchronized boolean index(String id, String className, String title, String subTitles, String content, String[] tagIds, Integer color, String iconFileIdentifier, float weight) {
 		try {
 			// init index writer config
-			IndexWriterConfig indexWriterConfig = new IndexWriterConfig(Version.LUCENE_47, this.analyzer);
+			IndexWriterConfig indexWriterConfig = new IndexWriterConfig(this.analyzer);
 
 			// create new index writer
 			IndexWriter iWriter = new IndexWriter(directory, indexWriterConfig);
@@ -185,7 +183,7 @@ public class LuceneSearchEngine implements SearchEngine {
 			} else containFields = new String[]{"title", "subTitles", "content"};
 
 			// Parse a simple query that searches for "text":
-			MultiFieldQueryParser parser = new MultiFieldQueryParser(Version.LUCENE_47, containFields, analyzer);
+			MultiFieldQueryParser parser = new MultiFieldQueryParser(containFields, analyzer);
 
 			// which operator do we use?
 			parser.setDefaultOperator(QueryParser.Operator.AND);
@@ -212,8 +210,12 @@ public class LuceneSearchEngine implements SearchEngine {
 					for (int i = 0; i < classes.length; i++) {
 						categories[i] = new QueryWrapperFilter(new TermQuery(new Term("className", classes[i].trim())));
 					}
+					BooleanFilter bFilter = new BooleanFilter();
+					for (Filter f : categories)
+						bFilter.add(f, BooleanClause.Occur.SHOULD);
+
 					// add chained filter
-					searchFilters.add(new ChainedFilter(categories, ChainedFilter.OR));
+					searchFilters.add(bFilter);
 				}
 			}
 
@@ -233,9 +235,11 @@ public class LuceneSearchEngine implements SearchEngine {
 			if (searchFilters.size() == 1)
 				filter = searchFilters.get(0);
 			else if (searchFilters.size() > 1) {
-				Filter[] filterArray = new Filter[searchFilters.size()];
-				searchFilters.toArray(filterArray);
-				filter = new ChainedFilter(filterArray, ChainedFilter.AND);
+				BooleanFilter bFilter = new BooleanFilter();
+				for (Filter f : searchFilters)
+					bFilter.add(f, BooleanClause.Occur.MUST);
+
+				filter = bFilter;
 			}
 
 			// define query
@@ -284,7 +288,7 @@ public class LuceneSearchEngine implements SearchEngine {
 			FieldQuery fieldQuery = null;
 			// field query for highlighted terms
 			if (searchTerm != null)
-				fieldQuery = highlighter.getFieldQuery(new QueryParser(Version.LUCENE_47, "content", analyzer).parse(searchTerm), iReader);
+				fieldQuery = highlighter.getFieldQuery(new QueryParser("content", analyzer).parse(searchTerm), iReader);
 
 			// cycle trough hits
 			List<SearchHit> hits = new ArrayList<>();
@@ -336,7 +340,7 @@ public class LuceneSearchEngine implements SearchEngine {
 			IndexSearcher iSearcher = new IndexSearcher(iReader);
 
 			// only search content
-			MultiFieldQueryParser parser = new MultiFieldQueryParser(Version.LUCENE_47, new String[]{"content"}, analyzer);
+			MultiFieldQueryParser parser = new MultiFieldQueryParser(new String[]{"content"}, analyzer);
 
 			// set operator and contain by id
 			parser.setDefaultOperator(QueryParser.Operator.AND);
@@ -351,7 +355,7 @@ public class LuceneSearchEngine implements SearchEngine {
 
 				// get highlighted text
 				FastVectorHighlighter highlighter = new FastVectorHighlighter();
-				FieldQuery fieldQuery = highlighter.getFieldQuery(new QueryParser(Version.LUCENE_47, "content", analyzer).parse(searchTerm), iReader);
+				FieldQuery fieldQuery = highlighter.getFieldQuery(new QueryParser("content", analyzer).parse(searchTerm), iReader);
 
 				// return max of 100 highlighted elements
 				return highlighter.getBestFragments(fieldQuery, iReader, scoreDoc.doc, "content", 100, 100);
@@ -367,7 +371,7 @@ public class LuceneSearchEngine implements SearchEngine {
 	public synchronized void remove(String id) {
 		try {
 			// init index writer config
-			IndexWriterConfig indexWriterConfig = new IndexWriterConfig(Version.LUCENE_47, this.analyzer);
+			IndexWriterConfig indexWriterConfig = new IndexWriterConfig(this.analyzer);
 
 			// create new index writer
 			IndexWriter iWriter = new IndexWriter(directory, indexWriterConfig);
@@ -425,7 +429,7 @@ public class LuceneSearchEngine implements SearchEngine {
 	public synchronized void clearAllIndexes() {
 		try {
 			// init index writer config
-			IndexWriterConfig indexWriterConfig = new IndexWriterConfig(Version.LUCENE_47, this.analyzer);
+			IndexWriterConfig indexWriterConfig = new IndexWriterConfig(this.analyzer);
 
 			// create new index writer
 			IndexWriter iWriter = new IndexWriter(directory, indexWriterConfig);

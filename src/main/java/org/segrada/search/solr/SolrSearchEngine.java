@@ -176,7 +176,7 @@ public class SolrSearchEngine implements SearchEngine {
 				else if (fields.equalsIgnoreCase("allTitles")) containFields = new String[]{this.title, this.subTitles};
 				else throw new RuntimeException("fields-Filter " + fields + " is not known.");
 			} else containFields = new String[]{this.title, this.subTitles, this.content};
-			parser = new MultiFieldQueryParser(Version.LUCENE_47, containFields, analyzer);
+			parser = new MultiFieldQueryParser(containFields, analyzer);
 
 			// which operator do we use?
 			parser.setDefaultOperator(QueryParser.Operator.AND);
@@ -363,7 +363,7 @@ public class SolrSearchEngine implements SearchEngine {
 
 		try {
 			// only search content
-			MultiFieldQueryParser parser = new MultiFieldQueryParser(Version.LUCENE_47, new String[]{"content"}, analyzer);
+			MultiFieldQueryParser parser = new MultiFieldQueryParser(new String[]{"content"}, analyzer);
 
 			SolrQuery query = new SolrQuery();
 
