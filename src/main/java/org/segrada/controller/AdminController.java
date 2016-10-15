@@ -87,6 +87,9 @@ public class AdminController {
 
 		// work all services and update index
 		for (Map.Entry<String, AbstractFullTextService> entry : fullTextServiceMap.entrySet()) {
+			if (logger.isDebugEnabled())
+				logger.debug("Started reindexing " + entry);
+
 			// reindex this batch
 			entry.getValue().reindexAll();
 

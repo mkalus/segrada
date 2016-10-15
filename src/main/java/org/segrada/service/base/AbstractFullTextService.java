@@ -113,9 +113,9 @@ abstract public class AbstractFullTextService<T extends SegradaEntity, E extends
 				entity.iconFileIdentifier,
 				entity.weight
 		))
-			logger.error("Could not write entity to search index: " + entity.id);
+			logger.error("Could not write entity to search index: " + entity.getClass().toString() + "/" + entity.id);
 		else if (logger.isInfoEnabled())
-			logger.info("Indexed entity to search index: " + entity.id);
+			logger.info("Indexed entity to search index: " + entity.getClass().toString() + "/" + entity.id);
 	}
 
 	/**

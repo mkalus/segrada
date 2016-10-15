@@ -17,6 +17,7 @@ import org.segrada.session.Identity;
 import org.segrada.test.OrientDBTestInstance;
 import org.segrada.test.OrientDbTestApplicationSettings;
 
+import java.util.Iterator;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -111,7 +112,7 @@ public class AbstractRepositoryServiceTest {
 
 	@Test
 	public void testFindAll() throws Exception {
-		assertTrue(service.findAll().isEmpty());
+		assertFalse(service.findAll().iterator().hasNext());
 
 		IColor color = new Color();
 		color.setTitle("title");
@@ -119,12 +120,16 @@ public class AbstractRepositoryServiceTest {
 
 		service.save(color);
 
-		assertEquals(1, service.findAll().size());
+		Iterator it = service.findAll().iterator();
+		assertTrue(it.hasNext());
+
+		it.next();
+		assertFalse(it.hasNext());
 
 		// delete it
 		service.delete(color);
 
-		assertEquals(0, service.findAll().size());
+		assertFalse(service.findAll().iterator().hasNext());
 	}
 
 	@Test

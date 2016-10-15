@@ -2,8 +2,6 @@ package org.segrada.service.repository.prototype;
 
 import org.segrada.model.prototype.SegradaEntity;
 
-import java.util.List;
-
 /**
  * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]
  *
@@ -39,7 +37,7 @@ public interface CRUDRepository<T extends SegradaEntity> extends SegradaReposito
 	 * Find all entities
 	 * @return list of all entities
 	 */
-	List<T> findAll();
+	Iterable<T> findAll();
 
 	/**
 	 * find single instance by id

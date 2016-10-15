@@ -2,8 +2,6 @@ package org.segrada.service.base;
 
 import org.segrada.model.prototype.SegradaEntity;
 
-import java.util.List;
-
 /**
  * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]
  *
@@ -40,7 +38,7 @@ public interface SegradaService<T extends SegradaEntity> {
 
 	boolean delete(T entity);
 
-	List<T> findAll();
+	Iterable<T> findAll();
 
 	long count();
 
