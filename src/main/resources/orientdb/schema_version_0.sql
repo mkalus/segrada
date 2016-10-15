@@ -17,8 +17,8 @@ create property Color.titleasc String
 create property Color.color Integer
 create property Color.created Datetime
 create property Color.modified Datetime
-create property Color.creator Link<User>
-create property Color.modifier Link<User>
+create property Color.creator Link User
+create property Color.modifier Link User
 alter property Color.title MANDATORY true
 alter property Color.title COLLATE ci
 alter property Color.titleasc MANDATORY true
@@ -36,8 +36,8 @@ create property Pictogram.fileIdentifier String
 create property Pictogram.mimeType String
 create property Pictogram.created Datetime
 create property Pictogram.modified Datetime
-create property Pictogram.creator Link<User>
-create property Pictogram.modifier Link<User>
+create property Pictogram.creator Link User
+create property Pictogram.modifier Link User
 alter property Pictogram.title MANDATORY true
 alter property Pictogram.title COLLATE ci
 alter property Pictogram.titleasc MANDATORY true
@@ -58,8 +58,8 @@ create property User.lastLogin Datetime
 create property User.active Boolean
 create property User.created Datetime
 create property User.modified Datetime
-create property User.creator Link<User>
-create property User.modifier Link<User>
+create property User.creator Link User
+create property User.modifier Link User
 alter property User.login MANDATORY true
 alter property User.password MANDATORY true
 alter property User.name MANDATORY true
@@ -76,12 +76,12 @@ create index User.nameasc NOTUNIQUE
 create class Comment extends V
 create property Comment.text String
 create property Comment.markup String
-create property Comment.pictogram Link<Pictogram>
+create property Comment.pictogram Link Pictogram
 create property Comment.color Integer
 create property Comment.created Datetime
 create property Comment.modified Datetime
-create property Comment.creator Link<User>
-create property Comment.modifier Link<User>
+create property Comment.creator Link User
+create property Comment.modifier Link User
 alter property Comment.text MANDATORY true
 alter property Comment.markup MANDATORY true
 alter property Comment.created MANDATORY true
@@ -94,8 +94,8 @@ create property Tag.title String
 create property Tag.titleasc String
 create property Tag.created Datetime
 create property Tag.modified Datetime
-create property Tag.creator Link<User>
-create property Tag.modifier Link<User>
+create property Tag.creator Link User
+create property Tag.modifier Link User
 alter property Tag.title MANDATORY true
 alter property Tag.title COLLATE ci
 alter property Tag.titleasc MANDATORY true
@@ -107,13 +107,13 @@ create index Tag.searchtitle on Tag (title) FULLTEXT ENGINE LUCENE
 
 ######################################################################################################################
 create class Location
-create property Location.parent Link<V>
+create property Location.parent Link V
 create property Location.latitude Double
 create property Location.longitude Double
 create property Location.created Datetime
 create property Location.modified Datetime
-create property Location.creator Link<User>
-create property Location.modifier Link<User>
+create property Location.creator Link User
+create property Location.modifier Link User
 alter property Location.parent MANDATORY true
 alter property Location.latitude MANDATORY true
 alter property Location.longitude MANDATORY true
@@ -124,7 +124,7 @@ create index Location.spatial on Location (latitude,longitude) SPATIAL ENGINE LU
 
 ######################################################################################################################
 create class Period
-create property Period.parent Link<V>
+create property Period.parent Link V
 create property Period.type String
 create property Period.fromEntry String
 create property Period.toEntry String
@@ -134,8 +134,8 @@ create property Period.fromEntryCalendar String
 create property Period.toEntryCalendar String
 create property Period.created Datetime
 create property Period.modified Datetime
-create property Period.creator Link<User>
-create property Period.modifier Link<User>
+create property Period.creator Link User
+create property Period.modifier Link User
 alter property Period.parent MANDATORY true
 alter property Period.type MANDATORY true
 alter property Period.created MANDATORY true
@@ -157,12 +157,12 @@ create property File.fullText String
 create property File.fileSize Long
 create property File.indexFullText Boolean
 create property File.containFile Boolean
-create property File.pictogram Link<Pictogram>
+create property File.pictogram Link Pictogram
 create property File.color Integer
 create property File.created Datetime
 create property File.modified Datetime
-create property File.creator Link<User>
-create property File.modifier Link<User>
+create property File.creator Link User
+create property File.modifier Link User
 alter property File.title MANDATORY true
 alter property File.title COLLATE ci
 alter property File.titleasc MANDATORY true
@@ -191,12 +191,12 @@ create property Source.citation String
 create property Source.copyright String
 create property Source.description String
 create property Source.descriptionMarkup String
-create property Source.pictogram Link<Pictogram>
+create property Source.pictogram Link Pictogram
 create property Source.color Integer
 create property Source.created Datetime
 create property Source.modified Datetime
-create property Source.creator Link<User>
-create property Source.modifier Link<User>
+create property Source.creator Link User
+create property Source.modifier Link User
 alter property Source.shortTitle MANDATORY true
 alter property Source.shortTitle COLLATE ci
 alter property Source.shortTitleasc MANDATORY true
@@ -218,12 +218,12 @@ create property Node.titleasc String
 create property Node.alternativeTitles String
 create property Node.description String
 create property Node.descriptionMarkup String
-create property Node.pictogram Link<Pictogram>
+create property Node.pictogram Link Pictogram
 create property Node.color Integer
 create property Node.created Datetime
 create property Node.modified Datetime
-create property Node.creator Link<User>
-create property Node.modifier Link<User>
+create property Node.creator Link User
+create property Node.modifier Link User
 create property Node.minEntry String
 create property Node.maxEntry String
 create property Node.minJD Long
@@ -251,16 +251,16 @@ create property RelationType.fromTitle String
 create property RelationType.toTitle String
 create property RelationType.fromTitleAsc String
 create property RelationType.toTitleAsc String
-create property RelationType.fromTags Linklist<Tag>
-create property RelationType.toTags Linklist<Tag>
+create property RelationType.fromTags Linklist Tag
+create property RelationType.toTags Linklist Tag
 create property RelationType.description String
 create property RelationType.descriptionMarkup String
-create property RelationType.pictogram Link<Pictogram>
+create property RelationType.pictogram Link Pictogram
 create property RelationType.color Integer
 create property RelationType.created Datetime
 create property RelationType.modified Datetime
-create property RelationType.creator Link<User>
-create property RelationType.modifier Link<User>
+create property RelationType.creator Link User
+create property RelationType.modifier Link User
 alter property RelationType.fromTitle MANDATORY true
 alter property RelationType.fromTitle COLLATE ci
 alter property RelationType.toTitle MANDATORY true
@@ -284,16 +284,16 @@ create index RelationType.toTags NOTUNIQUE_HASH_INDEX
 create class IsRelation extends E
 
 create class Relation extends V
-create property Relation.relationType Link<RelationType>
-create property Relation.relationLink Link<IsRelation>
+create property Relation.relationType Link RelationType
+create property Relation.relationLink Link IsRelation
 create property Relation.description String
 create property Relation.descriptionMarkup String
-create property Relation.pictogram Link<Pictogram>
+create property Relation.pictogram Link Pictogram
 create property Relation.color Integer
 create property Relation.created Datetime
 create property Relation.modified Datetime
-create property Relation.creator Link<User>
-create property Relation.modifier Link<User>
+create property Relation.creator Link User
+create property Relation.modifier Link User
 create property Relation.minEntry String
 create property Relation.maxEntry String
 create property Relation.minJD Long
@@ -313,13 +313,13 @@ create index Relation.relationLink UNIQUE_HASH_INDEX
 
 ######################################################################################################################
 create class SourceReference
-create property SourceReference.source Link<Source>
-create property SourceReference.reference Link<V>
+create property SourceReference.source Link Source
+create property SourceReference.reference Link V
 create property SourceReference.referenceText String
 create property SourceReference.created Datetime
 create property SourceReference.modified Datetime
-create property SourceReference.creator Link<User>
-create property SourceReference.modifier Link<User>
+create property SourceReference.creator Link User
+create property SourceReference.modifier Link User
 alter property SourceReference.source MANDATORY true
 alter property SourceReference.reference MANDATORY true
 alter property SourceReference.created MANDATORY true

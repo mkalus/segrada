@@ -3,11 +3,11 @@ create class UserGroup
 create property UserGroup.title String
 create property UserGroup.titleasc String
 create property UserGroup.description String
-create property UserGroup.roles EMBEDDEDMAP<String, Integer>
+create property UserGroup.roles EMBEDDEDMAP Integer
 create property UserGroup.created Datetime
 create property UserGroup.modified Datetime
-create property UserGroup.creator Link<User>
-create property UserGroup.modifier Link<User>
+create property UserGroup.creator Link User
+create property UserGroup.modifier Link User
 create property UserGroup.special String
 alter property UserGroup.title MANDATORY true
 alter property UserGroup.title COLLATE ci
@@ -22,7 +22,7 @@ create index UserGroup.special NOTUNIQUE
 
 
 ######################################################################################################################
-create property User.group Link<UserGroup>
+create property User.group Link UserGroup
 alter property User.group MANDATORY true
 
 ######################################################################################################################

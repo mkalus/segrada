@@ -69,10 +69,9 @@ public class OrientDbUserGroupRepositoryTest {
 
 	@Test
 	public void testConvertToEntity() throws Exception {
-		Map<String, String> roles = new HashMap<>();
-		roles.put("Test", "1");
-		roles.put("Test3", "-1");
-		roles.put("Test5", "xxx"); // test robustness of code
+		Map<String, Integer> roles = new HashMap<>();
+		roles.put("Test", 1);
+		roles.put("Test3", -1);
 
 		ODocument document = new ODocument("UserGroup").field("title", "title")
 				.field("titleasc", "titleasc").field("roles", roles)
@@ -158,10 +157,9 @@ public class OrientDbUserGroupRepositoryTest {
 		// no previously defined group?
 		assertNull(repository.findSpecial("ADMIN"));
 
-		Map<String, String> roles = new HashMap<>();
-		roles.put("Test", "1");
-		roles.put("Test3", "-1");
-		roles.put("Test5", "xxx"); // test robustness of code
+		Map<String, Integer> roles = new HashMap<>();
+		roles.put("Test", 1);
+		roles.put("Test3", -1);
 
 		ODocument document = new ODocument("UserGroup").field("title", "title")
 				.field("titleasc", "titleasc").field("roles", roles)

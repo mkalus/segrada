@@ -228,11 +228,11 @@ abstract public class AbstractSegradaOrientDbRepository<T extends SegradaEntity>
 		userGroup.setTitle(document.field("title", String.class));
 		userGroup.setDescription(document.field("description", String.class));
 		userGroup.setSpecial(document.field("special", String.class));
-		Map<String, String> roles = document.field("roles", OType.EMBEDDEDMAP);
+		Map<String, Integer> roles = document.field("roles", OType.EMBEDDEDMAP);
 		for (Object key : roles.keySet()) {
 			try {
 				String realKey = (String) key;
-				Integer value = new Integer(roles.get(key));
+				Integer value = roles.get(key);
 
 				userGroup.setRole(realKey, value);
 			} catch (NumberFormatException e) {

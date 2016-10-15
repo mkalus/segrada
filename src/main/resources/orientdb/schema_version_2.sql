@@ -1,6 +1,6 @@
 ######################################################################################################################
 create class RememberMeToken
-create property RememberMeToken.user Link<User>
+create property RememberMeToken.user Link User
 create property RememberMeToken.selector String
 create property RememberMeToken.token String
 create property RememberMeToken.expires Datetime
