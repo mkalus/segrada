@@ -256,7 +256,8 @@ public class OrientDBFilter implements Filter {
 		}
 
 		// shut down instance completely
-		Orient.instance().shutdown();
+		if (Orient.instance().isActive())
+			Orient.instance().shutdown();
 
 		logger.info("OrientDB has been shut down.");
 
