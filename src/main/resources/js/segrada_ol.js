@@ -104,7 +104,7 @@
 			//create the style
 			var iconStyle = new ol.style.Style({
 				image: new ol.style.Icon(/** @type {olx.style.IconOptions} */ ({
-					anchor: [12, 24],
+					anchor: [12, 12],
 					anchorXUnits: 'pixels',
 					anchorYUnits: 'pixels',
 					opacity: 0.75,
@@ -115,7 +115,7 @@
 			//create map and show it
 			var map = new ol.Map({
 				layers: [
-					new ol.layer.Tile({source: new ol.source.MapQuest({layer: 'sat'})}),
+					new ol.layer.Tile({source: new ol.source.Stamen({layer: 'terrain-background'})}),
 					new ol.layer.Vector({ // vector layer containing markers
 						source: vectorSource,
 						style: iconStyle
