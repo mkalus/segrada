@@ -7,7 +7,7 @@ import static org.junit.Assert.*;
 public class MarkupProcessorTest {
 	@Test
 	public void testMarkup() throws Exception {
-		MarkupProcessor processor = new MarkupProcessor();
+		MarkupProcessor processor = new MarkupProcessor("th");
 
 		// no NPEs!
 		assertEquals("", processor.markup(null, "default"));
@@ -24,7 +24,7 @@ public class MarkupProcessorTest {
 
 	@Test
 	public void testCorruptMarkup() throws Exception {
-		MarkupProcessor processor = new MarkupProcessor();
+		MarkupProcessor processor = new MarkupProcessor("th");
 
 		assertEquals("", processor.markup("", "xxxyyy"));
 		assertEquals("Test", processor.markup("Test", "xxxyyy"));

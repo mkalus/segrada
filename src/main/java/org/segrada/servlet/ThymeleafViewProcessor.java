@@ -1,17 +1,14 @@
 package org.segrada.servlet;
 
+import com.google.inject.Inject;
 import com.sun.jersey.api.view.Viewable;
 import com.sun.jersey.spi.template.ViewProcessor;
+import net.sf.ehcache.CacheManager;
 import org.segrada.rendering.thymeleaf.SegradaDialect;
 import org.segrada.session.CSRFTokenManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
-import org.thymeleaf.fragment.ElementAndAttributeNameFragmentSpec;
-import org.thymeleaf.fragment.IFragmentSpec;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
-import org.thymeleaf.templateresolver.TemplateResolver;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -67,22 +64,6 @@ public class ThymeleafViewProcessor implements ViewProcessor<String> {
 
 	private TemplateEngine templateEngine;
 
-	/**
-	 * Constructor
-	 */
-	public ThymeleafViewProcessor() {
-		TemplateResolver templateResolver = new ServletContextTemplateResolver();
-		templateResolver.setPrefix("/WEB-INF/templates/");
-		templateResolver.setSuffix(".html");
-		templateResolver.setTemplateMode("HTML5");
-		templateResolver.setCacheTTLMs(3600000L);
-
-		templateEngine = new TemplateEngine();
-		templateEngine.setTemplateResolver(templateResolver);
-		templateEngine.setMessageResolver(new SegradaMessageResolver());
-		templateEngine.addDialect(new SegradaDialect());
-	}
-
 	@Override
 	public String resolve(final String path) {
 		return path;
@@ -91,6 +72,20 @@ public class ThymeleafViewProcessor implements ViewProcessor<String> {
 	@Override
 	public void writeTo(final String resolvedPath, final Viewable viewable,
 	                    final OutputStream out) throws IOException {
+		// create template engine on first write
+		if (templateEngine == null) {
+			ServletContextTemplateResolver templateResolver = new ServletContextTemplateResolver(servletContext);
+			templateResolver.setPrefix("/WEB-INF/templates/");
+			templateResolver.setSuffix(".html");
+			templateResolver.setTemplateMode("HTML");
+			templateResolver.setCacheTTLMs(3600000L);
+
+			templateEngine = new TemplateEngine();
+			templateEngine.setTemplateResolver(templateResolver);
+			templateEngine.setMessageResolver(new SegradaMessageResolver(servletContext));
+			templateEngine.addDialect(new SegradaDialect());
+		}
+
 		// Commit the status and headers to the HttpServletResponse
 		out.flush();
 
@@ -109,13 +104,13 @@ public class ThymeleafViewProcessor implements ViewProcessor<String> {
 		}
 
 		// Define _csrf token
-		context.setVariable("_csrf", CSRFTokenManager.getTokenForSession(context.getHttpSession()));
+		context.setVariable("_csrf", CSRFTokenManager.getTokenForSession(context.getSession()));
 		// get identity from session and save it as variable for easy access in frontend
-		Enumeration<String> elements = context.getHttpSession().getAttributeNames();
+		Enumeration<String> elements = context.getSession().getAttributeNames();
 		while (elements.hasMoreElements()) {
 			String key = elements.nextElement();
 			if (key.contains("org.segrada.session.Identity")) {
-				context.setVariable("identity", context.getHttpSession().getAttribute(key));
+				context.setVariable("identity", context.getSession().getAttribute(key));
 				break;
 			}
 		}
@@ -127,19 +122,21 @@ public class ThymeleafViewProcessor implements ViewProcessor<String> {
 
 		// resolve template name by ::
 		String templateName;
-		IFragmentSpec fragmentSpec = null;
+		Set<String> templateSelectors = null;
 		String[] subtemplate = viewable.getTemplateName().split("::");
 
 		if (subtemplate.length != 2) templateName = viewable.getTemplateName();
 		else {
 			templateName = subtemplate[0].trim();
-			fragmentSpec = new ElementAndAttributeNameFragmentSpec(null, "class", subtemplate[1].trim(), true);
+			templateSelectors = new HashSet<>();
+			templateSelectors.add("." + subtemplate[1].trim() + "/div");
 		}
 
 		// resolve AJAX calls
 		// only render content fragment in AJAX calls
-		if (fragmentSpec == null && "XMLHttpRequest".equals(context.getHttpServletRequest().getHeader("X-Requested-With")) && !templateName.startsWith("redirect:")) {
-			fragmentSpec = new ElementAndAttributeNameFragmentSpec(null, "class", "container", true);
+		if (templateSelectors == null && "XMLHttpRequest".equals(context.getRequest().getHeader("X-Requested-With")) && !templateName.startsWith("redirect:")) {
+			templateSelectors = new HashSet<>();
+			templateSelectors.add(".container/div");
 		}
 
 		///TODO: handle redirects?
@@ -148,10 +145,9 @@ public class ThymeleafViewProcessor implements ViewProcessor<String> {
 		updateLocale(context);
 
 		// set charset type by hand
-		context.getHttpServletResponse().setContentType("text/html; charset=utf-8");
+		context.getResponse().setContentType("text/html; charset=utf-8");
 
-		templateEngine.process(templateName, context, fragmentSpec, responseInvoker
-				.get().getWriter());
+		templateEngine.process(templateName, templateSelectors, context, responseInvoker.get().getWriter());
 	}
 
 	/**
@@ -159,9 +155,9 @@ public class ThymeleafViewProcessor implements ViewProcessor<String> {
 	 * @param context web context
 	 */
 	private static void updateLocale(WebContext context) {
-		if (context != null && context.getHttpSession() != null) {
+		if (context != null && context.getSession() != null) {
 			// get locale saved in session
-			Object lObject = context.getHttpSession().getAttribute("language");
+			Object lObject = context.getSession().getAttribute("language");
 			String language = lObject==null?null:(String) lObject;
 
 			if (language != null && !language.isEmpty()) {

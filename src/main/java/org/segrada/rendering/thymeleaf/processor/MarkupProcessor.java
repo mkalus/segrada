@@ -2,16 +2,14 @@ package org.segrada.rendering.thymeleaf.processor;
 
 import org.segrada.rendering.markup.MarkupFilter;
 import org.segrada.rendering.markup.MarkupFilterFactory;
-import org.thymeleaf.Arguments;
-import org.thymeleaf.Configuration;
-import org.thymeleaf.dom.Element;
-import org.thymeleaf.processor.element.AbstractUnescapedTextChildModifierElementProcessor;
-import org.thymeleaf.standard.expression.IStandardExpression;
+import org.thymeleaf.context.ITemplateContext;
+import org.thymeleaf.model.IProcessableElementTag;
+import org.thymeleaf.processor.element.IElementTagStructureHandler;
 import org.thymeleaf.standard.expression.IStandardExpressionParser;
-import org.thymeleaf.standard.expression.StandardExpressions;
+import org.thymeleaf.templatemode.TemplateMode;
 
 /**
- * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]
+ * Copyright 2016 Maximilian Kalus [segrada@auxnet.de]
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,50 +27,44 @@ import org.thymeleaf.standard.expression.StandardExpressions;
  *
  * Usage: <th:markup markup="'html'" text="'text'" />
  */
-public class MarkupProcessor extends AbstractUnescapedTextChildModifierElementProcessor {
-	public MarkupProcessor() {
-		super("markup");
-	}
+public class MarkupProcessor extends AbstractSegradaTagProcessor {
+	/**
+	 * Tag name
+	 */
+	private static final String TAG_NAME = "markup";
 
-	public int getPrecedence() {
-		return 1000;
+	/**
+	 * Precedence of processor
+	 */
+	private static final int PRECEDENCE = 1000;
+
+	/**
+	 * Constructor
+	 * @param dialectPrefix dialect prefix, e.g. th or segrada
+	 */
+	public MarkupProcessor(final String dialectPrefix) {
+		super(
+			TemplateMode.HTML, // This processor will apply only to HTML mode
+			dialectPrefix,     // Prefix to be applied to name for matching
+			TAG_NAME,          // Tag name: match specifically this tag
+			true,              // Apply dialect prefix to tag name
+			null,              // No attribute name: will match by tag name
+			false,             // No prefix to be applied to attribute name
+			PRECEDENCE); // Precedence (inside dialect's own precedence)
 	}
 
 	@Override
-	protected String getText(final Arguments arguments, final Element element) {
-		final Configuration configuration = arguments.getConfiguration();
+	protected void doProcess(
+			final ITemplateContext context, final IProcessableElementTag tag,
+			final IElementTagStructureHandler structureHandler) {
+		final IStandardExpressionParser parser = getParser(context);
 
-		// Obtain the Thymeleaf Standard Expression parser
-		final IStandardExpressionParser parser =
-				StandardExpressions.getExpressionParser(configuration);
+		// Get attribute values
+		final String markup = parseTagValue(parser, context, tag, "markup");
+		final String text = parseTagValue(parser, context, tag, "text");
 
-		// Obtain the attribute value
-		final String attributeValue = element.getAttributeValue("text");
-
-		// Parse the attribute value as a Thymeleaf Standard Expression
-		final IStandardExpression expression =
-				parser.parseExpression(configuration, arguments, attributeValue);
-
-		// Execute the expression just parsed
-		final String content =
-				(String) expression.execute(configuration, arguments);
-
-
-
-		// get markup processor value
-		final String markupAttributeValue = element.getAttributeValue("markup");
-
-		// Parse the attribute value as a Thymeleaf Standard Expression
-		final IStandardExpression markupExpression =
-				parser.parseExpression(configuration, arguments, markupAttributeValue);
-
-		// Execute the expression just parsed
-		final String markup =
-				(String) markupExpression.execute(configuration, arguments);
-
-
-		// create return string
-		return "<div class=\"sg-markup\">" + markup(content, markup) + "</div>";
+		// replace tag completely with char sequence
+		structureHandler.replaceWith("<div class=\"sg-markup\">" + markup(text, markup) + "</div>", false);
 	}
 
 	/**
@@ -81,7 +73,7 @@ public class MarkupProcessor extends AbstractUnescapedTextChildModifierElementPr
 	 * @param markup to be applied on text
 	 * @return formatted and escaped text
 	 */
-	public String markup(String text, String markup) throws IllegalArgumentException {
+	protected String markup(String text, String markup) throws IllegalArgumentException {
 		// do not format empty texts
 		if (text == null) return "";
 

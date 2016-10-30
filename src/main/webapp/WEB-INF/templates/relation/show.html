@@ -40,7 +40,7 @@
 								<span th:text="${entity.fromEntity.title}">fromEntity.title</span>
 							</div>
 						</div>
-						<div class="col-xs-2 text-right" th:strip-whitespace="shallow">
+						<div class="col-xs-2 text-right" th:strip-whitespace>
 							<a th:if="${identity.hasAccess('GRAPH')}" href="#" th:href="@{/node/graph/{uid}(uid=${entity.fromEntity.uid})}" type="button" class="sg-graph-update sg-data-icon" aria-label="Graph" th:title="#{AddToGraph}" th:attr="aria-label=#{AddToGraph}"><i class="fa fa-share"></i></a>
 							<a th:if="${identity.hasAccess('NODE')}" class="sg-data-icon sg-data-add" href="#" th:title="#{Show}" th:href="@{/node/show/{uid}(uid=${entity.fromEntity.uid})}"><i class="fa fa-eye"></i></a>
 							<a th:if="${identity.hasEditAccess(entity.fromEntity, 'NODE')}" class="sg-data-icon sg-data-add" href="#" th:title="#{Edit}" th:href="@{/node/edit/{uid}(uid=${entity.fromEntity.uid})}"><i class="fa fa-pencil"></i></a>
@@ -50,7 +50,7 @@
 					<div class="row">
 						<div class="col-xs-5 lead text-right"><span th:text="${entity.relationType.fromTitle}">relationType.fromTitle</span> <i class="fa fa-long-arrow-down fa-2x"></i></div>
 						<div class="col-xs-5 lead text-left"><i class="fa fa-long-arrow-up fa-2x"></i> <span th:text="${entity.relationType.toTitle}">relationType.toTitle</span></div>
-						<div class="col-xs-2 text-right" th:strip-whitespace="shallow">
+						<div class="col-xs-2 text-right" th:strip-whitespace>
 							<a th:if="${identity.hasAccess('RELATION_TYPE')}" class="sg-data-icon sg-data-add" href="#" th:title="#{Show}" th:href="@{/relation_type/show/{uid}(uid=${entity.relationType.uid})}"><i class="fa fa-eye"></i></a>
 							<a th:if="${identity.hasEditAccess(entity.relationType, 'RELATION_TYPE')}" class="sg-data-icon sg-data-add" href="#" th:title="#{Edit}" th:href="@{/relation_type/edit/{uid}(uid=${entity.relationType.uid})}"><i class="fa fa-pencil"></i></a>
 						</div>
@@ -62,7 +62,7 @@
 								<span th:text="${entity.toEntity.title}">toEntity.title</span>
 							</div>
 						</div>
-						<div class="col-xs-2 text-right" th:strip-whitespace="shallow">
+						<div class="col-xs-2 text-right" th:strip-whitespace>
 							<a th:if="${identity.hasAccess('GRAPH')}" href="#" th:href="@{/node/graph/{uid}(uid=${entity.toEntity.uid})}" type="button" class="sg-graph-update sg-data-icon" aria-label="Graph" th:title="#{AddToGraph}" th:attr="aria-label=#{AddToGraph}"><i class="fa fa-share"></i></a>
 							<a th:if="${identity.hasAccess('NODE')}" class="sg-data-icon sg-data-add" href="#" th:title="#{Show}" th:href="@{/node/show/{uid}(uid=${entity.toEntity.uid})}"><i class="fa fa-eye"></i></a>
 							<a th:if="${identity.hasEditAccess(entity.toEntity, 'NODE')}" class="sg-data-icon sg-data-add" href="#" th:title="#{Edit}" th:href="@{/node/edit/{uid}(uid=${entity.toEntity.uid})}"><i class="fa fa-pencil"></i></a>

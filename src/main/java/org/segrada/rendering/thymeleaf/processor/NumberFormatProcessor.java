@@ -1,21 +1,14 @@
 package org.segrada.rendering.thymeleaf.processor;
 
 import org.segrada.util.NumberFormatter;
-import org.thymeleaf.Arguments;
-import org.thymeleaf.Configuration;
-import org.thymeleaf.dom.Element;
-import org.thymeleaf.dom.Node;
-import org.thymeleaf.dom.Text;
-import org.thymeleaf.processor.element.AbstractMarkupSubstitutionElementProcessor;
-import org.thymeleaf.standard.expression.IStandardExpression;
+import org.thymeleaf.context.ITemplateContext;
+import org.thymeleaf.model.IProcessableElementTag;
+import org.thymeleaf.processor.element.IElementTagStructureHandler;
 import org.thymeleaf.standard.expression.IStandardExpressionParser;
-import org.thymeleaf.standard.expression.StandardExpressions;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.thymeleaf.templatemode.TemplateMode;
 
 /**
- * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]
+ * Copyright 2016 Maximilian Kalus [segrada@auxnet.de]
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,65 +28,57 @@ import java.util.List;
  *
  * format must be si or binary
  */
-public class NumberFormatProcessor extends AbstractMarkupSubstitutionElementProcessor {
+public class NumberFormatProcessor extends AbstractSegradaTagProcessor {
+	/**
+	 * Tag name
+	 */
+	private static final String TAG_NAME = "formatnumber";
+
+	/**
+	 * Precedence of processor
+	 */
+	private static final int PRECEDENCE = 1000;
+
 	private NumberFormatter numberFormatter;
 
-	public NumberFormatProcessor() {
-		super("formatnumber");
-	}
-
-	public int getPrecedence() {
-		return 1000;
+	/**
+	 * Constructor
+	 * @param dialectPrefix dialect prefix, e.g. th or segrada
+	 */
+	public NumberFormatProcessor(final String dialectPrefix) {
+		super(
+				TemplateMode.HTML, // This processor will apply only to HTML mode
+				dialectPrefix,     // Prefix to be applied to name for matching
+				TAG_NAME,          // Tag name: match specifically this tag
+				true,              // Apply dialect prefix to tag name
+				null,              // No attribute name: will match by tag name
+				false,             // No prefix to be applied to attribute name
+				PRECEDENCE); // Precedence (inside dialect's own precedence)
 	}
 
 	@Override
-	protected List<Node> getMarkupSubstitutes(final Arguments arguments, final Element element) {
-		final Configuration configuration = arguments.getConfiguration();
+	protected void doProcess(
+			final ITemplateContext context, final IProcessableElementTag tag,
+			final IElementTagStructureHandler structureHandler) {
+		final IStandardExpressionParser parser = getParser(context);
 
-		// Obtain the Thymeleaf Standard Expression parser
-		final IStandardExpressionParser parser =
-				StandardExpressions.getExpressionParser(configuration);
+		// Get attribute values
+		final Long number = parseTagValue(parser, context, tag, "number");
+		final String format = parseTagValue(parser, context, tag, "format");
 
-		// Obtain the attribute value
-		final String attributeValue = element.getAttributeValue("number");
+		// interpret values
+		boolean si = "si".equals(format);
 
-		// Parse the attribute value as a Thymeleaf Standard Expression
-		final IStandardExpression expression =
-				parser.parseExpression(configuration, arguments, attributeValue);
+		// if number ok
+		if (number != null) {
+			// lazily create instance
+			if (numberFormatter == null) numberFormatter = new NumberFormatter();
 
-		// Execute the expression just parsed
-		final Long number =
-				(Long) expression.execute(configuration, arguments);
-
-
-
-		// get markup processor value
-		final String formatAttributeValue = element.getAttributeValue("format");
-
-		// Parse the attribute value as a Thymeleaf Standard Expression
-		final IStandardExpression formatExpression =
-				parser.parseExpression(configuration, arguments, formatAttributeValue);
-
-		// Execute the expression just parsed
-		final String format =
-				(String) formatExpression.execute(configuration, arguments);
-
-		boolean si = format.equals("si");
-
-		// lazily create instance
-		if (numberFormatter == null) numberFormatter = new NumberFormatter();
-
-
-		final List<Node> nodes = new ArrayList<>();
-
-		// render
-		try {
-			final Text text = new Text(numberFormatter.humanReadableByteCount(number, si));
-			nodes.add(text);
-		} catch (Exception e) {
-			//TODO log
+			// parse number
+			structureHandler.replaceWith(numberFormatter.humanReadableByteCount(number, si), false);
+		} else {
+			// do not show element at all
+			structureHandler.removeElement();
 		}
-
-		return nodes;
 	}
 }

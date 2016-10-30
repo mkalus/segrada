@@ -55,7 +55,7 @@
 						<div th:replace="partials/common :: taglist (tags=${entity.tags})"></div>
 					</td>
 					<td class="text-right">
-						<div class="sg-data-icon-bar" role="group" aria-label="Actions" th:strip-whitespace="shallow">
+						<div class="sg-data-icon-bar" role="group" aria-label="Actions" th:strip-whitespace>
 							<a class="sg-data-icon sg-data-add" href="#" th:title="#{Show}" th:href="@{/file/show/{uid}(uid=${entity.uid})}"><i class="fa fa-eye"></i></a>
 							<a th:if="${identity.hasEditAccess(entity, 'FILE')}" class="sg-data-icon sg-data-add" href="#" th:title="#{Edit}" th:href="@{/file/edit/{uid}(uid=${entity.uid})}"><i class="fa fa-pencil"></i></a>
 							<a th:if="${identity.hasDeleteAccess(entity, 'FILE')}" class="sg-data-icon" href="#" th:title="#{Delete}" th:href="@{/file/delete/{uid}/0(uid=${entity.uid})}" th:attr="data-confirm=${#messages.msg('ReallyDelete', entity.title)}"><i class="fa fa-times-circle-o"></i></a>

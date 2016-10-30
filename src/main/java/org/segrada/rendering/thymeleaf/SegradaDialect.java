@@ -1,14 +1,15 @@
 package org.segrada.rendering.thymeleaf;
 
 import org.segrada.rendering.thymeleaf.processor.*;
-import org.thymeleaf.dialect.AbstractDialect;
+import org.thymeleaf.dialect.AbstractProcessorDialect;
 import org.thymeleaf.processor.IProcessor;
+import org.thymeleaf.standard.StandardDialect;
 
 import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]
+ * Copyright 2016 Maximilian Kalus [segrada@auxnet.de]
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,19 +25,27 @@ import java.util.Set;
  *
  * Custom segrada dialect elements using "th:" prefix
  */
-public class SegradaDialect extends AbstractDialect {
-	public String getPrefix() {
-		return "th";
+public class SegradaDialect extends AbstractProcessorDialect {
+	/**
+	 * dialect name
+	 */
+	private static final String DIALECT_NAME = "Segrada Dialect";
+
+	/**
+	 * Constructor
+	 */
+	public SegradaDialect() {
+		super(DIALECT_NAME, "th", StandardDialect.PROCESSOR_PRECEDENCE);
 	}
 
 	@Override
-	public Set<IProcessor> getProcessors() {
+	public Set<IProcessor> getProcessors(final String dialectPrefix) {
 		final Set<IProcessor> processors = new HashSet<>();
-		processors.add(new Nl2BrProcessor());
-		processors.add(new MarkupProcessor());
-		processors.add(new NumberFormatProcessor());
-		processors.add(new DateTimeFormatProcessor());
-		processors.add(new StripWhitespaceProcessor());
+		processors.add(new Nl2BrProcessor(dialectPrefix));
+		processors.add(new MarkupProcessor(dialectPrefix));
+		processors.add(new NumberFormatProcessor(dialectPrefix));
+		processors.add(new DateTimeFormatProcessor(dialectPrefix));
+		processors.add(new StripWhitespaceProcessor(dialectPrefix));
 		return processors;
 	}
 }

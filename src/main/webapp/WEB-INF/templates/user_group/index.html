@@ -30,7 +30,7 @@
                 <td th:text="${entity.title}">Title</td>
                 <td><i class="fa fa-gavel" th:if="${entity.special == 'ADMIN'}" th:title="#{Administrator}"></i><i class="fa fa-user-secret" th:if="${entity.special == 'ANONYMOUS'}" th:title="#{Anonymous}"></i></td>
                 <td class="text-right">
-                    <div class="sg-data-icon-bar" role="group" aria-label="Actions" th:strip-whitespace="shallow">
+                    <div class="sg-data-icon-bar" role="group" aria-label="Actions" th:strip-whitespace>
                         <a class="sg-data-icon sg-data-add" href="#" th:title="#{Show}" th:href="@{/user_group/show/{uid}(uid=${entity.uid})}"><i class="fa fa-eye"></i></a>
                         <a th:if="${identity.hasEditAccess(entity, 'ADMIN')}" class="sg-data-icon sg-data-add" href="#" th:title="#{Edit}" th:href="@{/user_group/edit/{uid}(uid=${entity.uid})}"><i class="fa fa-pencil"></i></a>
                         <a th:if="${identity.hasDeleteAccess(entity, 'ADMIN')}" th:unless="${entity.special}" class="sg-data-icon" href="#" th:title="#{Delete}" th:href="@{/user_group/delete/{uid}/0(uid=${entity.uid})}" th:attr="data-confirm=${#messages.msg('ReallyDelete', entity.title)}"><i class="fa fa-times-circle-o"></i></a>

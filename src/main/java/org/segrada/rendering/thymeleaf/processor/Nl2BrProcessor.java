@@ -1,17 +1,19 @@
 package org.segrada.rendering.thymeleaf.processor;
 
-import org.thymeleaf.Arguments;
-import org.thymeleaf.Configuration;
-import org.thymeleaf.dom.Element;
-import org.thymeleaf.processor.attr.AbstractUnescapedTextChildModifierAttrProcessor;
-import org.thymeleaf.standard.expression.IStandardExpression;
+import org.thymeleaf.IEngineConfiguration;
+import org.thymeleaf.context.ITemplateContext;
+import org.thymeleaf.model.IProcessableElementTag;
+import org.thymeleaf.processor.element.AbstractElementTagProcessor;
+import org.thymeleaf.processor.element.IElementTagStructureHandler;
 import org.thymeleaf.standard.expression.IStandardExpressionParser;
+import org.thymeleaf.standard.expression.StandardExpressionParser;
 import org.thymeleaf.standard.expression.StandardExpressions;
+import org.thymeleaf.templatemode.TemplateMode;
 
 import static org.apache.commons.lang.StringEscapeUtils.escapeHtml;
 
 /**
- * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]
+ * Copyright 2016 Maximilian Kalus [segrada@auxnet.de]
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,36 +31,69 @@ import static org.apache.commons.lang.StringEscapeUtils.escapeHtml;
  *
  * Usage: th:nl2br="'Text'"
  */
-public class Nl2BrProcessor extends AbstractUnescapedTextChildModifierAttrProcessor {
-	public Nl2BrProcessor() {
-		super("nl2br");
+public class Nl2BrProcessor extends AbstractElementTagProcessor {
+	/**
+	 * Tag name
+	 */
+	private static final String ATTR_NAME = "nl2br";
+
+	/**
+	 * Precedence of processor
+	 */
+	private static final int PRECEDENCE = 1200;
+
+	/**
+	 * Constructor
+	 * @param dialectPrefix dialect prefix, e.g. th or segrada
+	 */
+	public Nl2BrProcessor(final String dialectPrefix) {
+		super(
+				TemplateMode.HTML, // This processor will apply only to HTML mode
+				dialectPrefix,     // Prefix to be applied to name for matching
+				null,              // No tag name: match any tag name
+				false,             // No prefix to be applied to tag name
+				ATTR_NAME,         // Name of the attribute that will be matched
+				true,              // Apply dialect prefix to attribute name
+				PRECEDENCE); // Precedence (inside dialect's own precedence)
 	}
 
 	@Override
-	protected String getText(Arguments arguments, Element element, String attributeName) {
-		final Configuration configuration = arguments.getConfiguration();
+	protected void doProcess(
+			final ITemplateContext context, final IProcessableElementTag tag,
+			final IElementTagStructureHandler structureHandler) {
+		final IStandardExpressionParser parser = getParser(context);
 
-		// Obtain the attribute value
-		final String attributeValue = element.getAttributeValue(attributeName);
+		String content = parseTagValue(parser, context, tag);
 
-		// Obtain the Thymeleaf Standard Expression parser
-		final IStandardExpressionParser parser =
-				StandardExpressions.getExpressionParser(configuration);
+		// If no content is to be applied, just convert to an empty message
+		if (content == null) content = "";
+		else content = nl2br(content);
 
+		// replace whole tag completely with char sequence
+		structureHandler.replaceWith(content, false);
+	}
+
+	/**
+	 * helper method to parse a tag value through the IStandardExpressionParser
+	 * @param parser standard expression parser
+	 * @param context Template context
+	 * @param tag tag to be parsed
+	 * @return parsed tag value
+	 */
+	private String parseTagValue(final IStandardExpressionParser parser, final ITemplateContext context, final IProcessableElementTag tag) {
 		// Parse the attribute value as a Thymeleaf Standard Expression
-		final IStandardExpression expression =
-				parser.parseExpression(configuration, arguments, attributeValue);
+		return (String) parser.parseExpression(context, tag.getAttributeValue(this.getDialectPrefix(), ATTR_NAME)).execute(context);
+	}
 
-		// Execute the expression just parsed
-		final String content =
-				(String) expression.execute(configuration, arguments);
+	/**
+	 * obtain standard expression parser
+	 * @param context Template context
+	 * @return standard expression parser
+	 */
+	private IStandardExpressionParser getParser(final ITemplateContext context) {
+		final IEngineConfiguration configuration = context.getConfiguration();
 
-		// If no content is to be applied, just return an empty message
-		if (content == null) {
-			return "";
-		}
-
-		return nl2br(content);
+		return StandardExpressions.getExpressionParser(configuration);
 	}
 
 	/**
@@ -67,15 +102,10 @@ public class Nl2BrProcessor extends AbstractUnescapedTextChildModifierAttrProces
 	 * @param text to be worked on
 	 * @return worked text
 	 */
-	public String nl2br(String text) {
+	protected String nl2br(String text) {
 		return escapeHtml(text)
 				.replace("\r\n", "\n")
 				.replace("\r", "\n")
 				.replace("\n", "<br/>\n");
-	}
-
-	@Override
-	public int getPrecedence() {
-		return 12000;
 	}
 }
