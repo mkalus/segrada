@@ -25,7 +25,7 @@ import org.thymeleaf.templatemode.TemplateMode;
  * <p>
  * Helper class to provide markup functionality to thymeleaf
  *
- * Usage: <th:markup markup="'html'" text="'text'" />
+ * Usage: <sg:markup markup="'html'" text="'text'" />
  */
 public class MarkupProcessor extends AbstractSegradaTagProcessor {
 	/**

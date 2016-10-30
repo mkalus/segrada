@@ -8,7 +8,7 @@ public class Nl2BrProcessorTest {
 
 	@Test
 	public void textNl2br() throws Exception {
-		Nl2BrProcessor processor = new Nl2BrProcessor("th");
+		Nl2BrProcessor processor = new Nl2BrProcessor("sg");
 
 		// simple test cases
 		assertEquals("Hello<br/>\nWorld!", processor.nl2br("Hello\nWorld!"));

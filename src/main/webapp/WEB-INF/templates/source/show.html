@@ -60,7 +60,7 @@
 					</div>
 				</div>
 
-				<div class="sg-description well well-sm" th:unless="${#strings.isEmpty(entity.description)}"><th:markup text="${entity.description}" markup="${entity.descriptionMarkup}" /></div>
+				<div class="sg-description well well-sm" th:unless="${#strings.isEmpty(entity.description)}"><sg:markup text="${entity.description}" markup="${entity.descriptionMarkup}" /></div>
 
 				<div th:if="${pdfFile and identity.hasAccess('FILE')}">
 					<div th:replace="partials/search :: withinFile (file=${pdfFile}, uid=${entity.uid})"></div>

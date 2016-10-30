@@ -29,7 +29,7 @@ import static org.apache.commons.lang.StringEscapeUtils.escapeHtml;
  * <p>
  * Helper class to provide nl2br functionality to thymeleaf
  *
- * Usage: th:nl2br="'Text'"
+ * Usage: sg:nl2br="'Text'"
  */
 public class Nl2BrProcessor extends AbstractElementTagProcessor {
 	/**

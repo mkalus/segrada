@@ -35,7 +35,7 @@ public class SegradaDialect extends AbstractProcessorDialect {
 	 * Constructor
 	 */
 	public SegradaDialect() {
-		super(DIALECT_NAME, "th", StandardDialect.PROCESSOR_PRECEDENCE);
+		super(DIALECT_NAME, "sg", StandardDialect.PROCESSOR_PRECEDENCE);
 	}
 
 	@Override

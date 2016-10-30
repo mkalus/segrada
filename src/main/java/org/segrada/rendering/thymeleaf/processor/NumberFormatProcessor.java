@@ -24,7 +24,7 @@ import org.thymeleaf.templatemode.TemplateMode;
  * <p>
  * Helper class to process numbers in a nice way
  *
- * Usage: <th:formatnumber number="'1234567'" format="'si'" />
+ * Usage: <sg:formatnumber number="'1234567'" format="'si'" />
  *
  * format must be si or binary
  */

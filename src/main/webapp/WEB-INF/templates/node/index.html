@@ -55,7 +55,7 @@
 						<div th:replace="partials/common :: taglist (tags=${entity.tags})"></div>
 					</td>
 					<td class="text-right">
-						<div class="sg-data-icon-bar" role="group" aria-label="Actions" th:strip-whitespace>
+						<div class="sg-data-icon-bar" role="group" aria-label="Actions" sg:strip-whitespace>
 							<a th:if="${identity.hasAccess('GRAPH')}" href="#" th:href="@{/node/graph/{uid}(uid=${entity.uid})}" type="button" class="sg-graph-update sg-data-icon" aria-label="Graph" th:title="#{AddToGraph}" th:attr="aria-label=#{AddToGraph}"><i class="fa fa-share"></i></a>
 							<a class="sg-data-icon sg-data-add" href="#" th:title="#{Show}" th:href="@{/node/show/{uid}(uid=${entity.uid})}"><i class="fa fa-eye"></i></a>
 							<a th:if="${identity.hasEditAccess(entity, 'NODE')}" class="sg-data-icon sg-data-add" href="#" th:title="#{Edit}" th:href="@{/node/edit/{uid}(uid=${entity.uid})}"><i class="fa fa-pencil"></i></a>

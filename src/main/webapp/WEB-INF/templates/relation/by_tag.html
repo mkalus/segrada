@@ -52,7 +52,7 @@
 					<td th:if="${identity.hasAccess('PERIOD')}" th:utext="${@org.segrada.util.FuzzyDateRenderer@renderOrEmpty(entity.minJD,entity.minEntry,entity.minEntryCalendar,entity.fuzzyMinFlags)}">Start</td>
 					<td th:if="${identity.hasAccess('PERIOD')}" th:utext="${@org.segrada.util.FuzzyDateRenderer@renderOrEmpty(entity.maxJD,entity.maxEntry,entity.maxEntryCalendar,entity.fuzzyMaxFlags)}">Stop</td>
 					<td class="text-right">
-						<div class="sg-data-icon-bar" role="group" aria-label="Actions" th:strip-whitespace>
+						<div class="sg-data-icon-bar" role="group" aria-label="Actions" sg:strip-whitespace>
 							<a th:if="${identity.hasAccess('GRAPH')}" href="#" th:href="@{/relation/graph/{uid}(uid=${entity.uid})}" type="button" class="sg-graph-update sg-data-icon" aria-label="Graph" th:title="#{AddToGraph}" th:attr="aria-label=#{AddToGraph}"><i class="fa fa-share"></i></a>
 							<a class="sg-data-icon sg-data-add" href="#" th:title="#{Show}" th:href="@{/relation/show/{uid}(uid=${entity.uid})}"><i class="fa fa-eye"></i></a>
 							<a th:if="${identity.hasEditAccess(entity, 'RELATION')}" class="sg-data-icon sg-data-add" href="#" th:title="#{Edit}" th:href="@{/relation/edit/{uid}(uid=${entity.uid})}"><i class="fa fa-pencil"></i></a>

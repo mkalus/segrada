@@ -32,7 +32,7 @@
 
 		<div class="tab-content">
 			<div role="tabpanel" class="tab-pane active" id="tab1" th:id="${'tab-1-' + entity.uid}" >
-				<div class="sg-description well well-sm" th:unless="${#strings.isEmpty(entity.description)}"><th:markup text="${entity.description}" markup="${entity.descriptionMarkup}" /></div>
+				<div class="sg-description well well-sm" th:unless="${#strings.isEmpty(entity.description)}"><sg:markup text="${entity.description}" markup="${entity.descriptionMarkup}" /></div>
 
 				<div class="sg-file-data sg-margin-top">
 					<div class="row">
@@ -41,7 +41,7 @@
 					</div>
 					<div class="row">
 						<div class="col-xs-3"><strong th:text="#{field.filesize}">Filesize</strong></div>
-						<div class="col-xs-9"><th:formatnumber number="${entity.fileSize}" format="'binary'" /></div>
+						<div class="col-xs-9"><sg:formatnumber number="${entity.fileSize}" format="'binary'" /></div>
 					</div>
 					<div class="row" th:unless="${#strings.isEmpty(entity.copyright)}">
 						<div class="col-xs-3"><strong th:text="#{field.copyright}">Copyright</strong></div>

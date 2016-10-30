@@ -15,7 +15,7 @@
         <div th:replace="partials/common :: headerboxright (type=#{UserGroup},base='user_group',entity=${entity},access='ADMIN')"></div>
         <h4 class="sg-data-header"><span class="fa fa-users" th:title="#{UserGroup}"></span> <span th:text="${entity.title}">User Group</span></h4>
 
-        <div class="sg-description well well-sm" th:unless="${#strings.isEmpty(entity.description)}" th:nl2br="${entity.description}">Description</div>
+        <div class="sg-description well well-sm" th:unless="${#strings.isEmpty(entity.description)}" sg:nl2br="${entity.description}">Description</div>
 
         <div class="sg-user-data sg-margin-top sg-margin-bottom">
             <div class="row">

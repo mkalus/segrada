@@ -7,7 +7,7 @@ import static org.junit.Assert.*;
 public class MarkupProcessorTest {
 	@Test
 	public void testMarkup() throws Exception {
-		MarkupProcessor processor = new MarkupProcessor("th");
+		MarkupProcessor processor = new MarkupProcessor("sg");
 
 		// no NPEs!
 		assertEquals("", processor.markup(null, "default"));

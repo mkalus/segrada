@@ -25,7 +25,7 @@ import org.thymeleaf.templatemode.TemplateMode;
  * <p>
  * Helper class to process date time millis to readable date
  *
- * Usage: <th:datetimeformat millis="'1234567'" format="'HH'" />
+ * Usage: <sg:datetimeformat millis="'1234567'" format="'HH'" />
  *
  */
 public class DateTimeFormatProcessor extends AbstractSegradaTagProcessor {
