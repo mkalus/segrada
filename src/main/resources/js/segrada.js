@@ -983,6 +983,10 @@ function escapeHTML(myString) {
 		if (link.hasClass('active')) {
 			link.removeClass('active');
 			$('.fa-share-alt-square', link).addClass('fa-share-alt').removeClass('fa-share-alt-square');
+
+			// remember positions
+			graphNetwork.storePositions();
+
 			$('#sg-graph-container').hide();
 			$('#sg-control').show();
 
