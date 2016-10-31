@@ -39,12 +39,12 @@ public class LuceneSearchEngineTest {
 		// search
 		PaginationInfo<SearchHit> searchResult = searchEngine.search("consetetur hello", null);
 
-		assertEquals(1, searchResult.total);
+		assertEquals(1, searchResult.getTotal());
 		assertEquals(1, searchResult.getMinPage());
-		assertEquals(1, searchResult.entities.size());
+		assertEquals(1, searchResult.getEntities().size());
 
 		// get hit and analyze it
-		SearchHit hit = searchResult.entities.get(0);
+		SearchHit hit = searchResult.getEntities().get(0);
 
 		assertEquals("1", hit.getId());
 		assertEquals("DummyClass", hit.getClassName());
@@ -59,7 +59,7 @@ public class LuceneSearchEngineTest {
 		// search - should not return anything
 		searchResult = searchEngine.search("consetetur hello", null);
 
-		assertEquals(0, searchResult.total);
+		assertEquals(0, searchResult.getTotal());
 	}
 
 	@Test
@@ -81,138 +81,138 @@ public class LuceneSearchEngineTest {
 
 		// search - no filter
 		searchResult = searchEngine.search("title", null);
-		assertEquals(2, searchResult.total);
+		assertEquals(2, searchResult.getTotal());
 		searchResult = searchEngine.search("Avocado", null);
-		assertEquals(2, searchResult.total);
+		assertEquals(2, searchResult.getTotal());
 		searchResult = searchEngine.search("text", null);
-		assertEquals(1, searchResult.total);
+		assertEquals(1, searchResult.getTotal());
 		searchResult = searchEngine.search("DOESNOTCOMPUTE", null);
-		assertEquals(0, searchResult.total);
+		assertEquals(0, searchResult.getTotal());
 
 		// test invalid search filter
 		filter.clear();
 		filter.put("fields", "noodles");
 		searchResult = searchEngine.search("title", filter);
-		assertEquals(0, searchResult.total);
+		assertEquals(0, searchResult.getTotal());
 
 		// test title search
 		filter.clear();
 		filter.put("fields", "title");
 		searchResult = searchEngine.search("title", filter);
-		assertEquals(2, searchResult.total);
+		assertEquals(2, searchResult.getTotal());
 		searchResult = searchEngine.search("Avocado", filter);
-		assertEquals(1, searchResult.total);
+		assertEquals(1, searchResult.getTotal());
 		searchResult = searchEngine.search("text", filter);
-		assertEquals(0, searchResult.total);
+		assertEquals(0, searchResult.getTotal());
 
 		// test subtitles search
 		filter.clear();
 		filter.put("fields", "subtitles");
 		searchResult = searchEngine.search("Subtitle", filter);
-		assertEquals(2, searchResult.total);
+		assertEquals(2, searchResult.getTotal());
 		searchResult = searchEngine.search("Avocado", filter);
-		assertEquals(1, searchResult.total);
+		assertEquals(1, searchResult.getTotal());
 		searchResult = searchEngine.search("text", filter);
-		assertEquals(0, searchResult.total);
+		assertEquals(0, searchResult.getTotal());
 
 		// test text search
 		filter.clear();
 		filter.put("fields", "content");
 		searchResult = searchEngine.search("text", filter);
-		assertEquals(1, searchResult.total);
+		assertEquals(1, searchResult.getTotal());
 		searchResult = searchEngine.search("Avocado", filter);
-		assertEquals(0, searchResult.total); // titles contained in content
+		assertEquals(0, searchResult.getTotal()); // titles contained in content
 		searchResult = searchEngine.search("Title", filter);
-		assertEquals(0, searchResult.total); // titles contained in content
+		assertEquals(0, searchResult.getTotal()); // titles contained in content
 
 		// title and subtitle fields
 		filter.clear();
 		filter.put("fields", "allTitles");
 		searchResult = searchEngine.search("text", filter);
-		assertEquals(0, searchResult.total);
+		assertEquals(0, searchResult.getTotal());
 		searchResult = searchEngine.search("Avocado", filter);
-		assertEquals(2, searchResult.total); // titles contained in content
+		assertEquals(2, searchResult.getTotal()); // titles contained in content
 		searchResult = searchEngine.search("Title", filter);
-		assertEquals(2, searchResult.total); // titles contained in content
+		assertEquals(2, searchResult.getTotal()); // titles contained in content
 		searchResult = searchEngine.search("Subtitle", filter);
-		assertEquals(2, searchResult.total); // titles contained in content
+		assertEquals(2, searchResult.getTotal()); // titles contained in content
 
 		// test classes
 		filter.clear();
 		filter.put("class", "DummyClass");
 		searchResult = searchEngine.search("title", filter);
-		assertEquals(1, searchResult.total);
+		assertEquals(1, searchResult.getTotal());
 		filter.put("class", "DummyClassNOTEXIST");
 		searchResult = searchEngine.search("title", filter);
-		assertEquals(0, searchResult.total);
+		assertEquals(0, searchResult.getTotal());
 
 		// test multiple classes
 		filter.clear();
 		filter.put("class", "DummyClass,AnotherDummyClass");
 		searchResult = searchEngine.search("title", filter);
-		assertEquals(2, searchResult.total);
+		assertEquals(2, searchResult.getTotal());
 
 		// limit filter
 		filter.clear();
 		filter.put("limit", "1");
 		searchResult = searchEngine.search(null, filter);
-		assertEquals(1, searchResult.entities.size());
+		assertEquals(1, searchResult.getEntities().size());
 
 		// operator filter
 		filter.clear();
 		filter.put("operator", "and");
 		searchResult = searchEngine.search("title another", filter);
-		assertEquals(1, searchResult.entities.size());
+		assertEquals(1, searchResult.getEntities().size());
 		filter.clear();
 		filter.put("operator", "or");
 		searchResult = searchEngine.search("title another", filter);
-		assertEquals(2, searchResult.entities.size());
+		assertEquals(2, searchResult.getEntities().size());
 
 		// single tag filter
 		filter.clear();
 		filter.put("tags", "tag1");
 		searchResult = searchEngine.search(null, filter);
-		assertEquals(2, searchResult.entities.size());
+		assertEquals(2, searchResult.getEntities().size());
 
 		// single tag filter
 		filter.clear();
 		filter.put("tags", "tag2");
 		searchResult = searchEngine.search(null, filter);
-		assertEquals(1, searchResult.entities.size());
+		assertEquals(1, searchResult.getEntities().size());
 
 		// single tag filter - non-existent
 		filter.clear();
 		filter.put("tags", "tag66");
 		searchResult = searchEngine.search(null, filter);
-		assertEquals(0, searchResult.entities.size());
+		assertEquals(0, searchResult.getEntities().size());
 
 		// multi-tag-filter
 		filter.clear();
 		filter.put("tags", "tag1,tag2");
 		searchResult = searchEngine.search(null, filter);
-		assertEquals(2, searchResult.entities.size());
+		assertEquals(2, searchResult.getEntities().size());
 
 		// multi-tag-filter with non-existent
 		filter.clear();
 		filter.put("tags", "tag2,tag66");
 		searchResult = searchEngine.search(null, filter);
-		assertEquals(1, searchResult.entities.size());
+		assertEquals(1, searchResult.getEntities().size());
 
 		// multi-tag-filter with different order
 		filter.clear();
 		filter.put("tags", "tag4,tag2");
 		searchResult = searchEngine.search(null, filter);
-		assertEquals(1, searchResult.entities.size());
+		assertEquals(1, searchResult.getEntities().size());
 
 		// multiple filter test
 		filter.clear();
 		filter.put("tags", "tag1");
 		filter.put("class", "DummyClass");
 		searchResult = searchEngine.search(null, filter);
-		assertEquals(1, searchResult.total);
+		assertEquals(1, searchResult.getTotal());
 
 		searchResult = searchEngine.search("labore", filter);
-		assertEquals(1, searchResult.total);
+		assertEquals(1, searchResult.getTotal());
 	}
 
 	@Test
@@ -279,7 +279,7 @@ public class LuceneSearchEngineTest {
 
 		// search
 		PaginationInfo<SearchHit> searchResult = searchEngine.search("consetetur hello", null);
-		assertEquals(0, searchResult.total);
+		assertEquals(0, searchResult.getTotal());
 
 		SearchHit hit = searchEngine.getById("3");
 		assertNull(hit);
@@ -299,13 +299,13 @@ public class LuceneSearchEngineTest {
 		// search
 		PaginationInfo<SearchHit> searchResult = searchEngine.search("xyzzy", null);
 
-		assertEquals(1, searchResult.total);
+		assertEquals(1, searchResult.getTotal());
 		assertEquals(1, searchResult.getMinPage());
 		assertEquals(1, searchResult.getMaxPage());
-		assertEquals(1, searchResult.entities.size());
+		assertEquals(1, searchResult.getEntities().size());
 
 		// get hit and analyze it
-		SearchHit hit = searchResult.entities.get(0);
+		SearchHit hit = searchResult.getEntities().get(0);
 		assertEquals("Hello World 2", hit.getTitle()); // should be second title which has been saved
 	}
 

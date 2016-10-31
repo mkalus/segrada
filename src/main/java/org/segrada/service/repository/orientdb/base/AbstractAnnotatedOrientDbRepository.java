@@ -88,7 +88,7 @@ abstract public class AbstractAnnotatedOrientDbRepository<T extends SegradaAnnot
 
 							if (sourceReferenceRepository != null) {
 								PaginationInfo<ISourceReference> paginationInfo = sourceReferenceRepository.findByReference(entity.getId(), page, entriesPerPage, null); //TODO limit to access
-								return paginationInfo.entities;
+								return paginationInfo.getEntities();
 							} else throw new NullPointerException("NULL sourceReferenceRepository");
 						}
 					}

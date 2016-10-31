@@ -286,91 +286,91 @@ public class OrientDbNodeRepositoryTest {
 
 		// first simple tests of pagination
 		PaginationInfo<INode> pi = repository.paginate(1, 10, null);
-		assertTrue(pi.page == 1);
-		assertTrue(pi.entriesPerPage == 10);
-		assertTrue(pi.pages == 4);
-		assertTrue(pi.total == 33);
-		assertTrue(pi.entities.size() == 10);
+		assertTrue(pi.getPage() == 1);
+		assertTrue(pi.getEntriesPerPage() == 10);
+		assertTrue(pi.getPages() == 4);
+		assertTrue(pi.getTotal() == 33);
+		assertTrue(pi.getEntities().size() == 10);
 
 		// last page
 		pi = repository.paginate(4, 10, null);
-		assertTrue(pi.page == 4);
-		assertTrue(pi.entriesPerPage == 10);
-		assertTrue(pi.pages == 4);
-		assertTrue(pi.total == 33);
-		assertTrue(pi.entities.size() == 3);
+		assertTrue(pi.getPage() == 4);
+		assertTrue(pi.getEntriesPerPage() == 10);
+		assertTrue(pi.getPages() == 4);
+		assertTrue(pi.getTotal() == 33);
+		assertTrue(pi.getEntities().size() == 3);
 
 		// different page size
 		pi = repository.paginate(4, 5, null);
-		assertTrue(pi.page == 4);
-		assertTrue(pi.entriesPerPage == 5);
-		assertTrue(pi.pages == 7);
-		assertTrue(pi.total == 33);
-		assertTrue(pi.entities.size() == 5);
+		assertTrue(pi.getPage() == 4);
+		assertTrue(pi.getEntriesPerPage() == 5);
+		assertTrue(pi.getPages() == 7);
+		assertTrue(pi.getTotal() == 33);
+		assertTrue(pi.getEntities().size() == 5);
 
 		// do incorrect pagination 1
 		pi = repository.paginate(0, 10, null);
-		assertTrue(pi.page == 1);
-		assertTrue(pi.entriesPerPage == 10);
-		assertTrue(pi.pages == 4);
-		assertTrue(pi.total == 33);
-		assertTrue(pi.entities.size() == 10);
+		assertTrue(pi.getPage() == 1);
+		assertTrue(pi.getEntriesPerPage() == 10);
+		assertTrue(pi.getPages() == 4);
+		assertTrue(pi.getTotal() == 33);
+		assertTrue(pi.getEntities().size() == 10);
 
 		// do incorrect pagination 2
 		pi = repository.paginate(1, 0, null);
-		assertTrue(pi.page == 1);
-		assertTrue(pi.entriesPerPage == 10);
-		assertTrue(pi.pages == 4);
-		assertTrue(pi.total == 33);
-		assertTrue(pi.entities.size() == 10);
+		assertTrue(pi.getPage() == 1);
+		assertTrue(pi.getEntriesPerPage() == 10);
+		assertTrue(pi.getPages() == 4);
+		assertTrue(pi.getTotal() == 33);
+		assertTrue(pi.getEntities().size() == 10);
 
 		// out of bounds
 		pi = repository.paginate(10, 10, null);
-		assertTrue(pi.page == 4);
-		assertTrue(pi.entriesPerPage == 10);
-		assertTrue(pi.pages == 4);
-		assertTrue(pi.total == 33);
-		assertTrue(pi.entities.size() == 3);
+		assertTrue(pi.getPage() == 4);
+		assertTrue(pi.getEntriesPerPage() == 10);
+		assertTrue(pi.getPages() == 4);
+		assertTrue(pi.getTotal() == 33);
+		assertTrue(pi.getEntities().size() == 3);
 
 		// full text filter
 		Map<String, Object> filters = new HashMap<>();
 		filters.put("search", "title");
 		pi = repository.paginate(1, 10, filters);
-		assertTrue(pi.page == 1);
-		assertTrue(pi.entriesPerPage == 10);
-		assertTrue(pi.pages == 4);
-		assertTrue(pi.total == 33);
-		assertTrue(pi.entities.size() == 10);
+		assertTrue(pi.getPage() == 1);
+		assertTrue(pi.getEntriesPerPage() == 10);
+		assertTrue(pi.getPages() == 4);
+		assertTrue(pi.getTotal() == 33);
+		assertTrue(pi.getEntities().size() == 10);
 
 		// empty result
 		filters.put("search", "alt");
 		pi = repository.paginate(1, 10, filters);
-		assertTrue(pi.page == 1);
-		assertTrue(pi.entriesPerPage == 10);
-		assertTrue(pi.pages == 1);
-		assertTrue(pi.total == 0);
-		assertTrue(pi.entities.size() == 0);
+		assertTrue(pi.getPage() == 1);
+		assertTrue(pi.getEntriesPerPage() == 10);
+		assertTrue(pi.getPages() == 1);
+		assertTrue(pi.getTotal() == 0);
+		assertTrue(pi.getEntities().size() == 0);
 
 		// filter by tags
 		filters.clear();
 		filters.put("tags", new String[] { "Tag 1",  "Tag 2" });
 		pi = repository.paginate(1, 10, filters);
-		assertTrue(pi.page == 1);
-		assertTrue(pi.entriesPerPage == 10);
-		assertTrue(pi.pages == 1);
-		assertTrue(pi.total == 7);
-		assertTrue(pi.entities.size() == 7);
+		assertTrue(pi.getPage() == 1);
+		assertTrue(pi.getEntriesPerPage() == 10);
+		assertTrue(pi.getPages() == 1);
+		assertTrue(pi.getTotal() == 7);
+		assertTrue(pi.getEntities().size() == 7);
 
 		// filter by tags and full text
 		filters.clear();
 		filters.put("tags", new String[] { "Tag 1",  "Tag 2" });
 		filters.put("search", "title");
 		pi = repository.paginate(1, 10, filters);
-		assertTrue(pi.page == 1);
-		assertTrue(pi.entriesPerPage == 10);
-		assertTrue(pi.pages == 1);
-		assertTrue(pi.total == 7);
-		assertTrue(pi.entities.size() == 7);
+		assertTrue(pi.getPage() == 1);
+		assertTrue(pi.getEntriesPerPage() == 10);
+		assertTrue(pi.getPages() == 1);
+		assertTrue(pi.getTotal() == 7);
+		assertTrue(pi.getEntities().size() == 7);
 
 		//TODO more filters
 	}

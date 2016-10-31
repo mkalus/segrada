@@ -25,27 +25,27 @@ public class PaginationInfo<T extends SegradaEntity> {
 	/**
 	 * current page to show
 	 */
-	public final int page;
+	private final int page;
 
 	/**
 	 * total number of pages
 	 */
-	public final int pages;
+	private final int pages;
 
 	/**
 	 * total number of entities
 	 */
-	public final int total;
+	private final int total;
 
 	/**
 	 * entries per page to show
 	 */
-	public final int entriesPerPage;
+	private final int entriesPerPage;
 
 	/**
 	 * hits
 	 */
-	public final List<T> entities;
+	private final List<T> entities;
 
 	/**
 	 * constructor
@@ -105,5 +105,25 @@ public class PaginationInfo<T extends SegradaEntity> {
 		}
 
 		return "pagination";
+	}
+
+	public int getPage() {
+		return page;
+	}
+
+	public int getPages() {
+		return pages;
+	}
+
+	public int getTotal() {
+		return total;
+	}
+
+	public int getEntriesPerPage() {
+		return entriesPerPage;
+	}
+
+	public List<T> getEntities() {
+		return entities;
 	}
 }
