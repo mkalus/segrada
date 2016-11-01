@@ -1,7 +1,5 @@
 package org.segrada.service.repository;
 
-import com.google.inject.Singleton;
-
 /**
  * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]
  *
