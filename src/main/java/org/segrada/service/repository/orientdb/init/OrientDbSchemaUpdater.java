@@ -135,16 +135,21 @@ public class OrientDbSchemaUpdater {
 	 */
 	public void initializeDatabase() {
 		if (dbPath.startsWith("remote:")) {
-			try {
-				OServerAdmin admin = new OServerAdmin(dbPath);
-				admin.connect(dbRoot, dbRootPassword);
-				if (!admin.existsDatabase()) {
-					logger.info("Attempting to create database " + dbPath + ".");
-					admin.createDatabase("graph", "plocal");
+			if (dbRoot == null || "".equals(dbRoot)) {
+				// send warning that we cannot create database
+				logger.info("No root password defined for remote connection. Please make sure your database has been created - or define orientDB.remote_root and orientDB.remote_pw as runtime parameters to autocreate remote database.");
+			} else {
+				try {
+					OServerAdmin admin = new OServerAdmin(dbPath);
+					admin.connect(dbRoot, dbRootPassword);
+					if (!admin.existsDatabase()) {
+						logger.info("Attempting to create database " + dbPath + ".");
+						admin.createDatabase("graph", "plocal");
+					}
+				} catch (Exception e) {
+					logger.error("Could not connect to " + dbPath + ": exiting.");
+					System.exit(1);
 				}
-			} catch (Exception e) {
-				logger.info("Could not connect to " + dbPath + ": exiting.");
-				System.exit(1);
 			}
 		} else if (!orientGraphFactory.exists()) {
 			logger.info("Database " + dbPath + " did not exist: Creating it now.");
