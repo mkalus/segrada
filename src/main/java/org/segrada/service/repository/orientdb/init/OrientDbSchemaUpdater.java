@@ -45,7 +45,7 @@ public class OrientDbSchemaUpdater {
 	/**
 	 * current version of db
 	 */
-	private static final int CURRENT_VERSION = 4;
+	private static final int CURRENT_VERSION = 5;
 
 	/**
 	 * graph factory instance
@@ -293,12 +293,12 @@ public class OrientDbSchemaUpdater {
 			logger.info("Schema data updated to version 1.");
 		}
 
-		// no database population here, just update
+		// no database population here, just migration
 		if (versionLocal <= 1) {
 			versionLocal = 2;
 		}
 
-		// no database population here, just update
+		// no database population here, just migration
 		if (versionLocal <= 2) {
 			versionLocal = 3;
 		}
@@ -364,6 +364,11 @@ public class OrientDbSchemaUpdater {
 			versionLocal = 4;
 
 			logger.info("Schema data updated to version 4.");
+		}
+
+		// no database population here, just migration
+		if (versionLocal <= 4) {
+			versionLocal = 5;
 		}
 
 		// upsert config defaults
