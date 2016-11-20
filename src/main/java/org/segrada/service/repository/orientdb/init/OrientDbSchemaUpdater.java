@@ -143,7 +143,7 @@ public class OrientDbSchemaUpdater {
 					admin.createDatabase("graph", "plocal");
 				}
 			} catch (Exception e) {
-				logger.info("Could connect to " + dbPath + ": exiting.");
+				logger.info("Could not connect to " + dbPath + ": exiting.");
 				System.exit(1);
 			}
 		} else if (!orientGraphFactory.exists()) {
