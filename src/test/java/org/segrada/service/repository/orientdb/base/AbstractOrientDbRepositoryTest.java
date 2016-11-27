@@ -219,6 +219,40 @@ public class AbstractOrientDbRepositoryTest {
 	}
 
 	@Test
+	public void testFindNextEntriesFrom() throws Exception {
+		// should return null
+		List<MockEntity> emptyList = mockOrientDbRepository.findNextEntriesFrom(null, 10);
+
+		assertNull(emptyList);
+
+		// add two entities
+		MockEntity entity1 = new MockEntity();
+		mockOrientDbRepository.save(entity1);
+		MockEntity entity2 = new MockEntity();
+		mockOrientDbRepository.save(entity2);
+
+		// should return 2 entries
+		List<MockEntity> filledList = mockOrientDbRepository.findNextEntriesFrom(null, 10);
+
+		// correct size of list?
+		assertEquals(2, filledList.size());
+
+		// should return second entry
+		filledList = mockOrientDbRepository.findNextEntriesFrom(entity1.getUid(), 10);
+
+		// correct size of list?
+		assertEquals(1, filledList.size());
+
+		// should return one entry
+		filledList = mockOrientDbRepository.findNextEntriesFrom(null, 1);
+		assertEquals(1, filledList.size());
+
+		// should return null
+		filledList = mockOrientDbRepository.findNextEntriesFrom(entity2.getUid(), 10);
+		assertNull(filledList);
+	}
+
+	@Test
 	public void testFind() throws Exception {
 		// create and save document
 		ODocument document = new ODocument("Mock").save();

@@ -4,6 +4,8 @@ import org.segrada.model.prototype.SegradaEntity;
 import org.segrada.service.repository.factory.RepositoryFactory;
 import org.segrada.service.repository.prototype.CRUDRepository;
 
+import java.util.List;
+
 /**
  * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]
  *
@@ -59,6 +61,11 @@ public abstract class AbstractRepositoryService<T extends SegradaEntity, E exten
 	@Override
 	public Iterable<T> findAll() {
 		return repository.findAll();
+	}
+
+	@Override
+	public List<T> findNextEntriesFrom(String uid, int number) {
+		return repository.findNextEntriesFrom(uid, number);
 	}
 
 	@Override

@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
+import java.util.List;
 
 /**
  * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]
@@ -64,7 +65,18 @@ abstract public class AbstractFullTextService<T extends SegradaEntity, E extends
 	 * reindex all entities
 	 */
 	public void reindexAll() {
-		findAll().forEach(this::indexEntity);
+		// iterate through entries
+		String lastUid = null;
+
+		List<T> list = findNextEntriesFrom(null, 100);
+		while (list != null) {
+			for (T entity : list) {
+				indexEntity(entity);
+				lastUid = entity.getUid();
+			}
+
+			list = findNextEntriesFrom(lastUid, 100);
+		}
 	}
 
 	/**

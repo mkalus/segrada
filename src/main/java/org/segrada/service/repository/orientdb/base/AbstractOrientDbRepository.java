@@ -228,6 +228,51 @@ abstract public class AbstractOrientDbRepository<T extends SegradaEntity> extend
 	}
 
 	/**
+	 * Find next entries starting from uid (or first if uid is null) up to number entries
+	 * @param uid to start with or null for first entry
+	 * @param number maximum number of entries
+	 * @return list of entries or null if none exist
+	 */
+	public List<T> findNextEntriesFrom(String uid, int number) {
+		List<T> entities = null;
+
+		try {
+			initDb();
+
+			String queryAdd = getDefaultQueryParameters();
+			if (uid != null) {
+				if ((queryAdd == null || "".equals(queryAdd))) queryAdd = " WHERE ";
+				else queryAdd = " AND ";
+				queryAdd += "@rid > " + convertUidToId(uid);
+			}
+
+			// create query
+			String sql = "select * from ".concat(getModelClassName())
+					.concat(queryAdd)
+					.concat(" ORDER BY @rid LIMIT " + (number <= 0?10:number));
+
+			// execute query
+			OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>(sql);
+			List<ODocument> list = db.command(query).execute();
+
+			// no hits?
+			if (list == null || list.size() == 0)
+				return null;
+
+			// preallocate size
+			entities = new ArrayList<>(list.size());
+
+			for (ODocument document : list) {
+				entities.add(convertToEntity(document));
+			}
+		} catch (Exception e) {
+			logger.error("Exception thrown while fetching next entities.", e);
+		}
+
+		return entities;
+	}
+
+	/**
 	 * find single entity by Orient Id
 	 * @param id string representation of orient db, e.g. "#11:1"
 	 * @return entity or null

@@ -133,6 +133,35 @@ public class AbstractRepositoryServiceTest {
 	}
 
 	@Test
+	public void testFindNextEntriesFrom() throws Exception {
+		assertFalse(service.findAll().iterator().hasNext());
+
+		List<IColor> list = service.findNextEntriesFrom(null, 10);
+		assertNull(list);
+
+		IColor color = new Color();
+		color.setTitle("title");
+		color.setColor(123456);
+
+		service.save(color);
+
+		list = service.findNextEntriesFrom(null, 10);
+		assertEquals(1, list.size());
+
+		list = service.findNextEntriesFrom(color.getUid(), 10);
+		assertNull(list);
+
+		// delete it
+		service.delete(color);
+
+		list = service.findNextEntriesFrom(null, 10);
+		assertNull(list);
+
+		list = service.findNextEntriesFrom(color.getUid(), 10);
+		assertNull(list);
+	}
+
+	@Test
 	public void testCount() throws Exception {
 		assertEquals(0, service.count());
 

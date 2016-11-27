@@ -2,6 +2,8 @@ package org.segrada.service.repository.prototype;
 
 import org.segrada.model.prototype.SegradaEntity;
 
+import java.util.List;
+
 /**
  * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]
  *
@@ -38,6 +40,14 @@ public interface CRUDRepository<T extends SegradaEntity> extends SegradaReposito
 	 * @return list of all entities
 	 */
 	Iterable<T> findAll();
+
+	/**
+	 * Find next entries starting from uid (or first if uid is null) up to number entries
+	 * @param uid to start with or null for first entry
+	 * @param number maximum number of entries
+	 * @return list of entries or null if none exist
+	 */
+	List<T> findNextEntriesFrom(String uid, int number);
 
 	/**
 	 * find single instance by id
