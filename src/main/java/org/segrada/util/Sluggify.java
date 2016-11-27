@@ -7,6 +7,7 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 
+import java.text.Normalizer;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
@@ -385,5 +386,16 @@ public final class Sluggify {
 			++idx;
 		}
 		return idx;
+	}
+
+	/**
+	 * Normalize input
+	 * @param input to be normalized and trimmed
+	 * @return normalized input
+	 */
+	public static String normalize(String input) {
+		if (input != null && !"".equals(input))
+			return Normalizer.normalize(input, Normalizer.Form.NFC).trim();
+		return input;
 	}
 }

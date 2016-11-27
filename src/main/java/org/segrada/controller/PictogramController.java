@@ -15,6 +15,7 @@ import org.segrada.model.prototype.IPictogram;
 import org.segrada.service.PictogramService;
 import org.segrada.service.base.SegradaService;
 import org.segrada.session.CSRFTokenManager;
+import org.segrada.util.Sluggify;
 
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
@@ -206,7 +207,7 @@ public class PictogramController extends AbstractBaseController<IPictogram> {
 		else entity = (Pictogram) service.findById(id);
 
 		// add data
-		entity.setTitle(title);
+		entity.setTitle(Sluggify.normalize(title));
 
 		// validate entity
 		Map<String, String> errors = validate(entity);

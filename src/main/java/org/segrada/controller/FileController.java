@@ -19,6 +19,7 @@ import org.segrada.service.TagService;
 import org.segrada.service.base.AbstractRepositoryService;
 import org.segrada.service.base.SegradaService;
 import org.segrada.session.CSRFTokenManager;
+import org.segrada.util.Sluggify;
 
 import javax.annotation.Nullable;
 import javax.annotation.security.PermitAll;
@@ -557,11 +558,11 @@ public class FileController extends AbstractColoredController<IFile> {
 		tagList.toArray(tags);
 
 		// add data
-		entity.setTitle(title);
-		entity.setDescription(description);
+		entity.setTitle(Sluggify.normalize(title));
+		entity.setDescription(Sluggify.normalize(description));
 		entity.setDescriptionMarkup(descriptionMarkup);
-		entity.setCopyright(copyright);
-		entity.setLocation(location);
+		entity.setCopyright(Sluggify.normalize(copyright));
+		entity.setLocation(Sluggify.normalize(location));
 		entity.setIndexFullText(indexFullText != null && indexFullText.equals("1"));
 		entity.setContainFile(containFile != null && containFile.equals("1"));
 		entity.setColorCode(color);

@@ -10,6 +10,7 @@ import org.segrada.model.prototype.ITag;
 import org.segrada.model.prototype.SegradaEntity;
 import org.segrada.model.prototype.SegradaTaggable;
 import org.segrada.service.base.AbstractRepositoryService;
+import org.segrada.util.Sluggify;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,6 +29,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.nio.charset.Charset;
+import java.text.Normalizer;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -156,6 +158,10 @@ public class SegradaMessageBodyReader implements MessageBodyReader<SegradaEntity
 				// handle arrays
 				if (String[].class.isAssignableFrom(setterType)) {
 					value = values;
+				}
+				// handle Strings
+				if (String.class.isAssignableFrom(setterType) && value != null) {
+					value = Sluggify.normalize((String) value);
 				}
 				// handle booleans
 				if (Boolean.class.isAssignableFrom(setterType)) {
