@@ -176,10 +176,10 @@ public abstract class AbstractBaseController<T extends SegradaEntity> {
 		// new entities will get remembered tags and color by default
 		if (isNewEntity) {
 			if (entity instanceof SegradaTaggable) {
-				((SegradaTaggable) entity).setTags(getRememberedTags());
+				((SegradaTaggable) entity).setTags(getRememberedTags(entity.getModelName()));
 			}
 			if (entity instanceof SegradaColoredEntity) {
-				((SegradaColoredEntity) entity).setColorCode(getRememberedColor());
+				((SegradaColoredEntity) entity).setColorCode(getRememberedColor(entity.getModelName()));
 			}
 		}
 
@@ -213,10 +213,10 @@ public abstract class AbstractBaseController<T extends SegradaEntity> {
 
 				// remember tags and color?
 				if (entity instanceof SegradaTaggable) {
-					rememberLastTags(((SegradaTaggable) entity).getTags());
+					rememberLastTags(((SegradaTaggable) entity).getTags(), entity.getModelName());
 				}
 				if (entity instanceof SegradaColoredEntity) {
-					rememberLastColor(((SegradaColoredEntity) entity).getColorCode());
+					rememberLastColor(((SegradaColoredEntity) entity).getColorCode(), entity.getModelName());
 				}
 
 				//OK - redirect to show
@@ -347,24 +347,24 @@ public abstract class AbstractBaseController<T extends SegradaEntity> {
 	 * Save last tags in session
 	 * @param tags array of tags
 	 */
-	protected void rememberLastTags(String[] tags) {
-		session.setAttribute("lastRememberedTags", tags);
+	protected void rememberLastTags(String[] tags, String model) {
+		session.setAttribute("lastRememberedTags" + model, tags);
 	}
 
 	/**
 	 * Save last color in session
 	 * @param color code
 	 */
-	protected void rememberLastColor(String color) {
-		session.setAttribute("lastRememberedColor", color);
+	protected void rememberLastColor(String color, String model) {
+		session.setAttribute("lastRememberedColor" + model, color);
 	}
 
 	/**
 	 * get remembered tags from session
 	 * @return tags or empty string
 	 */
-	protected String[] getRememberedTags() {
-		Object o = session.getAttribute("lastRememberedTags");
+	protected String[] getRememberedTags(String model) {
+		Object o = session.getAttribute("lastRememberedTags" + model);
 		if (o != null && o instanceof String[]) return (String[]) o;
 		return new String[]{};
 	}
@@ -373,8 +373,8 @@ public abstract class AbstractBaseController<T extends SegradaEntity> {
 	 * get remembered color from session
 	 * @return color or null
 	 */
-	protected String getRememberedColor() {
-		Object o = session.getAttribute("lastRememberedColor");
+	protected String getRememberedColor(String model) {
+		Object o = session.getAttribute("lastRememberedColor" + model);
 		if (o != null && o instanceof String) return (String) o;
 		return null;
 	}

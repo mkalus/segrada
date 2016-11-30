@@ -602,8 +602,8 @@ public class FileController extends AbstractColoredController<IFile> {
 				clearCache(); // delete caches
 
 				// remember tags and colors
-				rememberLastTags(tags);
-				rememberLastColor(color);
+				rememberLastTags(tags, entity.getModelName());
+				rememberLastColor(color, entity.getModelName());
 
 				//OK - redirect to show
 				try {
