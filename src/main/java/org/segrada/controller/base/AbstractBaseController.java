@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import com.sun.jersey.api.view.Viewable;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Ehcache;
+import org.segrada.model.prototype.IPictogram;
 import org.segrada.model.prototype.SegradaColoredEntity;
 import org.segrada.model.prototype.SegradaEntity;
 import org.segrada.model.prototype.SegradaTaggable;
@@ -180,6 +181,7 @@ public abstract class AbstractBaseController<T extends SegradaEntity> {
 			}
 			if (entity instanceof SegradaColoredEntity) {
 				((SegradaColoredEntity) entity).setColorCode(getRememberedColor(entity.getModelName()));
+				((SegradaColoredEntity) entity).setPictogram(getRememberedPictogram(entity.getModelName()));
 			}
 		}
 
@@ -217,6 +219,7 @@ public abstract class AbstractBaseController<T extends SegradaEntity> {
 				}
 				if (entity instanceof SegradaColoredEntity) {
 					rememberLastColor(((SegradaColoredEntity) entity).getColorCode(), entity.getModelName());
+					rememberLastPictogram(((SegradaColoredEntity) entity).getPictogram(), entity.getModelName());
 				}
 
 				//OK - redirect to show
@@ -346,6 +349,7 @@ public abstract class AbstractBaseController<T extends SegradaEntity> {
 	/**
 	 * Save last tags in session
 	 * @param tags array of tags
+	 * @param model model to remember for
 	 */
 	protected void rememberLastTags(String[] tags, String model) {
 		session.setAttribute("lastRememberedTags" + model, tags);
@@ -354,13 +358,24 @@ public abstract class AbstractBaseController<T extends SegradaEntity> {
 	/**
 	 * Save last color in session
 	 * @param color code
+	 * @param model model to remember for
 	 */
 	protected void rememberLastColor(String color, String model) {
 		session.setAttribute("lastRememberedColor" + model, color);
 	}
 
 	/**
+	 * Save last pictogram in session
+	 * @param pictogram pictogram
+	 * @param model model to remember for
+	 */
+	protected void rememberLastPictogram(IPictogram pictogram, String model) {
+		session.setAttribute("lastRememberedPictogram" + model, pictogram);
+	}
+
+	/**
 	 * get remembered tags from session
+	 * @param model model to remember for
 	 * @return tags or empty string
 	 */
 	protected String[] getRememberedTags(String model) {
@@ -371,11 +386,23 @@ public abstract class AbstractBaseController<T extends SegradaEntity> {
 
 	/**
 	 * get remembered color from session
+	 * @param model model to remember for
 	 * @return color or null
 	 */
 	protected String getRememberedColor(String model) {
 		Object o = session.getAttribute("lastRememberedColor" + model);
 		if (o != null && o instanceof String) return (String) o;
+		return null;
+	}
+
+	/**
+	 * get remembered pictogram from session
+	 * @param model model to remember for
+	 * @return color or null
+	 */
+	protected IPictogram getRememberedPictogram(String model) {
+		Object o = session.getAttribute("lastRememberedPictogram" + model);
+		if (o != null && o instanceof IPictogram) return (IPictogram) o;
 		return null;
 	}
 }

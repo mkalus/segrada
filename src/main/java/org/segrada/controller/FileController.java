@@ -604,6 +604,7 @@ public class FileController extends AbstractColoredController<IFile> {
 				// remember tags and colors
 				rememberLastTags(tags, entity.getModelName());
 				rememberLastColor(color, entity.getModelName());
+				rememberLastPictogram(entity.getPictogram(), entity.getModelName());
 
 				//OK - redirect to show
 				try {
