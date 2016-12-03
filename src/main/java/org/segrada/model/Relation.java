@@ -115,6 +115,13 @@ public class Relation extends AbstractCoreModel implements IRelation {
 	}
 
 	@Override
+	public String getReversedTitle() {
+		return (getToEntity()==null?"?":getToEntity().getTitle())
+				+ "⇒" + (getRelationType()==null?"?":getRelationType().getToTitle())
+				+ "⇒" + (getFromEntity()==null?"?":getFromEntity().getTitle());
+	}
+
+	@Override
 	public String toString() {
 		return "{Relation}" + (getId() == null ? "*" : getId()) + ", "
 				+ (getFromEntity()==null?"?":getFromEntity().toString())

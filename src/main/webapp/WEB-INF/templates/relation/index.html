@@ -50,7 +50,7 @@
 						<span class="sg-color-icon" th:style="'background-color: ' + ${entity.colorCode}" th:if="${entity.color}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
 						<img src="#" th:src="@{/pictogram/file/{uid}(uid=${entity.pictogram.uid})}" th:alt-title="${entity.pictogram.title}" alt="" width="24" height="24" th:if="${entity.pictogram}"/>
 					</td>
-					<td th:text="${entity.title}">Title</td>
+					<td th:text="${hasNode && #strings.equals(nodeUid, entity.toEntity.uid)}? ${entity.reversedTitle} : ${entity.title}">Title</td>
 					<td th:if="${identity.hasAccess('PERIOD')}" th:utext="${@org.segrada.util.FuzzyDateRenderer@renderOrEmpty(entity.minJD,entity.minEntry,entity.minEntryCalendar,entity.fuzzyMinFlags)}">Start</td>
 					<td th:if="${identity.hasAccess('PERIOD')}" th:utext="${@org.segrada.util.FuzzyDateRenderer@renderOrEmpty(entity.maxJD,entity.maxEntry,entity.maxEntryCalendar,entity.fuzzyMaxFlags)}">Stop</td>
 					<td class="text-right">

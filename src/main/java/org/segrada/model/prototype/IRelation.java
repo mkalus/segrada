@@ -32,4 +32,10 @@ public interface IRelation extends SegradaCoreEntity {
 
 	INode getToEntity();
 	void setToEntity(INode toEntity);
+
+	/**
+	 * Get reversed title
+	 * @return reversed title
+	 */
+	String getReversedTitle();
 }

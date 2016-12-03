@@ -2,6 +2,9 @@ package org.segrada.model;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.segrada.model.prototype.INode;
+import org.segrada.model.prototype.IRelation;
+import org.segrada.model.prototype.IRelationType;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
@@ -82,5 +85,25 @@ public class RelationTest {
 	public void testDescriptionMarkupEmpty() throws Exception {
 		Set<ConstraintViolation<Relation>> constraintViolations = validator.validateValue(Relation.class, "descriptionMarkup", null);
 		assertTrue("Description markup empty", constraintViolations.size() == 1);
+	}
+
+	@Test
+	public void testGetReversedTitle() throws Exception {
+		INode from = new Node();
+		from.setTitle("from");
+
+		INode to = new Node();
+		to.setTitle("to");
+
+		IRelationType relationType = new RelationType();
+		relationType.setFromTitle("xfromx");
+		relationType.setToTitle("xtox");
+
+		IRelation relation = new Relation();
+		relation.setFromEntity(from);
+		relation.setToEntity(to);
+		relation.setRelationType(relationType);
+
+		assertEquals("to⇒xtox⇒from", relation.getReversedTitle());
 	}
 }
