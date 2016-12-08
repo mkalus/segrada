@@ -2,6 +2,7 @@ package org.segrada.service.repository.orientdb;
 
 import com.orientechnologies.orient.core.id.ORecordId;
 import com.orientechnologies.orient.core.record.impl.ODocument;
+import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
 import org.segrada.model.SavedQuery;
 import org.segrada.model.prototype.ISavedQuery;
 import org.segrada.model.prototype.IUser;
@@ -9,6 +10,7 @@ import org.segrada.service.repository.SavedQueryRepository;
 import org.segrada.service.repository.orientdb.base.AbstractSegradaOrientDbRepository;
 import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory;
 import org.segrada.service.util.PaginationInfo;
+import org.segrada.util.OrientStringEscape;
 import org.segrada.util.Sluggify;
 
 import javax.annotation.Nullable;
@@ -125,7 +127,29 @@ public class OrientDbSavedQueryRepository extends AbstractSegradaOrientDbReposit
 	public List<ISavedQuery> findAllBy(@Nullable IUser user, @Nullable String type, @Nullable String title) {
 		List<ISavedQuery> list = new ArrayList<>();
 
-		//TODO
+		// aggregate filters
+		List<String> constraints = new ArrayList<>();
+		if (user != null && user.getId() != null) constraints.add("user = " + user.getId());
+		if (type != null) constraints.add("type = '" + OrientStringEscape.escapeOrientSql(type) + "'");
+		if (title != null) constraints.add("title LIKE '" + OrientStringEscape.escapeOrientSql(title) + "%'");
+
+		// build SQL query
+		String sql = "";
+		for (String constraint : constraints) {
+			if (!sql.isEmpty()) sql += " AND ";
+			sql += constraint;
+		}
+		if (!sql.isEmpty()) sql = " WHERE " + sql;
+
+		initDb();
+
+		// execute query
+		OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>("select * from SavedQuery" + sql + getDefaultOrder(true));
+		List<ODocument> result = db.command(query).execute();
+
+		for (ODocument doc : result) {
+			list.add(convertToEntity(doc));
+		}
 
 		return list;
 	}

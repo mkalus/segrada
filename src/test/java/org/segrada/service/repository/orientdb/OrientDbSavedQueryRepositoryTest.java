@@ -7,6 +7,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.segrada.model.SavedQuery;
+import org.segrada.model.User;
 import org.segrada.model.prototype.ISavedQuery;
 import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory;
 import org.segrada.session.Identity;
@@ -131,7 +132,30 @@ public class OrientDbSavedQueryRepositoryTest {
 
 	@Test
 	public void testFindAllBy() throws Exception {
-		//TODO
-		fail();
+		// test empty repository
+		assertEquals(0, repository.findAllBy(null, null, null).size());
+		assertEquals(0, repository.findAllBy(new User(), null, null).size());
+		assertEquals(0, repository.findAllBy(new User(), null, "test").size());
+		assertEquals(0, repository.findAllBy(new User(), "test", null).size());
+		assertEquals(0, repository.findAllBy(null, "test", "test").size());
+		assertEquals(0, repository.findAllBy(new User(), "test", "test").size());
+
+		// fill repository
+		for (int i = 0; i < 10; i++) {
+			ISavedQuery savedQuery = new SavedQuery();
+			savedQuery.setTitle("Query " + i);
+			savedQuery.setType(i % 2 == 0 ? "graph" : "dummy");
+
+			repository.save(savedQuery);
+		}
+
+		// test queries
+		assertEquals(10, repository.findAllBy(null, null, null).size());
+		assertEquals(5, repository.findAllBy(null, "graph", null).size());
+		assertEquals(10, repository.findAllBy(null, null, "query").size());
+		assertEquals(1, repository.findAllBy(null, null, "query 2").size());
+		assertEquals(1, repository.findAllBy(null, "graph", "query 2").size());
+		assertEquals(1, repository.findAllBy(null, "dummy", "query 1").size());
+		assertEquals(0, repository.findAllBy(null, "dummy", "query 2").size());
 	}
 }
