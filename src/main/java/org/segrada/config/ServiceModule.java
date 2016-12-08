@@ -85,6 +85,7 @@ public class ServiceModule extends AbstractModule {
 		bind(TagService.class);
 		bind(UserService.class);
 		bind(UserGroupService.class);
+		bind(SavedQueryService.class);
 
 		// bind remember me service
 		bind(RememberMeRepository.class).to(OrientRememberMeRepository.class);

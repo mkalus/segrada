@@ -92,6 +92,8 @@ function escapeHTML(myString) {
 	var graphNodes = new vis.DataSet([]);
 	var graphEdges = new vis.DataSet([]);
 	var graphNetwork = null; // reference to graph network
+	var graphName = null; // current name of graph
+	var graphUid = null; // uid of saved graph
 
 	/**
 	 * on enter pressed event
@@ -1127,6 +1129,8 @@ function escapeHTML(myString) {
 		$('#sg-graph-action-restart').click(function(e) {
 			graphEdges.clear();
 			graphNodes.clear();
+			graphUid = "";
+			graphName = "";
 			e.preventDefault();
 		});
 		$('#sg-graph-action-reload').click(function(e) {
@@ -1142,6 +1146,84 @@ function escapeHTML(myString) {
 		$('#sg-graph-close').click(function(e) {
 			graphHide();
 			e.preventDefault();
+		});
+		$('#sg-graph-action-load').click(function(e) {
+			// TODO: load saved graphs
+			$('#sg-graph-modal-load').modal();
+			// graphName
+			// graphUid
+			e.preventDefault();
+		});
+		$('#sg-graph-action-save').click(function(e) {
+			// any nodes?
+			if (graphNodes.length > 0) {
+				// prefill form
+				$('#title-sg-graph-save').val(graphName != null ? graphName : '');
+				var saveAsNew = $('#save-as-new-sg-graph-save').parent().parent().parent();
+				if (graphUid != null) saveAsNew.show();
+				else saveAsNew.hide();
+
+				// show form modal
+				$('#sg-graph-modal-save').modal();
+
+			}
+			e.preventDefault();
+		});
+
+		$('#sg-graph-modal-save-frm').submit(function(e) {
+			e.preventDefault();
+
+			var title = $('#title-sg-graph-save').val();
+			var uid = graphUid;
+			// save as new?
+			if (graphUid != null && $('#save-as-new-sg-graph-save').is(':checked')) uid = null;
+
+			// validate
+			//TODO
+
+			// remember positions
+			graphNetwork.storePositions();
+
+			// store all information in data object
+			var nodes = [];
+			var edges = [];
+			graphNodes.forEach(function(n) {
+				nodes.push({
+					id: n.id,
+					x: n.x,
+					y: n.y,
+					group: n.group
+				});
+			});
+			graphEdges.forEach(function(e) {
+				edges.push({
+					id: e.id,
+					group: e.group
+				});
+			});
+			var data = { };
+
+			// save graph
+			$.post($(this).attr('action'), {
+				'_csrf': $('#sg-graph-container').attr('data-csrf'),
+				'uid': uid,
+				'title': title,
+				'type': 'graph',
+				'data': JSON.stringify({
+					'nodes': nodes,
+					'edges': edges
+				})
+			}, function(data) {
+				// save variables for later
+				graphName = title;
+				graphUid = data;
+				//TODO: User feedback
+			}).fail(function() {
+				alert("ERROR");
+			});
+
+			// hide modal
+			$('#sg-graph-modal-save').modal('hide');
 		});
 
 		// init defaults

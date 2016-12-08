@@ -33,19 +33,8 @@
 		</div>
 	</div>
 </div>
-<div id="sg-graph-container" style="display: none;" th:attr="data-csrf=${_csrf}">
-	<div id="sg-graph-header">
-		<div class="pull-right">
-			<a href="#" class="btn btn-link" id="sg-graph-action-restart" th:title="#{Clear}" aria-label="Clear"><i class="fa fa-bomb"></i></a>
-			<a href="#" class="btn btn-link" id="sg-graph-action-reload" th:title="#{Reload}" aria-label="Reload"><i class="fa fa-refresh"></i></a>
-			<a href="#" class="btn btn-link" id="sg-graph-action-fit" th:title="#{Fit}" aria-label="Fit View"><i class="fa fa-arrows-alt"></i></a>
-			<a href="#" class="btn btn-link" id="sg-graph-action-remove" th:title="#{RemoveSelected}" aria-label="Remove Selected Elements"><i class="fa fa-minus-circle"></i></a>
-		</div>
+<div th:include="partials/graph :: graphMain"></div>
 
-		<a href="#" class="btn btn-link" id="sg-graph-close" th:title="#{Close}" aria-label="Close"><i class="fa fa-times"></i></a>
-	</div>
-	<div id="sg-graph"><!--/*###segrada-graph###*/--></div>
-</div>
 <div class="hidden">
 	<div id="sg-base" th:text="@{/}">/</div>
 	<div id="sg-wait"><div th:replace="partials/common :: loadingicon"></div></div>

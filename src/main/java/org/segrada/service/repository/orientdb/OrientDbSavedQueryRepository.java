@@ -62,6 +62,16 @@ public class OrientDbSavedQueryRepository extends AbstractSegradaOrientDbReposit
 		populateEntityWithBaseData(document, savedQuery);
 		populateEntityWithCreatedModified(document, savedQuery);
 
+		// get creator/modifier from user
+		// get creator/modifier
+		ORecordId oUser = document.field("user", ORecordId.class);
+
+		// push
+		if (oUser != null) {
+			savedQuery.setCreator(lazyLoadUser(oUser));
+			savedQuery.setModifier(lazyLoadUser(oUser));
+		}
+
 		return savedQuery;
 	}
 

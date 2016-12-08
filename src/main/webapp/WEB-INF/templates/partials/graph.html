@@ -1,0 +1,70 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" th:lang="${#locale.language}">
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<title>Segrada</title>
+	<div th:include="partials/common :: head" th:remove="tag"></div>
+</head>
+
+<body th:fragment="graphMain">
+
+<div id="sg-graph-container" style="display: none;" th:attr="data-csrf=${_csrf}">
+	<div id="sg-graph-header">
+		<div class="pull-right">
+			<a href="#" class="btn btn-link" id="sg-graph-action-load" th:title="#{Load}" aria-label="Clear"><i class="fa fa-folder-open"></i></a>
+			<a href="#" class="btn btn-link" id="sg-graph-action-save" th:title="#{Save}" aria-label="Clear"><i class="fa fa-floppy-o"></i></a>
+			<a href="#" class="btn btn-link" id="sg-graph-action-restart" th:title="#{Clear}" aria-label="Clear"><i class="fa fa-bomb"></i></a>
+			<a href="#" class="btn btn-link" id="sg-graph-action-reload" th:title="#{Reload}" aria-label="Reload"><i class="fa fa-refresh"></i></a>
+			<a href="#" class="btn btn-link" id="sg-graph-action-fit" th:title="#{Fit}" aria-label="Fit View"><i class="fa fa-arrows-alt"></i></a>
+			<a href="#" class="btn btn-link" id="sg-graph-action-remove" th:title="#{RemoveSelected}" aria-label="Remove Selected Elements"><i class="fa fa-minus-circle"></i></a>
+		</div>
+
+		<a href="#" class="btn btn-link" id="sg-graph-close" th:title="#{Close}" aria-label="Close"><i class="fa fa-times"></i></a>
+	</div>
+	<div id="sg-graph"><!--/*###segrada-graph###*/--></div>
+</div>
+
+<div id="sg-graph-modal-save" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="sg-graph-modal-save-title">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<form method="post" action="#" th:action="@{/saved_query/save}" class="form-horizontal" id="sg-graph-modal-save-frm">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="sg-graph-modal-save-title" th:text="#{SaveGraph}">Save Graph</h4>
+				</div>
+				<div class="modal-body">
+					<input type="hidden" name="_csrf" th:value="${_csrf}" />
+
+					<div th:replace="partials/form :: formTextfield (name='title',field='',label=#{field.title},id='sg-graph-save',errors=null,required=true)"></div>
+					<div th:replace="partials/form :: formCheckbox (name='save-as-new',field=false,label=#{field.saveAsNewGraph},id='sg-graph-save',errors=null,required=false,noHiddenField=true)"></div>
+
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal" th:text="#{Close}">Close</button>
+					<button type="submit" class="btn btn-primary" th:text="#{Save}">Save</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+<div id="sg-graph-modal-load" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="sg-graph-modal-load-title">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="sg-graph-modal-load-title" th:text="#{LoadGraph}">Load Graph</h4>
+			</div>
+			<div class="modal-body">
+				...
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal" th:text="#{Close}">Close</button>
+				<button type="submit" class="btn btn-primary" th:text="#{Load}">Load</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+</body>
+</html>

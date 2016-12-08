@@ -59,6 +59,7 @@ public class SegradaGuiceServletContextListener extends GuiceServletContextListe
 						bind(TagController.class);
 						bind(UserController.class);
 						bind(UserGroupController.class);
+						bind(SavedQueryController.class);
 						bind(SearchController.class);
 						bind(AdminController.class);
 						bind(LocaleController.class);
