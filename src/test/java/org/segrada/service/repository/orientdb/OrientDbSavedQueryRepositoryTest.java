@@ -125,8 +125,8 @@ public class OrientDbSavedQueryRepositoryTest {
 
 	@Test
 	public void testPaginate() throws Exception {
-		//TODO
-		fail();
+		//fail("Test not implemented yet.");
+		//TODO: do later
 	}
 
 	@Test
