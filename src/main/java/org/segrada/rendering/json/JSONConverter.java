@@ -5,6 +5,7 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.segrada.model.prototype.INode;
 import org.segrada.model.prototype.IRelation;
+import org.segrada.model.prototype.ISavedQuery;
 import org.segrada.model.prototype.ITag;
 
 import javax.servlet.ServletContext;
@@ -95,6 +96,23 @@ public class JSONConverter {
 			color.put("color", relation.getColorCode());
 			o.put("color", color);
 		}
+
+		return o;
+	}
+
+	/**
+	 * convert saved query to json object
+	 * @param savedQuery to be converted
+	 * @return json object
+	 * @throws JSONException
+	 */
+	public JSONObject convertSavedQueryToJSON(ISavedQuery savedQuery) throws JSONException {
+		JSONObject o = new JSONObject();
+
+		o.put("id", savedQuery.getId());
+		o.put("uid", savedQuery.getUid());
+		o.put("title", savedQuery.getTitle());
+		o.put("type", savedQuery.getType());
 
 		return o;
 	}

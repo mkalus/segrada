@@ -2,8 +2,11 @@ package org.segrada.controller;
 
 import com.google.inject.Inject;
 import com.google.inject.servlet.RequestScoped;
+import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONException;
 import org.segrada.model.prototype.ISavedQuery;
 import org.segrada.model.prototype.IUser;
+import org.segrada.rendering.json.JSONConverter;
 import org.segrada.service.SavedQueryService;
 import org.segrada.session.Identity;
 import org.slf4j.Logger;
@@ -13,6 +16,7 @@ import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.List;
 
 /**
  * Copyright 2016 Maximilian Kalus [segrada@auxnet.de]
@@ -41,6 +45,9 @@ public class SavedQueryController {
 
 	@Inject
 	private Identity identity;
+
+	@Inject
+	private JSONConverter jsonConverter;
 
 	@GET
 	@Produces(MediaType.TEXT_HTML)
@@ -109,5 +116,31 @@ public class SavedQueryController {
 
 		// send ok
 		return Response.ok(entity.getUid()).build();
+	}
+
+	@GET
+	@Path("/find_by")
+	@Produces("application/json")
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@RolesAllowed("GRAPH")
+	public Response findBy(
+			@QueryParam("type") String type,
+			@QueryParam("title") String title
+	) {
+		// convert to null if needed
+		if (type != null && type.isEmpty()) type = null;
+		if (title != null && title.isEmpty()) title = null;
+
+		// find in repository
+		JSONArray jsonList = new JSONArray();
+		for (ISavedQuery savedQuery : service.findAllBy(identity.getUser(), type, title)) {
+			try {
+				jsonList.put(jsonConverter.convertSavedQueryToJSON(savedQuery));
+			} catch (JSONException e) {
+				logger.error("Error converting Saved Query to JSON (" + savedQuery.toString() + ").", e);
+			}
+		}
+
+		return Response.ok(jsonList.toString()).build();
 	}
 }
