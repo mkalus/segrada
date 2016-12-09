@@ -1075,6 +1075,14 @@ function escapeHTML(myString) {
 		});
 	}
 
+	// clear graph data
+	function graphClear() {
+		graphEdges.clear();
+		graphNodes.clear();
+		graphUid = "";
+		graphName = "";
+	}
+
 	// *******************************************************
 	// add destroyed events when elements are destroyed
 	$.event.special.destroyed = {
@@ -1127,10 +1135,7 @@ function escapeHTML(myString) {
 			e.preventDefault();
 		});
 		$('#sg-graph-action-restart').click(function(e) {
-			graphEdges.clear();
-			graphNodes.clear();
-			graphUid = "";
-			graphName = "";
+			graphClear();
 			e.preventDefault();
 		});
 		$('#sg-graph-action-reload').click(function(e) {
@@ -1152,6 +1157,13 @@ function escapeHTML(myString) {
 			$('#sg-graph-modal-load').modal();
 			// graphName
 			// graphUid
+
+			// after load
+			// graphClear();
+			//graphLoadRemote("/saved_query/graph/32-0");
+			// /saved_query/graph/32-0
+			// set graphName
+			// set graphUid
 			e.preventDefault();
 		});
 		$('#sg-graph-action-save').click(function(e) {
