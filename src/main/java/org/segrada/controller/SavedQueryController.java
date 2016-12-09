@@ -6,6 +6,11 @@ import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.segrada.model.prototype.ISavedQuery;
 import org.segrada.model.prototype.IUser;
+import org.segrada.model.prototype.SegradaEntity;
+import org.segrada.model.savedquery.GraphCoordinate;
+import org.segrada.model.savedquery.GraphSavedQueryDataWorker;
+import org.segrada.model.savedquery.SavedQueryDataWorker;
+import org.segrada.model.savedquery.factory.SavedQueryDataWorkerFactory;
 import org.segrada.rendering.json.JSONConverter;
 import org.segrada.service.SavedQueryService;
 import org.segrada.session.Identity;
@@ -17,6 +22,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Copyright 2016 Maximilian Kalus [segrada@auxnet.de]
@@ -49,6 +55,9 @@ public class SavedQueryController {
 	@Inject
 	private JSONConverter jsonConverter;
 
+	@Inject
+	private SavedQueryDataWorkerFactory savedQueryDataWorkerFactory;
+
 	@GET
 	@Produces(MediaType.TEXT_HTML)
 	@RolesAllowed("GRAPH")
@@ -77,7 +86,11 @@ public class SavedQueryController {
 		IUser me = identity.getUser();
 
 		// validate data before anything else
-		// TODO
+		SavedQueryDataWorker validator = savedQueryDataWorkerFactory.produceSavedQueryDataValidator(type);
+		if (!validator.validateData(data)) {
+			logger.error("Data validation failed: " + data);
+			return Response.serverError().build();
+		}
 
 		// validation ok, now find entity
 		ISavedQuery entity;
@@ -142,5 +155,32 @@ public class SavedQueryController {
 		}
 
 		return Response.ok(jsonList.toString()).build();
+	}
+
+	@GET
+	@Path("/show/{uid}")
+	@Produces(MediaType.TEXT_HTML)
+	@RolesAllowed("GRAPH")
+	public Response show(@PathParam("uid") String uid) {
+		ISavedQuery savedQuery = service.findById(service.convertUidToId(uid));
+
+		// not found
+		if (savedQuery == null) return Response.status(404).build();
+
+		// convert back to list of elements via validator
+		SavedQueryDataWorker validator = savedQueryDataWorkerFactory.produceSavedQueryDataValidator(savedQuery.getType());
+		if (validator == null) {
+			logger.error("Saved query type " + savedQuery.getType() + " not supported.");
+			return Response.serverError().build();
+		}
+
+		Map<String, List<SegradaEntity>> extractedData = validator.savedQueryToEntities(savedQuery.getData());
+		if (savedQuery.getType().equals("graph")) {
+			// get coordinates
+			Map<String, GraphCoordinate> coordinateMap = ((GraphSavedQueryDataWorker) validator).retrieveCoordinatesFromData(savedQuery.getData());
+		}
+
+		//TODO
+		return Response.ok().build();
 	}
 }

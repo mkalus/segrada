@@ -11,6 +11,8 @@ import com.tinkerpop.blueprints.impls.orient.OrientGraphFactory;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.SimpleFSDirectory;
+import org.segrada.model.savedquery.GraphSavedQueryDataWorker;
+import org.segrada.model.savedquery.SavedQueryDataWorker;
 import org.segrada.search.SearchEngine;
 import org.segrada.search.lucene.LuceneSearchEngine;
 import org.segrada.search.lucene.LuceneSegradaAnalyzer;
@@ -107,6 +109,11 @@ public class ServiceModule extends AbstractModule {
 		annotatedServices.addBinding("Node").to(NodeService.class);
 		annotatedServices.addBinding("Source").to(SourceService.class);
 		annotatedServices.addBinding("Relation").to(RelationService.class);
+
+		// create mapped binding for saved query data validators
+		MapBinder<String, SavedQueryDataWorker> savedQueryDataValidatorMapBinder
+				= MapBinder.newMapBinder(binder(), String.class, SavedQueryDataWorker.class);
+		savedQueryDataValidatorMapBinder.addBinding("graph").to(GraphSavedQueryDataWorker.class);
 	}
 
 	@Provides
