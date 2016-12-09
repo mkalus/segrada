@@ -48,7 +48,7 @@
 		</div>
 	</div>
 </div>
-<div id="sg-graph-modal-load" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="sg-graph-modal-load-title">
+<div id="sg-graph-modal-load" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="sg-graph-modal-load-title" th:attr="data-url=@{/saved_query/find_by?type=graph},data-get-url=@{/saved_query/graph/}">
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -56,11 +56,9 @@
 				<h4 class="modal-title" id="sg-graph-modal-load-title" th:text="#{LoadGraph}">Load Graph</h4>
 			</div>
 			<div class="modal-body">
-				...
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-default" data-dismiss="modal" th:text="#{Close}">Close</button>
-				<button type="submit" class="btn btn-primary" th:text="#{Load}">Load</button>
 			</div>
 		</div>
 	</div>

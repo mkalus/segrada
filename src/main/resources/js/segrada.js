@@ -379,7 +379,7 @@ function escapeHTML(myString) {
 
 		// *******************************************************
 		// pictogram chooser
-		$(".sg-pictogram-modal").on('shown.bs.modal', function () {
+		$(".sg-pictogram-modal", part).on('shown.bs.modal', function () {
 			var modal = $(this);
 			var myId = modal.attr('id');
 			var modalContent = $("#container-" + myId, modal);
@@ -421,7 +421,7 @@ function escapeHTML(myString) {
 
 		// *******************************************************
 		// source ref editor modal
-		$(".sg-source-ref-modal").on('shown.bs.modal', function () {
+		$(".sg-source-ref-modal", part).on('shown.bs.modal', function () {
 			var modal = $(this);
 			var myId = modal.attr('id');
 			var modalContent = $(".modal-body", modal);
@@ -1155,15 +1155,7 @@ function escapeHTML(myString) {
 		$('#sg-graph-action-load').click(function(e) {
 			// TODO: load saved graphs
 			$('#sg-graph-modal-load').modal();
-			// graphName
-			// graphUid
 
-			// after load
-			// graphClear();
-			//graphLoadRemote("/saved_query/graph/32-0");
-			// /saved_query/graph/32-0
-			// set graphName
-			// set graphUid
 			e.preventDefault();
 		});
 		$('#sg-graph-action-save').click(function(e) {
@@ -1182,6 +1174,48 @@ function escapeHTML(myString) {
 			e.preventDefault();
 		});
 
+		$("#sg-graph-modal-load").on('shown.bs.modal', function () {
+			var $modal = $(this);
+			var $content = $('.modal-body', $modal);
+
+			// show loading icon
+			$content.html($('#sg-wait').html());
+
+			// load from graph
+			var url = $modal.attr('data-url');
+			$.get(url, function (data) {
+				var getUrl = $modal.attr('data-get-url');
+				var content = "";
+
+				// get each saved graph entry
+				data.forEach(function(savedGraph) {
+					content += "<li><a href='" + getUrl + savedGraph.uid + "' data-uid='" + savedGraph.uid + "'>" + savedGraph.title + "</a></li>"
+				});
+
+				// surround by ul
+				if (content != "") content = "<ul>" + content + "</ul>";
+
+				$content.html(content);
+
+				// handle clicks
+				$('a', $content).click(function(e) {
+					// clear graph and load new graph
+					graphClear();
+					graphLoadRemote($(this).attr('href'));
+
+					// set variables
+					graphName = $(this).html();
+					graphUid = $(this).attr('data-uid');
+
+					// hide modal
+					$modal.modal('hide');
+
+					e.preventDefault();
+				});
+			});
+		});
+
+		// handle save graph form submission - create new or save existing graph
 		$('#sg-graph-modal-save-frm').submit(function(e) {
 			e.preventDefault();
 
