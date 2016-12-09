@@ -4,9 +4,8 @@ import com.google.inject.Inject;
 import com.google.inject.servlet.RequestScoped;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
-import org.segrada.model.prototype.ISavedQuery;
-import org.segrada.model.prototype.IUser;
-import org.segrada.model.prototype.SegradaEntity;
+import org.codehaus.jettison.json.JSONObject;
+import org.segrada.model.prototype.*;
 import org.segrada.model.savedquery.GraphCoordinate;
 import org.segrada.model.savedquery.GraphSavedQueryDataWorker;
 import org.segrada.model.savedquery.SavedQueryDataWorker;
@@ -133,7 +132,7 @@ public class SavedQueryController {
 
 	@GET
 	@Path("/find_by")
-	@Produces("application/json")
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@RolesAllowed("GRAPH")
 	public Response findBy(
@@ -157,31 +156,104 @@ public class SavedQueryController {
 		return Response.ok(jsonList.toString()).build();
 	}
 
-	@GET
-	@Path("/show/{uid}")
-	@Produces(MediaType.TEXT_HTML)
+	@POST
+	@Path("/graph/{uid}")
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
 	@RolesAllowed("GRAPH")
-	public Response show(@PathParam("uid") String uid) {
+	public String postGraph(@PathParam("uid") String uid) {
+		return graph(uid);
+	}
+
+	@GET
+	@Path("/graph/{uid}")
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+	@RolesAllowed("GRAPH")
+	public String getGraph(@PathParam("uid") String uid) {
+		return graph(uid);
+	}
+
+	/**
+	 * Handle graph creation
+	 * @param uid of node
+	 * @return json string to set data
+	 */
+	public String graph(String uid) {
 		ISavedQuery savedQuery = service.findById(service.convertUidToId(uid));
 
 		// not found
-		if (savedQuery == null) return Response.status(404).build();
+		if (savedQuery == null)
+			return "{\"error\": \"Not found.\"}";
 
 		// convert back to list of elements via validator
 		SavedQueryDataWorker worker = savedQueryDataWorkerFactory.produceSavedQueryDataValidator(savedQuery.getType());
 		if (worker == null) {
 			logger.error("Saved query type " + savedQuery.getType() + " not supported.");
-			return Response.serverError().build();
+			return "{\"error\": \"Saved query type " + savedQuery.getType() + " not supported.\"}";
 		}
 
 		// extract data from representation
 		Map<String, List<SegradaEntity>> extractedData = worker.savedQueryToEntities(savedQuery.getData());
+		Map<String, GraphCoordinate> coordinateMap;
 		if (savedQuery.getType().equals("graph")) {
 			// get coordinates
-			Map<String, GraphCoordinate> coordinateMap = ((GraphSavedQueryDataWorker) worker).retrieveCoordinatesFromData(savedQuery.getData());
+			coordinateMap = ((GraphSavedQueryDataWorker) worker).retrieveCoordinatesFromData(savedQuery.getData());
+		} else coordinateMap = null;
+
+		// create nodes
+		List<SegradaEntity> entities = extractedData.get("nodes");
+		JSONArray nodes = new JSONArray(entities.size());
+		for (SegradaEntity entity : entities) {
+			try {
+				JSONObject o;
+				if (entity instanceof INode)
+					o = jsonConverter.convertNodeToJSON((INode) entity);
+				else if (entity instanceof ITag)
+					o = jsonConverter.convertTagToJSON((ITag) entity);
+				else throw new JSONException("Unsupported node type " + entity.toString());
+
+				// add coordinate, if applicable
+				GraphCoordinate coordinate = coordinateMap.get(entity.getId());
+				if (coordinate == null) coordinate = coordinateMap.get(entity.getUid()); // try both variants to find coordinate
+				if (coordinate != null) {
+					o.put("x", coordinate.x);
+					o.put("y", coordinate.y);
+				}
+
+				// o set, add to list
+				nodes.put(o);
+			} catch (JSONException e) {
+				logger.warn("Could not convert to JSON: " + entity.toString(), e);
+			}
 		}
 
-		//TODO
-		return Response.ok().build();
+		// create edges
+		List<SegradaEntity> relations = extractedData.get("edges");
+		JSONArray edges = new JSONArray(relations.size());
+		for (SegradaEntity entity : relations) {
+			try {
+				JSONObject o;
+
+				if (entity instanceof IRelation)
+					o = jsonConverter.convertRelationToJSON((IRelation) entity);
+				else throw new JSONException("Unsupported edge type " + entity.toString());
+
+				// o set, add to list
+				edges.put(o);
+			} catch (JSONException e) {
+				logger.warn("Could not convert to JSON: " + entity.toString(), e);
+			}
+		}
+
+		// create response object
+		try {
+			JSONObject response = new JSONObject();
+
+			response.put("nodes", nodes);
+			response.put("edges", edges);
+
+			return response.toString();
+		} catch (JSONException e) {
+			return "{\"error\": \"" + JSONObject.quote(e.getMessage()) + "\"}";
+		}
 	}
 }
