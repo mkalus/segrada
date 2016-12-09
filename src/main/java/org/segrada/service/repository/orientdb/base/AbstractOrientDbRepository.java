@@ -1,10 +1,8 @@
 package org.segrada.service.repository.orientdb.base;
 
-import com.google.inject.Inject;
 import com.orientechnologies.orient.core.id.ORecordId;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
-import com.tinkerpop.blueprints.impls.orient.OrientGraphFactory;
 import org.segrada.model.base.AbstractSegradaEntity;
 import org.segrada.model.prototype.SegradaEntity;
 import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory;
@@ -52,13 +50,8 @@ abstract public class AbstractOrientDbRepository<T extends SegradaEntity> extend
 	protected void initDb() {
 		try {
 			if (db.isClosed()) {
-				if (db.isPooled()) {
-					logger.warn("Cannot reopen closed remote db - fix this in code!");
-					//TODO find a fix for these cases
-				} else {
-					db.open(repositoryFactory.getApplicationSettings().getSetting("orientDB.login"),
-							repositoryFactory.getApplicationSettings().getSetting("orientDB.password"));
-				}
+				db.open(repositoryFactory.getApplicationSettings().getSetting("orientDB.login"),
+						repositoryFactory.getApplicationSettings().getSetting("orientDB.password"));
 			}
 		} catch (Exception e) {
 			throw new RuntimeException("Could not open database.", e);
