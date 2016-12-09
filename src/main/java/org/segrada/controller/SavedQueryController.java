@@ -86,8 +86,8 @@ public class SavedQueryController {
 		IUser me = identity.getUser();
 
 		// validate data before anything else
-		SavedQueryDataWorker validator = savedQueryDataWorkerFactory.produceSavedQueryDataValidator(type);
-		if (!validator.validateData(data)) {
+		SavedQueryDataWorker worker = savedQueryDataWorkerFactory.produceSavedQueryDataValidator(type);
+		if (!worker.validateData(data)) {
 			logger.error("Data validation failed: " + data);
 			return Response.serverError().build();
 		}
@@ -168,16 +168,17 @@ public class SavedQueryController {
 		if (savedQuery == null) return Response.status(404).build();
 
 		// convert back to list of elements via validator
-		SavedQueryDataWorker validator = savedQueryDataWorkerFactory.produceSavedQueryDataValidator(savedQuery.getType());
-		if (validator == null) {
+		SavedQueryDataWorker worker = savedQueryDataWorkerFactory.produceSavedQueryDataValidator(savedQuery.getType());
+		if (worker == null) {
 			logger.error("Saved query type " + savedQuery.getType() + " not supported.");
 			return Response.serverError().build();
 		}
 
-		Map<String, List<SegradaEntity>> extractedData = validator.savedQueryToEntities(savedQuery.getData());
+		// extract data from representation
+		Map<String, List<SegradaEntity>> extractedData = worker.savedQueryToEntities(savedQuery.getData());
 		if (savedQuery.getType().equals("graph")) {
 			// get coordinates
-			Map<String, GraphCoordinate> coordinateMap = ((GraphSavedQueryDataWorker) validator).retrieveCoordinatesFromData(savedQuery.getData());
+			Map<String, GraphCoordinate> coordinateMap = ((GraphSavedQueryDataWorker) worker).retrieveCoordinatesFromData(savedQuery.getData());
 		}
 
 		//TODO
