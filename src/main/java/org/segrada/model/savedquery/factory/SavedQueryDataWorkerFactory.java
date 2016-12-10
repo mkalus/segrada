@@ -1,7 +1,6 @@
 package org.segrada.model.savedquery.factory;
 
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
 import org.segrada.model.prototype.SegradaEntity;
 import org.segrada.model.savedquery.SavedQueryDataWorker;
 import org.slf4j.Logger;
@@ -27,7 +26,6 @@ import java.util.Map;
  *
  * Factory for saved query data workers
  */
-@Singleton
 public class SavedQueryDataWorkerFactory {
 	private static final Logger logger = LoggerFactory.getLogger(SavedQueryDataWorkerFactory.class);
 
