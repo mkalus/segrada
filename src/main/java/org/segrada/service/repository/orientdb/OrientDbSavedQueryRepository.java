@@ -127,6 +127,8 @@ public class OrientDbSavedQueryRepository extends AbstractSegradaOrientDbReposit
 	public List<ISavedQuery> findAllBy(@Nullable IUser user, @Nullable String type, @Nullable String title) {
 		List<ISavedQuery> list = new ArrayList<>();
 
+		initDb();
+
 		// aggregate filters
 		List<String> constraints = new ArrayList<>();
 		if (user != null && user.getId() != null) constraints.add("user = " + user.getId());
@@ -140,8 +142,6 @@ public class OrientDbSavedQueryRepository extends AbstractSegradaOrientDbReposit
 			sql += constraint;
 		}
 		if (!sql.isEmpty()) sql = " WHERE " + sql;
-
-		initDb();
 
 		// execute query
 		OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>("select * from SavedQuery" + sql + getDefaultOrder(true));
