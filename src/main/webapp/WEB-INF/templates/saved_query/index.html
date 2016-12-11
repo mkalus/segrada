@@ -1,0 +1,42 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" th:lang="${#locale.language}">
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<title th:text="#{list.saved_query}">Saved Query</title>
+	<div th:include="partials/common :: head" th:remove="tag"></div>
+</head>
+
+<body>
+<div th:replace="partials/common :: browser"></div>
+
+<div class="container">
+	<div class="sg-control-content sg-saved-query">
+		<h4 class="sg-control-header"><i class="fa fa-thumb-tack"></i> <span th:text="#{list.saved_query}">List</span></h4>
+
+		<p th:text="${#messages.msg('showEntities', entities.size())}">Size</p>
+
+		<table class="table table-hover table-striped table-condensed">
+			<tr>
+				<th th:text="#{field.title}">Name</th>
+				<th th:text="#{field.type}">Type</th>
+				<th></th>
+			</tr>
+			<tr th:each="entity : ${entities}" th:attr="data-data-dblclick=@{/saved_query/show/{uid}(uid=${entity.uid})}">
+				<td th:text="${entity.title}">Name</td>
+				<td th:title="${entity.type}" th:text="${#messages.msg('types.' + entity.type)}">Type</td>
+				<td class="text-right">
+					<div class="sg-data-icon-bar" role="group" aria-label="Actions" sg:strip-whitespace>
+						<a class="sg-data-icon sg-data-add" href="#" th:title="#{Show}" th:href="@{/saved_query/show/{uid}(uid=${entity.uid})}"><i class="fa fa-eye"></i></a>
+						<a th:if="${identity.hasEditAccess(entity, 'GRAPH')}" class="sg-data-icon sg-data-add" href="#" th:title="#{Edit}" th:href="@{/saved_query/edit/{uid}(uid=${entity.uid})}"><i class="fa fa-pencil"></i></a>
+						<a th:if="${identity.hasDeleteAccess(entity, 'GRAPH')}" class="sg-data-icon" href="#" th:title="#{Delete}" th:href="@{/saved_query/delete/{uid}/0(uid=${entity.uid})}" th:attr="data-confirm=${#messages.msg('ReallyDelete', entity.title)}"><i class="fa fa-times-circle-o"></i></a>
+					</div>
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>
+
+<div th:replace="partials/common :: footer"></div>
+</body>
+</html>

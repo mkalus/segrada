@@ -2,9 +2,12 @@ package org.segrada.controller;
 
 import com.google.inject.Inject;
 import com.google.inject.servlet.RequestScoped;
+import com.sun.jersey.api.view.Viewable;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
+import org.segrada.controller.base.AbstractBaseController;
+import org.segrada.model.SavedQuery;
 import org.segrada.model.prototype.*;
 import org.segrada.model.savedquery.GraphCoordinate;
 import org.segrada.model.savedquery.GraphSavedQueryDataWorker;
@@ -12,6 +15,7 @@ import org.segrada.model.savedquery.SavedQueryDataWorker;
 import org.segrada.model.savedquery.factory.SavedQueryDataWorkerFactory;
 import org.segrada.rendering.json.JSONConverter;
 import org.segrada.service.SavedQueryService;
+import org.segrada.service.base.SegradaService;
 import org.segrada.session.Identity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +24,7 @@ import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -42,7 +47,7 @@ import java.util.Map;
  */
 @Path("/saved_query")
 @RequestScoped
-public class SavedQueryController {
+public class SavedQueryController extends AbstractBaseController<ISavedQuery> {
 	private static final Logger logger = LoggerFactory.getLogger(SavedQueryController.class);
 
 	@Inject
@@ -57,11 +62,63 @@ public class SavedQueryController {
 	@Inject
 	private SavedQueryDataWorkerFactory savedQueryDataWorkerFactory;
 
+
+	@Override
+	protected String getBasePath() {
+		return "/saved_query/";
+	}
+
+	@Override
+	public SegradaService getService() {
+		return service;
+	}
+
 	@GET
 	@Produces(MediaType.TEXT_HTML)
 	@RolesAllowed("GRAPH")
-	public String index() {
-		return "Not implemented.";
+	public Viewable index(
+			@QueryParam("title") String title,
+			@QueryParam("type") String type
+	) {
+		// create model map
+		Map<String, Object> model = new HashMap<>();
+
+		model.put("entities", service.findAllBy(identity.getUser(), type, title));
+
+		return new Viewable(getBasePath() + "index", model);
+	}
+
+	@GET
+	@Path("/show/{uid}")
+	@Produces(MediaType.TEXT_HTML)
+	@RolesAllowed("GRAPH")
+	public Viewable show(@PathParam("uid") String uid) {
+		return handleShow(uid, service);
+	}
+
+	@GET
+	@Path("/edit/{uid}")
+	@Produces(MediaType.TEXT_HTML)
+	@RolesAllowed({"GRAPH"})
+	public Viewable edit(@PathParam("uid") String uid) {
+		return handleForm(service.findById(service.convertUidToId(uid)));
+	}
+
+	@POST
+	@Path("/update")
+	@Produces(MediaType.TEXT_HTML)
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@RolesAllowed({"GRAPH"})
+	public Response update(SavedQuery entity) {
+		return handleUpdate(entity, service);
+	}
+
+	@GET
+	@Path("/delete/{uid}/{empty}")
+	@Produces(MediaType.TEXT_HTML)
+	@RolesAllowed({"NODE_DELETE", "NODE_DELETE_MINE"})
+	public Response delete(@PathParam("uid") String uid, @PathParam("empty") String empty) {
+		return handleDelete(empty, service.findById(service.convertUidToId(uid)), service);
 	}
 
 	@POST
