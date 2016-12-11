@@ -19,12 +19,12 @@
 		<java.version>1.8</java.version>
 		<!-- Version settings -->
 		<guice.version>4.1.0</guice.version>
-		<jetty.version>9.3.8.v20160314</jetty.version>
-		<joda.version>2.9.4</joda.version>
+		<jetty.version>9.4.0.v20161208</jetty.version>
+		<joda.version>2.9.6</joda.version>
 		<lucene.version>5.3.2</lucene.version>
 		<!-- upgradeable? -->
 		<orientdb.version>2.2.13</orientdb.version>
-		<tika.version>1.13</tika.version>
+		<tika.version>1.14</tika.version>
 	</properties>
 
 	<dependencies>
@@ -106,7 +106,7 @@
 		<dependency>
 			<groupId>org.glassfish.jersey.ext</groupId>
 			<artifactId>jersey-bean-validation</artifactId>
-			<version>2.24</version>
+			<version>2.25</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.glassfish.jersey.core</groupId>
