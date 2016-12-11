@@ -759,6 +759,12 @@ function escapeHTML(myString) {
 			// replace graph by remotely getting updated data
 			graphClear();
 			graphLoadRemote($(this).attr('href'));
+
+			// optionally load title and uid
+			var title = $(this).attr('data-title');
+			if (title.length != 0) graphName = title;
+			var uid = $(this).attr('data-uid');
+			if (uid.length != 0) graphUid = uid;
 			e.preventDefault();
 		});
 

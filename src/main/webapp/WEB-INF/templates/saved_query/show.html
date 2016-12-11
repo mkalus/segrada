@@ -17,7 +17,7 @@
 
 		<div class="sg-description well well-sm" th:unless="${#strings.isEmpty(entity.description)}"><span sg:nl2br="${entity.description}">Description</span></div>
 
-		<p th:if="${entity.type == 'graph'}"><a href="#" th:href="@{/saved_query/graph/{uid}(uid=${entity.uid})}" class="btn btn-primary sg-graph-replace"><span class="fa fa-share-alt" aria-hidden="true"></span> <span th:text="#{LoadGraph}">Load Graph</span></a></p>
+		<p th:if="${entity.type == 'graph'}"><a href="#" th:href="@{/saved_query/graph/{uid}(uid=${entity.uid})}" class="btn btn-primary sg-graph-replace" th:attr="data-title=${entity.title},data-uid=${entity.uid}"><span class="fa fa-share-alt" aria-hidden="true"></span> <span th:text="#{LoadGraph}">Load Graph</span></a></p>
 
 		<!--/*TODO Export to Gephi and Graphviz */-->
 		<div th:replace="partials/common :: datafooter (entity=${entity})"></div>
