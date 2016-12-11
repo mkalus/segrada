@@ -1022,16 +1022,18 @@ function escapeHTML(myString) {
 
 		// show graph
 		graphShow();
+		graphShowLoading();
 
 		// prepare data
 		var nodeIds = [];
 		var edgeIds = [];
 
 		var temp = graphNodes.get({fields: ['id']});
-		for (var i = 0; i < temp.length; i++)
+		var i;
+		for (i = 0; i < temp.length; i++)
 			nodeIds.push(temp[i].id);
 		temp = graphEdges.get({fields: ['id']});
-		for (var i = 0; i < temp.length; i++)
+		for (i = 0; i < temp.length; i++)
 			edgeIds.push(temp[i].id);
 
 		var csrf = $('#sg-graph-container').attr('data-csrf');
@@ -1047,6 +1049,7 @@ function escapeHTML(myString) {
 			},
 			data: JSON.stringify({ "nodes": nodeIds, "edges": edgeIds }),
 			success: function(data, textStatus, jqXHR) {
+				graphHideLoading();
 				// error handling TODO: make this nicer!
 				if (data == null) {
 					alert("NULL data");
@@ -1081,6 +1084,15 @@ function escapeHTML(myString) {
 		graphNodes.clear();
 		graphUid = "";
 		graphName = "";
+	}
+
+	function graphShowLoading() {
+		var $sgGraph = $('#sg-graph');
+		$sgGraph.css('background', 'url("' + $sgGraph.attr('data-bg') + '") no-repeat center center');
+	}
+
+	function graphHideLoading() {
+		$('#sg-graph').css('background', 'transparent');
 	}
 
 	// *******************************************************
@@ -1225,7 +1237,7 @@ function escapeHTML(myString) {
 			if (graphUid != null && $('#save-as-new-sg-graph-save').is(':checked')) uid = null;
 
 			// validate
-			//TODO
+			//TODO: title mandatory -> red feedback on emtpy title
 
 			// remember positions
 			graphNetwork.storePositions();
@@ -1263,7 +1275,7 @@ function escapeHTML(myString) {
 				// save variables for later
 				graphName = title;
 				graphUid = data;
-				//TODO: User feedback
+				//TODO: User feedback: Save succeeded or the like
 			}).fail(function() {
 				alert("ERROR");
 			});

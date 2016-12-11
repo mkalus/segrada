@@ -22,7 +22,7 @@
 
 		<a href="#" class="btn btn-link" id="sg-graph-close" th:title="#{Close}" aria-label="Close"><i class="fa fa-times"></i></a>
 	</div>
-	<div id="sg-graph"><!--/*###segrada-graph###*/--></div>
+	<div id="sg-graph" th:attr="data-bg=@{/img/loading_large.gif}"><!--/*###segrada-graph###*/--></div>
 </div>
 
 <div id="sg-graph-modal-save" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="sg-graph-modal-save-title">
