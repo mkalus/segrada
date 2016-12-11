@@ -755,6 +755,13 @@ function escapeHTML(myString) {
 			e.preventDefault();
 		});
 
+		$('a.sg-graph-replace', part).click(function(e) {
+			// replace graph by remotely getting updated data
+			graphClear();
+			graphLoadRemote($(this).attr('href'));
+			e.preventDefault();
+		});
+
 		// Tag hierarchy graph
 		$('div.sg-tag-hierarchy', part).each(function() {
 			var me = $(this);
