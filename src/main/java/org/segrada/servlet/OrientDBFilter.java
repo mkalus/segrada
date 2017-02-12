@@ -221,7 +221,8 @@ public class OrientDBFilter implements Filter {
 			for (Object key : roles.keySet()) {
 				try {
 					String realKey = (String) key;
-					Integer value = new Integer(roles.get(key));
+					Object o = roles.get(key); // this is somewhat redundant, but fixes a nasty bug if o is an integer object and not a string
+					Integer value = new Integer(o.toString());
 
 					userGroup.setRole(realKey, value);
 				} catch (NumberFormatException e) {
