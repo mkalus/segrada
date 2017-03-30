@@ -13,6 +13,8 @@ import org.segrada.model.savedquery.GraphCoordinate;
 import org.segrada.model.savedquery.GraphSavedQueryDataWorker;
 import org.segrada.model.savedquery.SavedQueryDataWorker;
 import org.segrada.model.savedquery.factory.SavedQueryDataWorkerFactory;
+import org.segrada.rendering.export.Exporter;
+import org.segrada.rendering.export.GEXFExporter;
 import org.segrada.rendering.json.JSONConverter;
 import org.segrada.service.SavedQueryService;
 import org.segrada.service.base.SegradaService;
@@ -312,5 +314,32 @@ public class SavedQueryController extends AbstractBaseController<ISavedQuery> {
 		} catch (JSONException e) {
 			return "{\"error\": \"" + JSONObject.quote(e.getMessage()) + "\"}";
 		}
+	}
+
+	@GET
+	@Path("/export/{uid}")
+	@RolesAllowed("GRAPH")
+	public Response export(@PathParam("uid") String uid) {
+		ISavedQuery savedQuery = service.findById(service.convertUidToId(uid));
+
+		// not found
+		if (savedQuery == null)
+			return Response.serverError().build();
+
+		// convert back to list of elements via validator
+		SavedQueryDataWorker worker = savedQueryDataWorkerFactory.produceSavedQueryDataValidator(savedQuery.getType());
+		if (worker == null) {
+			logger.error("Saved query type " + savedQuery.getType() + " not supported.");
+			return Response.serverError().build();
+		}
+
+		// extract data from representation
+		Map<String, List<SegradaEntity>> extractedData = worker.savedQueryToEntities(savedQuery.getData());
+
+
+		// TODO: make this dynamic later on
+		Exporter exporter = new GEXFExporter();
+
+		return Response.ok(exporter.exportAsString(savedQuery.getTitle(), extractedData)).type(exporter.getMediaType()).build();
 	}
 }
