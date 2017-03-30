@@ -19,11 +19,11 @@
 		<java.version>1.8</java.version>
 		<!-- Version settings -->
 		<guice.version>4.1.0</guice.version>
-		<jetty.version>9.4.0.v20161208</jetty.version>
-		<joda.version>2.9.6</joda.version>
+		<jetty.version>9.4.2.v20170220</jetty.version>
+		<joda.version>2.9.9</joda.version>
 		<lucene.version>5.3.2</lucene.version>
 		<!-- upgradeable? -->
-		<orientdb.version>2.2.13</orientdb.version>
+		<orientdb.version>2.2.17</orientdb.version>
 		<tika.version>1.14</tika.version>
 	</properties>
 
