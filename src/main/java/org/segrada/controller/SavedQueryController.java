@@ -16,6 +16,8 @@ import org.segrada.model.savedquery.factory.SavedQueryDataWorkerFactory;
 import org.segrada.rendering.export.Exporter;
 import org.segrada.rendering.export.GEXFExporter;
 import org.segrada.rendering.json.JSONConverter;
+import org.segrada.service.NodeService;
+import org.segrada.service.RelationService;
 import org.segrada.service.SavedQueryService;
 import org.segrada.service.base.SegradaService;
 import org.segrada.session.Identity;
@@ -27,6 +29,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -54,6 +57,12 @@ public class SavedQueryController extends AbstractBaseController<ISavedQuery> {
 
 	@Inject
 	SavedQueryService service;
+
+	@Inject
+	NodeService nodeService;
+
+	@Inject
+	RelationService relationService;
 
 	@Inject
 	private Identity identity;
@@ -320,26 +329,44 @@ public class SavedQueryController extends AbstractBaseController<ISavedQuery> {
 	@Path("/export/{uid}")
 	@RolesAllowed("GRAPH")
 	public Response export(@PathParam("uid") String uid) {
-		ISavedQuery savedQuery = service.findById(service.convertUidToId(uid));
+		Map<String, List<SegradaEntity>> extractedData;
+		String title;
 
-		// not found
-		if (savedQuery == null)
-			return Response.serverError().build();
+		if ("all".equals(uid)) {
+			// extract data from representation
+			extractedData = new HashMap<>();
+			List<SegradaEntity> nodes = new LinkedList<>();
+			nodeService.findAll().forEach(nodes::add);
+			extractedData.put("nodes", nodes);
 
-		// convert back to list of elements via validator
-		SavedQueryDataWorker worker = savedQueryDataWorkerFactory.produceSavedQueryDataValidator(savedQuery.getType());
-		if (worker == null) {
-			logger.error("Saved query type " + savedQuery.getType() + " not supported.");
-			return Response.serverError().build();
+			List<SegradaEntity> relations = new LinkedList<>();
+			relationService.findAll().forEach(relations::add);
+			extractedData.put("edges", relations);
+
+			title = "";
+		} else {
+			ISavedQuery savedQuery = service.findById(service.convertUidToId(uid));
+
+			// not found
+			if (savedQuery == null)
+				return Response.serverError().build();
+
+			title = savedQuery.getTitle();
+
+			// convert back to list of elements via validator
+			SavedQueryDataWorker worker = savedQueryDataWorkerFactory.produceSavedQueryDataValidator(savedQuery.getType());
+			if (worker == null) {
+				logger.error("Saved query type " + savedQuery.getType() + " not supported.");
+				return Response.serverError().build();
+			}
+
+			// extract data from representation
+			extractedData = worker.savedQueryToEntities(savedQuery.getData());
 		}
-
-		// extract data from representation
-		Map<String, List<SegradaEntity>> extractedData = worker.savedQueryToEntities(savedQuery.getData());
-
 
 		// TODO: make this dynamic later on
 		Exporter exporter = new GEXFExporter();
 
-		return Response.ok(exporter.exportAsString(savedQuery.getTitle(), extractedData)).type(exporter.getMediaType()).build();
+		return Response.ok(exporter.exportAsString(title, extractedData)).type(exporter.getMediaType()).build();
 	}
 }

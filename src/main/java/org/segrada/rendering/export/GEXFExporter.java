@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import static org.apache.commons.lang.StringEscapeUtils.escapeHtml;
+import static org.apache.commons.lang.StringEscapeUtils.escapeXml;
 
 /**
  * Copyright 2017 Maximilian Kalus [segrada@auxnet.de]
@@ -39,7 +39,7 @@ public class GEXFExporter implements Exporter {
 		// Metadata
 		sb.append("<meta lastmodifieddate=\"").append(fmt.format(new Date())).append("\">\n" +
 				"<creator>Segrada</creator>\n" +
-				"<description>").append(escapeHtml(title)).append("</description>\n" +
+				"<description>").append(escapeXml(title)).append("</description>\n" +
 				"</meta>");
 
 		// Data header
@@ -51,7 +51,7 @@ public class GEXFExporter implements Exporter {
 		List<SegradaEntity> entities = extractedData.get("nodes");
 		for (SegradaEntity entity : entities) {
 			sb.append("<node id=\"").append(entity.getUid()).append("\" label=\"")
-					.append(escapeHtml(entity.getTitle())).append("\">");
+					.append(escapeXml(entity.getTitle())).append("\">");
 			// TODO: start/stop times via spells? https://gephi.org/gexf/format/dynamics.html
 			// TODO: geo
 			sb.append("</node>");
@@ -68,7 +68,7 @@ public class GEXFExporter implements Exporter {
 			IRelation relation = (IRelation) entity;
 
 			sb.append("<edge id=\"").append(entity.getUid()).append("\" label=\"")
-					.append(escapeHtml(relation.getRelationType().getFromTitle())).append("\" source=\"")
+					.append(escapeXml(relation.getRelationType().getFromTitle())).append("\" source=\"")
 					.append(relation.getFromEntity().getUid()).append("\" target=\"")
 					.append(relation.getToEntity().getUid()).append("\">");
 			// TODO: start/stop times via spells? https://gephi.org/gexf/format/dynamics.html
