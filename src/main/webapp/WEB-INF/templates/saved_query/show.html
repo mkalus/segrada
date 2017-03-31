@@ -19,7 +19,8 @@
 
 		<p th:if="${entity.type == 'graph'}"><a href="#" th:href="@{/saved_query/graph/{uid}(uid=${entity.uid})}" class="btn btn-primary sg-graph-replace" th:attr="data-title=${entity.title},data-uid=${entity.uid}"><span class="fa fa-share-alt" aria-hidden="true"></span> <span th:text="#{LoadGraph}">Load Graph</span></a></p>
 
-		<!--/*TODO Export to Gephi and Graphviz */-->
+		<p><a href="#" th:href="@{/saved_query/export/{uid}(uid=${entity.uid})}" class="btn btn-primary"><span class="fa fa-download" aria-hidden="true"></span> <span th:text="#{DownloadGraph}">Download Graph</span></a></p>
+
 		<div th:replace="partials/common :: datafooter (entity=${entity})"></div>
 	</div>
 </div>

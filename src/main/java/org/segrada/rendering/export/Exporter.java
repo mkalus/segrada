@@ -30,4 +30,6 @@ public interface Exporter {
 	String exportAsString(String title, Map<String, List<SegradaEntity>> extractedData);
 
 	String getMediaType();
+
+	String getFileName(String id);
 }

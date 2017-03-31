@@ -85,4 +85,9 @@ public class GEXFExporter implements Exporter {
 	public String getMediaType() {
 		return MediaType.APPLICATION_XML;
 	}
+
+	@Override
+	public String getFileName(String id) {
+		return id + ".gexf";
+	}
 }

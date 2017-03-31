@@ -331,6 +331,7 @@ public class SavedQueryController extends AbstractBaseController<ISavedQuery> {
 	public Response export(@PathParam("uid") String uid) {
 		Map<String, List<SegradaEntity>> extractedData;
 		String title;
+		String id;
 
 		if ("all".equals(uid)) {
 			// extract data from representation
@@ -344,6 +345,7 @@ public class SavedQueryController extends AbstractBaseController<ISavedQuery> {
 			extractedData.put("edges", relations);
 
 			title = "";
+			id = "graph";
 		} else {
 			ISavedQuery savedQuery = service.findById(service.convertUidToId(uid));
 
@@ -352,6 +354,7 @@ public class SavedQueryController extends AbstractBaseController<ISavedQuery> {
 				return Response.serverError().build();
 
 			title = savedQuery.getTitle();
+			id = savedQuery.getUid();
 
 			// convert back to list of elements via validator
 			SavedQueryDataWorker worker = savedQueryDataWorkerFactory.produceSavedQueryDataValidator(savedQuery.getType());
@@ -367,6 +370,8 @@ public class SavedQueryController extends AbstractBaseController<ISavedQuery> {
 		// TODO: make this dynamic later on
 		Exporter exporter = new GEXFExporter();
 
-		return Response.ok(exporter.exportAsString(title, extractedData)).type(exporter.getMediaType()).build();
+		return Response.ok(exporter.exportAsString(title, extractedData))
+				.header("Content-Disposition", "attachment; filename=\"" + exporter.getFileName(id) + "\"")
+				.type(exporter.getMediaType()).build();
 	}
 }
