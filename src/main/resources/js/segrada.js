@@ -1178,7 +1178,6 @@ function escapeHTML(myString) {
 			e.preventDefault();
 		});
 		$('#sg-graph-action-load').click(function(e) {
-			// TODO: load saved graphs
 			$('#sg-graph-modal-load').modal();
 
 			e.preventDefault();
@@ -1187,9 +1186,9 @@ function escapeHTML(myString) {
 			// any nodes?
 			if (graphNodes.length > 0) {
 				// prefill form
-				$('#title-sg-graph-save').val(graphName != null ? graphName : '');
+				$('#title-sg-graph-save').val(graphName !== null ? graphName : '');
 				var saveAsNew = $('#save-as-new-sg-graph-save').parent().parent().parent();
-				if (graphUid != null) saveAsNew.show();
+				if (graphUid !== null) saveAsNew.show();
 				else saveAsNew.hide();
 
 				// show form modal
