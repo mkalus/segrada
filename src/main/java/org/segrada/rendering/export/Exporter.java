@@ -2,6 +2,7 @@ package org.segrada.rendering.export;
 
 import org.segrada.model.prototype.SegradaEntity;
 
+import java.io.OutputStream;
 import java.util.List;
 import java.util.Map;
 
@@ -24,12 +25,22 @@ import java.util.Map;
  */
 public interface Exporter {
 	/**
-	 * Export data as string
-	 * @return string
+	 * Export data as stream
+	 * @param os output stream to write to
+	 * @param title of export
+	 * @param extractedData list of extracted data
 	 */
-	String exportAsString(String title, Map<String, List<SegradaEntity>> extractedData);
+	void export(OutputStream os, String title, Map<String, List<SegradaEntity>> extractedData);
 
+	/**
+	 * @return Media type e.g. application/xml
+	 */
 	String getMediaType();
 
+	/**
+	 * Filename to download
+	 * @param id of query
+	 * @return filename of downloaded file e.g. 32-0.xml
+	 */
 	String getFileName(String id);
 }

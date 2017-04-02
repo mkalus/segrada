@@ -28,6 +28,9 @@ import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.StreamingOutput;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -370,7 +373,10 @@ public class SavedQueryController extends AbstractBaseController<ISavedQuery> {
 		// TODO: make this dynamic later on
 		Exporter exporter = new GEXFExporter();
 
-		return Response.ok(exporter.exportAsString(title, extractedData))
+		// stream output
+		StreamingOutput stream = outputStream -> exporter.export(outputStream, title, extractedData);
+
+		return Response.ok(stream)
 				.header("Content-Disposition", "attachment; filename=\"" + exporter.getFileName(id) + "\"")
 				.type(exporter.getMediaType()).build();
 	}
