@@ -9,7 +9,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.segrada.model.base.AbstractSegradaEntity;
-import org.segrada.model.prototype.SegradaEntity;
+import org.segrada.model.prototype.IMock;
 import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory;
 import org.segrada.session.Identity;
 import org.segrada.test.OrientDBTestInstance;
@@ -214,8 +214,10 @@ public class AbstractOrientDbRepositoryTest {
 		assertEquals(2, filledList.size());
 
 		// ids should be the same
-		assertEquals(entity1.getId(), filledList.get(0).getId());
-		assertEquals(entity2.getId(), filledList.get(1).getId());
+		IMock mock1 = filledList.get(0);
+		IMock mock2 = filledList.get(1);
+		assertEquals(entity1.getId(), mock1.getId());
+		assertEquals(entity2.getId(), mock2.getId());
 	}
 
 	@Test
@@ -314,7 +316,7 @@ public class AbstractOrientDbRepositoryTest {
 	/**
 	 * Mock entity
 	 */
-	private class MockEntity extends AbstractSegradaEntity implements SegradaEntity {
+	private class MockEntity extends AbstractSegradaEntity implements IMock {
 		@Override
 		public boolean equals(Object that) {
 			return that != null && this.getClass() == that.getClass() && EqualsBuilder.reflectionEquals(this, that);

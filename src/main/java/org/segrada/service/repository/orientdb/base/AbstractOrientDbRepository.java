@@ -6,6 +6,7 @@ import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
 import org.segrada.model.base.AbstractSegradaEntity;
 import org.segrada.model.prototype.SegradaEntity;
 import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory;
+import org.segrada.service.repository.orientdb.util.AbstractLateConverter;
 import org.segrada.service.repository.prototype.CRUDRepository;
 import org.segrada.service.util.PaginationInfo;
 import org.slf4j.Logger;
@@ -217,8 +218,23 @@ abstract public class AbstractOrientDbRepository<T extends SegradaEntity> extend
 			// preallocate size
 			entities = new ArrayList<>(list.size());
 
+			// prepare proxy
+			ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+			// test cases
+			Class[] myClass = new Class[]{Class.forName("org.segrada.model.prototype.I" + getModelClassName())};
+
+			// add objects to list, proxied
 			for (ODocument document : list) {
-				entities.add(convertToEntity(document));
+				entities.add((T) java.lang.reflect.Proxy.newProxyInstance(
+						classLoader,
+						myClass,
+						new AbstractLateConverter<T>() {
+							@Override
+							protected T convert() {
+								return convertToEntity(document);
+							}
+						}
+				));
 			}
 		} catch (Exception e) {
 			logger.error("Exception thrown while fetching all entities.", e);
