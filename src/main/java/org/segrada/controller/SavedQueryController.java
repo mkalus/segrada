@@ -29,10 +29,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -263,7 +260,7 @@ public class SavedQueryController extends AbstractBaseController<ISavedQuery> {
 		}
 
 		// extract data from representation
-		Map<String, List<SegradaEntity>> extractedData = worker.savedQueryToEntities(savedQuery.getData());
+		Map<String, Iterable<SegradaEntity>> extractedData = worker.savedQueryToEntities(savedQuery.getData());
 		Map<String, GraphCoordinate> coordinateMap;
 		if (savedQuery.getType().equals("graph")) {
 			// get coordinates
@@ -271,8 +268,8 @@ public class SavedQueryController extends AbstractBaseController<ISavedQuery> {
 		} else coordinateMap = null;
 
 		// create nodes
-		List<SegradaEntity> entities = extractedData.get("nodes");
-		JSONArray nodes = new JSONArray(entities.size());
+		Iterable<SegradaEntity> entities = extractedData.get("nodes");
+		JSONArray nodes = new JSONArray();
 		for (SegradaEntity entity : entities) {
 			try {
 				JSONObject o;
@@ -298,8 +295,8 @@ public class SavedQueryController extends AbstractBaseController<ISavedQuery> {
 		}
 
 		// create edges
-		List<SegradaEntity> relations = extractedData.get("edges");
-		JSONArray edges = new JSONArray(relations.size());
+		Iterable<SegradaEntity> relations = extractedData.get("edges");
+		JSONArray edges = new JSONArray();
 		for (SegradaEntity entity : relations) {
 			try {
 				JSONObject o;
@@ -332,20 +329,16 @@ public class SavedQueryController extends AbstractBaseController<ISavedQuery> {
 	@Path("/export/{uid}")
 	@RolesAllowed("GRAPH")
 	public Response export(@PathParam("uid") String uid) {
-		Map<String, List<SegradaEntity>> extractedData;
+		Map<String, Iterable<SegradaEntity>> extractedData;
 		String title;
 		String id;
 
 		if ("all".equals(uid)) {
 			// extract data from representation
 			extractedData = new HashMap<>();
-			List<SegradaEntity> nodes = new LinkedList<>();
-			nodeService.findAll().forEach(nodes::add);
-			extractedData.put("nodes", nodes);
+			extractedData.put("nodes", (Iterable) nodeService.findAll());
 
-			List<SegradaEntity> relations = new LinkedList<>();
-			relationService.findAll().forEach(relations::add);
-			extractedData.put("edges", relations);
+			extractedData.put("edges", (Iterable) relationService.findAll());
 
 			title = "";
 			id = "graph";

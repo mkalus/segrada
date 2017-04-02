@@ -54,11 +54,9 @@ public class SavedQueryDataWorkerFactory {
 				}
 
 				@Override
-				public Map<String, List<SegradaEntity>> savedQueryToEntities(String data) {
+				public Map<String, Iterable<SegradaEntity>> savedQueryToEntities(String data) {
 					return null;
 				}
-
-
 			};
 		}
 

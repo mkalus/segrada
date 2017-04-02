@@ -34,7 +34,7 @@ import static org.apache.commons.lang.StringEscapeUtils.escapeXml;
  */
 public class GEXFExporter implements Exporter {
 	@Override
-	public void export(OutputStream os, String title, Map<String, List<SegradaEntity>> extractedData) {
+	public void export(OutputStream os, String title, Map<String, Iterable<SegradaEntity>> extractedData) {
 		try {
 			Writer writer = new BufferedWriter(new OutputStreamWriter(os));
 
@@ -56,7 +56,7 @@ public class GEXFExporter implements Exporter {
 			// Nodes
 			writer.write("<nodes>");
 
-			List<SegradaEntity> entities = extractedData.get("nodes");
+			Iterable<SegradaEntity> entities = extractedData.get("nodes");
 			for (SegradaEntity entity : entities) {
 				writer.write("<node id=\"" + entity.getUid() + "\" label=\""
 						+ escapeXml(entity.getTitle()) + "\">");
@@ -71,7 +71,7 @@ public class GEXFExporter implements Exporter {
 			// Edges
 			writer.write("<edges>");
 
-			List<SegradaEntity> relations = extractedData.get("edges");
+			Iterable<SegradaEntity> relations = extractedData.get("edges");
 			for (SegradaEntity entity : relations) {
 				IRelation relation = (IRelation) entity;
 

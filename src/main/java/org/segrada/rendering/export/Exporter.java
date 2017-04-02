@@ -30,7 +30,7 @@ public interface Exporter {
 	 * @param title of export
 	 * @param extractedData list of extracted data
 	 */
-	void export(OutputStream os, String title, Map<String, List<SegradaEntity>> extractedData);
+	void export(OutputStream os, String title, Map<String, Iterable<SegradaEntity>> extractedData);
 
 	/**
 	 * @return Media type e.g. application/xml

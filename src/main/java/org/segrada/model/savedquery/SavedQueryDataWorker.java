@@ -35,5 +35,5 @@ public interface SavedQueryDataWorker {
 	 * @param data representation to extract
 	 * @return map of lists, e.g. "nodes" -> list of nodes in graph + "edges" -> list of relations
 	 */
-	Map<String, List<SegradaEntity>> savedQueryToEntities(String data);
+	Map<String, Iterable<SegradaEntity>> savedQueryToEntities(String data);
 }

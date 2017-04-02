@@ -96,9 +96,9 @@ public class GraphSavedQueryDataWorker implements SavedQueryDataWorker {
 	}
 
 	@Override
-	public Map<String, List<SegradaEntity>> savedQueryToEntities(String data) {
+	public Map<String, Iterable<SegradaEntity>> savedQueryToEntities(String data) {
 		try {
-			Map<String, List<SegradaEntity>> returnData = new HashMap<>();
+			Map<String, Iterable<SegradaEntity>> returnData = new HashMap<>();
 
 			JSONObject o = new JSONObject(data);
 
