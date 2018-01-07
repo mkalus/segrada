@@ -33,7 +33,11 @@ public abstract class AbstractLazyLoadedObject implements java.lang.reflect.Invo
 	 */
 	public Object invoke(Object proxy, java.lang.reflect.Method method, Object[] args) throws Throwable {
 		if (target == null) {
-			target = loadObject();
+			try {
+				target = loadObject();
+			} catch (Exception e) {
+				return null;
+			}
 		}
 		return method.invoke(target, args);
 	}
