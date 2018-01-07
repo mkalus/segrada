@@ -5,73 +5,45 @@ function escapeHTML(myString) {
 
 (function ($) {
 	/**
-	 * tags tokenizer
+	 * Substring matcher for remote searches for nodes
+	 * @param searchUrl
 	 */
-	var tagsTokenizer = new Bloodhound({
-		datumTokenizer: function (d) {
-			return Bloodhound.tokenizers.whitespace(d.title);
-		},
-		queryTokenizer: Bloodhound.tokenizers.whitespace,
-		remote: {
-			wildcard: '%QUERY',
-			url: urlSegradaTagSearch + '%QUERY'
+	var genericMatcher = function(searchUrl) {
+		return function findMatches(q, cb) {
+			var response = $.ajax({
+				url: searchUrl + encodeURIComponent(q),
+				async: false
+			});
+
+			cb(JSON.parse(response.responseText));
 		}
-	});
+	};
+
 
 	/**
-	 * node tokenizer
+	 * Substring matcher for remote searches for nodes
 	 */
-	var nodeTokenizer = new Bloodhound({
-		datumTokenizer: function (d) {
-			return Bloodhound.tokenizers.whitespace(d.title);
-		},
-		queryTokenizer: Bloodhound.tokenizers.whitespace,
-		remote: {
-			url: urlSegradaNodeSearch,
-			replace: function(url, uriEncodedQuery) {
-				var searchUrl = url + uriEncodedQuery;
+	var nodeMatcher = function() {
+		return function findMatches(q, cb) {
+			var searchUrl = urlSegradaNodeSearch + encodeURIComponent(q);
 
-				// get current textField
-				var textField = $(".sg-node-search").filter(":focus");
-				var relationTypeSelect = $("#" + textField.attr('data-select-id') + ' option').filter(":selected");
-				var contraintIds = relationTypeSelect.attr(textField.attr('data-attr'));
-				if (contraintIds != null && contraintIds.length > 0) {
-					// add list of ids
-					searchUrl += '&tags=' + encodeURIComponent(contraintIds);
-				}
-
-				return searchUrl;
+			// get current textField
+			var textField = $(".sg-node-search").filter(":focus");
+			var relationTypeSelect = $("#" + textField.attr('data-select-id') + ' option').filter(":selected");
+			var contraintIds = relationTypeSelect.attr(textField.attr('data-attr'));
+			if (contraintIds != null && contraintIds.length > 0) {
+				// add list of ids
+				searchUrl += '&tags=' + encodeURIComponent(contraintIds);
 			}
-		}
-	});
 
-	/**
-	 * file tokenizer
-	 */
-	var fileTokenizer = new Bloodhound({
-		datumTokenizer: function (d) {
-			return Bloodhound.tokenizers.whitespace(d.title);
-		},
-		queryTokenizer: Bloodhound.tokenizers.whitespace,
-		remote: {
-			wildcard: '%QUERY',
-			url: urlSegradaFileSearch + '%QUERY'
-		}
-	});
+			var response = $.ajax({
+				url: searchUrl,
+				async: false
+			});
 
-	/**
-	 * source tokenizer
-	 */
-	var sourceTokenizer = new Bloodhound({
-		datumTokenizer: function (d) {
-			return Bloodhound.tokenizers.whitespace(d.title);
-		},
-		queryTokenizer: Bloodhound.tokenizers.whitespace,
-		remote: {
-			wildcard: '%QUERY',
-			url: urlSegradaSourceSearch + '%QUERY'
+			cb(JSON.parse(response.responseText));
 		}
-	});
+	};
 
 	// clean certain urls from jsessionid elements
 	function cleanPathFromSessionId(path) {
@@ -490,7 +462,7 @@ function escapeHTML(myString) {
 					name: 'tags',
 					displayKey: 'title',
 					valueKey: 'title',
-					source: tagsTokenizer.ttAdapter()
+					source: genericMatcher(urlSegradaTagSearch)
 				}
 			});
 
@@ -513,7 +485,7 @@ function escapeHTML(myString) {
 				name: 'node',
 				displayKey: 'title',
 				valueKey: 'id',
-				source: nodeTokenizer.ttAdapter()
+				source: nodeMatcher()
 			}).bind('typeahead:selected', function(e, datum) {
 				target.val(datum.id);
 			}).bind('keyup', function() { // empty on textbox empty
@@ -536,7 +508,7 @@ function escapeHTML(myString) {
 				name: 'file',
 				displayKey: 'title',
 				valueKey: 'id',
-				source: fileTokenizer.ttAdapter()
+				source: genericMatcher(urlSegradaFileSearch)
 			}).bind('typeahead:selected', function(e, datum) {
 				target.val(datum.id);
 			}).bind('keyup', function() { // empty on textbox empty
@@ -558,7 +530,7 @@ function escapeHTML(myString) {
 				name: 'source',
 				displayKey: 'title',
 				valueKey: 'id',
-				source: sourceTokenizer.ttAdapter()
+				source: genericMatcher(urlSegradaSourceSearch)
 			}).bind('typeahead:selected', function(e, datum) {
 				target.val(datum.id);
 			}).bind('keyup', function() { // empty on textbox empty
@@ -1141,10 +1113,6 @@ function escapeHTML(myString) {
 			});
 			e.preventDefault();
 		});
-
-		// *******************************************************
-		// initialize tokenizers
-		tagsTokenizer.initialize();
 
 		// *******************************************************
 		// Do graph toggle

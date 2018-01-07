@@ -2,6 +2,7 @@
 (function ($) {
 	/**
 	 * tokenizer/finder for elements on nominatim.openstreetmap.org
+	 * TODO: Remove bloodhound!
 	 */
 	var placenamesTokenizer = new Bloodhound({
 		datumTokenizer: function (d) {
