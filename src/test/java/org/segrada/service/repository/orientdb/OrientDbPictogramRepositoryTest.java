@@ -156,6 +156,11 @@ public class OrientDbPictogramRepositoryTest {
 	}
 
 	@Test
+	public void testDelete() throws Exception {
+		// we should implement tests for this use case...
+	}
+
+	@Test
 	public void testGetDefaultOrder() throws Exception {
 		assertEquals(" ORDER BY title", repository.getDefaultOrder(true));
 		assertEquals(" title", repository.getDefaultOrder(false));
