@@ -2,6 +2,7 @@ package org.segrada.service.repository.orientdb;
 
 import com.google.inject.Inject;
 import com.orientechnologies.orient.core.record.impl.ODocument;
+import com.orientechnologies.orient.core.sql.OCommandSQL;
 import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.queryparser.flexible.standard.QueryParserUtil;
@@ -120,6 +121,36 @@ public class OrientDbPictogramRepository extends AbstractSegradaOrientDbReposito
 			hits.add(convertToEntity(document));
 
 		return hits;
+	}
+
+	@Override
+	public boolean delete(IPictogram entity) {
+		if (super.delete(entity)) {
+			initDb();
+
+			// update connected entities
+			String query = "update Node set pictogram = null where pictogram = " + entity.getId();
+			db.command(new OCommandSQL(query)).execute();
+
+			// update connected relations
+			query = "update Relation set pictogram = null where pictogram = " + entity.getId();
+			db.command(new OCommandSQL(query)).execute();
+
+			// update connected files
+			query = "update File set pictogram = null where pictogram = " + entity.getId();
+			db.command(new OCommandSQL(query)).execute();
+
+			// update connected relation types
+			query = "update RelationType set pictogram = null where pictogram = " + entity.getId();
+			db.command(new OCommandSQL(query)).execute();
+
+			// update connected sources
+			query = "update Source set pictogram = null where pictogram = " + entity.getId();
+			db.command(new OCommandSQL(query)).execute();
+
+			return true;
+		}
+		return false;
 	}
 
 	@Override
