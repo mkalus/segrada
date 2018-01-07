@@ -3,6 +3,9 @@ package org.segrada.rendering.markup;
 import org.junit.Test;
 import org.segrada.rendering.markup.DefaultMarkupFilter;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import static org.junit.Assert.assertEquals;
 
 public class DefaultMarkupFilterTest {
@@ -67,5 +70,22 @@ public class DefaultMarkupFilterTest {
 
 		DefaultMarkupFilter filter = new DefaultMarkupFilter();
 		assertEquals("This is a text string Blahblah bold emphasised underline *not bold* _not emphasised_ ==no underline== *not yesbold ÄÖÜ@µ", filter.toPlain(test));
+	}
+
+	@Test
+	public void testBibRefPattern() throws Exception {
+		Pattern bibRefPattern = DefaultMarkupFilter.getBibRefPattern();
+
+		Matcher matcher = bibRefPattern.matcher("[[haebler:rott]] Blahblah [13f:]");
+		assertEquals("_R_ Blahblah [13f:]", matcher.replaceFirst("_R_"));
+
+		matcher = bibRefPattern.matcher("Blahblah [13f:] [[haebler:rott]] Blahblah [13f:]");
+		assertEquals("Blahblah [13f:] _R_ Blahblah [13f:]", matcher.replaceFirst("_R_"));
+
+		matcher = bibRefPattern.matcher("[[haebler:rott]] Blahblah [13f:] [[test:test1]]");
+		assertEquals("_R_ Blahblah [13f:] _R_", matcher.replaceAll("_R_"));
+
+		matcher = bibRefPattern.matcher("from source [[article:Procurement Nadir: India Howitzer Competitions]]");
+		assertEquals("from source _R_", matcher.replaceFirst("_R_"));
 	}
 }

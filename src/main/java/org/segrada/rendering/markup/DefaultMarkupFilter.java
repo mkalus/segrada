@@ -64,7 +64,14 @@ public class DefaultMarkupFilter extends MarkupFilter {
 			"-&gt;", "&rarr;",
 	};
 
-	private static final Pattern bibRefPattern = Pattern.compile("\\[\\[([a-zA-Z0-9]+:[a-zA-Z0-9]+)\\]\\]");
+	private static final Pattern bibRefPattern = Pattern.compile("\\[\\[([^:\\[\\]]+:[^\\[\\]]+)\\]\\]");
+
+	/**
+	 * @return pattern to find bibliographic references
+	 */
+	public static Pattern getBibRefPattern() {
+		return bibRefPattern;
+	}
 
 	public DefaultMarkupFilter() {
 		if (injector != null)
