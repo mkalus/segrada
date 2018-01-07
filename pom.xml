@@ -19,12 +19,12 @@
 		<java.version>1.8</java.version>
 		<!-- Version settings -->
 		<guice.version>4.1.0</guice.version>
-		<jetty.version>9.4.2.v20170220</jetty.version>
+		<jetty.version>9.4.8.v20171121</jetty.version>
 		<joda.version>2.9.9</joda.version>
 		<lucene.version>5.3.2</lucene.version>
 		<!-- upgradeable? -->
-		<orientdb.version>2.2.17</orientdb.version>
-		<tika.version>1.14</tika.version>
+		<orientdb.version>2.2.29</orientdb.version><!-- TODO: Test cases fail on 2.2.30 - https://github.com/orientechnologies/orientdb/wiki/OrientDB-2.2-Release-Notes -->
+		<tika.version>1.17</tika.version>
 	</properties>
 
 	<dependencies>
@@ -131,7 +131,7 @@
 		<dependency>
 			<groupId>org.thymeleaf</groupId>
 			<artifactId>thymeleaf</artifactId>
-			<version>3.0.2.RELEASE</version>
+			<version>3.0.9.RELEASE</version>
 		</dependency>
 		<!-- Pegdown markdown parser -->
 		<dependency>
