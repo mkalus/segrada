@@ -720,6 +720,24 @@ function escapeHTML(myString) {
 		});
 
 		// *******************************************************
+		// HTML Editor enabler/disabler
+		$('.sg-plain-editor', part).click(function(e) {
+			$($(this).attr('data-editor')).summernote('destroy');
+		});
+
+		$('.sg-html-editor', part).each(function() {
+			var $this = $(this);
+			var editor = $($this.attr('data-editor'));
+
+			// enable if checkbox has been checked
+			if ($this.attr('checked')) editor.summernote();
+
+			$this.click(function(e) {
+				editor.summernote();
+			});
+		});
+
+		// *******************************************************
 		// Graph: load remote data and update graph view
 		$('a.sg-graph-update', part).click(function(e) {
 			// update graph by remotely getting updated data
