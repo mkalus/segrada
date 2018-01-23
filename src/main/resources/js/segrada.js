@@ -726,14 +726,21 @@ function escapeHTML(myString) {
 		});
 
 		$('.sg-html-editor', part).each(function() {
+			var locale = $('html').attr('lang');
+			if (locale === 'en') locale = 'en-US';
+
+			var summernoteOptions = {
+				lang: locale
+			};
+
 			var $this = $(this);
 			var editor = $($this.attr('data-editor'));
 
 			// enable if checkbox has been checked
-			if ($this.attr('checked')) editor.summernote();
+			if ($this.attr('checked')) editor.summernote(summernoteOptions);
 
 			$this.click(function(e) {
-				editor.summernote();
+				editor.summernote(summernoteOptions);
 			});
 		});
 
