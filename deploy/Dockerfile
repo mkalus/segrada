@@ -39,8 +39,8 @@ RUN set -xe \
 		gpg --keyserver ha.pool.sks-keyservers.net --recv-keys "$key"; \
 	done
 
-ENV SEGRADA_TGZ_URL http://segrada.org/fileadmin/downloads/Segrada.tar.gz
-ENV SEGRADA_DB_TGZ_URL http://segrada.org/fileadmin/downloads/SegradaEmptyDB.tar.gz
+ENV SEGRADA_TGZ_URL https://segrada.org/fileadmin/downloads/Segrada.tar.gz
+ENV SEGRADA_DB_TGZ_URL https://segrada.org/fileadmin/downloads/SegradaEmptyDB.tar.gz
 
 RUN set -xe \
 	&& curl -SL "$SEGRADA_TGZ_URL" -o Segrada.tar.gz \
