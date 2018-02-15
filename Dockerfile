@@ -14,7 +14,7 @@
 ############################################################
 
 # Set the base image to use to Java 8
-FROM java:8-jre
+FROM openjdk:8-jre-slim
 
 # add our user and group first to make sure their IDs get assigned consistently, regardless of whatever dependencies get added
 RUN groupadd -r segrada && useradd -r -g segrada segrada
@@ -31,6 +31,8 @@ ENV SEGRADA_GPG_KEYS \
 	#2048R/1E6E76AE 2016-01-09 Maximilian Kalus <info@segrada.org>
 	02F936D6520BA02A98CDC3D8D94CE3401E6E76AE
 
+RUN apt-get update && apt-get install -y --no-install-recommends gpg dirmngr curl
+
 RUN set -xe \
 	&& for key in $SEGRADA_GPG_KEYS; do \
 		gpg --keyserver ha.pool.sks-keyservers.net --recv-keys "$key"; \
@@ -45,6 +47,8 @@ RUN set -xe \
 	&& tar -xvf SegradaEmptyDB.tar.gz \
 	&& chown -R segrada:segrada . \
 	&& rm Segrada*.tar.gz*
+
+RUN set -xe && apt-get remove -y --purge gpg dirmngr curl && rm -rf /var/lib/apt/lists/*
 
 ADD target/Segrada.tar.gz .
 
