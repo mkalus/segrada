@@ -745,6 +745,34 @@ function escapeHTML(myString) {
 		});
 
 		// *******************************************************
+		// Image Viewer/Lightbox
+		$('.sg-lg-image', part).each(function() {
+			var id = $(this).attr('id');
+
+			if (id) {
+				new Viewer(document.getElementById(id), {
+					navbar: false,
+					toolbar: {
+						zoomIn: 1,
+						zoomOut: 1,
+						oneToOne: 1,
+						reset: 1,
+						prev: 0,
+						play: {
+							show: 1,
+							size: 'large'
+						},
+						next: 0,
+						rotateLeft: 1,
+						rotateRight: 1,
+						flipHorizontal: 1,
+						flipVertical: 1
+					}
+				});
+			}
+		});
+
+		// *******************************************************
 		// Graph: load remote data and update graph view
 		$('a.sg-graph-update', part).click(function(e) {
 			// update graph by remotely getting updated data
