@@ -12,6 +12,7 @@ Features:
 * Full text search of database and files
 * Graph view of connections
 * PDF-Preview of uploaded pdf files
+* Nice full screen image viewer enabling you to zoom and rotate images
 * Powerful filtering and search features
 * Multiple users possible
 * Scalable: Use on desktop, run as single or distributed server.
