@@ -1,0 +1,71 @@
+# Example yml to show how we could start a Segrada POD in Kubernetes. Very simple and singleton. For distributed deployment, check out the Docker compose settings in this directory.
+
+# Volume
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pvlocal
+spec:
+  capacity:
+    storage: 1Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Recycle
+  storageClassName: slow
+  hostPath:
+    path: /data/segrada
+
+# Volume Claim
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvlocalclaim
+spec:
+  accessModes:
+    - ReadWriteOnce
+  volumeMode: Filesystem
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: slow
+
+# Pod
+apiVersion: v1
+kind: Pod
+metadata:
+  name: segrada
+  labels:
+    app: segrada
+spec:
+  containers:
+  - name: segrada
+    image: ronix/segrada
+    ports:
+      - containerPort: 8080
+    volumeMounts:
+    - name: segrada-persistent-storage
+      mountPath: /usr/local/segrada/segrada_data
+  volumes:
+  - name: segrada-persistent-storage
+    persistentVolumeClaim:
+      claimName: pvlocalclaim
+
+# Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: segrada-service
+spec:
+  type: NodePort
+  ports:
+  - port: 8080 # the port that this service should serve on
+    # the container on each pod to connect to, can be a name
+    # (e.g. 'www') or a number (e.g. 80)
+    targetPort: 8080
+    protocol: TCP
+  # just like the selector in the deployment,
+  # but this time it identifies the set of pods to load balance
+  # traffic to.
+  selector:
+    app: segrada
