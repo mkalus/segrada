@@ -43,3 +43,13 @@ In order to try out Segrada, download the program and unpack it to a folder of y
 On Windows, start the application with Segrada.exe. On Linux, Unix, and Apple Mac OS, run start.sh (you might have to make this file executable).  
 A window should appear which can start the actual application. Press "Start" and wait for the button "Open Application" to become active.  
 The application runs in your browser. You can stop the application by clicking "Stop" in the control window or by closing it.
+
+You can also run Segrada using Docker:
+
+```bash
+docker run --name segrada -p 8080:8080 ronix/segrada
+```
+
+See https://hub.docker.com/r/ronix/segrada/ for more information.
+
+See deploy folder for more examples, e.g. running Segrada using Docker compose and on Kubernetes.
