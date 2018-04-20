@@ -482,6 +482,7 @@ function escapeHTML(myString) {
 				highlight: true,
 				minLength: 1
 			},{
+				async: true,
 				name: 'node',
 				displayKey: 'title',
 				valueKey: 'id',
@@ -505,6 +506,7 @@ function escapeHTML(myString) {
 				highlight: true,
 				minLength: 1
 			},{
+				async: true,
 				name: 'file',
 				displayKey: 'title',
 				valueKey: 'id',
@@ -527,6 +529,7 @@ function escapeHTML(myString) {
 				highlight: true,
 				minLength: 1
 			},{
+				async: true,
 				name: 'source',
 				displayKey: 'title',
 				valueKey: 'id',
