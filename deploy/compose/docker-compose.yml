@@ -1,4 +1,4 @@
-# Compose file to create distributed docker instance with Segrada, Solr and OrientDB Server.
+# Compose file to create distributed docker instance with Segrada, Solr, Hadoop, and OrientDB Server.
 version: '2'
 services:
   solr:
