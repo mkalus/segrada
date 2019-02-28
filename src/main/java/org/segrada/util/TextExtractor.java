@@ -79,6 +79,10 @@ public class TextExtractor {
 			// some formatting and checking
 			if (plain == null) return null;
 			plain = plain.trim();
+			// remove 65533 artifact at beginning
+			if (plain.length() > 0 && plain.charAt(0) == 65533) {
+				plain = plain.replace((char) 65533, (char) 10).trim();
+			}
 			if (plain.equals("")) return null;
 			return plain;
 		} catch (Exception e) {
