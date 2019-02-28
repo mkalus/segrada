@@ -28,8 +28,8 @@ WORKDIR $SEGRADA_HOME
 MAINTAINER Maximilian Kalus
 
 ENV SEGRADA_GPG_KEYS \
-	#2048R/1E6E76AE 2016-01-09 Maximilian Kalus <info@segrada.org>
-	02F936D6520BA02A98CDC3D8D94CE3401E6E76AE
+	#4096R/975157FB 2019-02-28 Maximilian Kalus <info@segrada.org>
+	C79663C6388988836529B05AEF4C437F975157FB
 
 RUN apt-get update && apt-get install -y --no-install-recommends gpg dirmngr curl
 
