@@ -35,7 +35,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends gpg dirmngr cur
 
 RUN set -xe \
 	&& for key in $SEGRADA_GPG_KEYS; do \
-		gpg --keyserver ha.pool.sks-keyservers.net --recv-keys "$key"; \
+		gpg --keyserver keyserver.ubuntu.com --recv-keys "$key"; \
 	done
 
 ENV SEGRADA_DB_TGZ_URL http://segrada.org/fileadmin/downloads/SegradaEmptyDB.tar.gz

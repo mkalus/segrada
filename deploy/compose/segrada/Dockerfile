@@ -27,7 +27,7 @@ ENV SEGRADA_GPG_KEYS \
 
 RUN set -xe \
 	&& for key in $SEGRADA_GPG_KEYS; do \
-		gpg --keyserver ha.pool.sks-keyservers.net --recv-keys "$key"; \
+		gpg --keyserver keyserver.ubuntu.com --recv-keys "$key"; \
 	done
 
 ENV SEGRADA_TGZ_URL http://segrada.org/fileadmin/downloads/Segrada.tar.gz
