@@ -61,7 +61,7 @@
 			</table>
 		</form>
 
-		<div th:replace="partials/pagination :: pagination (paginationInfo=${paginationInfo},base='file')"></div>
+		<div th:replace="partials/pagination :: pagination (paginationInfo=${paginationInfo},targetId=${targetId},base=${myurl})"></div>
 	</div>
 </div>
 
