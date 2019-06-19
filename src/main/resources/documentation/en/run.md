@@ -28,7 +28,8 @@ Segrada Launcher is a convenient way to start Segrada on your local machine.
 * Run the `start_mac.command` in the folder you just extracted. If the launcher does **not** start,
   you have to install Java. For some braindead reason, Apple requires you to install the JDK if you want to run Java
   programs. Visit the [Java Download Site on Oracle](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
-  and choose one of the JDKs (e.g. Java SE Development Kit 8u66 for Mac 64bit) for your platform.
+  and choose one of the JDKs (e.g. Java SE Development Kit 8u66 for Mac 64bit) for your platform. If you use Homebrew
+  you should be able to install Java using the command `brew cask install java`.
 * You should see the launcher window similar to the one above.
 * _Optionally:_ Select a path with an existing database. Default is the folder `segrada_data` in the folder where
   Segrada.exe and the other program files are located. 

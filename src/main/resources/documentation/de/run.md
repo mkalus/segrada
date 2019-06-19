@@ -31,7 +31,8 @@ Der Starter is eine einfache Möglichkeit, Segrada auf dem lokalen Rechner laufe
 * Entpacken Sie die TGZ-Datei in einen beliebigen Ordner Ihrer Wahl.
 * Starten Sie das Kommando `start_mac.command` in dem gerade entpackten Ordner aus. Falls der
   Starter **nicht** starten sollte, prüfen Sie bitte Ihre Java-Version und/oder laden sie Java von
-  [Oracle](https://www.java.com/) herunter.
+  [Oracle](https://www.java.com/) herunter und installieren Sie eines der JDK-Pakete. Falls Sie Homebrew benutzen,
+  können Sie Java mit dem Befehl `brew cask install java` installieren.
 * Das Starterfenster sollte nun in ähnlicher Weise wie oben zu sehen sein.
 * _Optional:_ Wählen Sie einen Pfad, in dem eine existierende Datenbank bereits gespeichert ist (oder verwenden Sie
   einen leeren Ordner, um dort eine neue Datenbank zu erstellen). Der Standardordner ist `segrada_data` im selben
