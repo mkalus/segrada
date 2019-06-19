@@ -31,8 +31,9 @@ Der Starter is eine einfache Möglichkeit, Segrada auf dem lokalen Rechner laufe
 * Entpacken Sie die TGZ-Datei in einen beliebigen Ordner Ihrer Wahl.
 * Starten Sie das Kommando `start_mac.command` in dem gerade entpackten Ordner aus. Falls der
   Starter **nicht** starten sollte, prüfen Sie bitte Ihre Java-Version und/oder laden sie Java von
-  [Oracle](https://www.java.com/) herunter und installieren Sie eines der JDK-Pakete. Falls Sie Homebrew benutzen,
-  können Sie Java mit dem Befehl `brew cask install java` installieren.
+  [Oracle](https://www.java.com/) herunter. Aus irgendeinem obskuren Grund muss auf Apple-Rechnern das JDK installiert
+  werden, um Java auszuführen. Falls Sie Homebrew benutzen, können Sie Java mit dem Befehl
+  `brew cask install java` installieren.
 * Das Starterfenster sollte nun in ähnlicher Weise wie oben zu sehen sein.
 * _Optional:_ Wählen Sie einen Pfad, in dem eine existierende Datenbank bereits gespeichert ist (oder verwenden Sie
   einen leeren Ordner, um dort eine neue Datenbank zu erstellen). Der Standardordner ist `segrada_data` im selben
@@ -47,10 +48,7 @@ Der Starter is eine einfache Möglichkeit, Segrada auf dem lokalen Rechner laufe
   herunter.
 * Entpacken Sie die TGZ-Datei in einen beliebigen Ordner Ihrer Wahl.
 * Öffnen Sie die Kommandozeile und führen Sie den Befehl `./start.sh` in dem gerade entpackten Ordner aus. Falls der
-  Starter **nicht** starten sollte, prüfen Sie bitte Ihre Java-Version. Aus irgendeinem obskuren Grund muss auf
-  Apple-Rechner das JDK installiert werden, um Java auszuführen. Besuchen Sie dazu die
-  [Java-Seite von Oracle](http://www.oracle.com/technetwork/java/javase/downloads/index.html) und wählen Sie ein
-  Installationspaket für Ihre Platform (z.B. Java SE Development Kit 8u66 für Mac 64-Bit).
+  Starter **nicht** starten sollte, prüfen Sie bitte Ihre Java-Version. Java 8 muss installiert sein.
 * Das Starterfenster sollte nun in ähnlicher Weise wie oben zu sehen sein.
 * _Optional:_ Wählen Sie einen Pfad, in dem eine existierende Datenbank bereits gespeichert ist (oder verwenden Sie
   einen leeren Ordner, um dort eine neue Datenbank zu erstellen). Der Standardordner ist `segrada_data` im selben
