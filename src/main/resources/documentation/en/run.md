@@ -59,6 +59,13 @@ In order to run Segrada as a server, start the server with the headless option:
 See [Command Line Options](command_line_options.md) for more options. You can also
 [start Segrada automatically](autostart.md).
 
+## Starging Segrada in Multiuser Mode
+
+Segrada supports multipe users and logins. Generally, this makes sense if you want to use Segrada as a server. To
+start Segrada in multiuser mode, use the following command: 
+
+    java -DrequireLogin=true -DallowAnonymous=false -jar segrada-1.0-SNAPSHOT.jar headless
+
 
 ## Running Segrada in Docker
 

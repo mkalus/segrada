@@ -70,6 +70,14 @@ Mehr Optionen unter [Kommandozeilenoptionen](command_line_options.md). Zudem kö
 [Segrada automatisch starten lassen](autostart.md).
 
 
+## Segrada im Mehrbenutzerbetrieb starten
+
+Segrada unterstützt auch den Betrieb für mehrere Benutzer. Dies macht am meisten Sinn, wenn Segrada als Server
+gestartet wird. Die Option für den Mehrbenutzerbetrieb ist:
+
+    java -DrequireLogin=true -DallowAnonymous=false -jar segrada-1.0-SNAPSHOT.jar headless
+
+
 ## Segrada in Docker starten
 
 Sie können Segrada auch als Docker-Container laufen lassen. Holen Sie das Image und starten Sie es mit:
