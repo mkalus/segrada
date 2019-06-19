@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 /**
- * Copyright 2015 Maximilian Kalus [segrada@auxnet.de]
+ * Copyright 2015-2019 Maximilian Kalus [segrada@auxnet.de]
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
