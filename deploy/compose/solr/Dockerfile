@@ -3,7 +3,7 @@
 #
 # Based on solr instance
 ############################################################
-FROM solr
+FROM solr:6-slim
 
 # create new core
 RUN cp -ar /opt/solr/server/solr/configsets/data_driven_schema_configs \
