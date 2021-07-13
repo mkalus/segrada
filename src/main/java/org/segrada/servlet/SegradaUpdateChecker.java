@@ -106,7 +106,7 @@ public class SegradaUpdateChecker {
 						try {
 							version = getHTML();
 						} catch (Exception e) {
-							logger.error("Could not load new version status from http://segrada.org/fileadmin/downloads/version.txt. Skipping update check.");
+							logger.error("Could not load new version status from https://segrada.org/fileadmin/downloads/version.txt. Skipping update check.");
 
 							// clear version update - just to make sure we have no strange artifacts
 							db.command(new OCommandSQL("DELETE FROM Config WHERE key = 'versionUpdate'")).execute();
@@ -151,7 +151,7 @@ public class SegradaUpdateChecker {
 		 */
 		private String getHTML() throws Exception {
 			StringBuilder result = new StringBuilder();
-			URL url = new URL("http://segrada.org/fileadmin/downloads/version.txt");
+			URL url = new URL("https://segrada.org/fileadmin/downloads/version.txt");
 			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 			conn.setRequestMethod("GET");
 			// relatively short timeouts
