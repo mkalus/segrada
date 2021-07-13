@@ -31,7 +31,7 @@ ENV SEGRADA_GPG_KEYS \
 	#4096R/975157FB 2019-02-28 Maximilian Kalus <info@segrada.org>
 	C79663C6388988836529B05AEF4C437F975157FB
 
-RUN apt-get update && apt-get install -y --no-install-recommends gpg dirmngr curl
+RUN apt-get update && apt-get install -y --no-install-recommends gpg gpg-agent dirmngr curl
 
 RUN set -xe \
 	&& for key in $SEGRADA_GPG_KEYS; do \
@@ -63,5 +63,5 @@ RUN set -xe \
 EXPOSE 8080
 VOLUME ["/usr/local/segrada/segrada_data"]
 USER segrada
-ENTRYPOINT ["/usr/bin/java", "-jar", "./segrada-1.0-SNAPSHOT.jar"]
+ENTRYPOINT ["/usr/local/openjdk-8/bin/java", "-jar", "./segrada-1.0-SNAPSHOT.jar"]
 CMD ["headless"]
