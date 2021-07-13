@@ -70,7 +70,10 @@ public class OrientDbTagRepository extends AbstractSegradaOrientDbRepository<ITa
 
 		if (tag.getId() != null) {
 			// set tags
-			tag.setTags(lazyLoadTags(tag));
+			String[] tags = getTags(document);
+			if (tags != null && tags.length > 0) {
+				tag.setTags(tags);
+			}
 		}
 
 		return tag;
@@ -403,14 +406,14 @@ public class OrientDbTagRepository extends AbstractSegradaOrientDbRepository<ITa
 
 		// only directly connected tags?
 		List<ODocument> result;
+		OSQLSynchQuery<ODocument> query;
 		if (onlyDirect) {
-			OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>("select out." + field + " as field from IsTagOf where out.@class = 'Tag' AND in = " + entity.getId());
-			result = db.command(query).execute();
+			query = new OSQLSynchQuery<>("select out." + field + " as field from IsTagOf where out.@class = 'Tag' AND in = " + entity.getId());
 		} else {
 			// execute query
-			OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>("select " + field + " as field from ( traverse in('IsTagOf') from " + entity.getId() + ") where @class = 'Tag'");
-			result = db.command(query).execute();
+			query = new OSQLSynchQuery<>("select " + field + " as field from ( traverse in('IsTagOf') from " + entity.getId() + ") where @class = 'Tag'");
 		}
+		result = db.command(query).execute();
 
 		String[] results = new String[result.size()];
 		int i = 0;

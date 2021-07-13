@@ -1,8 +1,10 @@
 package org.segrada.service.repository.orientdb.base;
 
+import com.orientechnologies.orient.core.db.record.ridbag.ORidBag;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.orientechnologies.orient.core.sql.OCommandSQL;
 import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
+import org.jetbrains.annotations.NotNull;
 import org.segrada.model.prototype.IComment;
 import org.segrada.model.prototype.IFile;
 import org.segrada.model.prototype.ISourceReference;
@@ -21,9 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Copyright 2015-2019 Maximilian Kalus [segrada@auxnet.de]
@@ -56,10 +56,13 @@ abstract public class AbstractAnnotatedOrientDbRepository<T extends SegradaAnnot
 		//tags are relations and set/updated in processAfterSaving
 	}
 
-	protected void populateEntityWithAnnotated(ODocument document, SegradaAnnotatedEntity entity) {
+	protected void populateEntityWithAnnotated(ODocument document, @NotNull SegradaAnnotatedEntity entity) {
 		if (entity.getId() != null) {
 			// set tags
-			entity.setTags(lazyLoadTags(entity));
+			String[] tags = getTags(document);
+			if (tags != null && tags.length > 0) {
+				entity.setTags(tags);
+			}
 			// set source references
 			entity.setSourceReferences(lazyLoadSourceReferences(entity, 1, 1000)); // TODO: should we change this into something more intelligent?
 			// set source references

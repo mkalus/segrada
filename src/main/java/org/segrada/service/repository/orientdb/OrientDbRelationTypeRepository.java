@@ -72,8 +72,11 @@ public class OrientDbRelationTypeRepository extends AbstractColoredOrientDbRepos
 		populateEntityWithCreatedModified(document, relationType);
 		populateEntityWithColored(document, relationType);
 
-		// set tags //TODO test!
-		relationType.setTags(lazyLoadTags(relationType));
+		// set tags
+		String[] tags = getTags(document);
+		if (tags != null && tags.length > 0) {
+			relationType.setTags(tags);
+		}
 		// get from and to tags
 		TagRepository tagRepository = repositoryFactory.produceRepository(OrientDbTagRepository.class);
 		if (tagRepository != null) {

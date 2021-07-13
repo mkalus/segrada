@@ -359,31 +359,6 @@ public class AbstractSegradaOrientDbRepositoryTest {
 		assertEquals(document.getIdentity().toString(), userGroup.getId());
 	}
 
-	@Test
-	public void testLazyLoadTags() throws Exception {
-		// create a node
-		ODocument node = new ODocument("Node").field("title", "title 1").field("titleasc", "title-1")
-				.field("alternativeTitles", "alternativeTitles")
-				.field("description", "Description")
-				.field("descriptionMarkup", "default")
-				.field("color", 0x123456)
-				.field("created", 1L)
-				.field("modified", 2L)
-				.save();
-		// create tag
-		ODocument tag = new ODocument("Tag").field("title", "title").field("titleasc", "title").field("created", 1L).field("modified", 2L).save();
-		// connect
-		orientDBTestInstance.getDatabase().command(new OCommandSQL("create edge IsTagOf from " + tag.getIdentity().toString() + " to " + node.getIdentity().toString())).execute();
-
-		INode nodeTaggable = new Node();
-		nodeTaggable.setId(node.getIdentity().toString());
-
-		String[] tags = mockOrientDbRepository.lazyLoadTags(nodeTaggable);
-		assertNotNull(tags);
-		assertTrue(tags.length == 1);
-		assertEquals("title", tags[0]);
-	}
-
 	/**
 	 * Mock entity
 	 */

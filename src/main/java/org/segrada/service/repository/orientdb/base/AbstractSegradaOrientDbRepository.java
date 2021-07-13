@@ -1,8 +1,10 @@
 package org.segrada.service.repository.orientdb.base;
 
+import com.orientechnologies.orient.core.db.record.ridbag.ORidBag;
 import com.orientechnologies.orient.core.id.ORecordId;
 import com.orientechnologies.orient.core.metadata.schema.OType;
 import com.orientechnologies.orient.core.record.impl.ODocument;
+import org.jetbrains.annotations.NotNull;
 import org.segrada.model.Pictogram;
 import org.segrada.model.User;
 import org.segrada.model.UserGroup;
@@ -15,10 +17,7 @@ import org.segrada.session.Identity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Copyright 2015-2019 Maximilian Kalus [segrada@auxnet.de]
@@ -128,38 +127,37 @@ abstract public class AbstractSegradaOrientDbRepository<T extends SegradaEntity>
 	}
 
 	/**
-	 * lazily load tag list
-	 * @param entity connected to tags
-	 * @return array containing tag ids
+	 * extracts tag titles from a document containing in_IsTagOf references to tags
+	 * @param document raw document
+	 * @return list of tags or null
 	 */
-	public String[] lazyLoadTags(final SegradaTaggable entity) {
-		/*try {
-			return (String[]) java.lang.reflect.Proxy.newProxyInstance(
-					String[].class.getClassLoader(),
-					new Class[]{String[].class},
-					new AbstractLazyLoadedObject() {
-						@Override
-						protected Object loadObject() {
-							TagRepository tagRepository = repositoryFactory.produceRepository(OrientDbTagRepository.class);
-
-							return tagRepository.findTagIdsConnectedToModel(entity.getId(), entity.getModelName(), true);
+	public String[] getTags(@NotNull ODocument document) {
+		// set tags
+		ORidBag tags = document.field("in_IsTagOf", ORidBag.class);
+		if (tags != null && !tags.isEmpty()) {
+			List<String> list = new ArrayList<>();
+			Iterator it = tags.iterator();
+			while (it.hasNext()) {
+				ODocument o = (ODocument)it.next();
+				if (o != null && o.containsField("out")) {
+					Object out = o.field("out");
+					if (out instanceof ODocument) {
+						String title = ((ODocument)out).field("title", String.class);
+						if (title != null) {
+							list.add(title);
 						}
 					}
-			);
-		} catch (Exception e) {
-			logger.error("Could not lazy load tags for " + entity.toString(), e);
+				}
+			}
+			if (!list.isEmpty()) {
+				String[] strTags = new String[list.size()];
+				list.toArray(strTags);
+				return strTags;
+			}
 		}
-		return null;*/
-		//TODO: make it work?
-		TagRepository tagRepository = repositoryFactory.produceRepository(OrientDbTagRepository.class);
-		if (tagRepository != null)
-			return tagRepository.findTagTitlesConnectedToModel(entity, true);
 
-		// log error
-		logger.error("Could not load TagRepository");
 		return null;
 	}
-
 
 	/**
 	 * update tag connections of a given entity

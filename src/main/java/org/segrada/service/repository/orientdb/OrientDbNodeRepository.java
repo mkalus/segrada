@@ -1,6 +1,7 @@
 package org.segrada.service.repository.orientdb;
 
 import com.google.inject.Inject;
+import com.orientechnologies.orient.core.db.record.ridbag.ORidBag;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
 import org.apache.lucene.index.Term;
