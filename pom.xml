@@ -19,7 +19,7 @@
 		<java.version>1.8</java.version>
 		<!-- Version settings -->
 		<guice.version>4.2.2</guice.version>
-		<jetty.version>9.4.15.v20190215</jetty.version>
+		<jetty.version>9.4.41.v20210516</jetty.version>
 		<joda.version>2.9.9</joda.version>
 		<lucene.version>5.3.2</lucene.version>
 		<!-- upgradeable? -->
@@ -69,7 +69,7 @@
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-validator</artifactId>
-			<version>5.3.1.Final</version>
+			<version>5.3.6.Final</version>
 		</dependency>
 
 		<!-- servlet stuff -->
@@ -314,7 +314,7 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.12</version>
+			<version>4.13.1</version>
 			<scope>test</scope>
 		</dependency>
 
