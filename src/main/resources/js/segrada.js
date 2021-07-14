@@ -460,6 +460,7 @@ function escapeHTML(myString) {
 				confirmKeys: [13], //enter only
 				typeaheadjs: {
 					name: 'tags',
+					limit: 25,
 					displayKey: 'title',
 					valueKey: 'title',
 					source: genericMatcher(urlSegradaTagSearch)
@@ -484,6 +485,7 @@ function escapeHTML(myString) {
 			},{
 				async: true,
 				name: 'node',
+				limit: 25,
 				displayKey: 'title',
 				valueKey: 'id',
 				source: nodeMatcher()
@@ -508,6 +510,7 @@ function escapeHTML(myString) {
 			},{
 				async: true,
 				name: 'file',
+				limit: 25,
 				displayKey: 'title',
 				valueKey: 'id',
 				source: genericMatcher(urlSegradaFileSearch)
@@ -531,6 +534,7 @@ function escapeHTML(myString) {
 			},{
 				async: true,
 				name: 'source',
+				limit: 25,
 				displayKey: 'title',
 				valueKey: 'id',
 				source: genericMatcher(urlSegradaSourceSearch)

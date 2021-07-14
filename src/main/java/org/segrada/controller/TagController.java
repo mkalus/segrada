@@ -270,7 +270,7 @@ public class TagController extends AbstractBaseController<ITag> {
 		JSONArray jsonArray = new JSONArray();
 
 		// search term finding
-		for (ITag tag : service.findBySearchTerm(term, 10, true)) {
+		for (ITag tag : service.findBySearchTerm(term, 25, true)) {
 			try {
 				JSONObject jsonObject = new JSONObject();
 				jsonObject.put("id", tag.getId());

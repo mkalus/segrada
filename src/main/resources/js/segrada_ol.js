@@ -204,6 +204,7 @@
 			},{
 				name: 'address-suggest-' + id,
 				displayKey: 'title',
+				limit: 25,
 				valueKey: 'id',
 				source: placenamesTokenizer.ttAdapter()
 			}).bind('typeahead:selected', function(e, datum) {
