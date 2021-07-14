@@ -18,7 +18,7 @@ package org.segrada.util;
  * Fuzzy Date Renderer to print out fuzzy dates nicely
  */
 public final class FuzzyDateRenderer {
-	private FuzzyDateRenderer() throws InstantiationException{
+	private FuzzyDateRenderer() throws InstantiationException {
 		throw new InstantiationException("The class is not created for instantiation");
 	}
 
@@ -30,13 +30,15 @@ public final class FuzzyDateRenderer {
 	 * @param fuzzyFlags char[] array of fuzzy flags to render with
 	 * @return
 	 */
-	public static String render(int julianDate, String dateString, String calendar, char[] fuzzyFlags) {
+	public static String render(int julianDate, String dateString, String calendar, char[] fuzzyFlags, String before, String after) {
 		// no further work wirg empty values
 		if (dateString == null || dateString.isEmpty()) return "";
 
 		if (fuzzyFlags != null)
 			for (char flag : fuzzyFlags)
 				switch (flag) {
+					case '-': dateString = before + ' ' + dateString; break; // add before prefix
+					case '+': dateString = after + ' ' + dateString; break; // add after prefix
 					case 'c': dateString = '~' + dateString; break; // add ca. prefix
 					case '?': dateString += '?'; break; // add ? suffix
 					default: break;
@@ -64,17 +66,17 @@ public final class FuzzyDateRenderer {
 	 * @return
 	 */
 	public static String renderFromTo(int fromJulianDate, String fromDateString, String fromCalendar, char[] fromFuzzyFlags,
-	                                  int toJulianDate, String toDateString, String toCalendar, char[] toFuzzyFlags) {
+	                                  int toJulianDate, String toDateString, String toCalendar, char[] toFuzzyFlags, String before, String after) {
 		// avoid NPEs
 		if (fromDateString == null) fromDateString = "";
 		if (toDateString == null) toDateString = "";
 
 		// render only one date, if same
-		if (fromDateString.equals(toDateString)) return render(fromJulianDate, fromDateString, fromCalendar, fromFuzzyFlags);
+		if (fromDateString.equals(toDateString)) return render(fromJulianDate, fromDateString, fromCalendar, fromFuzzyFlags, before, after);
 
 		// render two dates
-		String from = render(fromJulianDate, fromDateString, fromCalendar, fromFuzzyFlags);
-		String to = render(toJulianDate, toDateString, toCalendar, toFuzzyFlags);
+		String from = render(fromJulianDate, fromDateString, fromCalendar, fromFuzzyFlags, before, after);
+		String to = render(toJulianDate, toDateString, toCalendar, toFuzzyFlags, before, after);
 
 		return from + " &ndash; " + to;
 	}
@@ -87,8 +89,8 @@ public final class FuzzyDateRenderer {
 	 * @param fuzzyFlags char[] array of fuzzy flags to render with
 	 * @return
 	 */
-	public static String renderOrEmpty(int julianDate, String dateString, String calendar, char[] fuzzyFlags) {
-		String fuzzyDate = render(julianDate, dateString, calendar, fuzzyFlags);
+	public static String renderOrEmpty(int julianDate, String dateString, String calendar, char[] fuzzyFlags, String before, String after) {
+		String fuzzyDate = render(julianDate, dateString, calendar, fuzzyFlags, before, after);
 		return fuzzyDate.isEmpty()?"---":fuzzyDate;
 	}
 }

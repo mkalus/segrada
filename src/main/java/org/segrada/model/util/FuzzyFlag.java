@@ -22,7 +22,9 @@ import java.util.Set;
  */
 public enum FuzzyFlag {
 	FUZZY_CA('c'), // ca prefix
-	FUZZY_UNKNOWN('?'); // ? suffix
+	FUZZY_UNKNOWN('?'), // ? suffix
+	FUZZY_BEFORE('-'), // before prefix
+	FUZZY_AFTER('+'); // after suffix
 
 	private final char fuzzyValue;
 
@@ -43,6 +45,8 @@ public enum FuzzyFlag {
 		switch (flag) {
 			case 'c': return FUZZY_CA;
 			case '?': return FUZZY_UNKNOWN;
+			case '-': return FUZZY_BEFORE;
+			case '+': return FUZZY_AFTER;
 			default: break;
 		}
 		return null;

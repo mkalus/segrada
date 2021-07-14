@@ -19,7 +19,7 @@
 			<span class="sg-color-icon" th:style="'background-color: ' + ${entity.colorCode}" th:if="${entity.color}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
 			<img src="#" th:src="@{/pictogram/file/{uid}(uid=${entity.pictogram.uid})}" th:alt-title="${entity.pictogram.title}" alt="" width="24" height="24" th:if="${entity.pictogram}"/>
 			<span th:text="${entity.title}">Node</span>
-			<small th:if="${identity.hasAccess('PERIOD')}" th:utext="${@org.segrada.util.FuzzyDateRenderer@renderFromTo(entity.minJD,entity.minEntry,entity.minEntryCalendar,entity.fuzzyMinFlags, entity.maxJD,entity.maxEntry,entity.maxEntryCalendar,entity.fuzzyMaxFlags)}">0000 &ndash; 9999</small>
+			<small th:if="${identity.hasAccess('PERIOD')}" th:utext="${@org.segrada.util.FuzzyDateRenderer@renderFromTo(entity.minJD,entity.minEntry,entity.minEntryCalendar,entity.fuzzyMinFlags, entity.maxJD,entity.maxEntry,entity.maxEntryCalendar,entity.fuzzyMaxFlags, #messages.msg('period.fuzzyBefore'), #messages.msg('period.fuzzyAfter'))}">0000 &ndash; 9999</small>
 		</h4>
 
 		<ul class="nav nav-tabs" role="tablist">

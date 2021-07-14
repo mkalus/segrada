@@ -235,12 +235,21 @@ public class PeriodTest {
 
 		assertFalse(period.hasFuzzyToFlag('c'));
 		assertFalse(period.hasFuzzyToFlag('x'));
+		assertFalse(period.hasFuzzyToFlag('+'));
+		assertFalse(period.hasFuzzyToFlag('-'));
+		assertFalse(period.hasFuzzyToFlag('?'));
 
 		period.addFuzzyToFlag('x');
 		period.addFuzzyToFlag('c');
+		period.addFuzzyToFlag('?');
+		period.addFuzzyToFlag('+');
+		period.addFuzzyToFlag('-');
 
 		assertTrue(period.hasFuzzyToFlag('c'));
+		assertTrue(period.hasFuzzyToFlag('?'));
 		assertFalse(period.hasFuzzyToFlag('x'));
+		assertTrue(period.hasFuzzyToFlag('+'));
+		assertTrue(period.hasFuzzyToFlag('-'));
 	}
 
 	@Test

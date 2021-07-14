@@ -85,8 +85,12 @@ public class PeriodController extends AbstractBaseController<IPeriod> {
 			@FormParam("toEntryCalendar") String toEntryCalendar,
 			@FormParam("fromFuzzyFlagsCa") String fromFuzzyFlagsCa,
 			@FormParam("fromFuzzyFlagsUncertain") String fromFuzzyFlagsUncertain,
+			@FormParam("fromFuzzyFlagsBefore") String fromFuzzyFlagsBefore,
+			@FormParam("fromFuzzyFlagsAfter") String fromFuzzyFlagsAfter,
 			@FormParam("toFuzzyFlagsCa") String toFuzzyFlagsCa,
 			@FormParam("toFuzzyFlagsUncertain") String toFuzzyFlagsUncertain,
+			@FormParam("toFuzzyFlagsBefore") String toFuzzyFlagsBefore,
+			@FormParam("toFuzzyFlagsAfter") String toFuzzyFlagsAfter,
 			@FormParam("comment") String comment,
 			@FormParam("isPeriod") String isPeriodValue,
 			@FormParam("id") String id
@@ -113,6 +117,8 @@ public class PeriodController extends AbstractBaseController<IPeriod> {
 			toEntry = fromEntry;
 			toFuzzyFlagsCa = fromFuzzyFlagsCa;
 			toFuzzyFlagsUncertain = fromFuzzyFlagsUncertain;
+			toFuzzyFlagsBefore = fromFuzzyFlagsBefore;
+			toFuzzyFlagsAfter = fromFuzzyFlagsAfter;
 			toEntryCalendar = fromEntryCalendar;
 		}
 
@@ -142,8 +148,12 @@ public class PeriodController extends AbstractBaseController<IPeriod> {
 		// fuzzy flags
 		if (fromFuzzyFlagsCa != null) entity.addFuzzyFromFlag('c');
 		if (fromFuzzyFlagsUncertain != null) entity.addFuzzyFromFlag('?');
+		if (fromFuzzyFlagsBefore != null) entity.addFuzzyFromFlag('-');
+		if (fromFuzzyFlagsAfter != null) entity.addFuzzyFromFlag('+');
 		if (toFuzzyFlagsCa != null) entity.addFuzzyToFlag('c');
 		if (toFuzzyFlagsUncertain != null) entity.addFuzzyToFlag('?');
+		if (toFuzzyFlagsBefore != null) entity.addFuzzyToFlag('-');
+		if (toFuzzyFlagsAfter != null) entity.addFuzzyToFlag('+');
 
 		// validate entity
 		Map<String, String> errors = validate(entity, preValidationErrors);
@@ -198,8 +208,12 @@ public class PeriodController extends AbstractBaseController<IPeriod> {
 			Period entity,
 			@FormParam("fromFuzzyFlagsCa") String fromFuzzyFlagsCa,
 			@FormParam("fromFuzzyFlagsUncertain") String fromFuzzyFlagsUncertain,
+			@FormParam("fromFuzzyFlagsBefore") String fromFuzzyFlagsBefore,
+			@FormParam("fromFuzzyFlagsAfter") String fromFuzzyFlagsAfter,
 			@FormParam("toFuzzyFlagsCa") String toFuzzyFlagsCa,
 			@FormParam("toFuzzyFlagsUncertain") String toFuzzyFlagsUncertain,
+			@FormParam("toFuzzyFlagsBefore") String toFuzzyFlagsBefore,
+			@FormParam("toFuzzyFlagsAfter") String toFuzzyFlagsAfter,
 			@FormParam("isPeriod") String isPeriodValue
 	) {
 		// period or point of time?
@@ -209,13 +223,19 @@ public class PeriodController extends AbstractBaseController<IPeriod> {
 			entity.setToEntryCalendar(entity.getFromEntryCalendar());
 			toFuzzyFlagsCa = fromFuzzyFlagsCa;
 			toFuzzyFlagsUncertain = fromFuzzyFlagsUncertain;
+			toFuzzyFlagsBefore = fromFuzzyFlagsBefore;
+			toFuzzyFlagsAfter = fromFuzzyFlagsAfter;
 		}
 
 		// fuzzy flags
 		if (fromFuzzyFlagsCa != null) entity.addFuzzyFromFlag('c'); else entity.deleteFuzzyFromFlag('c');
 		if (fromFuzzyFlagsUncertain != null) entity.addFuzzyFromFlag('?'); else entity.deleteFuzzyFromFlag('?');
+		if (fromFuzzyFlagsBefore != null) entity.addFuzzyFromFlag('-'); else entity.deleteFuzzyFromFlag('-');
+		if (fromFuzzyFlagsAfter != null) entity.addFuzzyFromFlag('+'); else entity.deleteFuzzyFromFlag('+');
 		if (toFuzzyFlagsCa != null) entity.addFuzzyToFlag('c'); else entity.deleteFuzzyToFlag('c');
 		if (toFuzzyFlagsUncertain != null) entity.addFuzzyToFlag('?'); else entity.deleteFuzzyToFlag('?');
+		if (toFuzzyFlagsBefore != null) entity.addFuzzyToFlag('-'); else entity.deleteFuzzyToFlag('-');
+		if (toFuzzyFlagsAfter != null) entity.addFuzzyToFlag('+'); else entity.deleteFuzzyToFlag('+');
 
 		Response response = handleUpdate(entity, service);
 		if (response.getStatus() != 200) { // redirect means that element has been saved successfully

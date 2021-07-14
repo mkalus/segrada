@@ -84,8 +84,8 @@ Common fragments.
 			<th></th>
 		</tr>
 		<tr th:each="myPeriod : ${entity.periods}" th:id="${'sg-period-' + myPeriod.uid}">
-			<td th:utext="${@org.segrada.util.FuzzyDateRenderer@renderOrEmpty(myPeriod.fromJD,myPeriod.fromEntry,myPeriod.fromEntryCalendar,myPeriod.fuzzyFromFlags)}">Start</td>
-			<td th:utext="${@org.segrada.util.FuzzyDateRenderer@renderOrEmpty(myPeriod.toJD,myPeriod.toEntry,myPeriod.toEntryCalendar,myPeriod.fuzzyToFlags)}">Stop</td>
+			<td th:utext="${@org.segrada.util.FuzzyDateRenderer@renderOrEmpty(myPeriod.fromJD,myPeriod.fromEntry,myPeriod.fromEntryCalendar,myPeriod.fuzzyFromFlags, #messages.msg('period.fuzzyBefore'), #messages.msg('period.fuzzyAfter'))}">Start</td>
+			<td th:utext="${@org.segrada.util.FuzzyDateRenderer@renderOrEmpty(myPeriod.toJD,myPeriod.toEntry,myPeriod.toEntryCalendar,myPeriod.fuzzyToFlags, #messages.msg('period.fuzzyBefore'), #messages.msg('period.fuzzyAfter'))}">Stop</td>
 			<td th:text="${myPeriod.comment}">Comment</td>
 			<td class="text-right">
 				<div class="sg-data-icon-bar" role="group" aria-label="Actions">
@@ -156,18 +156,30 @@ Common fragments.
 		<div class="col-md-3">
 			<label class="checkbox-inline">
 				<input type="checkbox" name="fromFuzzyFlagsCa" value="c" th:checked="${period} and ${period.hasFuzzyFromFlag('c')}" /> <span th:text="#{period.fuzzyCa}">ca.</span>
-			</label>
+			</label><br />
 			<label class="checkbox-inline">
 				<input type="checkbox" name="fromFuzzyFlagsUncertain" value="?" th:checked="${period} and ${period.hasFuzzyFromFlag('?')}" /> <span th:text="#{period.fuzzyUncertain}">ca.</span>
+			</label><br />
+			<label class="checkbox-inline">
+				<input type="checkbox" name="fromFuzzyFlagsBefore" value="-" th:checked="${period} and ${period.hasFuzzyFromFlag('-')}" /> <span th:text="#{period.fuzzyBefore}">ca.</span>
+			</label><br />
+			<label class="checkbox-inline">
+				<input type="checkbox" name="fromFuzzyFlagsAfter" value="+" th:checked="${period} and ${period.hasFuzzyFromFlag('+')}" /> <span th:text="#{period.fuzzyAfter}">ca.</span>
 			</label>
 		</div>
 		<div class="col-md-2"></div>
 		<div class="col-md-3">
 			<label class="checkbox-inline">
 				<input type="checkbox" name="toFuzzyFlagsCa" value="c" th:checked="${period} and ${period.hasFuzzyToFlag('c')}" /> <span th:text="#{period.fuzzyCa}">ca.</span>
-			</label>
+			</label><br />
 			<label class="checkbox-inline">
 				<input type="checkbox" name="toFuzzyFlagsUncertain" value="?" th:checked="${period} and ${period.hasFuzzyToFlag('?')}" /> <span th:text="#{period.fuzzyUncertain}">ca.</span>
+			</label><br />
+			<label class="checkbox-inline">
+				<input type="checkbox" name="toFuzzyFlagsBefore" value="-" th:checked="${period} and ${period.hasFuzzyToFlag('-')}" /> <span th:text="#{period.fuzzyBefore}">ca.</span>
+			</label><br />
+			<label class="checkbox-inline">
+				<input type="checkbox" name="toFuzzyFlagsAfter" value="+" th:checked="${period} and ${period.hasFuzzyToFlag('+')}" /> <span th:text="#{period.fuzzyAfter}">ca.</span>
 			</label>
 		</div>
 		<div class="col-md-4"><small th:text="#{period.fuzzyInfo}" class="text-muted">(Fuzzy date)</small></div>

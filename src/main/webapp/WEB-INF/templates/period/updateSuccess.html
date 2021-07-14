@@ -14,8 +14,8 @@
 	<div class="alert alert-success" role="alert" th:text="#{periodChanged}">Successfully updated!</div>
 
 	<div class="sg-update-period hidden" th:attr="data-id=${'#sg-period-' + entity.uid}">
-		<div th:utext="${@org.segrada.util.FuzzyDateRenderer@renderOrEmpty(entity.fromJD,entity.fromEntry,entity.fromEntryCalendar,entity.fuzzyFromFlags)}">Start</div>
-		<div th:utext="${@org.segrada.util.FuzzyDateRenderer@renderOrEmpty(entity.toJD,entity.toEntry,entity.toEntryCalendar,entity.fuzzyToFlags)}">Stop</div>
+		<div th:utext="${@org.segrada.util.FuzzyDateRenderer@renderOrEmpty(entity.fromJD,entity.fromEntry,entity.fromEntryCalendar,entity.fuzzyFromFlags, #messages.msg('period.fuzzyBefore'), #messages.msg('period.fuzzyAfter'))}">Start</div>
+		<div th:utext="${@org.segrada.util.FuzzyDateRenderer@renderOrEmpty(entity.toJD,entity.toEntry,entity.toEntryCalendar,entity.fuzzyToFlags, #messages.msg('period.fuzzyBefore'), #messages.msg('period.fuzzyAfter'))}">Stop</div>
 		<div th:text="${entity.comment}">Comment</div>
 	</div>
 </div>
