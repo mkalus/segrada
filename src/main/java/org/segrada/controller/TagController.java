@@ -8,9 +8,11 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.segrada.controller.base.AbstractBaseController;
 import org.segrada.model.Tag;
+import org.segrada.model.prototype.INode;
 import org.segrada.model.prototype.ITag;
 import org.segrada.model.prototype.SegradaTaggable;
 import org.segrada.rendering.json.JSONConverter;
+import org.segrada.service.NodeService;
 import org.segrada.service.TagService;
 import org.segrada.service.base.AbstractRepositoryService;
 import org.segrada.service.base.SegradaService;
@@ -289,25 +291,26 @@ public class TagController extends AbstractBaseController<ITag> {
 	@Path("/graph/{uid}")
 	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
 	@RolesAllowed("GRAPH")
-	public String postGraph(@PathParam("uid") String uid, String jsonData) {
-		return graph(uid, jsonData);
+	public String postGraph(@PathParam("uid") String uid, @QueryParam("expand") boolean expand, String jsonData) {
+		return graph(uid, expand, jsonData);
 	}
 
 	@GET
 	@Path("/graph/{uid}")
 	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
 	@RolesAllowed("GRAPH")
-	public String getGraph(@PathParam("uid") String uid, @QueryParam("data") String jsonData) {
-		return graph(uid, jsonData);
+	public String getGraph(@PathParam("uid") String uid, @QueryParam("expand") boolean expand, @QueryParam("data") String jsonData) {
+		return graph(uid, expand, jsonData);
 	}
 
 	/**
 	 * Handle graph creation
 	 * @param uid of node
+	 * @param expand expand data to include all connected nodes?
 	 * @param jsonData optional json data (can be null)
 	 * @return json string to/add remove data
 	 */
-	protected String graph(String uid, String jsonData) {
+	protected String graph(String uid, boolean expand, String jsonData) {
 		try {
 			// get tag
 			ITag tag = service.findById(service.convertUidToId(uid));
@@ -323,10 +326,20 @@ public class TagController extends AbstractBaseController<ITag> {
 			JSONArray nodes = new JSONArray(1);
 			nodes.put(jsonConverter.convertTagToJSON(tag)); // add node
 
-			// add edges between nodes that are on the canvas already
+			// edges to add
 			JSONArray edges = new JSONArray();
+			if (expand) {
+				// get children
+				for (SegradaTaggable taggable : service.findByTag(tag.getId(), false, new String[]{"Node"})) {
+					nodes.put(jsonConverter.convertNodeToJSON((INode) taggable)); // add node
+
+					// tags have only one direction
+					edges.put(jsonConverter.createTagEntityConnection(tag.getId(), taggable.getId()));
+				}
+			}
 			//TODO: create a service method that does this query on a db level
-			if (data != null) {
+			// add edges between nodes that are on the canvas already
+			else if (data != null) {
 				JSONArray nodeIds = data.getJSONArray("nodes");
 				if (nodeIds != null && nodeIds.length() > 0) {
 					for (int i = 0; i < nodeIds.length(); i++) {

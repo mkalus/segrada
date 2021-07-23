@@ -245,25 +245,26 @@ public class NodeController extends AbstractColoredController<INode> {
 	@Path("/graph/{uid}")
 	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
 	@RolesAllowed("GRAPH")
-	public String postGraph(@PathParam("uid") String uid, String jsonData) {
-		return graph(uid, jsonData);
+	public String postGraph(@PathParam("uid") String uid, @QueryParam("expand") boolean expand, String jsonData) {
+		return graph(uid, expand, jsonData);
 	}
 
 	@GET
 	@Path("/graph/{uid}")
 	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
 	@RolesAllowed("GRAPH")
-	public String getGraph(@PathParam("uid") String uid, @QueryParam("data") String jsonData) {
-		return graph(uid, jsonData);
+	public String getGraph(@PathParam("uid") String uid, @QueryParam("expand") boolean expand, @QueryParam("data") String jsonData) {
+		return graph(uid, expand, jsonData);
 	}
 
 	/**
 	 * Handle graph creation
 	 * @param uid of node
+	 * @param expand expand data to include all connected nodes?
 	 * @param jsonData optional json data (can be null)
 	 * @return json string to/add remove data
 	 */
-	protected String graph(String uid, String jsonData) {
+	protected String graph(String uid, boolean expand, String jsonData) {
 		try {
 			// get node
 			INode node = service.findById(service.convertUidToId(uid));
@@ -279,10 +280,23 @@ public class NodeController extends AbstractColoredController<INode> {
 			JSONArray nodes = new JSONArray(1);
 			nodes.put(jsonConverter.convertNodeToJSON(node)); // add node
 
-			// add edges between nodes that are on the canvas already
+			// edges to add
 			JSONArray edges = new JSONArray();
+			if (expand) {
+				// get all connected nodes
+				for (IRelation relation : relationService.findByRelation(node)) {
+					edges.put(jsonConverter.convertRelationToJSON(relation));
+
+					// add either of the nodes
+					nodes.put(jsonConverter.convertNodeToJSON(
+							relation.getFromEntity().getId().equals(node.getId()) ?
+									relation.getToEntity() : relation.getFromEntity()
+					));
+				}
+			}
 			//TODO: create a service method that does this query on a db level
-			if (data != null) {
+			// add edges between nodes that are on the canvas already
+			else if (data != null) {
 				JSONArray nodeIds = data.getJSONArray("nodes");
 				if (nodeIds != null && nodeIds.length() > 0) {
 					// only if there are other elements on the canvas already
