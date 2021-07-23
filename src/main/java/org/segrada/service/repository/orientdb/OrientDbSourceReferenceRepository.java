@@ -84,6 +84,8 @@ public class OrientDbSourceReferenceRepository extends AbstractSegradaOrientDbRe
 
 		// rest is easy
 		sourceReference.setReferenceText(document.field("referenceText"));
+		sourceReference.setRoleOfNode(document.field("roleOfNode"));
+		sourceReference.setColor(document.field("color"));
 		populateEntityWithBaseData(document, sourceReference);
 
 		// populate with data
@@ -99,7 +101,9 @@ public class OrientDbSourceReferenceRepository extends AbstractSegradaOrientDbRe
 		// populate with data
 		document.field("referenceText", entity.getReferenceText())
 				.field("source", new ORecordId(entity.getSource().getId()))
-				.field("reference", new ORecordId(entity.getReference().getId()));
+				.field("reference", new ORecordId(entity.getReference().getId()))
+				.field("roleOfNode", entity.getRoleOfNode())
+				.field("color", entity.getColor());
 
 		// populate with data
 		populateODocumentWithCreatedModified(document, (SourceReference) entity);

@@ -8,9 +8,11 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.segrada.model.Comment;
+import org.segrada.model.Period;
 import org.segrada.model.Source;
 import org.segrada.model.SourceReference;
 import org.segrada.model.prototype.IComment;
+import org.segrada.model.prototype.IPeriod;
 import org.segrada.model.prototype.ISource;
 import org.segrada.model.prototype.ISourceReference;
 import org.segrada.service.repository.CommentRepository;
@@ -20,6 +22,7 @@ import org.segrada.session.Identity;
 import org.segrada.test.OrientDBTestInstance;
 import org.segrada.test.OrientDbTestApplicationSettings;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -82,6 +85,7 @@ public class OrientDbSourceRepositoryTest {
 				.field("shortTitle", "shortTitle")
 				.field("shortTitleasc", "shortTitle")
 				.field("shortRef", "shortRef")
+				.field("sourceType", "sourceType")
 				.field("url", "url")
 				.field("productCode", "productCode")
 				.field("author", "author")
@@ -99,6 +103,7 @@ public class OrientDbSourceRepositoryTest {
 		ISource node = repository.convertToEntity(document);
 
 		assertEquals("shortTitle", node.getShortTitle());
+		assertEquals("sourceType", node.getSourceType());
 		assertEquals("shortRef", node.getShortRef());
 		assertEquals("url", node.getUrl());
 		assertEquals("productCode", node.getProductCode());
@@ -121,6 +126,7 @@ public class OrientDbSourceRepositoryTest {
 
 		ISource source = new Source();
 		source.setShortTitle("shortTitle");
+		source.setSourceType("sourceType");
 		source.setShortRef("shortRef");
 		source.setUrl("url");
 		source.setProductCode("productCode");
@@ -134,10 +140,63 @@ public class OrientDbSourceRepositoryTest {
 		source.setCreated(1L);
 		source.setModified(2L);
 
+		List<IPeriod> list = new ArrayList<>();
+
+		// add a few periods
+		IPeriod period1 = new Period();
+		period1.setFromEntry("1.1585");
+		period1.setToEntry("2.1585");
+		period1.setCreated(1L);
+		period1.setModified(2L);
+		list.add(period1);
+
+		IPeriod period2 = new Period();
+		period2.setFromEntry("1929");
+		period2.setToEntry("1930");
+		period2.addFuzzyFromFlag('c');
+		period2.addFuzzyToFlag('?');
+		period2.setCreated(1L);
+		period2.setModified(2L);
+		list.add(period2);
+
+		IPeriod period3 = new Period();
+		period3.setFromEntry("1.1.1700");
+		period3.setToEntry("5.6.1702");
+		period3.setCreated(1L);
+		period3.setModified(2L);
+		list.add(period3);
+
+		IPeriod period4 = new Period();
+		period4.setFromEntry(null);
+		period4.setToEntry("1596");
+		period4.addFuzzyToFlag('c');
+		period4.setCreated(1L);
+		period4.setModified(2L);
+		list.add(period4);
+
+		IPeriod period5 = new Period();
+		period5.setFromEntry("5.1.901");
+		period5.setToEntry(null);
+		period5.addFuzzyFromFlag('?');
+		period5.setCreated(1L);
+		period5.setModified(2L);
+		list.add(period5);
+
+		IPeriod period6 = new Period();
+		period6.setFromEntry("19.6.1601");
+		period6.setToEntry("19.6.1601");
+		period6.setCreated(1L);
+		period6.setModified(2L);
+		list.add(period6);
+
+		// add periods
+		source.setPeriods(list);
+
 		// first without id
 		ODocument document = repository.convertToDocument(source);
 
 		assertEquals("shortTitle", document.field("shortTitle"));
+		assertEquals("sourceType", document.field("sourceType"));
 		assertEquals("shortRef", document.field("shortRef"));
 		assertEquals("url", document.field("url"));
 		assertEquals("productCode", document.field("productCode"));
@@ -150,6 +209,15 @@ public class OrientDbSourceRepositoryTest {
 		assertEquals(new Integer(0x123456), document.field("color", Integer.class));
 		assertEquals(new Long(1L), document.field("created", Long.class));
 		assertEquals(new Long(2L), document.field("modified", Long.class));
+
+		assertEquals(period5.getFromJD(), document.field("minJD"));
+		assertEquals(period2.getToJD(), document.field("maxJD"));
+		assertEquals(period5.getFromEntry(), document.field("minEntry"));
+		assertEquals(period2.getToEntry(), document.field("maxEntry"));
+		assertEquals(period5.getFromEntryCalendar(), document.field("minEntryCalendar"));
+		assertEquals(period2.getToEntryCalendar(), document.field("maxEntryCalendar"));
+		assertEquals("?", document.field("minFuzzyFlags"));
+		assertEquals("?", document.field("maxFuzzyFlags"));
 
 		// save document to get id
 		document.save();

@@ -3,6 +3,7 @@ package org.segrada.controller;
 import com.google.inject.Inject;
 import com.google.inject.servlet.RequestScoped;
 import com.sun.jersey.api.view.Viewable;
+import com.sun.jersey.multipart.FormDataParam;
 import org.codehaus.jettison.json.JSONObject;
 import org.segrada.controller.base.AbstractBaseController;
 import org.segrada.model.SourceReference;
@@ -125,6 +126,8 @@ public class SourceReferenceController extends AbstractBaseController<ISourceRef
 			@FormParam("referenceModel") String referenceModel,
 			@FormParam("sourceId") String sourceId,
 			@FormParam("referenceText") String referenceText,
+			@FormParam("roleOfNode") String roleOfNode,
+			@FormParam("color") String color,
 			@FormParam("backUrl") String backUrl
 	) {
 		String error = null;
@@ -161,6 +164,10 @@ public class SourceReferenceController extends AbstractBaseController<ISourceRef
 			// update text
 			if (referenceText != null && referenceText.isEmpty()) referenceText = null;
 			sourceReference.setReferenceText(referenceText);
+			// update roleOfNode
+			if (roleOfNode != null && roleOfNode.isEmpty()) roleOfNode = null;
+			sourceReference.setRoleOfNode(roleOfNode);
+			sourceReference.setColorCode(color);
 
 			clearCache(); // delete caches
 		}

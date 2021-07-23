@@ -8,9 +8,11 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.segrada.model.Comment;
+import org.segrada.model.Period;
 import org.segrada.model.Source;
 import org.segrada.model.SourceReference;
 import org.segrada.model.prototype.IComment;
+import org.segrada.model.prototype.IPeriod;
 import org.segrada.model.prototype.ISource;
 import org.segrada.model.prototype.ISourceReference;
 import org.segrada.service.repository.CommentRepository;
@@ -21,6 +23,7 @@ import org.segrada.session.Identity;
 import org.segrada.test.OrientDBTestInstance;
 import org.segrada.test.OrientDbTestApplicationSettings;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -98,6 +101,8 @@ public class OrientDbSourceReferenceRepositoryTest {
 		// create reference
 		ISourceReference sourceReference = new SourceReference();
 		sourceReference.setReferenceText("pp. 11f");
+		sourceReference.setRoleOfNode("very special role");
+		sourceReference.setColor(123456);
 		sourceReference.setSource(source);
 		sourceReference.setReference(comment);
 
@@ -110,6 +115,8 @@ public class OrientDbSourceReferenceRepositoryTest {
 		assertEquals(sourceReference.getSource().getId(), referenceToCheck.getSource().getId());
 		assertEquals(sourceReference.getReference().getId(), referenceToCheck.getReference().getId());
 		assertEquals(sourceReference.getReferenceText(), referenceToCheck.getReferenceText());
+		assertEquals(sourceReference.getRoleOfNode(), referenceToCheck.getRoleOfNode());
+		assertEquals(sourceReference.getColor(), referenceToCheck.getColor());
 		assertEquals(sourceReference.getCreated(), referenceToCheck.getCreated());
 		assertEquals(sourceReference.getModified(), referenceToCheck.getModified());
 		assertEquals(sourceReference.getCreator(), referenceToCheck.getCreator());
@@ -135,6 +142,8 @@ public class OrientDbSourceReferenceRepositoryTest {
 		// create reference
 		ISourceReference sourceReference = new SourceReference();
 		sourceReference.setReferenceText("pp. 11f");
+		sourceReference.setRoleOfNode("very special role");
+		sourceReference.setColor(123456);
 		sourceReference.setSource(source);
 		sourceReference.setReference(comment);
 		sourceReference.setCreated(1L);
@@ -144,6 +153,8 @@ public class OrientDbSourceReferenceRepositoryTest {
 		ODocument document = repository.convertToDocument(sourceReference);
 
 		assertEquals("pp. 11f", document.field("referenceText"));
+		assertEquals("very special role", document.field("roleOfNode"));
+		assertEquals(new Integer(123456), document.field("color"));
 		assertEquals(source.getId(), ((ORecordId) document.field("source", ORecordId.class)).toString());
 		assertEquals(comment.getId(), ((ORecordId) document.field("reference", ORecordId.class)).toString());
 		assertEquals(new Long(1L), document.field("created", Long.class));
