@@ -1018,6 +1018,21 @@ function escapeHTML(myString) {
 					loadDataAddUrl(url);
 			});
 
+			// TODO: maybe we could create a context menu at some point?
+			// graphNetwork.on("oncontext", function(obj) {
+			// 	if (obj.event) {
+			// 		obj.event.preventDefault();
+			// 	}
+			//
+			// 	// try to select node
+			// 	var nodeId = graphNetwork.getNodeAt(obj.pointer.DOM)
+			// 	if (nodeId) {
+			// 		graphNetwork.selectNodes([nodeId]);
+			// 	} else {
+			// 		graphNetwork.unselectAll();
+			// 	}
+			// });
+
 			/*if (typeof console != "undefined") {
 				console.log("Graph Network was initialized.");
 			}*/
