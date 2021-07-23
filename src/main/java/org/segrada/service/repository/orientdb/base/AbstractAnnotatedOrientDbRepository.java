@@ -70,64 +70,6 @@ abstract public class AbstractAnnotatedOrientDbRepository<T extends SegradaAnnot
 	}
 
 	/**
-	 * helper method to convert entity to document
-	 * @param document to be converted
-	 * @param entity converted
-	 */
-	protected void populateODocumentWithCore(ODocument document, SegradaTimedEntity entity) {
-		// determine periods and save range in my model
-		if (entity.getPeriods() != null && !entity.getPeriods().isEmpty()) {
-			Long min = Long.MAX_VALUE;
-			Long max = Long.MIN_VALUE;
-			String minEntry = null;
-			String maxEntry = null;
-			String minCalendar = null;
-			String maxCalendar = null;
-			char[] minFuzzyFlags = null;
-			char[] maxFuzzyFlags = null;
-
-			for (IPeriod period : entity.getPeriods()) {
-				// calculate from/to extent
-				Long from = period.getFromJD();
-				if (from != null && from != Long.MIN_VALUE && from < min) {
-					min = from;
-					minEntry = period.getFromEntry();
-					minCalendar = period.getFromEntryCalendar();
-					minFuzzyFlags = period.getFuzzyFromFlags();
-				}
-
-				Long to = period.getToJD();
-				if (to != null && to != Long.MAX_VALUE && to > max) {
-					max = to;
-					maxEntry = period.getToEntry();
-					maxCalendar = period.getToEntryCalendar();
-					maxFuzzyFlags = period.getFuzzyToFlags();
-				}
-			}
-			document.field("minJD", min);
-			document.field("maxJD", max);
-			document.field("minEntry", minEntry);
-			document.field("maxEntry", maxEntry);
-			document.field("minEntryCalendar", minCalendar);
-			document.field("maxEntryCalendar", maxCalendar);
-			document.field("minFuzzyFlags", new String(minFuzzyFlags==null?new char[0]:minFuzzyFlags));
-			document.field("maxFuzzyFlags", new String(maxFuzzyFlags==null?new char[0]:maxFuzzyFlags));
-		} else {
-			// reset fields
-			document.field("minJD", Long.MIN_VALUE);
-			document.field("maxJD", Long.MAX_VALUE);
-			document.removeField("minEntry");
-			document.removeField("maxEntry");
-			document.removeField("minEntryCalendar");
-			document.removeField("maxEntryCalendar");
-			document.removeField("minFuzzyFlags");
-			document.removeField("maxFuzzyFlags");
-		}
-
-		// periods and locations are not saved here, because they have their own repositories
-	}
-
-	/**
 	 * lazily load source references for an entity
 	 * @param entity connected as reference
 	 * @return list of source references (proxy)

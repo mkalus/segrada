@@ -17,7 +17,7 @@ package org.segrada.model.prototype;
  *
  * Source model interface
  */
-public interface ISource extends SegradaAnnotatedEntity, SegradaTimedEntity {
+public interface ISource extends SegradaCoreEntity {
 	String getShortTitle();
 	void setShortTitle(String shortTitle);
 

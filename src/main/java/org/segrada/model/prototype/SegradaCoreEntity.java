@@ -19,7 +19,44 @@ import java.util.List;
  *
  * Core entities contain some relations
  */
-public interface SegradaCoreEntity extends SegradaAnnotatedEntity, SegradaTimedEntity {
+public interface SegradaCoreEntity extends SegradaAnnotatedEntity {
 	List<ILocation> getLocations();
 	void setLocations(List<ILocation> locations);
+
+	List<IPeriod> getPeriods();
+	void setPeriods(List<IPeriod> periods);
+
+	/**
+	 * minimum and maximum entries of periods above
+	 */
+	String getMinEntry();
+	void setMinEntry(String minEntry);
+
+	String getMaxEntry();
+	void setMaxEntry(String maxEntry);
+
+	String getMinEntryCalendar();
+	void setMinEntryCalendar(String minEntryCalendar);
+
+	String getMaxEntryCalendar();
+	void setMaxEntryCalendar(String maxEntryCalendar);
+
+	Long getMinJD();
+	void setMinJD(Long minJD);
+
+	Long getMaxJD();
+	void setMaxJD(Long maxJD);
+
+	/**
+	 * fuzzy flag handlers
+	 */
+	void addFuzzyMinFlag(char flag);
+	void deleteFuzzyMinFlag(char flag);
+	boolean hasFuzzyMinFlag(char flag);
+	char[] getFuzzyMinFlags();
+
+	void addFuzzyMaxFlag(char flag);
+	void deleteFuzzyMaxFlag(char flag);
+	boolean hasFuzzyMaxFlag(char flag);
+	char[] getFuzzyMaxFlags();
 }

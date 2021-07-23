@@ -11,6 +11,7 @@ import org.segrada.model.Source;
 import org.segrada.model.prototype.ISource;
 import org.segrada.service.repository.SourceRepository;
 import org.segrada.service.repository.orientdb.base.AbstractAnnotatedOrientDbRepository;
+import org.segrada.service.repository.orientdb.base.AbstractCoreOrientDbRepository;
 import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory;
 import org.segrada.service.util.PaginationInfo;
 import org.segrada.util.OrientStringEscape;
@@ -35,7 +36,7 @@ import java.util.*;
  *
  * OrientDb Source Repository
  */
-public class OrientDbSourceRepository extends AbstractAnnotatedOrientDbRepository<ISource> implements SourceRepository {
+public class OrientDbSourceRepository extends AbstractCoreOrientDbRepository<ISource> implements SourceRepository {
 	/**
 	 * keep allowed sorting fields here
 	 */
@@ -70,6 +71,7 @@ public class OrientDbSourceRepository extends AbstractAnnotatedOrientDbRepositor
 		source.setDescriptionMarkup(document.field("descriptionMarkup", String.class));
 
 		populateEntityWithBaseData(document, source);
+		populateEntityWithCore(document, source);
 
 		// populate with data
 		populateEntityWithCreatedModified(document, source);
