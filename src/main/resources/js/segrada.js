@@ -395,11 +395,15 @@ function escapeHTML(myString) {
 		// source ref editor modal
 		$(".sg-source-ref-modal", part).on('shown.bs.modal', function () {
 			var modal = $(this);
-			var myId = modal.attr('id');
+			// var myId = modal.attr('id');
 			var modalContent = $(".modal-body", modal);
 
 			$.get(modal.attr('data-href'), function (data) {
 				modalContent.html(data);
+				// activate color picker
+				$("select.sg-colorpicker", modal).simplepicker({
+					theme: 'fontawesome'
+				});
 				$('form', modalContent).ajaxForm({
 					beforeSubmit: function(arr, $form, options) {
 						// disable container
@@ -413,6 +417,7 @@ function escapeHTML(myString) {
 						target.html(responseText);
 						afterAjax(target);
 						modal.modal('hide');
+						$('.modal-backdrop').remove() // delete backdrop of modal
 					},
 					error: function (responseText, statusText, xhr, $form) {
 						alert("Error " + responseText.status + "\n" + responseText.statusText);

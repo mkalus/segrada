@@ -3,13 +3,12 @@ package org.segrada.controller;
 import com.google.inject.Inject;
 import com.google.inject.servlet.RequestScoped;
 import com.sun.jersey.api.view.Viewable;
-import com.sun.jersey.multipart.FormDataParam;
-import org.codehaus.jettison.json.JSONObject;
-import org.segrada.controller.base.AbstractBaseController;
+import org.segrada.controller.base.AbstractColoredController;
 import org.segrada.model.SourceReference;
 import org.segrada.model.prototype.ISource;
 import org.segrada.model.prototype.ISourceReference;
 import org.segrada.model.prototype.SegradaAnnotatedEntity;
+import org.segrada.service.ColorService;
 import org.segrada.service.SourceReferenceService;
 import org.segrada.service.SourceService;
 import org.segrada.service.base.AbstractRepositoryService;
@@ -26,7 +25,6 @@ import javax.ws.rs.core.Response;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -48,7 +46,7 @@ import java.util.Map;
  */
 @Path("/source_reference")
 @RequestScoped
-public class SourceReferenceController extends AbstractBaseController<ISourceReference> {
+public class SourceReferenceController extends AbstractColoredController<ISourceReference> {
 	private static final Logger logger = LoggerFactory.getLogger(SourceReferenceController.class);
 
 	@Inject
@@ -59,6 +57,9 @@ public class SourceReferenceController extends AbstractBaseController<ISourceRef
 
 	@Inject
 	private Map<String, AbstractRepositoryService> annotatedServices;
+
+	@Inject
+	protected ColorService colorService;
 
 	@Inject
 	private Identity identity;
@@ -227,6 +228,7 @@ public class SourceReferenceController extends AbstractBaseController<ISourceRef
 		model.put("paginationInfo", paginationInfo);
 		model.put("targetId", "#sources-by-ref-" + referenceUid);
 		model.put("error", error);
+		model.put("colors", colorService.findAll());
 
 		return new Viewable("source_reference/by_reference", model);
 	}
