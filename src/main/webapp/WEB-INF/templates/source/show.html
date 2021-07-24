@@ -38,6 +38,10 @@
 						<div class="col-xs-2"><strong th:text="#{field.title}">Title</strong></div>
 						<div class="col-xs-10" th:text="${entity.title}">Title</div>
 					</div>
+					<div class="row" th:unless="${#strings.isEmpty(entity.sourceType)}">
+						<div class="col-xs-2"><strong th:text="#{field.sourceType}">Source Type</strong></div>
+						<div class="col-xs-10" th:text="${entity.sourceType}">sourceType</div>
+					</div>
 					<div class="row" th:unless="${#strings.isEmpty(entity.citation)}">
 						<div class="col-xs-2"><strong th:text="#{field.citation}">Citation</strong></div>
 						<div class="col-xs-10" th:text="${entity.citation}">citation</div>
