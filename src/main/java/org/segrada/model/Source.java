@@ -26,7 +26,7 @@ import javax.validation.constraints.Size;
  */
 public class Source extends AbstractCoreModel implements ISource {
 	// we will just use a part of the core model, as defined by ISource:
-	// time stuff
+	// time stuff, map stuff
 
 	private static final long serialVersionUID = 1L;
 

@@ -26,6 +26,8 @@
 					<th class="text-center"><i class="fa fa-briefcase"></i></th>
 					<th th:with="sortHelper=${@org.segrada.rendering.thymeleaf.util.TableSortPreprocessor@createSortLink(myurl, 'shortRef', 'shortTitleAsc', 'asc', filters)}"><a href="#" class="sg-control-set" th:href="${sortHelper.url}" th:utext="|#{field.shortRef}${sortHelper.icon}|">Reference</a></th>
 					<th th:with="sortHelper=${@org.segrada.rendering.thymeleaf.util.TableSortPreprocessor@createSortLink(myurl, 'shortTitleAsc', 'shortTitleAsc', 'asc', filters)}"><a href="#" class="sg-control-set" th:href="${sortHelper.url}" th:utext="|#{field.shortTitle}${sortHelper.icon}|">Short Title</a></th>
+					<th th:if="${identity.hasAccess('PERIOD')}" class="col-xs-1" th:with="sortHelper=${@org.segrada.rendering.thymeleaf.util.TableSortPreprocessor@createSortLink(myurl, 'minJD', 'title', 'asc', filters)}"><a href="#" class="sg-control-set" th:href="${sortHelper.url}" th:utext="|#{field.fromEntryShort}${sortHelper.icon}|">Start</a></th>
+					<th th:if="${identity.hasAccess('PERIOD')}" class="col-xs-1" th:with="sortHelper=${@org.segrada.rendering.thymeleaf.util.TableSortPreprocessor@createSortLink(myurl, 'maxJD', 'title', 'asc', filters)}"><a href="#" class="sg-control-set" th:href="${sortHelper.url}" th:utext="|#{field.toEntry}${sortHelper.icon}|">Stop</a></th>
 					<th th:if="${identity.hasAccess('TAG')}" class="col-xs-1" th:text="#{field.tags}">Tags</th>
 					<th></th>
 				</tr>
@@ -33,6 +35,8 @@
 					<td class="text-center"><a class="sg-control-set btn btn-sm btn-link" href="#" th:href="@{${myurl}(reset=1)}" th:title="#{reset}" th:attr="data-target-id=${targetId}"><i class="fa fa-eraser"></i></a></td>
 					<td><input type="text" class="form-control" th:value="${filters.shortRef}" name="short_ref" th:placeholder="#{field.filter_shortRef}" title="#{field.filter_shortRef}" /></td>
 					<td><input type="text" class="form-control" th:value="${filters.search}" name="search" th:placeholder="#{field.filter_title}" title="#{field.filter_title}" /></td>
+					<td th:if="${identity.hasAccess('PERIOD')}"><input type="text" class="form-control" th:value="${filters.minEntry}" name="minEntry" title="Start" th:title="#{field.fromEntry}" /></td>
+					<td th:if="${identity.hasAccess('PERIOD')}"><input type="text" class="form-control" th:value="${filters.maxEntry}" name="maxEntry" title="Stop" th:title="#{field.toEntry}" /></td>
 					<td th:if="${identity.hasAccess('TAG')}">
 						<input type="hidden" name="clearTags" value="1" />
 						<select multiple="multiple" type="text" name="tags" class="sg-tags">
@@ -48,6 +52,8 @@
 					</td>
 					<td th:text="${entity.shortRef}">Reference</td>
 					<td th:text="${entity.shortTitle}">Short Title</td>
+					<td th:if="${identity.hasAccess('PERIOD')}" th:utext="${@org.segrada.util.FuzzyDateRenderer@renderOrEmpty(entity.minJD,entity.minEntry,entity.minEntryCalendar,entity.fuzzyMinFlags, #messages.msg('period.fuzzyBefore'), #messages.msg('period.fuzzyAfter'))}">Start</td>
+					<td th:if="${identity.hasAccess('PERIOD')}" th:utext="${@org.segrada.util.FuzzyDateRenderer@renderOrEmpty(entity.maxJD,entity.maxEntry,entity.maxEntryCalendar,entity.fuzzyMaxFlags, #messages.msg('period.fuzzyBefore'), #messages.msg('period.fuzzyAfter'))}">Stop</td>
 					<td th:if="${identity.hasAccess('TAG')}" class="sg-taglist-contract">
 						<div th:replace="partials/common :: taglist (tags=${entity.tags})"></div>
 					</td>

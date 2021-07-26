@@ -40,7 +40,7 @@ public class OrientDbSourceRepository extends AbstractCoreOrientDbRepository<ISo
 	/**
 	 * keep allowed sorting fields here
 	 */
-	private static final Set<String> allowedSorts = new HashSet<>(Arrays.asList(new String[]{"shortTitleAsc", "shortRef"}));
+	private static final Set<String> allowedSorts = new HashSet<>(Arrays.asList(new String[]{"shortTitleAsc", "shortRef", "minJD", "maxJD"}));
 
 	/**
 	 * Constructor

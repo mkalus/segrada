@@ -8,10 +8,7 @@ import org.segrada.model.Period;
 import org.segrada.model.prototype.INode;
 import org.segrada.model.prototype.IPeriod;
 import org.segrada.model.prototype.SegradaCoreEntity;
-import org.segrada.service.ColorService;
-import org.segrada.service.NodeService;
-import org.segrada.service.PeriodService;
-import org.segrada.service.RelationService;
+import org.segrada.service.*;
 import org.segrada.service.base.AbstractRepositoryService;
 import org.segrada.service.base.SegradaService;
 import org.slf4j.Logger;
@@ -55,6 +52,9 @@ public class PeriodController extends AbstractBaseController<IPeriod> {
 	@Inject
 	private RelationService relationService;
 
+	@Inject
+	private SourceService sourceService;
+
 	@Override
 	protected String getBasePath() {
 		return "/period/";
@@ -96,12 +96,10 @@ public class PeriodController extends AbstractBaseController<IPeriod> {
 			@FormParam("id") String id
 	) {
 		// find parent
-		AbstractRepositoryService parentService = null;
-
 		if (parentModel == null || parentUid == null || parentModel.isEmpty() || parentUid.isEmpty())
 			return new Viewable("error", "Parent not defined properly.");
-		else if (parentModel.equals("Node")) parentService = this.nodeService;
-		else if (parentModel.equals("Relation")) parentService = this.relationService;
+
+		AbstractRepositoryService parentService = this.getServiceForParentModel(parentModel);
 
 		// try to find parent model
 		@SuppressWarnings("unchecked")
@@ -240,11 +238,10 @@ public class PeriodController extends AbstractBaseController<IPeriod> {
 		Response response = handleUpdate(entity, service);
 		if (response.getStatus() != 200) { // redirect means that element has been saved successfully
 			// update parent model, too - this will update the period of the model
-			if (entity.getParentModel().equals("Node"))
-				nodeService.save(nodeService.findById(entity.getParentId()));
-			else if (entity.getParentModel().equals("Relation"))
-				nodeService.save(nodeService.findById(entity.getParentId()));
-			else logger.error("No such enriched model while updating period: " + entity.getModelName());
+			AbstractRepositoryService parentService = this.getServiceForParentModel(entity.getParentModel());
+			if (parentService != null) {
+				parentService.save(parentService.findById(entity.getParentId()));
+			} else logger.error("No such enriched model while updating period: " + entity.getModelName());
 
 			// return "success" response
 			Map<String, Object> model = new HashMap<>();
@@ -286,13 +283,8 @@ public class PeriodController extends AbstractBaseController<IPeriod> {
 		}
 
 		// find parent
-		AbstractRepositoryService parentService = null;
-
-		String parentModel = entity.getParentModel();
 		String parentId = entity.getParentId();
-
-		if (parentModel.equals("Node")) parentService = this.nodeService;
-		else if (parentModel.equals("Relation")) parentService = this.relationService;
+		AbstractRepositoryService parentService = this.getServiceForParentModel(entity.getParentModel());
 
 		// update parent
 		if (parentService != null) {
@@ -304,5 +296,23 @@ public class PeriodController extends AbstractBaseController<IPeriod> {
 
 		// empty response
 		return Response.ok().build();
+	}
+
+	/**
+	 * Return repository service for parent model name
+	 * @param parentModel
+	 * @return service or null (if not found)
+	 */
+	protected AbstractRepositoryService getServiceForParentModel(String parentModel) {
+		switch (parentModel) {
+			case "Node":
+				return  this.nodeService;
+			case "Relation":
+				return  this.relationService;
+			case "Source":
+				return  this.sourceService;
+		}
+
+		return  null;
 	}
 }

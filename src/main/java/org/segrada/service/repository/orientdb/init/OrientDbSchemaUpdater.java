@@ -376,8 +376,11 @@ public class OrientDbSchemaUpdater {
 			versionLocal = 5;
 		}
 
-		// no database population here, just migration
+		// set empty min/max js entries for sources
 		if (versionLocal <= 5) {
+			String query = "UPDATE Source SET maxJD = '" + Long.toString(Long.MAX_VALUE) + "', minJD = '" + Long.toString(Long.MAX_VALUE) + "'";
+			db.command(new OCommandSQL(query)).execute();
+
 			versionLocal = 6;
 		}
 
