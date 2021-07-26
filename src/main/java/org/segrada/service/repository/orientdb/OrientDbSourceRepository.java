@@ -11,6 +11,7 @@ import org.segrada.model.Source;
 import org.segrada.model.prototype.ISource;
 import org.segrada.service.repository.SourceRepository;
 import org.segrada.service.repository.orientdb.base.AbstractAnnotatedOrientDbRepository;
+import org.segrada.service.repository.orientdb.base.AbstractCoreOrientDbRepository;
 import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory;
 import org.segrada.service.util.PaginationInfo;
 import org.segrada.util.OrientStringEscape;
@@ -35,11 +36,11 @@ import java.util.*;
  *
  * OrientDb Source Repository
  */
-public class OrientDbSourceRepository extends AbstractAnnotatedOrientDbRepository<ISource> implements SourceRepository {
+public class OrientDbSourceRepository extends AbstractCoreOrientDbRepository<ISource> implements SourceRepository {
 	/**
 	 * keep allowed sorting fields here
 	 */
-	private static final Set<String> allowedSorts = new HashSet<>(Arrays.asList(new String[]{"shortTitleAsc", "shortRef"}));
+	private static final Set<String> allowedSorts = new HashSet<>(Arrays.asList(new String[]{"shortTitleAsc", "shortRef", "minJD", "maxJD"}));
 
 	/**
 	 * Constructor
@@ -59,6 +60,7 @@ public class OrientDbSourceRepository extends AbstractAnnotatedOrientDbRepositor
 		Source source = new Source();
 		source.setShortTitle(document.field("shortTitle", String.class));
 		source.setLongTitle(document.field("longTitle", String.class));
+		source.setSourceType(document.field("sourceType", String.class));
 		source.setShortRef(document.field("shortRef", String.class));
 		source.setUrl(document.field("url", String.class));
 		source.setProductCode(document.field("productCode", String.class));
@@ -69,6 +71,7 @@ public class OrientDbSourceRepository extends AbstractAnnotatedOrientDbRepositor
 		source.setDescriptionMarkup(document.field("descriptionMarkup", String.class));
 
 		populateEntityWithBaseData(document, source);
+		populateEntityWithCore(document, source);
 
 		// populate with data
 		populateEntityWithCreatedModified(document, source);
@@ -86,6 +89,7 @@ public class OrientDbSourceRepository extends AbstractAnnotatedOrientDbRepositor
 				.field("shortTitleasc", Sluggify.asciify(entity.getShortTitle()))
 				.field("longTitle", entity.getLongTitle())
 				.field("shortRef", entity.getShortRef())
+				.field("sourceType", entity.getSourceType())
 				.field("url", entity.getUrl())
 				.field("productCode", entity.getProductCode())
 				.field("author", entity.getAuthor())
@@ -98,6 +102,7 @@ public class OrientDbSourceRepository extends AbstractAnnotatedOrientDbRepositor
 		populateODocumentWithCreatedModified(document, entity);
 		populateODocumentWithColored(document, entity);
 		populateODocumentWithAnnotated(document, entity);
+		populateODocumentWithCore(document, entity);
 
 		return document;
 	}

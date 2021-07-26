@@ -4,6 +4,8 @@ import org.segrada.model.prototype.ISourceReference;
 import org.segrada.service.repository.prototype.CRUDRepository;
 import org.segrada.service.util.PaginationInfo;
 
+import java.util.Map;
+
 /**
  * Copyright 2015-2019 Maximilian Kalus [segrada@auxnet.de]
  *
@@ -28,9 +30,10 @@ public interface SourceReferenceRepository extends CRUDRepository<ISourceReferen
 	 * @param page page
 	 * @param entriesPerPage entries per page
 	 * @param referencedClass class to limit to (or null)
+	 * @param filters sorting in this case
 	 * @return list of entities or null
 	 */
-	PaginationInfo<ISourceReference> findBySource(String id, int page, int entriesPerPage, String referencedClass);
+	PaginationInfo<ISourceReference> findBySource(String id, int page, int entriesPerPage, String referencedClass, Map<String, Object> filters);
 
 	/**
 	 * Find entities by reference id
@@ -38,7 +41,8 @@ public interface SourceReferenceRepository extends CRUDRepository<ISourceReferen
 	 * @param page page
 	 * @param entriesPerPage entries per page
 	 * @param referencedClass class to limit to (or null)
+     * @param filters sorting in this case
 	 * @return list of entities or null
 	 */
-	PaginationInfo<ISourceReference> findByReference(String id, int page, int entriesPerPage, String referencedClass);
+	PaginationInfo<ISourceReference> findByReference(String id, int page, int entriesPerPage, String referencedClass, Map<String, Object> filters);
 }

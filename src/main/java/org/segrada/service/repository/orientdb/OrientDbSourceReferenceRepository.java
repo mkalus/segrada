@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Copyright 2015-2019 Maximilian Kalus [segrada@auxnet.de]
@@ -84,6 +85,8 @@ public class OrientDbSourceReferenceRepository extends AbstractSegradaOrientDbRe
 
 		// rest is easy
 		sourceReference.setReferenceText(document.field("referenceText"));
+		sourceReference.setRoleOfNode(document.field("roleOfNode"));
+		sourceReference.setColor(document.field("color"));
 		populateEntityWithBaseData(document, sourceReference);
 
 		// populate with data
@@ -99,7 +102,9 @@ public class OrientDbSourceReferenceRepository extends AbstractSegradaOrientDbRe
 		// populate with data
 		document.field("referenceText", entity.getReferenceText())
 				.field("source", new ORecordId(entity.getSource().getId()))
-				.field("reference", new ORecordId(entity.getReference().getId()));
+				.field("reference", new ORecordId(entity.getReference().getId()))
+				.field("roleOfNode", entity.getRoleOfNode())
+				.field("color", entity.getColor());
 
 		// populate with data
 		populateODocumentWithCreatedModified(document, (SourceReference) entity);
@@ -108,13 +113,13 @@ public class OrientDbSourceReferenceRepository extends AbstractSegradaOrientDbRe
 	}
 
 	@Override
-	public PaginationInfo<ISourceReference> findBySource(String id, int page, int entriesPerPage, String referencedClass) {
-		return findByX(id, "source", page, entriesPerPage, referencedClass);
+	public PaginationInfo<ISourceReference> findBySource(String id, int page, int entriesPerPage, String referencedClass, Map<String, Object> filters) {
+		return findByX(id, "source", page, entriesPerPage, referencedClass, filters);
 	}
 
 	@Override
-	public PaginationInfo<ISourceReference> findByReference(String id, int page, int entriesPerPage, String referencedClass) {
-		return findByX(id, "reference", page, entriesPerPage, referencedClass);
+	public PaginationInfo<ISourceReference> findByReference(String id, int page, int entriesPerPage, String referencedClass, Map<String, Object> filters) {
+		return findByX(id, "reference", page, entriesPerPage, referencedClass, filters);
 	}
 
 	/**
@@ -122,9 +127,10 @@ public class OrientDbSourceReferenceRepository extends AbstractSegradaOrientDbRe
 	 * @param id of entity
 	 * @param direction either "in" or "out"
 	 * @param referencedClass referenced class to limit search to (or null)
+	 * @param filters sorting in this case
 	 * @return list of source references found
 	 */
-	private PaginationInfo<ISourceReference> findByX(String id, String direction, int page, int entriesPerPage, String referencedClass) {
+	private PaginationInfo<ISourceReference> findByX(String id, String direction, int page, int entriesPerPage, String referencedClass, Map<String, Object> filters) {
 		List<ISourceReference> list = new ArrayList<>();
 
 		// empty?
@@ -171,8 +177,37 @@ public class OrientDbSourceReferenceRepository extends AbstractSegradaOrientDbRe
 		String skipLimit = (skip>0?" SKIP ".concat(Integer.toString(skip)).concat(" "):"")
 				.concat(" LIMIT ").concat(Integer.toString(entriesPerPage));
 
+		// order
+		String order;
+		if (filters == null) {
+			order = getDefaultOrder(false);
+		} else {
+			String dir = getDirectionFromString(filters.get("dir"));
+
+			if (dir != null) {
+				switch ((String) filters.get("sort")) {
+					case "roleOfNode":
+						order = "roleOfNode ".concat(dir);
+						break;
+					case "referenceText":
+						order = "referenceText ".concat(dir);
+						break;
+					case "source":
+						order = "source.shortTitle ".concat(dir);
+						break;
+					default:
+						order = getDefaultOrder(false);
+				}
+			} else {
+				order = getDefaultOrder(false);
+			}
+		}
+		if (order != null && order != "") {
+			order = " ORDER BY ".concat(order);
+		}
+
 		// create query itself and fetch entities
-		query = new OSQLSynchQuery<>("select * from SourceReference where " + direction + " = ?" + limitToClass + getDefaultOrder() + skipLimit);
+		query = new OSQLSynchQuery<>("select * from SourceReference where " + direction + " = ?" + limitToClass + order + skipLimit);
 		result = db.command(query).execute(new ORecordId(id));
 
 		for (ODocument document : result) {

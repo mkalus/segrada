@@ -101,7 +101,6 @@ abstract public class AbstractCoreOrientDbRepository<T extends SegradaCoreEntity
 
 		// periods and locations are not saved here, because they have their own repositories
 	}
-
 	/**
 	 * helper to change ODocument back to entity
 	 * @param document to be converted

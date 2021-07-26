@@ -108,7 +108,7 @@ public abstract class AbstractBaseController<T extends SegradaEntity> {
 			// get filter entries from session
 			Object o = session.getAttribute(key);
 			if (o != null && o instanceof Map) { // we have a session object saved - now copy filters
-				Map<String, Object> sessionFilter = (Map<String, Object>) session.getAttribute(key);
+				Map<String, Object> sessionFilter = (Map<String, Object>) o;
 				// copy filter keys that are in sessionFilter, but not in filters
 				for (Map.Entry<String, Object> sessionEntry : sessionFilter.entrySet()) {
 					if (!filters.containsKey(sessionEntry.getKey()))

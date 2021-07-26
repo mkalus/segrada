@@ -1,6 +1,7 @@
 package org.segrada.model;
 
 import org.segrada.model.base.AbstractAnnotatedModel;
+import org.segrada.model.base.AbstractCoreModel;
 import org.segrada.model.prototype.ISource;
 
 import javax.validation.constraints.NotNull;
@@ -23,7 +24,10 @@ import javax.validation.constraints.Size;
  *
  * Source model implementation
  */
-public class Source extends AbstractAnnotatedModel implements ISource {
+public class Source extends AbstractCoreModel implements ISource {
+	// we will just use a part of the core model, as defined by ISource:
+	// time stuff, map stuff
+
 	private static final long serialVersionUID = 1L;
 
 	@NotNull(message = "error.notNull")
@@ -31,6 +35,8 @@ public class Source extends AbstractAnnotatedModel implements ISource {
 	private String shortTitle = "";
 
 	private String longTitle = "";
+
+	private String sourceType = "";
 
 	@NotNull(message = "error.notNull")
 	@Size(min=1, message = "error.notEmpty")
@@ -68,6 +74,16 @@ public class Source extends AbstractAnnotatedModel implements ISource {
 	@Override
 	public void setLongTitle(String longTitle) {
 		this.longTitle = longTitle;
+	}
+
+	@Override
+	public String getSourceType() {
+		return sourceType;
+	}
+
+	@Override
+	public void setSourceType(String sourceType) {
+		this.sourceType = sourceType;
 	}
 
 	@Override

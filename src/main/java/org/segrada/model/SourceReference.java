@@ -1,6 +1,6 @@
 package org.segrada.model;
 
-import org.segrada.model.base.AbstractSegradaEntity;
+import org.segrada.model.base.AbstractColoredModel;
 import org.segrada.model.prototype.ISource;
 import org.segrada.model.prototype.ISourceReference;
 import org.segrada.model.prototype.SegradaAnnotatedEntity;
@@ -24,7 +24,9 @@ import javax.validation.constraints.NotNull;
  *
  * Source reference model implementation
  */
-public class SourceReference extends AbstractSegradaEntity implements ISourceReference {
+public class SourceReference extends AbstractColoredModel implements ISourceReference {
+	// we will just use the color from the colored model as per definition in the interface
+
 	private static final long serialVersionUID = 1L;
 
 	@NotNull(message = "error.notNull")
@@ -34,6 +36,8 @@ public class SourceReference extends AbstractSegradaEntity implements ISourceRef
 	private SegradaAnnotatedEntity reference;
 
 	private String referenceText = "";
+
+	private String roleOfNode = "";
 
 	@Override
 	public ISource getSource() {
@@ -65,6 +69,15 @@ public class SourceReference extends AbstractSegradaEntity implements ISourceRef
 		this.referenceText = referenceText;
 	}
 
+	@Override
+	public String getRoleOfNode() {
+		return roleOfNode;
+	}
+
+	@Override
+	public void setRoleOfNode(String roleOfNode) {
+		this.roleOfNode = roleOfNode;
+	}
 
 	@Override
 	public String getTitle() {

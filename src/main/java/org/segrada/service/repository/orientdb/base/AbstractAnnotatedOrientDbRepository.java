@@ -5,10 +5,7 @@ import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.orientechnologies.orient.core.sql.OCommandSQL;
 import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
 import org.jetbrains.annotations.NotNull;
-import org.segrada.model.prototype.IComment;
-import org.segrada.model.prototype.IFile;
-import org.segrada.model.prototype.ISourceReference;
-import org.segrada.model.prototype.SegradaAnnotatedEntity;
+import org.segrada.model.prototype.*;
 import org.segrada.service.repository.CommentRepository;
 import org.segrada.service.repository.FileRepository;
 import org.segrada.service.repository.SourceReferenceRepository;
@@ -90,7 +87,7 @@ abstract public class AbstractAnnotatedOrientDbRepository<T extends SegradaAnnot
 									repositoryFactory.produceRepository(OrientDbSourceReferenceRepository.class);
 
 							if (sourceReferenceRepository != null) {
-								PaginationInfo<ISourceReference> paginationInfo = sourceReferenceRepository.findByReference(entity.getId(), page, entriesPerPage, null); //TODO limit to access
+								PaginationInfo<ISourceReference> paginationInfo = sourceReferenceRepository.findByReference(entity.getId(), page, entriesPerPage, null, new HashMap<>()); //TODO limit to access
 								return paginationInfo.getEntities();
 							} else throw new NullPointerException("NULL sourceReferenceRepository");
 						}

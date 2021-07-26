@@ -1,5 +1,7 @@
 package org.segrada.model.prototype;
 
+import java.util.List;
+
 /**
  * Copyright 2015-2019 Maximilian Kalus [segrada@auxnet.de]
  *
@@ -26,4 +28,17 @@ public interface ISourceReference extends SegradaEntity {
 
 	String getReferenceText();
 	void setReferenceText(String referenceText);
+
+	String getRoleOfNode();
+	void setRoleOfNode(String roleOfNode);
+
+	Integer getColor();
+	void setColor(Integer color);
+
+	/**
+	 * get color as hex code
+	 * @return color as hex code
+	 */
+	String getColorCode();
+	void setColorCode(String colorCode);
 }

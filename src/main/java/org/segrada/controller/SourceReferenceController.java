@@ -3,12 +3,12 @@ package org.segrada.controller;
 import com.google.inject.Inject;
 import com.google.inject.servlet.RequestScoped;
 import com.sun.jersey.api.view.Viewable;
-import org.codehaus.jettison.json.JSONObject;
-import org.segrada.controller.base.AbstractBaseController;
+import org.segrada.controller.base.AbstractColoredController;
 import org.segrada.model.SourceReference;
 import org.segrada.model.prototype.ISource;
 import org.segrada.model.prototype.ISourceReference;
 import org.segrada.model.prototype.SegradaAnnotatedEntity;
+import org.segrada.service.ColorService;
 import org.segrada.service.SourceReferenceService;
 import org.segrada.service.SourceService;
 import org.segrada.service.base.AbstractRepositoryService;
@@ -25,7 +25,6 @@ import javax.ws.rs.core.Response;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -47,7 +46,7 @@ import java.util.Map;
  */
 @Path("/source_reference")
 @RequestScoped
-public class SourceReferenceController extends AbstractBaseController<ISourceReference> {
+public class SourceReferenceController extends AbstractColoredController<ISourceReference> {
 	private static final Logger logger = LoggerFactory.getLogger(SourceReferenceController.class);
 
 	@Inject
@@ -58,6 +57,9 @@ public class SourceReferenceController extends AbstractBaseController<ISourceRef
 
 	@Inject
 	private Map<String, AbstractRepositoryService> annotatedServices;
+
+	@Inject
+	protected ColorService colorService;
 
 	@Inject
 	private Identity identity;
@@ -125,6 +127,8 @@ public class SourceReferenceController extends AbstractBaseController<ISourceRef
 			@FormParam("referenceModel") String referenceModel,
 			@FormParam("sourceId") String sourceId,
 			@FormParam("referenceText") String referenceText,
+			@FormParam("roleOfNode") String roleOfNode,
+			@FormParam("color") String color,
 			@FormParam("backUrl") String backUrl
 	) {
 		String error = null;
@@ -161,6 +165,10 @@ public class SourceReferenceController extends AbstractBaseController<ISourceRef
 			// update text
 			if (referenceText != null && referenceText.isEmpty()) referenceText = null;
 			sourceReference.setReferenceText(referenceText);
+			// update roleOfNode
+			if (roleOfNode != null && roleOfNode.isEmpty()) roleOfNode = null;
+			sourceReference.setRoleOfNode(roleOfNode);
+			sourceReference.setColorCode(color);
 
 			clearCache(); // delete caches
 		}
@@ -194,7 +202,9 @@ public class SourceReferenceController extends AbstractBaseController<ISourceRef
 			@PathParam("model") String referenceModel,
 			@QueryParam("page") int page,
 			@QueryParam("entriesPerPage") int entriesPerPage,
-			@QueryParam("error") String error
+			@QueryParam("error") String error,
+			@QueryParam("sort") String sortBy, // titleasc, roleOfNode
+			@QueryParam("dir") String sortOrder // asc, desc, none
 	) {
 		// get reference by uid
 		SegradaAnnotatedEntity referenceEntity;
@@ -210,7 +220,9 @@ public class SourceReferenceController extends AbstractBaseController<ISourceRef
 		String limitToClass = getAccessLimit();
 
 		// get references
-		PaginationInfo<ISourceReference> paginationInfo = service.findByReference(service.convertUidToId(referenceUid), page, entriesPerPage, limitToClass);
+		Map<String, Object> filters = this.createSortingFilter(sortBy, sortOrder, "SourceReferenceServiceByReference");
+
+		PaginationInfo<ISourceReference> paginationInfo = service.findByReference(service.convertUidToId(referenceUid), page, entriesPerPage, limitToClass, filters);
 
 		// create model map
 		Map<String, Object> model = new HashMap<>();
@@ -220,6 +232,8 @@ public class SourceReferenceController extends AbstractBaseController<ISourceRef
 		model.put("paginationInfo", paginationInfo);
 		model.put("targetId", "#sources-by-ref-" + referenceUid);
 		model.put("error", error);
+		model.put("colors", colorService.findAll());
+		model.put("filters", filters);
 
 		return new Viewable("source_reference/by_reference", model);
 	}
@@ -238,7 +252,9 @@ public class SourceReferenceController extends AbstractBaseController<ISourceRef
 			@PathParam("uid") String sourceUid,
 			@QueryParam("page") int page,
 			@QueryParam("entriesPerPage") int entriesPerPage,
-			@QueryParam("error") String error
+			@QueryParam("error") String error,
+			@QueryParam("sort") String sortBy, // titleasc, roleOfNode
+			@QueryParam("dir") String sortOrder // asc, desc, none
 	) {
 		// get source by uid
 		ISource source = sourceService.findById(sourceService.convertUidToId(sourceUid));
@@ -248,7 +264,9 @@ public class SourceReferenceController extends AbstractBaseController<ISourceRef
 		String limitToClass = getAccessLimit();
 
 		// get references
-		PaginationInfo<ISourceReference> paginationInfo = service.findBySource(source.getId(), page, entriesPerPage, limitToClass);
+		Map<String, Object> filters = this.createSortingFilter(sortBy, sortOrder, "SourceReferenceServiceBySource");
+
+		PaginationInfo<ISourceReference> paginationInfo = service.findBySource(source.getId(), page, entriesPerPage, limitToClass, filters);
 
 		// create model map
 		Map<String, Object> model = new HashMap<>();
@@ -257,8 +275,38 @@ public class SourceReferenceController extends AbstractBaseController<ISourceRef
 		model.put("paginationInfo", paginationInfo);
 		model.put("targetId", "#references-by-ref-" + sourceUid);
 		model.put("error", error);
+		model.put("filters", filters);
 
 		return new Viewable("source_reference/by_source", model);
+	}
+
+	/**
+	 * Create sorting filter for source references
+	 * @param sortBy sort by string: titleasc, roleOfNode
+	 * @param sortOrder sort order string asc/desc/none
+	 * @param key cache key
+	 * @return created filter (can be an empty has map)
+	 */
+	private Map<String, Object> createSortingFilter(String sortBy, String sortOrder, String key) {
+		Map<String, Object> filters = new HashMap<>();
+
+		if (sortBy != null && sortOrder != null) {
+			filters.put("sort", sortBy);
+			filters.put("dir", sortOrder);
+
+			// save to session
+			session.setAttribute(key, filters);
+		} else {
+			// get filter entries from session
+			Object o = session.getAttribute(key);
+			if (o != null && o instanceof Map) { // we have a session object saved - now copy filters
+				Map<String, Object> sessionFilter = (Map<String, Object>) o;
+				filters.put("sort", sessionFilter.get("sort").toString());
+				filters.put("dir", sessionFilter.get("dir").toString());
+			}
+		}
+
+		return filters;
 	}
 
 	/**

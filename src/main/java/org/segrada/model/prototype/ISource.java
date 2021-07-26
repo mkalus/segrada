@@ -17,12 +17,15 @@ package org.segrada.model.prototype;
  *
  * Source model interface
  */
-public interface ISource extends SegradaAnnotatedEntity {
+public interface ISource extends SegradaCoreEntity {
 	String getShortTitle();
 	void setShortTitle(String shortTitle);
 
 	String getLongTitle();
 	void setLongTitle(String shortTitle);
+
+	String getSourceType();
+	void setSourceType(String sourceType);
 
 	String getShortRef();
 	void setShortRef(String shortRef);

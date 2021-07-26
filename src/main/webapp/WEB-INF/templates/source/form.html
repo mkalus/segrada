@@ -25,6 +25,7 @@
 			<div th:replace="partials/form :: formTextfield (name='shortRef',field=${entity.shortRef},label=#{field.shortRef},id=${tempId},errors=${errors},required=true)"></div>
 			<div th:replace="partials/form :: formTextfield (name='shortTitle',field=${entity.shortTitle},label=#{field.shortTitle},id=${tempId},errors=${errors},required=true)"></div>
 			<div th:replace="partials/form :: formTextarea (name='longTitle',field=${entity.longTitle},label=#{field.longTitle},id=${tempId},rows=2,errors=${errors},required=false)"></div>
+			<div th:replace="partials/form :: formTextfield (name='sourceType',field=${entity.sourceType},label=#{field.sourceType},id=${tempId},errors=${errors},required=false)"></div>
 			<div th:replace="partials/form :: formTextfield (name='url',field=${entity.url},label=#{field.url},id=${tempId},errors=${errors},required=false)"></div>
 			<div th:replace="partials/form :: formTextfield (name='productCode',field=${entity.productCode},label=#{field.productCode},id=${tempId},errors=${errors},required=false)"></div>
 			<div th:replace="partials/form :: formTextfield (name='author',field=${entity.author},label=#{field.author},id=${tempId},errors=${errors},required=false)"></div>

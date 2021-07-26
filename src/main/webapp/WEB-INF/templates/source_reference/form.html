@@ -38,6 +38,16 @@
 				</div>
 			</div>
 
+			<div class="form-group">
+				<label class="col-sm-2 control-label" th:for="${'roleOfNode-' + uid}"><span th:text="#{field.roleOfNode}"></span></label>
+				<div class="col-sm-10">
+					<input type="text" th:id="${'roleOfNode-' + uid}" name="roleOfNode" class="form-control" th:placeholder="#{field.roleOfNode}" th:value="${entity.roleOfNode}" />
+					<span class="help-block"></span>
+				</div>
+			</div>
+
+			<div th:replace="partials/form :: formColorSelect (colors=${colors},name='color',field=${entity.color},label=#{field.color},id=${'color-' + uid},errors=${errors},required=false)"></div>
+
 			<input type="hidden" name="id" th:value="${entity.id}" th:if="${entity.id}" />
 			<input type="hidden" name="sourceId" th:value="${entity.source.id}" />
 			<input type="hidden" name="referenceId" th:value="${entity.reference.id}" />

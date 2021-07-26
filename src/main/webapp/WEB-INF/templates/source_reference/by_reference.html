@@ -11,30 +11,36 @@
 <div th:replace="partials/common :: browser"></div>
 
 <div class="container">
-	<div class="sg-control-content sg-file">
+	<div class="sg-control-content sg-file" th:with="myurl=@{/source_reference/by_reference/{model}/{uid}(model=${model},uid=${uid})}">
 		<h4 class="sg-control-header"><i class="fa fa-bookmark"></i> <span th:text="#{list.source_references}">References to entity</span></h4>
 
 		<p th:text="${#messages.msg(paginationInfo.key(), paginationInfo.page, paginationInfo.pages, paginationInfo.total)}">Pages</p>
 
-		<table class="table table-hover table-striped table-condensed">
-			<tr>
-				<th class="text-center"><i class="fa fa-bookmark"></i></th>
-				<th th:text="#{field.source}">Source</th>
-				<th th:text="#{field.text}">Text</th>
-				<th></th>
-			</tr>
-			<tr th:each="entity : ${paginationInfo.entities}" th:attr="data-data-dblclick=@{/source/show/{uid}(uid=${entity.source.uid})}">
-				<td></td>
-				<td><a class="sg-data-icon sg-data-add" href="#" th:title="#{Show}" th:href="@{/source/show/{uid}(uid=${entity.source.uid})}"><i class="fa fa-eye"></i></a> <span th:text="${entity.source.shortTitle}">Source</span></td>
-				<td th:text="${entity.referenceText}">Text</td>
-				<td class="text-right">
-					<div class="sg-data-icon-bar" role="group" aria-label="Actions" sg:strip-whitespace>
-						<a th:if="${identity.hasEditAccess(entity, 'SOURCE_REFERENCE')}" class="sg-data-icon sg-source-ref-editor" href="#" th:href="@{/source_reference/edit/{uid}(uid=${entity.uid},backUrl=@{/source_reference/by_reference/{model}/{uid}(model=${model},uid=${uid})})}" th:title="#{Edit}" th:attr="data-id=${'edit-source-ref-' + uid}"><i class="fa fa-pencil"></i></a>
-						<a th:if="${identity.hasDeleteAccess(entity, 'SOURCE_REFERENCE')}" class="sg-data-icon" href="#" th:title="#{Unlink}" th:href="@{/source_reference/delete/{uid}(uid=${entity.uid},backUrl=@{/source_reference/by_reference/{model}/{uid}(model=${model},uid=${uid})})}" th:attr="data-confirm=${#messages.msg('ReallyUnlink', entity.title, referenceEntity.title)}"><i class="fa fa-unlink"></i></a>
-					</div>
-				</td>
-			</tr>
-		</table>
+		<form method="get" action="#" th:action="${myurl}" class="sg-control-form" th:attr="data-target-id=${targetId}">
+			<table class="table table-hover table-striped table-condensed">
+				<tr>
+					<th class="text-center"><i class="fa fa-bookmark"></i></th>
+					<th th:with="sortHelper=${@org.segrada.rendering.thymeleaf.util.TableSortPreprocessor@createSortLink(myurl, 'source', 'referenceText', 'asc', filters)}"><a href="#" class="sg-control-set" th:href="${sortHelper.url}" th:utext="|#{field.source}${sortHelper.icon}|" th:attr="data-target-id=${targetId}">Source</a></th>
+					<th th:with="sortHelper=${@org.segrada.rendering.thymeleaf.util.TableSortPreprocessor@createSortLink(myurl, 'referenceText', 'referenceText', 'asc', filters)}"><a href="#" class="sg-control-set" th:href="${sortHelper.url}" th:utext="|#{field.text}${sortHelper.icon}|" th:attr="data-target-id=${targetId}">Text</a></th>
+					<th th:with="sortHelper=${@org.segrada.rendering.thymeleaf.util.TableSortPreprocessor@createSortLink(myurl, 'roleOfNode', 'referenceText', 'asc', filters)}"><a href="#" class="sg-control-set" th:href="${sortHelper.url}" th:utext="|#{field.roleOfNode}${sortHelper.icon}|" th:attr="data-target-id=${targetId}">roleOfNode</a></th>
+					<th></th>
+				</tr>
+				<tr th:each="entity : ${paginationInfo.entities}" th:attr="data-data-dblclick=@{/source/show/{uid}(uid=${entity.source.uid})}">
+					<td class="text-center">
+						<span class="sg-color-icon" th:style="'background-color: ' + ${entity.colorCode}" th:if="${entity.color}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+					</td>
+					<td><a class="sg-data-icon sg-data-add" href="#" th:title="#{Show}" th:href="@{/source/show/{uid}(uid=${entity.source.uid})}"><i class="fa fa-eye"></i></a> <span th:text="${entity.source.shortTitle}">Source</span></td>
+					<td th:text="${entity.referenceText}">Text</td>
+					<td th:text="${entity.roleOfNode}">roleOfNode</td>
+					<td class="text-right">
+						<div class="sg-data-icon-bar" role="group" aria-label="Actions" sg:strip-whitespace>
+							<a th:if="${identity.hasEditAccess(entity, 'SOURCE_REFERENCE')}" class="sg-data-icon sg-source-ref-editor" href="#" th:href="@{/source_reference/edit/{uid}(uid=${entity.uid},backUrl=${myurl})}" th:title="#{Edit}" th:attr="data-id=${'edit-source-ref-' + uid}"><i class="fa fa-pencil"></i></a>
+							<a th:if="${identity.hasDeleteAccess(entity, 'SOURCE_REFERENCE')}" class="sg-data-icon" href="#" th:title="#{Unlink}" th:href="@{/source_reference/delete/{uid}(uid=${entity.uid},backUrl=${myurl})}" th:attr="data-confirm=${#messages.msg('ReallyUnlink', entity.title, referenceEntity.title)}"><i class="fa fa-unlink"></i></a>
+						</div>
+					</td>
+				</tr>
+			</table>
+		</form>
 
 		<div class="modal fade sg-source-ref-modal" id="edit-source-ref-xxx" th:id="${'edit-source-ref-' + uid}" data-href="" tabindex="-1" th:attr="data-target=${targetId}" role="dialog" aria-hidden="true">
 			<div class="modal-dialog">
@@ -50,7 +56,7 @@
 			</div>
 		</div>
 
-		<div th:replace="partials/pagination :: pagination (paginationInfo=${paginationInfo},base=${'source_reference/by_reference/' + referenceEntity.modelName + '/' + referenceEntity.uid})"></div>
+		<div th:replace="partials/pagination :: pagination (paginationInfo=${paginationInfo},base=${myurl})"></div>
 
 		<div class="sg-stop-flow" th:if="${identity.hasAccess('SOURCE_REFERENCE_ADD')}">
 			<h4 th:text="#{add.sourceReference}">Add source reference</h4>
@@ -76,6 +82,16 @@
 						<span class="help-block"></span>
 					</div>
 				</div>
+
+				<div class="form-group">
+					<label class="col-sm-2 control-label" th:for="${'roleOfNode-' + uid}"><span th:text="#{field.roleOfNode}"></span></label>
+					<div class="col-sm-10">
+						<input type="text" th:id="${'roleOfNode-' + uid}" name="roleOfNode" class="form-control" th:placeholder="#{field.roleOfNode}" />
+						<span class="help-block"></span>
+					</div>
+				</div>
+
+				<div th:replace="partials/form :: formColorSelect (colors=${colors},name='color',field='',label=#{field.color},id=${'color-' + uid},errors=${errors},required=false)"></div>
 
 				<div class="form-group">
 					<div class="col-sm-offset-2 col-sm-10">
