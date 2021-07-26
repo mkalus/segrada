@@ -11,34 +11,41 @@
 <div th:replace="partials/common :: browser"></div>
 
 <div class="container">
-	<div class="sg-control-content sg-file">
+	<div class="sg-control-content sg-file" th:with="myurl=@{/source_reference/by_source/{uid}(uid=${source.uid})}">
 		<h4 class="sg-control-header"><i class="fa fa-bookmark"></i> <span th:text="#{list.references_to_source}">References to source</span></h4>
 
 		<div th:if="${error}" th:text="#{${error}}" class="alert alert-danger">Error</div>
 
 		<p th:text="${#messages.msg(paginationInfo.key(), paginationInfo.page, paginationInfo.pages, paginationInfo.total)}">Pages</p>
 
-		<table class="table table-hover table-striped table-condensed">
-			<tr>
-				<th class="text-center"><i class="fa fa-bookmark"></i></th>
-				<th th:text="#{field.reference}">Reference</th>
-				<th th:text="#{field.text}">Text</th>
-				<th></th>
-			</tr>
-			<tr th:each="entity : ${paginationInfo.entities}" th:attr="data-data-dblclick=@{/{model}/show/{uid}(uid=${entity.reference.uid},model=${#strings.toLowerCase(entity.reference.modelName)})}">
-				<td class="text-center"><span th:replace="partials/common :: faIcon (modelName=${entity.reference.modelName})"></span></td>
-				<td th:text="${entity.reference.title}">Title</td>
-				<td th:text="${entity.referenceText}">Text</td>
-				<td class="text-right">
-					<div class="sg-data-icon-bar" role="group" aria-label="Actions" sg:strip-whitespace>
-						<a th:if="${identity.hasEditAccess(entity, 'SOURCE_REFERENCE')}" class="sg-data-icon sg-source-ref-editor" href="#" th:href="@{/source_reference/edit/{uid}(uid=${entity.uid},backUrl=@{/source_reference/by_source/{uid}(uid=${uid})})}" th:title="#{Edit}" th:attr="data-id=${'edit-source-ref-' + uid}"><i class="fa fa-pencil"></i></a>
-						<a th:if="${identity.hasDeleteAccess(entity, 'SOURCE_REFERENCE')}" class="sg-data-icon" href="#" th:title="#{Unlink}" th:href="@{/source_reference/delete/{uid}(uid=${entity.uid},backUrl=@{/source_reference/by_source/{uid}(uid=${uid})})}" th:attr="data-confirm=${#messages.msg('ReallyUnlink', entity.title, source.title)}"><i class="fa fa-unlink"></i></a>
-					</div>
-				</td>
-			</tr>
-		</table>
+		<form method="get" action="#" th:action="${myurl}" class="sg-control-form" th:attr="data-target-id=${targetId}">
+			<table class="table table-hover table-striped table-condensed">
+				<tr>
+					<th class="text-center"><i class="fa fa-bookmark"></i></th>
+					<th th:text="#{field.reference}">Reference</th>
+					<th th:with="sortHelper=${@org.segrada.rendering.thymeleaf.util.TableSortPreprocessor@createSortLink(myurl, 'referenceText', 'referenceText', 'asc', filters)}"><a href="#" class="sg-control-set" th:href="${sortHelper.url}" th:utext="|#{field.text}${sortHelper.icon}|" th:attr="data-target-id=${targetId}">text</a></th>
+					<th th:with="sortHelper=${@org.segrada.rendering.thymeleaf.util.TableSortPreprocessor@createSortLink(myurl, 'roleOfNode', 'referenceText', 'asc', filters)}"><a href="#" class="sg-control-set" th:href="${sortHelper.url}" th:utext="|#{field.roleOfNode}${sortHelper.icon}|" th:attr="data-target-id=${targetId}">roleOfNode</a></th>
+					<th></th>
+				</tr>
+				<tr th:each="entity : ${paginationInfo.entities}" th:attr="data-data-dblclick=@{/{model}/show/{uid}(uid=${entity.reference.uid},model=${#strings.toLowerCase(entity.reference.modelName)})}">
+					<td class="text-center">
+						<span th:replace="partials/common :: faIcon (modelName=${entity.reference.modelName})"></span>
+						<span class="sg-color-icon" th:style="'background-color: ' + ${entity.colorCode}" th:if="${entity.color}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+					</td>
+					<td th:text="${entity.reference.title}">Title</td>
+					<td th:text="${entity.referenceText}">Text</td>
+					<td th:text="${entity.roleOfNode}">roleOfNode</td>
+					<td class="text-right">
+						<div class="sg-data-icon-bar" role="group" aria-label="Actions" sg:strip-whitespace>
+							<a th:if="${identity.hasEditAccess(entity, 'SOURCE_REFERENCE')}" class="sg-data-icon sg-source-ref-editor" href="#" th:href="@{/source_reference/edit/{uid}(uid=${entity.uid},backUrl=${myurl})}" th:title="#{Edit}" th:attr="data-id=${'edit-source-ref-' + uid}"><i class="fa fa-pencil"></i></a>
+							<a th:if="${identity.hasDeleteAccess(entity, 'SOURCE_REFERENCE')}" class="sg-data-icon" href="#" th:title="#{Unlink}" th:href="@{/source_reference/delete/{uid}(uid=${entity.uid},backUrl=${myurl})}" th:attr="data-confirm=${#messages.msg('ReallyUnlink', entity.title, source.title)}"><i class="fa fa-unlink"></i></a>
+						</div>
+					</td>
+				</tr>
+			</table>
+		</form>
 
-		<div th:replace="partials/pagination :: pagination (paginationInfo=${paginationInfo},base=${'source_reference/by_source/' + source.uid})"></div>
+		<div th:replace="partials/pagination :: pagination (paginationInfo=${paginationInfo},base=${myurl})"></div>
 
 		<div class="modal fade sg-source-ref-modal" id="edit-source-ref-xxx" th:id="${'edit-source-ref-' + uid}" data-href="" th:attr="data-target=${targetId}" tabindex="-1" role="dialog" aria-hidden="true">
 			<div class="modal-dialog">

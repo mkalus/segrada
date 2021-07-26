@@ -24,6 +24,7 @@ import org.segrada.test.OrientDBTestInstance;
 import org.segrada.test.OrientDbTestApplicationSettings;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -197,11 +198,11 @@ public class OrientDbSourceReferenceRepositoryTest {
 		repository.save(sourceReference);
 
 		// do not find anything when dummy searching
-		PaginationInfo<ISourceReference> list = repository.findBySource("99:99", 1, 15, null);
+		PaginationInfo<ISourceReference> list = repository.findBySource("99:99", 1, 15, null, new HashMap<>());
 		assertTrue(list.getEntities().isEmpty());
 
 		// find by reference
-		list = repository.findBySource(source.getId(), 1, 15, null);
+		list = repository.findBySource(source.getId(), 1, 15, null, new HashMap<>());
 		assertTrue(list.getEntities().size() == 1);
 		assertEquals(sourceReference.getId(), list.getEntities().get(0).getId());
 	}
@@ -231,11 +232,11 @@ public class OrientDbSourceReferenceRepositoryTest {
 		repository.save(sourceReference);
 
 		// do not find anything when dummy searching
-		PaginationInfo<ISourceReference> list = repository.findByReference("99:99", 1, 15, null);
+		PaginationInfo<ISourceReference> list = repository.findByReference("99:99", 1, 15, null, new HashMap<>());
 		assertTrue(list.getEntities().isEmpty());
 
 		// find by reference
-		list = repository.findByReference(comment.getId(), 1, 15, null);
+		list = repository.findByReference(comment.getId(), 1, 15, null, new HashMap<>());
 		assertTrue(list.getEntities().size() == 1);
 		assertEquals(sourceReference.getId(), list.getEntities().get(0).getId());
 	}

@@ -202,7 +202,9 @@ public class SourceReferenceController extends AbstractColoredController<ISource
 			@PathParam("model") String referenceModel,
 			@QueryParam("page") int page,
 			@QueryParam("entriesPerPage") int entriesPerPage,
-			@QueryParam("error") String error
+			@QueryParam("error") String error,
+			@QueryParam("sort") String sortBy, // titleasc, roleOfNode
+			@QueryParam("dir") String sortOrder // asc, desc, none
 	) {
 		// get reference by uid
 		SegradaAnnotatedEntity referenceEntity;
@@ -218,7 +220,9 @@ public class SourceReferenceController extends AbstractColoredController<ISource
 		String limitToClass = getAccessLimit();
 
 		// get references
-		PaginationInfo<ISourceReference> paginationInfo = service.findByReference(service.convertUidToId(referenceUid), page, entriesPerPage, limitToClass);
+		Map<String, Object> filters = this.createSortingFilter(sortBy, sortOrder, "SourceReferenceServiceByReference");
+
+		PaginationInfo<ISourceReference> paginationInfo = service.findByReference(service.convertUidToId(referenceUid), page, entriesPerPage, limitToClass, filters);
 
 		// create model map
 		Map<String, Object> model = new HashMap<>();
@@ -229,6 +233,7 @@ public class SourceReferenceController extends AbstractColoredController<ISource
 		model.put("targetId", "#sources-by-ref-" + referenceUid);
 		model.put("error", error);
 		model.put("colors", colorService.findAll());
+		model.put("filters", filters);
 
 		return new Viewable("source_reference/by_reference", model);
 	}
@@ -247,7 +252,9 @@ public class SourceReferenceController extends AbstractColoredController<ISource
 			@PathParam("uid") String sourceUid,
 			@QueryParam("page") int page,
 			@QueryParam("entriesPerPage") int entriesPerPage,
-			@QueryParam("error") String error
+			@QueryParam("error") String error,
+			@QueryParam("sort") String sortBy, // titleasc, roleOfNode
+			@QueryParam("dir") String sortOrder // asc, desc, none
 	) {
 		// get source by uid
 		ISource source = sourceService.findById(sourceService.convertUidToId(sourceUid));
@@ -257,7 +264,9 @@ public class SourceReferenceController extends AbstractColoredController<ISource
 		String limitToClass = getAccessLimit();
 
 		// get references
-		PaginationInfo<ISourceReference> paginationInfo = service.findBySource(source.getId(), page, entriesPerPage, limitToClass);
+		Map<String, Object> filters = this.createSortingFilter(sortBy, sortOrder, "SourceReferenceServiceBySource");
+
+		PaginationInfo<ISourceReference> paginationInfo = service.findBySource(source.getId(), page, entriesPerPage, limitToClass, filters);
 
 		// create model map
 		Map<String, Object> model = new HashMap<>();
@@ -266,8 +275,38 @@ public class SourceReferenceController extends AbstractColoredController<ISource
 		model.put("paginationInfo", paginationInfo);
 		model.put("targetId", "#references-by-ref-" + sourceUid);
 		model.put("error", error);
+		model.put("filters", filters);
 
 		return new Viewable("source_reference/by_source", model);
+	}
+
+	/**
+	 * Create sorting filter for source references
+	 * @param sortBy sort by string: titleasc, roleOfNode
+	 * @param sortOrder sort order string asc/desc/none
+	 * @param key cache key
+	 * @return created filter (can be an empty has map)
+	 */
+	private Map<String, Object> createSortingFilter(String sortBy, String sortOrder, String key) {
+		Map<String, Object> filters = new HashMap<>();
+
+		if (sortBy != null && sortOrder != null) {
+			filters.put("sort", sortBy);
+			filters.put("dir", sortOrder);
+
+			// save to session
+			session.setAttribute(key, filters);
+		} else {
+			// get filter entries from session
+			Object o = session.getAttribute(key);
+			if (o != null && o instanceof Map) { // we have a session object saved - now copy filters
+				Map<String, Object> sessionFilter = (Map<String, Object>) o;
+				filters.put("sort", sessionFilter.get("sort").toString());
+				filters.put("dir", sessionFilter.get("dir").toString());
+			}
+		}
+
+		return filters;
 	}
 
 	/**

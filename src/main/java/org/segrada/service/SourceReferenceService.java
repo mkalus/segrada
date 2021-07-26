@@ -8,6 +8,8 @@ import org.segrada.service.repository.SourceReferenceRepository;
 import org.segrada.service.repository.factory.RepositoryFactory;
 import org.segrada.service.util.PaginationInfo;
 
+import java.util.Map;
+
 /**
  * Copyright 2015-2019 Maximilian Kalus [segrada@auxnet.de]
  *
@@ -50,10 +52,11 @@ public class SourceReferenceService extends AbstractRepositoryService<ISourceRef
 	 * @param page page
 	 * @param entriesPerPage entries per page
 	 * @param referencedClass class to limit to (or null)
+	 * @param filters add sorting filters
 	 * @return list of entities or null
 	 */
-	public PaginationInfo<ISourceReference> findBySource(String id, int page, int entriesPerPage, String referencedClass) {
-		return repository.findBySource(id, page, entriesPerPage, referencedClass);
+	public PaginationInfo<ISourceReference> findBySource(String id, int page, int entriesPerPage, String referencedClass, Map<String, Object> filters) {
+		return repository.findBySource(id, page, entriesPerPage, referencedClass, filters);
 	}
 
 	/**
@@ -62,9 +65,10 @@ public class SourceReferenceService extends AbstractRepositoryService<ISourceRef
 	 * @param page page
 	 * @param entriesPerPage entries per page
 	 * @param referencedClass class to limit to (or null)
+	 * @param filters add sorting filters
 	 * @return list of entities or null
 	 */
-	public PaginationInfo<ISourceReference> findByReference(String id, int page, int entriesPerPage, String referencedClass) {
-		return repository.findByReference(id, page, entriesPerPage, referencedClass);
+	public PaginationInfo<ISourceReference> findByReference(String id, int page, int entriesPerPage, String referencedClass, Map<String, Object> filters) {
+		return repository.findByReference(id, page, entriesPerPage, referencedClass, filters);
 	}
 }
