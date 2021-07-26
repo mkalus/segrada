@@ -220,7 +220,11 @@ public class SourceReferenceController extends AbstractColoredController<ISource
 		String limitToClass = getAccessLimit();
 
 		// get references
-		Map<String, Object> filters = this.createSortingFilter(sortBy, sortOrder, "Source_reference/by_reference/" + referenceUid + "Service");
+		final String key = "Source_ref/by_ref/" + referenceModel + "/" + referenceUid; // shortened a bit
+		Map<String, Object> filters = this.createSortingFilter(sortBy, sortOrder, key);
+
+		// entries per page?
+		entriesPerPage = this.createEntriesPerPage(entriesPerPage, key);
 
 		PaginationInfo<ISourceReference> paginationInfo = service.findByReference(service.convertUidToId(referenceUid), page, entriesPerPage, limitToClass, filters);
 
@@ -234,6 +238,15 @@ public class SourceReferenceController extends AbstractColoredController<ISource
 		model.put("error", error);
 		model.put("colors", colorService.findAll());
 		model.put("filters", filters);
+
+		Map<String, Object> saved = new HashMap<>();
+		if (filters.containsKey("sort") && filters.containsKey("dir")) {
+			saved.put("sort", filters.get("sort"));
+			saved.put("dir", filters.get("dir"));
+		}
+		saved.put("entriesPerPage", paginationInfo.getEntriesPerPage());
+		// save to session
+		session.setAttribute(key, saved);
 
 		return new Viewable("source_reference/by_reference", model);
 	}
@@ -264,7 +277,11 @@ public class SourceReferenceController extends AbstractColoredController<ISource
 		String limitToClass = getAccessLimit();
 
 		// get references
-		Map<String, Object> filters = this.createSortingFilter(sortBy, sortOrder, "Source_reference/by_source/" + sourceUid + "Service");
+		final String key = "Source_reference/by_source/" + sourceUid + "Service";
+		Map<String, Object> filters = this.createSortingFilter(sortBy, sortOrder, key);
+
+		// entries per page?
+		entriesPerPage = this.createEntriesPerPage(entriesPerPage, key);
 
 		PaginationInfo<ISourceReference> paginationInfo = service.findBySource(source.getId(), page, entriesPerPage, limitToClass, filters);
 
@@ -276,6 +293,15 @@ public class SourceReferenceController extends AbstractColoredController<ISource
 		model.put("targetId", "#references-by-ref-" + sourceUid);
 		model.put("error", error);
 		model.put("filters", filters);
+
+		Map<String, Object> saved = new HashMap<>();
+		if (filters.containsKey("sort") && filters.containsKey("dir")) {
+			saved.put("sort", filters.get("sort"));
+			saved.put("dir", filters.get("dir"));
+		}
+		saved.put("entriesPerPage", paginationInfo.getEntriesPerPage());
+		// save to session
+		session.setAttribute(key, saved);
 
 		return new Viewable("source_reference/by_source", model);
 	}
@@ -293,20 +319,44 @@ public class SourceReferenceController extends AbstractColoredController<ISource
 		if (sortBy != null && sortOrder != null) {
 			filters.put("sort", sortBy);
 			filters.put("dir", sortOrder);
-
-			// save to session
-			session.setAttribute(key, filters);
 		} else {
 			// get filter entries from session
 			Object o = session.getAttribute(key);
 			if (o != null && o instanceof Map) { // we have a session object saved - now copy filters
 				Map<String, Object> sessionFilter = (Map<String, Object>) o;
-				filters.put("sort", sessionFilter.get("sort").toString());
-				filters.put("dir", sessionFilter.get("dir").toString());
+				if (sessionFilter.containsKey("sort") && sessionFilter.containsKey("dir")) {
+					filters.put("sort", sessionFilter.get("sort").toString());
+					filters.put("dir", sessionFilter.get("dir").toString());
+				}
 			}
 		}
 
 		return filters;
+	}
+
+	/**
+	 * get entries per page, possibly saved in session
+	 * @param entriesPerPage
+	 * @param key
+	 * @return
+	 */
+	private int createEntriesPerPage(int entriesPerPage, String key) {
+		// set by param
+		if (entriesPerPage > 0) {
+			return  entriesPerPage;
+		}
+
+		// get filter entries from session
+		Object o = session.getAttribute(key);
+		if (o != null && o instanceof Map) { // we have a session object saved - now copy filters
+			Map<String, Object> sessionFilter = (Map<String, Object>) o;
+			Object f = sessionFilter.get("entriesPerPage");
+			if (f instanceof Integer) {
+				return (int) f;
+			}
+		}
+
+		return entriesPerPage;
 	}
 
 	/**

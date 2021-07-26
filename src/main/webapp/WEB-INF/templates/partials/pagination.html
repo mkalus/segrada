@@ -48,6 +48,18 @@
 				</a>
 			</li>
 		</ul>
+
+		<div class="btn-group navbar-right">
+			<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" th:title="#{entriesPerPage}">
+				<span th:text="#{perPage(${paginationInfo.entriesPerPage})}"></span> <span class="caret"></span>
+			</button>
+			<ul class="dropdown-menu dropdown-menu-right">
+				<li><a href="#" th:href="@{${base}(entriesPerPage=15)}" class="sg-control-set" th:attr="data-target-id=${targetId}">15</a></li>
+				<li><a href="#" th:href="@{${base}(entriesPerPage=25)}" class="sg-control-set" th:attr="data-target-id=${targetId}">25</a></li>
+				<li><a href="#" th:href="@{${base}(entriesPerPage=50)}" class="sg-control-set" th:attr="data-target-id=${targetId}">50</a></li>
+				<li><a href="#" th:href="@{${base}(entriesPerPage=100)}" class="sg-control-set" th:attr="data-target-id=${targetId}">100</a></li>
+			</ul>
+		</div>
 	</nav>
 </div>
 

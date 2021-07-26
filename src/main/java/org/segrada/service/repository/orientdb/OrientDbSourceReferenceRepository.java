@@ -165,7 +165,7 @@ public class OrientDbSourceReferenceRepository extends AbstractSegradaOrientDbRe
 			);
 
 		// calculate pages
-		if (entriesPerPage < 1) entriesPerPage = 10; // sanity
+		if (entriesPerPage < 1) entriesPerPage = 15; // sanity
 		int pages = total / entriesPerPage + (total % entriesPerPage == 0?0:1);
 
 		// make sure we are inside the bounds

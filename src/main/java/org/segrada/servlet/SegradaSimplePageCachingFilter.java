@@ -46,12 +46,12 @@ public class SegradaSimplePageCachingFilter extends SimplePageCachingFilter {
 	/**
 	 * excluded patterns
 	 */
-	private static final Pattern excludePatterns = Pattern.compile("/(clear_cache|reindex|locale/)");
+	private static final Pattern excludePatterns = Pattern.compile("/(clear_cache|reindex|locale/|source_reference/by_|relation/by_)");
 
 	/**
 	 * url parts that add a session key to the cache key in order to function properly
 	 */
-	private static final Pattern addSessionToCacheKey = Pattern.compile("^/((node|source|file|relation)(/by_tag/[0-9\\-]+)?|relation_type|pictogram|tag|color|source_reference/.*)$");
+	private static final Pattern addSessionToCacheKey = Pattern.compile("^/((node|source|file|relation)(/by_tag/[0-9\\-]+)?|relation_type|pictogram|tag|color)$");
 
 	/**
 	 * pattern to filter out jsessionid-urls
