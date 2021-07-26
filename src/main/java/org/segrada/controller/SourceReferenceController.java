@@ -220,7 +220,7 @@ public class SourceReferenceController extends AbstractColoredController<ISource
 		String limitToClass = getAccessLimit();
 
 		// get references
-		Map<String, Object> filters = this.createSortingFilter(sortBy, sortOrder, "SourceReferenceServiceByReference");
+		Map<String, Object> filters = this.createSortingFilter(sortBy, sortOrder, "Source_reference/by_reference/" + referenceUid + "Service");
 
 		PaginationInfo<ISourceReference> paginationInfo = service.findByReference(service.convertUidToId(referenceUid), page, entriesPerPage, limitToClass, filters);
 
@@ -264,7 +264,7 @@ public class SourceReferenceController extends AbstractColoredController<ISource
 		String limitToClass = getAccessLimit();
 
 		// get references
-		Map<String, Object> filters = this.createSortingFilter(sortBy, sortOrder, "SourceReferenceServiceBySource");
+		Map<String, Object> filters = this.createSortingFilter(sortBy, sortOrder, "Source_reference/by_source/" + sourceUid + "Service");
 
 		PaginationInfo<ISourceReference> paginationInfo = service.findBySource(source.getId(), page, entriesPerPage, limitToClass, filters);
 
