@@ -758,6 +758,14 @@ function escapeHTML(myString) {
 			});
 		});
 
+		$('.sg-markup-editor', part).click(function(e) {
+			var editor = $($(this).attr('data-editor'));
+
+			editor.summernote('destroy');
+
+			var simplemde = new SimpleMDE({ element: editor[0] });
+		});
+
 		// *******************************************************
 		// Image Viewer/Lightbox
 		$('.sg-lg-image', part).each(function() {
