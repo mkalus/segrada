@@ -37,6 +37,8 @@ We are looking for translators. If you want to support Segrada, feel free to con
 
 ## Running Segrada
 
+You need Java 8 JRE installed. Later versions will not work with Segrada.
+
 Download from: [www.segrada.org](http://www.segrada.org/ "Segrada Homepage")
 
 In order to try out Segrada, download the program and unpack it to a folder of your choice.  
