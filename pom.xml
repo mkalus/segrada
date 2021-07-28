@@ -133,11 +133,11 @@
 			<artifactId>thymeleaf</artifactId>
 			<version>3.0.9.RELEASE</version>
 		</dependency>
-		<!-- Pegdown markdown parser -->
+		<!-- Flexmark markdown parser -->
 		<dependency>
-			<groupId>org.pegdown</groupId>
-			<artifactId>pegdown</artifactId>
-			<version>1.6.0</version>
+			<groupId>com.vladsch.flexmark</groupId>
+			<artifactId>flexmark-all</artifactId>
+			<version>0.62.2</version>
 		</dependency>
 
 		<!-- OrientDB -->

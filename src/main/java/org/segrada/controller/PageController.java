@@ -2,12 +2,7 @@ package org.segrada.controller;
 
 import com.google.inject.Singleton;
 import com.sun.jersey.api.view.Viewable;
-import org.parboiled.common.StringUtils;
-import org.pegdown.FastEncoder;
-import org.pegdown.LinkRenderer;
-import org.pegdown.PegDownProcessor;
-import org.pegdown.ast.ExpImageNode;
-import org.pegdown.ast.ExpLinkNode;
+import org.segrada.rendering.markdown.PageMarkdownRenderer;
 
 import javax.annotation.security.PermitAll;
 import javax.servlet.http.HttpServletRequest;
@@ -167,51 +162,6 @@ public class PageController {
 			return "IOEXCEPTION: " + e.getMessage();
 		}
 
-		// create markdown renderer
-		PegDownProcessor markdownParser = new PegDownProcessor();
-
-		// render markdown to HTML
-		return markdownParser.markdownToHtml(sb.toString(), new PageLinkRenderer(contextPath));
-	}
-
-	/**
-	 * link renderer for page context
-	 */
-	private class PageLinkRenderer extends LinkRenderer {
-		private final String contextPath;
-
-		public PageLinkRenderer(String contextPath) {
-			this.contextPath = contextPath;
-		}
-
-		@Override
-		public Rendering render(ExpLinkNode node, String text) {
-			// do not change links starting with http
-			if (node.url.startsWith("http")) // add external class
-				return super.render(node, text).withAttribute("class", "sg-link-external");
-
-			// add context path to url
-			String url = contextPath + "/page/" + node.url;
-			// cut away .md suffix if needed
-			if (url.endsWith(".md")) url = url.substring(0, url.length() - 3);
-
-			LinkRenderer.Rendering rendering = new LinkRenderer.Rendering(url, text);
-			rendering = rendering.withAttribute("class", "sg-data-add");
-			return StringUtils.isEmpty(node.title)?rendering:rendering.withAttribute("title", FastEncoder.encode(node.title));
-		}
-
-		@Override
-		public Rendering render(ExpImageNode node, String text) {
-			// do not change links starting with http
-			if (node.url.startsWith("http")) return super.render(node, text);
-
-			// add context path to url
-			String url = contextPath + "/page/img/" + node.url;
-			// cut away .png suffix if needed //TODO: make this work nicely
-			if (url.endsWith(".png")) url = url.substring(0, url.length() - 4);
-
-			LinkRenderer.Rendering rendering = new LinkRenderer.Rendering(url, text);
-			return StringUtils.isEmpty(node.title)?rendering:rendering.withAttribute("title", FastEncoder.encode(node.title));
-		}
+		return PageMarkdownRenderer.render(sb.toString(), contextPath);
 	}
 }
