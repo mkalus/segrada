@@ -69,6 +69,12 @@
 					HTML
 				</label>
 			</div>
+			<div class="radio-inline">
+				<label>
+					<input class="sg-plain-editor" th:attr="data-editor=${'#' + name + '-' + id}" type="radio" th:id="${markupName + '-' + id + '_markdown'}" th:name="${markupName}" value="markdown" th:checked="${#strings.equals('markdown', markupField)}">
+					Markdown
+				</label>
+			</div>
 		</div>
 	</div>
 </div>

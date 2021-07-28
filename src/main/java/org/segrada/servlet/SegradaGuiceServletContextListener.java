@@ -10,7 +10,9 @@ import org.segrada.config.AuthenticationModule;
 import org.segrada.config.ServiceModule;
 import org.segrada.config.TemplateModule;
 import org.segrada.controller.*;
+import org.segrada.rendering.markdown.MarkdownRenderer;
 import org.segrada.rendering.markup.DefaultMarkupFilter;
+import org.segrada.rendering.markup.MarkdownMarkupFilter;
 
 import javax.servlet.annotation.WebListener;
 import java.util.Map;
@@ -94,6 +96,7 @@ public class SegradaGuiceServletContextListener extends GuiceServletContextListe
 		OrientDBFilter.setInjector(injector);
 		SegradaSimplePageCachingFilter.setInjector(injector);
 		DefaultMarkupFilter.setInjector(injector);
+		MarkdownRenderer.setInjector(injector);
 		CheckAuthentication.setInjector(injector);
 
 		return injector;
