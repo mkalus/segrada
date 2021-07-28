@@ -33,7 +33,7 @@
 			<div class="form-group">
 				<label class="col-sm-2 control-label" th:for="${'referenceText-' + uid}"><span th:text="#{field.referenceText}"></span></label>
 				<div class="col-sm-10">
-					<input type="text" th:id="${'referenceText-' + uid}" name="referenceText" class="form-control" th:placeholder="#{field.referenceText}" th:value="${entity.referenceText}" />
+					<input type="text" th:id="${'referenceText-' + uid}" name="referenceText" class="form-control" th:placeholder="#{field.referenceTextLong}" th:value="${entity.referenceText}" />
 					<span class="help-block"></span>
 				</div>
 			</div>
@@ -41,7 +41,7 @@
 			<div class="form-group">
 				<label class="col-sm-2 control-label" th:for="${'roleOfNode-' + uid}"><span th:text="#{field.roleOfNode}"></span></label>
 				<div class="col-sm-10">
-					<input type="text" th:id="${'roleOfNode-' + uid}" name="roleOfNode" class="form-control" th:placeholder="#{field.roleOfNode}" th:value="${entity.roleOfNode}" />
+					<input type="text" th:id="${'roleOfNode-' + uid}" name="roleOfNode" class="form-control" th:placeholder="#{field.roleOfNodeLong}" th:value="${entity.roleOfNode}" />
 					<span class="help-block"></span>
 				</div>
 			</div>
