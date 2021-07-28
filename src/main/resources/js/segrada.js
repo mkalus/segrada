@@ -417,7 +417,9 @@ function escapeHTML(myString) {
 						target.html(responseText);
 						afterAjax(target);
 						modal.modal('hide');
+						// buggy closing of modal, reason could not be found, so we do it by hand
 						$('.modal-backdrop').remove() // delete backdrop of modal
+						$('body').removeClass('modal-open'); // delete overflow hidden
 					},
 					error: function (responseText, statusText, xhr, $form) {
 						alert("Error " + responseText.status + "\n" + responseText.statusText);
