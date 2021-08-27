@@ -1,31 +1,27 @@
 /* Segrada Open Layers stuff */
 (function ($) {
 	/**
-	 * tokenizer/finder for elements on nominatim.openstreetmap.org
-	 * TODO: Remove bloodhound!
+	 * Search string matcher for nominatim place name searches
 	 */
-	var placenamesTokenizer = new Bloodhound({
-		datumTokenizer: function (d) {
-			return Bloodhound.tokenizers.whitespace(d.title);
-		},
-		queryTokenizer: Bloodhound.tokenizers.whitespace,
-		remote: {
-			wildcard: '%QUERY',
-			url: 'http://nominatim.openstreetmap.org/search?format=json&q=%QUERY',
-			transform: function(response) {
-				var returnValues = [];
-				for (var i = 0; i < response.length; i++) {
+	const nominatimMatcher = function() {
+		return function findMatches(q, _, cb) {
+			$.ajax({
+				url: 'http://nominatim.openstreetmap.org/search?format=json&q=' + encodeURIComponent(q)
+			}).done(function (data) {
+				const returnValues = [];
+
+				for (let i = 0; i < data.length; i++) {
 					returnValues.push({
-						title: response[i].display_name,
-						lng: response[i].lon,
-						lat: response[i].lat
+						title: data[i].display_name,
+						lng: data[i].lon,
+						lat: data[i].lat
 					});
 				}
 
-				return returnValues;
-			}
+				cb(returnValues);
+			});
 		}
-	});
+	};
 
 	/**
 	 * add a single marker to the map
@@ -206,7 +202,7 @@
 				displayKey: 'title',
 				limit: 25,
 				valueKey: 'id',
-				source: placenamesTokenizer.ttAdapter()
+				source: nominatimMatcher()
 			}).bind('typeahead:selected', function(e, datum) {
 				input.val(datum.title);
 				$('input[name=lat]', form).val(datum.lat);
