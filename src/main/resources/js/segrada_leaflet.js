@@ -54,8 +54,8 @@
             const input = $('.sg-geocomplete', form);
             let markerContainer = $('#' + id + '-markers', container);
 
-            //create map
-            const map = L.map(id + '-map').setView([mapSettings.lat || 0, mapSettings.lng || 0], mapSettings.zoom || 1);
+            //create map - disable double click zooming
+            const map = L.map(id + '-map', { doubleClickZoom: false }).setView([mapSettings.lat || 0, mapSettings.lng || 0], mapSettings.zoom || 1);
 
             // add map from settings
             const mapLayer = L.tileLayer.provider(mapSettings.provider || "Stamen.TerrainBackground", mapSettings.options || {});
@@ -69,7 +69,7 @@
 
             // add form opener
             $('.sg-map-add-marker', container).click(function(e) {
-                $(this).parent().hide();
+                $('#' + id + '-add-location-btn').hide();
                 form.show();
                 e.preventDefault();
             });
@@ -125,8 +125,22 @@
                     alert("Error " + responseText.status + "\n" + responseText.statusText);
                 }
             });
+
+            // map double clicking: add new marker
+            map.on('dblclick', function (e) {
+                $('#' + id + '-add-location-btn').hide();
+                form.show();
+
+                $('input[name=lat]', form).val(e.latlng.lat);
+                $('input[name=lng]', form).val(e.latlng.lng);
+                $('input[type=submit]', form).show();
+
+                return false;
+            })
         });
     } // afterMapAjax end
+
+    // TODO: click on marker to edit it => draggable or form -> via button?
 
     /**
      * add a single marker to the map
@@ -203,6 +217,11 @@
 
             if (bb.isValid()) {
                 map.fitBounds(bb.pad(0.05));
+
+                // do not zoom too much!
+                if (map.getZoom() > 13) {
+                    map.setZoom(13);
+                }
             }
         }
     }
