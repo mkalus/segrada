@@ -8,7 +8,6 @@
 </head>
 
 <body>
-<div th:replace="partials/common :: browser"></div>
 
 <div class="container">
 	<div class="sg-data sg-file" th:with="tempId=${#strings.isEmpty(entity.uid)}?${#strings.randomAlphanumeric(10)}:${entity.uid}" th:id="${'file-' + tempId}">
