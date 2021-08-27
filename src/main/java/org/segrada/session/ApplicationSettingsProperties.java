@@ -1,6 +1,7 @@
 package org.segrada.session;
 
 import com.google.inject.Singleton;
+import org.codehaus.jettison.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,7 +61,11 @@ public class ApplicationSettingsProperties implements ApplicationSettings {
 		buildMap.put("SEGRADA_SOLR_FIELD_TAG", "solr.field_tag");
 		buildMap.put("SEGRADA_SOLR_FIELD_COLOR", "solr.field_color");
 		buildMap.put("SEGRADA_SOLR_FIELD_ICON", "solr.icon");
-		buildMap.put("SEGRADA_MAP_ENGINE", "map.engine");
+		buildMap.put("SEGRADA_MAP_DEFAULT_ZOOM", "map.defaultZoom");
+		buildMap.put("SEGRADA_MAP_DEFAULT_LAT", "map.defaultLat");
+		buildMap.put("SEGRADA_MAP_DEFAULT_LNG", "map.defaultLng");
+		buildMap.put("SEGRADA_MAP_PROVIDER", "map.provider");
+		// map options are handled below - as JSON string
 		buildMap.put("SEGRADA_BINARY_DATA_SERVICE", "binaryDataService");
 		buildMap.put("SEGRADA_HADOOP_CONFIGURATION_FILES", "binaryDataService.hadoop.configurationFiles");
 		buildMap.put("SEGRADA_HADOOP_FS_DEFAULT_FS", "binaryDataService.hadoop.fs.defaultFS");
@@ -96,7 +101,7 @@ public class ApplicationSettingsProperties implements ApplicationSettings {
 			System.exit(-1);
 		}
 
-		// now overwrite propeties with those defined as system variables
+		// now overwrite properties with those defined as system variables
 		Map<String, String> var = System.getenv();
 		for (Map.Entry<String, String> envToPropEntry : environmentToProperty.entrySet()) {
 			if (var.containsKey(envToPropEntry.getKey())) {
@@ -109,6 +114,23 @@ public class ApplicationSettingsProperties implements ApplicationSettings {
 					if (logger.isInfoEnabled())
 						logger.info("Property set from environment: " + key + ": " + value);
 				}
+			}
+		}
+
+		// map options as JSON string
+		if (var.containsKey("SEGRADA_MAP_OPTIONS")) {
+			String value = var.get("SEGRADA_MAP_OPTIONS");
+
+			try {
+				JSONObject jsonSettings = new JSONObject(value);
+
+				Iterator it = jsonSettings.keys();
+				while (it.hasNext()) {
+					String key = (String) it.next();
+					settings.setProperty("map.options." + key, jsonSettings.getString(key));
+				}
+			} catch (Exception e) {
+				logger.error("Could not read SEGRADA_MAP_OPTIONS: ", e);
 			}
 		}
 

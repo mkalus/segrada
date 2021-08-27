@@ -55,19 +55,14 @@ public class MainController {
 		String requireLogin = applicationSettings.getSetting("requireLogin");
 		boolean showLogout = requireLogin != null && !requireLogin.isEmpty() && requireLogin.equalsIgnoreCase("true");
 
-		// map engine defined in settings
-		String mapEngine = applicationSettings.getSetting("map.engine");
-		if (mapEngine == null) mapEngine = "leaflet"; // leaflet as default
-
 		// create model map
 		Map<String, Object> model = new HashMap<>();
 		model.put("version", SegradaUpdateChecker.currentVersion);
 		model.put("versionUpdate", versionUpdate);
 		model.put("showLogout", showLogout);
-		model.put("mapEngine", mapEngine);
 
 		try {
-			model.put("mapSettings", defineMapSettings(mapEngine));
+			model.put("mapSettings", defineMapSettings());
 		} catch (JSONException e) {
 			// ignore silently
 		}
@@ -76,9 +71,7 @@ public class MainController {
 	}
 
 	// define map settings as JSON string
-	protected String defineMapSettings(String mapEngine) throws JSONException {
-		if (!mapEngine.equals("leaflet")) return "";
-
+	protected String defineMapSettings() throws JSONException {
 		// define map settings
 		JSONObject mapSettings = new JSONObject();
 
