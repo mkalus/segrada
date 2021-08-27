@@ -31,7 +31,11 @@ Example:
 * `allowAnonymous` Allow anonymous login, if requireLogin is true (default: false)
 * `uploads.storage` Type of storage used when uploading files, MEMORY or FILE (default: MEMORY)
 * `uploads.maximum_upload_size` Maximum upload size (default: 52428800 aka 50 MB)
-* `map.engine` Map engine to use (default: ol for OpenLayers, no other options yet)
+* `map.defaultZoom` Zoom level of map without markers (default: 1, can be 0-20)
+* `map.defaultLat` Default latitude of map (default: 0)
+* `map.defaultLng` Default longitude of map (default: 0)
+* `map.provider` Map provider as per definitions of [Leaflet-Providers](https://github.com/leaflet-extras/leaflet-providers) (default: Stamen.TerrainBackground), see [preview](http://leaflet-extras.github.io/leaflet-providers/preview/index.html) for examples.
+* `map.options.[key]` Additional options for map providers (e.g. API key `map.options.apiKey = 123456`).
 * `binaryDataService` File service use, for Hadoop, set org.segrada.service.binarydata.BinaryDataServiceHadoop (default: org.segrada.service.binarydata.BinaryDataServiceFile)
 * `binaryDataService.hadoop.configurationFiles` Hadoop optional configuration file (comma separated, default: empty)
 * `binaryDataService.hadoop.fs.defaultFS` Hadoop server URI (default: hdfs://localhost:9000/)
@@ -80,7 +84,11 @@ Mappings to command line parameters above:
 * `SEGRADA_SOLR_FIELD_TAG` -> `solr.field_tag`
 * `SEGRADA_SOLR_FIELD_COLOR` -> `solr.field_color`
 * `SEGRADA_SOLR_FIELD_ICON` -> `solr.field_icon`
-* `SEGRADA_MAP_ENGINE` -> `map.engine`
+* `SEGRADA_MAP_DEFAULT_ZOOM` -> `map.defaultZoom"`
+* `SEGRADA_MAP_DEFAULT_LAT` -> `map.defaultLat"`
+* `SEGRADA_MAP_DEFAULT_LNG` -> `map.defaultLng"`
+* `SEGRADA_MAP_PROVIDER` -> `map.provider"`
+* `SEGRADA_MAP_OPTIONS` -> If this is a JSON object (as string), it will parse the key/values and set the map options
 * `SEGRADA_BINARY_DATA_SERVICE` -> `binaryDataService`
 * `SEGRADA_HADOOP_CONFIGURATION_FILES` -> `binaryDataService.hadoop.configurationFiles`
 * `SEGRADA_HADOOP_FS_DEFAULT_FS` -> `binaryDataService.hadoop.fs.defaultFS`

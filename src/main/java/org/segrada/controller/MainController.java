@@ -3,6 +3,8 @@ package org.segrada.controller;
 import com.google.inject.Inject;
 import com.google.inject.servlet.RequestScoped;
 import com.sun.jersey.api.view.Viewable;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 import org.segrada.service.ConfigService;
 import org.segrada.servlet.SegradaUpdateChecker;
 import org.segrada.session.ApplicationSettings;
@@ -53,17 +55,40 @@ public class MainController {
 		String requireLogin = applicationSettings.getSetting("requireLogin");
 		boolean showLogout = requireLogin != null && !requireLogin.isEmpty() && requireLogin.equalsIgnoreCase("true");
 
-		// map engine defined in settings
-		String mapEngine = applicationSettings.getSetting("map.engine");
-		if (mapEngine == null) mapEngine = "ol"; // open layers as default
-
 		// create model map
 		Map<String, Object> model = new HashMap<>();
 		model.put("version", SegradaUpdateChecker.currentVersion);
 		model.put("versionUpdate", versionUpdate);
 		model.put("showLogout", showLogout);
-		model.put("mapEngine", mapEngine);
+
+		try {
+			model.put("mapSettings", defineMapSettings());
+		} catch (JSONException e) {
+			// ignore silently
+		}
 
 		return new Viewable("home", model);
+	}
+
+	// define map settings as JSON string
+	protected String defineMapSettings() throws JSONException {
+		// define map settings
+		JSONObject mapSettings = new JSONObject();
+
+		// from settings
+		mapSettings.put("provider", applicationSettings.getSettingOrDefault("map.provider", "Stamen.TerrainBackground"));
+		mapSettings.put("zoom", applicationSettings.getSettingAsInteger("map.defaultZoom", 13));
+		mapSettings.put("lat", applicationSettings.getSettingAsInteger("map.defaultLat", 0));
+		mapSettings.put("lng", applicationSettings.getSettingAsInteger("map.defaultLng", 0));
+
+		// options
+		JSONObject mapOptions = new JSONObject();
+		mapSettings.put("options", mapOptions);
+
+		for (Map.Entry<String, String> entry : applicationSettings.getAllSettingsStartingWith("map.options.").entrySet()) {
+			mapOptions.put(entry.getKey(), entry.getValue());
+		}
+
+		return mapSettings.toString();
 	}
 }

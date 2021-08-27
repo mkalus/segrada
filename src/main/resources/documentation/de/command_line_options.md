@@ -31,7 +31,11 @@ Beispiel:
 * `allowAnonymous` Anonymen Login erlauben, falls requireLogin wahr ist (Voreinstellung: false)
 * `uploads.storage` Art des Zwischenspeichers für hochgeladene Dateien, MEMORY oder FILE (Voreinstellung: MEMORY)
 * `uploads.maximum_upload_size` Maximum upload size (Voreinstellung: 52428800 aka 50 MB)
-* `map.engine` Verwendeter Kartenserver (Voreinstellung: ol für OpenLayers, keine weiteren Optionen im Moment)
+* `map.defaultZoom` Zoom-Ebene für Karten ohne Marker (Voreinstellung: 1, Werte zwischen 0 und 20)
+* `map.defaultLat` Voreinstellung Breitengrad (Voreinstellung: 0)
+* `map.defaultLng` Voreinstellung Längengrad (Voreinstellung: 0)
+* `map.provider` Karten-Provider wie in [Leaflet-Providers](https://github.com/leaflet-extras/leaflet-providers) definiert (Voreinstellung: Stamen.TerrainBackground), [Beispiele](http://leaflet-extras.github.io/leaflet-providers/preview/index.html)
+* `map.options.[schlüssel]` Zusätzliche Optionen für Karten-Provider (z.B. API-Schlüssel `map.options.apiKey = 123456`).
 * `binaryDataService` Verwendeter Dateidienst, für Hadoop org.segrada.service.binarydata.BinaryDataServiceHadoop setzen (Voreinstellung: org.segrada.service.binarydata.BinaryDataServiceFile)
 * `binaryDataService.hadoop.configurationFiles` Hadoop Optionale Konfigurationsdateien (Komma-getrennt, Vorsteinstellung: leer)
 * `binaryDataService.hadoop.fs.defaultFS` Hadoop Server-URI (Voreinstellung: hdfs://localhost:9000/)
@@ -48,12 +52,14 @@ Beispiel Windows:
 
     set SEGRADA_SAVE_PATH=C:\path\to\segrada
     set SEGRADA_ORIENTDB_URL=plocal:C:\path\to\segrada\db
+    set SEGRADA_MAP_PROVIDER=OpenStreetMap.Mapnik
     java -jar segrada-1.0-SNAPSHOT.jar
 
 Beispiel Linux/OS X:
 
     SEGRADA_SAVE_PATH=/home/myhome/devel/Segrada/segrada_data \
     SEGRADA_ORIENTDB_URL=plocal:/home/myhome/Segrada/Java/segrada_data/db \
+    SEGRADA_MAP_PROVIDER=OpenStreetMap.Mapnik \
     java -jar segrada-1.0-SNAPSHOT.jar
 
 Umgebungsvariablen und ihre Äquivalente von oben:
@@ -79,7 +85,11 @@ Umgebungsvariablen und ihre Äquivalente von oben:
 * `SEGRADA_SOLR_FIELD_TAG` -> `solr.field_tag`
 * `SEGRADA_SOLR_FIELD_COLOR` -> `solr.field_color`
 * `SEGRADA_SOLR_FIELD_ICON` -> `solr.field_icon`
-* `SEGRADA_MAP_ENGINE` -> `map.engine`
+* `SEGRADA_MAP_DEFAULT_ZOOM` -> `map.defaultZoom"`
+* `SEGRADA_MAP_DEFAULT_LAT` -> `map.defaultLat"`
+* `SEGRADA_MAP_DEFAULT_LNG` -> `map.defaultLng"`
+* `SEGRADA_MAP_PROVIDER` -> `map.provider"`
+* `SEGRADA_MAP_OPTIONS` -> Falls dies ein JSON-Objekt ist (als Zeichenkette), wird der Wert in korrekte Karten-Optionen umgewandelt
 * `SEGRADA_BINARY_DATA_SERVICE` -> `binaryDataService`
 * `SEGRADA_HADOOP_CONFIGURATION_FILES` -> `binaryDataService.hadoop.configurationFiles`
 * `SEGRADA_HADOOP_FS_DEFAULT_FS` -> `binaryDataService.hadoop.fs.defaultFS`

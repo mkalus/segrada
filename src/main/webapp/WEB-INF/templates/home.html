@@ -38,6 +38,9 @@
 	<div id="sg-base" th:text="@{/}">/</div>
 	<div id="sg-wait"><div th:replace="partials/common :: loadingicon"></div></div>
 	<div id="sg-wait-btn"><img src="../../img/loading_btn.gif" alt="" th:src="@{/img/loading_btn.gif}" th:alt-title="#{Loading}" /></div>
+	<div id="sg-map-settings" th:utext="${mapSettings}"></div>
+	<div id="sg-delete-text" th:text="#{Delete}"></div>
+	<div id="sg-really-delete-text" th:text="#{ReallyDelete}"></div>
 </div>
 
 <div th:replace="partials/common :: footer"></div>

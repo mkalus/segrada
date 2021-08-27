@@ -8,14 +8,13 @@ function escapeHTML(myString) {
 	 * Substring matcher for remote searches for nodes
 	 * @param searchUrl
 	 */
-	var genericMatcher = function(searchUrl) {
-		return function findMatches(q, cb) {
-			var response = $.ajax({
-				url: searchUrl + encodeURIComponent(q),
-				async: false
+	const genericMatcher = function(searchUrl) {
+		return function findMatches(q, _, cb) {
+			const response = $.ajax({
+				url: searchUrl + encodeURIComponent(q)
+			}).done(function (data) {
+				cb(data);
 			});
-
-			cb(JSON.parse(response.responseText));
 		}
 	};
 
@@ -23,25 +22,24 @@ function escapeHTML(myString) {
 	/**
 	 * Substring matcher for remote searches for nodes
 	 */
-	var nodeMatcher = function() {
-		return function findMatches(q, cb) {
-			var searchUrl = urlSegradaNodeSearch + encodeURIComponent(q);
+	const nodeMatcher = function() {
+		return function findMatches(q, _, cb) {
+			let searchUrl = urlSegradaNodeSearch + encodeURIComponent(q);
 
 			// get current textField
-			var textField = $(".sg-node-search").filter(":focus");
-			var relationTypeSelect = $("#" + textField.attr('data-select-id') + ' option').filter(":selected");
-			var contraintIds = relationTypeSelect.attr(textField.attr('data-attr'));
+			const textField = $(".sg-node-search").filter(":focus");
+			const relationTypeSelect = $("#" + textField.attr('data-select-id') + ' option').filter(":selected");
+			const contraintIds = relationTypeSelect.attr(textField.attr('data-attr'));
 			if (contraintIds != null && contraintIds.length > 0) {
 				// add list of ids
 				searchUrl += '&tags=' + encodeURIComponent(contraintIds);
 			}
 
-			var response = $.ajax({
-				url: searchUrl,
-				async: false
+			const response = $.ajax({
+				url: searchUrl
+			}).done(function (data) {
+				cb(data);
 			});
-
-			cb(JSON.parse(response.responseText));
 		}
 	};
 
@@ -470,7 +468,8 @@ function escapeHTML(myString) {
 					limit: 25,
 					displayKey: 'title',
 					valueKey: 'title',
-					source: genericMatcher(urlSegradaTagSearch)
+					source: genericMatcher(urlSegradaTagSearch),
+					async: true
 				}
 			});
 
