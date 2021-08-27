@@ -1,8 +1,10 @@
 package org.segrada.test;
 
+import org.jetbrains.annotations.Nullable;
 import org.segrada.session.ApplicationSettings;
 
 import java.util.Collection;
+import java.util.Map;
 
 /**
  * Copyright 2015-2021 Maximilian Kalus [segrada@auxnet.de]
@@ -25,6 +27,27 @@ public class OrientDbTestApplicationSettings implements ApplicationSettings {
 	@Override
 	public String getSetting(String key) {
 		return "admin";
+	}
+
+	@Nullable
+	@Override
+	public String getSettingOrDefault(String key, String defaultValue) {
+		return null;
+	}
+
+	@Override
+	public int getSettingAsInteger(String key, int defaultValue) {
+		return 0;
+	}
+
+	@Override
+	public double getSettingAsDouble(String key, double defaultValue) {
+		return 0;
+	}
+
+	@Override
+	public Map<String, String> getAllSettingsStartingWith(String key) {
+		return null;
 	}
 
 	@Override

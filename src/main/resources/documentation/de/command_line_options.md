@@ -31,7 +31,7 @@ Beispiel:
 * `allowAnonymous` Anonymen Login erlauben, falls requireLogin wahr ist (Voreinstellung: false)
 * `uploads.storage` Art des Zwischenspeichers für hochgeladene Dateien, MEMORY oder FILE (Voreinstellung: MEMORY)
 * `uploads.maximum_upload_size` Maximum upload size (Voreinstellung: 52428800 aka 50 MB)
-* `map.engine` Verwendeter Kartenserver (Voreinstellung: ol für OpenLayers, keine weiteren Optionen im Moment)
+* `map.engine` Verwendeter Kartenserver (Voreinstellung: leaflet für Leaflet, ol für OpenLayers, letzteres ist veraltet)
 * `binaryDataService` Verwendeter Dateidienst, für Hadoop org.segrada.service.binarydata.BinaryDataServiceHadoop setzen (Voreinstellung: org.segrada.service.binarydata.BinaryDataServiceFile)
 * `binaryDataService.hadoop.configurationFiles` Hadoop Optionale Konfigurationsdateien (Komma-getrennt, Vorsteinstellung: leer)
 * `binaryDataService.hadoop.fs.defaultFS` Hadoop Server-URI (Voreinstellung: hdfs://localhost:9000/)

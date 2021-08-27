@@ -2,6 +2,7 @@ package org.segrada.session;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
+import java.util.Map;
 
 /**
  * Copyright 2015-2021 Maximilian Kalus [segrada@auxnet.de]
@@ -27,6 +28,36 @@ public interface ApplicationSettings {
 	 * @return value retrieved or null
 	 */
 	@Nullable String getSetting(String key);
+
+	/**
+	 * retrieve a setting from settings - if empty, get default
+	 * @param key to look for
+	 * @return value retrieved or default value
+	 */
+	@Nullable String getSettingOrDefault(String key, String defaultValue);
+
+	/**
+	 * retrieve a setting from settings - parse to int
+	 * @param key to look for
+	 * @param defaultValue value retrieved or default value
+	 * @return value retrieved or default value
+	 */
+	int getSettingAsInteger(String key, int defaultValue);
+
+	/**
+	 * retrieve a setting from settings - parse to double
+	 * @param key to look for
+	 * @param defaultValue value retrieved or default value
+	 * @return value retrieved or default value
+	 */
+	double getSettingAsDouble(String key, double defaultValue);
+
+	/**
+	 * retrieve all settings starting with a certain key - this key is also cut from the settings
+	 * @param key part to look for
+	 * @return list of matches
+	 */
+	Map<String, String> getAllSettingsStartingWith(String key);
 
 	/**
 	 * retrieve a setting from the settings - with default value

@@ -145,6 +145,68 @@ public class ApplicationSettingsProperties implements ApplicationSettings {
 		return settings.getProperty(key);
 	}
 
+	/**
+	 * retrieve a setting from settings - if empty, get default
+	 * @param key to look for
+	 * @return value retrieved or default value
+	 */
+	@Nullable
+	@Override
+	public String getSettingOrDefault(String key, String defaultValue) {
+		String back = getSetting(key);
+		if (back == null || back.isEmpty()) return defaultValue;
+		return back;
+	}
+
+	/**
+	 * retrieve a setting from settings - parse to int
+	 * @param key to look for
+	 * @param defaultValue value retrieved or default value
+	 * @return value retrieved or default value
+	 */
+	@Override
+	public int getSettingAsInteger(String key, int defaultValue) {
+		String back = getSetting(key);
+		if (back == null || back.isEmpty()) return defaultValue;
+
+		try {
+			return Integer.parseInt(back);
+		} catch (Exception e) {
+			return defaultValue;
+		}
+	}
+
+	/**
+	 * retrieve a setting from settings - parse to double
+	 * @param key to look for
+	 * @param defaultValue value retrieved or default value
+	 * @return value retrieved or default value
+	 */
+	@Override
+	public double getSettingAsDouble(String key, double defaultValue) {
+		String back = getSetting(key);
+		if (back == null || back.isEmpty()) return defaultValue;
+
+		try {
+			return Double.parseDouble(back);
+		} catch (Exception e) {
+			return defaultValue;
+		}
+	}
+
+	@Override
+	public Map<String, String> getAllSettingsStartingWith(String key) {
+		Map<String, String> filteredSettings = new HashMap<>();
+
+		for (String propertyKey : settings.stringPropertyNames()) {
+			if (propertyKey.startsWith(key)) {
+				filteredSettings.put(propertyKey.substring(key.length()), settings.get(propertyKey).toString());
+			}
+		}
+
+		return filteredSettings;
+	}
+
 	@Nullable
 	@Override
 	public String getSetting(String key, @Nullable String defaultValue) {

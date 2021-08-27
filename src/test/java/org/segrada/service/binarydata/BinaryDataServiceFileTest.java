@@ -16,6 +16,7 @@ import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.*;
 
@@ -76,6 +77,27 @@ public class BinaryDataServiceFileTest {
 			@Override
 			public String getSetting(String key) {
 				return savePath;
+			}
+
+			@org.jetbrains.annotations.Nullable
+			@Override
+			public String getSettingOrDefault(String key, String defaultValue) {
+				return null;
+			}
+
+			@Override
+			public int getSettingAsInteger(String key, int defaultValue) {
+				return 0;
+			}
+
+			@Override
+			public double getSettingAsDouble(String key, double defaultValue) {
+				return 0;
+			}
+
+			@Override
+			public Map<String, String> getAllSettingsStartingWith(String key) {
+				return null;
 			}
 
 			@Nullable

@@ -31,7 +31,7 @@ Example:
 * `allowAnonymous` Allow anonymous login, if requireLogin is true (default: false)
 * `uploads.storage` Type of storage used when uploading files, MEMORY or FILE (default: MEMORY)
 * `uploads.maximum_upload_size` Maximum upload size (default: 52428800 aka 50 MB)
-* `map.engine` Map engine to use (default: ol for OpenLayers, no other options yet)
+* `map.engine` Map engine to use (default: leaflet for Leaflet, set to ol for OpenLayers, but this is deprecated)
 * `binaryDataService` File service use, for Hadoop, set org.segrada.service.binarydata.BinaryDataServiceHadoop (default: org.segrada.service.binarydata.BinaryDataServiceFile)
 * `binaryDataService.hadoop.configurationFiles` Hadoop optional configuration file (comma separated, default: empty)
 * `binaryDataService.hadoop.fs.defaultFS` Hadoop server URI (default: hdfs://localhost:9000/)
