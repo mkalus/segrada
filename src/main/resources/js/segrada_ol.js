@@ -55,7 +55,6 @@
 	 */
 	function updateMap(markerContainer, vectorSource) {
 		vectorSource.clear(true);
-		console.log(vectorSource);
 
 		// add existing markers
 		$('.sg-location-marker', markerContainer).each(function() {

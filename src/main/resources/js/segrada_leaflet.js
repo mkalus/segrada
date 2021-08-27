@@ -52,15 +52,20 @@
             // get other map features
             const form = $('.sg-map-form', container);
             const input = $('.sg-geocomplete', form);
-
-            console.log(mapSettings.provider);
-            console.log(mapSettings.lat);
+            let markerContainer = $('#' + id + '-markers', container);
 
             //create map
-            const map = L.map(id + '-map').setView([mapSettings.lat || 0, mapSettings.lng || 0], mapSettings.zoom || 2);
+            const map = L.map(id + '-map').setView([mapSettings.lat || 0, mapSettings.lng || 0], mapSettings.zoom || 1);
 
             // add map from settings
-            L.tileLayer.provider(mapSettings.provider || "Stamen.TerrainBackground", mapSettings.options || {}).addTo(map);
+            const mapLayer = L.tileLayer.provider(mapSettings.provider || "Stamen.TerrainBackground", mapSettings.options || {});
+            mapLayer.addTo(map);
+
+            // markers
+            const markers = L.featureGroup().addTo(map);
+
+            // add existing markers
+            updateMap(markerContainer, markers, map);
 
             // add form opener
             $('.sg-map-add-marker', container).click(function(e) {
@@ -95,9 +100,112 @@
                 }
             });
 
-            console.log(container);
+            // form submitted
+            form.ajaxForm({
+                beforeSubmit: function(arr, $form, options) {
+                    // disable container
+                    container.addClass('disabled');
+                    return true;
+                },
+                success: function (responseText, statusText, xhr, $form) {
+                    container.removeClass('disabled');
+                    markerContainer.replaceWith(responseText);
+                    markerContainer = $('#' + id + '-markers', container);
+                    // update map
+                    updateMap(markerContainer, markers, map);
+                    // clear form
+                    input.val('');
+                    $('input[name=lat]', form).val('');
+                    $('input[name=lng]', form).val('');
+                    $('input[name=comment]', form).val('');
+                    $('input[type=submit]', form).hide();
+                },
+                error: function (responseText, statusText, xhr, $form) {
+                    container.removeClass('disabled');
+                    alert("Error " + responseText.status + "\n" + responseText.statusText);
+                }
+            });
         });
     } // afterMapAjax end
+
+    /**
+     * add a single marker to the map
+     * @param $this
+     * @param markerContainer
+     * @param markers L.featureGroup
+     * @param map
+     */
+    function addMarkerToMap($this, markerContainer, markers, map) {
+        const lat = parseFloat($this.attr('data-lat'));
+        const lng = parseFloat($this.attr('data-lng'));
+
+        const popupContent = document.createElement("DIV");
+
+        // add comment
+        const comment = $this.attr('data-comment');
+        if (typeof comment !== 'undefined' && comment !== '') {
+            const commentContent = document.createElement("P");
+            commentContent.innerText = comment;
+            popupContent.appendChild(commentContent);
+        }
+
+        // add delete button
+        if ($this.attr('data-delete-ok')==='1') {
+            const deleteContent = document.createElement("P");
+            popupContent.appendChild(deleteContent);
+
+            const deleteButton = document.createElement("BUTTON");
+            deleteButton.setAttribute("class", "btn btn-danger btn-xs");
+            deleteButton.innerText = $('#sg-delete-text').html();
+            deleteContent.appendChild(deleteButton);
+
+            // add delete listener
+            deleteButton.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                // call confirm deletion
+                const deleteConfirmText = $('#sg-really-delete-text').html().replace('{0}', lat + ',' + lng);
+                if (confirm(deleteConfirmText)) {
+                    // call ajax
+                    $.get($this.attr('data-delete'), function (responseText) {
+                        const id = markerContainer.attr('id');
+                        markerContainer.replaceWith(responseText);
+                        markerContainer = $('#' + id);
+                        // update map
+                        updateMap(markerContainer, markers, map, false);
+                    });
+                }
+            });
+        }
+
+        const marker = L.marker([lat, lng]).addTo(markers);
+        marker.bindPopup(popupContent);
+    }
+
+    /**
+     * Update map markers on map
+     * @param markerContainer
+     * @param markers L.featureGroup
+     * @param map
+     * @param setBounds set to false to leave map like this after update
+     */
+    function updateMap(markerContainer, markers, map, setBounds = true) {
+        markers.clearLayers();
+
+        // add existing markers
+        $('.sg-location-marker', markerContainer).each(function() {
+            addMarkerToMap($(this), markerContainer, markers, map)
+        });
+
+        // update bounds
+        if (setBounds) {
+            const bb = markers.getBounds();
+
+            if (bb.isValid()) {
+                map.fitBounds(bb.pad(0.05));
+            }
+        }
+    }
 
     // called after document is ready
     $(document).ready(function () {

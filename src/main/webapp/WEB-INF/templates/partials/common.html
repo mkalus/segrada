@@ -189,8 +189,9 @@ Common fragments.
 	<div class="sg-map sg-margin-top" th:id="${'locations-' + entity.uid + '-map'}">
 	</div>
 	<div class="hidden" th:replace="partials/common :: listlocationmarkers (entity=${entity})">Markers</div>
+	<!-- TODO: Deprecated with the use of Leaflet
 	<div class="hidden" th:id="${'locations-' + entity.uid + '-delete'}" th:text="#{Delete}">Delete</div>
-	<div class="hidden" th:id="${'locations-' + entity.uid + '-delete-confirm'}" th:text="#{ReallyDelete}">Really delete?</div>
+	<div class="hidden" th:id="${'locations-' + entity.uid + '-delete-confirm'}" th:text="#{ReallyDelete}">Really delete?</div>-->
 	<div class="sg-margin-top-sm" th:if="${identity.hasAccess('LOCATION_ADD')}">
 		<a href="#" class="btn btn-success sg-map-add-marker"><i class="fa fa-plus"></i> <span th:text="#{add.location}">Add location</span></a>
 		<span th:text="#{add.location_dblClick}" class="sg-location-dbl-click" th:attr="data-confirm=#{add.location_dblClick_question}">Double click hint</span>
