@@ -9,7 +9,6 @@ import org.segrada.model.prototype.ISavedQuery;
 import org.segrada.model.prototype.ITag;
 
 import javax.servlet.ServletContext;
-import javax.ws.rs.core.Context;
 
 /**
  * Copyright 2015-2021 Maximilian Kalus [segrada@auxnet.de]
@@ -64,11 +63,11 @@ public class JSONConverter {
 				font.put("background", node.getColorCode());
 				o.put("font", font);
 			}
-		}
-		// no picture, but color
-		else if (node.getColor() != null) {
+		} else {
+			// icon only
 			JSONObject icon = new JSONObject();
-			icon.put("color", node.getColorCode());
+			icon.put("code", "\uf192");
+			icon.put("color", node.getColor() != null ? node.getColorCode() : "#000000");
 			o.put("icon", icon);
 		}
 

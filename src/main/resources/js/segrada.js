@@ -72,7 +72,7 @@ function escapeHTML(myString) {
 	 */
 	$.fn.onEnter = function (func) {
 		this.bind('keypress', function (e) {
-			if (e.keyCode == 13) func.apply(this, [e]);
+			if ((e.key !== undefined && e.key === 'Enter') || e.keyCode === 13) func.apply(this, [e]);
 		});
 		return this;
 	};
@@ -172,7 +172,7 @@ function escapeHTML(myString) {
 			beforeSubmit: function(arr, $form, options) {
 				// dynamic target?
 				var target = $form.attr('data-target-id');
-				if (typeof target == "undefined" || target == null || target.length == 0) {
+				if (typeof target == "undefined" || target === null || target.length === 0) {
 					target = '#sg-control';
 
 					// hide graph
@@ -187,7 +187,7 @@ function escapeHTML(myString) {
 			success: function (responseText, statusText, xhr, $form) {
 				// dynamic target?
 				var target = $form.attr('data-target-id');
-				if (typeof target == "undefined" || target == null || target.length == 0) target = '#sg-control';
+				if (typeof target == "undefined" || target == null || target.length === 0) target = '#sg-control';
 				var container = $(target);
 				container.html(responseText);
 				afterAjax(container);
@@ -195,7 +195,7 @@ function escapeHTML(myString) {
 			error: function (responseText, statusText, xhr, $form) {
 				// dynamic target?
 				var target = $form.attr('data-target-id');
-				if (typeof target == "undefined" || target == null || target.length == 0) target = '#sg-control';
+				if (typeof target == "undefined" || target == null || target.length === 0) target = '#sg-control';
 				var container = $(target);
 				container.html(responseText.statusText);
 				alert("Error " + responseText.status + "\n" + responseText.statusText);
@@ -800,9 +800,9 @@ function escapeHTML(myString) {
 
 			// optionally load title and uid
 			var title = $(this).attr('data-title');
-			if (title.length != 0) graphName = title;
+			if (title.length !== 0) graphName = title;
 			var uid = $(this).attr('data-uid');
-			if (uid.length != 0) graphUid = uid;
+			if (uid.length !== 0) graphUid = uid;
 			e.preventDefault();
 		});
 
@@ -831,17 +831,17 @@ function escapeHTML(myString) {
 				var myId = n.attr('data-id');
 				var myLevel = n.attr('data-level');
 				tagNodes.push({id: myId, label: n.html(), level: myLevel, url: n.attr('data-url')});
-				if (myLevel == '0') {
+				if (myLevel === '0') {
 					tagEdges.push({from: myId, to: centerId });
 					countParents++;
-				} else if (myLevel == '2') {
+				} else if (myLevel === '2') {
 					tagEdges.push({from: centerId, to: myId });
 					countChildren++;
 				}
 			});
 
 			// dynamic height of container box
-			var countNodes = countParents>countChildren?(countParents==0?1:countParents):countChildren;
+			var countNodes = countParents>countChildren?(countParents===0?1:countParents):countChildren;
 			container.css({width: '100%', height: (countNodes*50) + 'px', border: '1px solid #ccc'});
 
 			// create a network
@@ -917,7 +917,7 @@ function escapeHTML(myString) {
 						addEdge: 'Verknüpfung hinzufügen',
 						editNode: 'Knoten editieren',
 						editEdge: 'Verknüpfung editieren',
-						addDescription: 'Klicke auf eine freie Stelle, um einen neuen Knoten zu plazieren.',
+						addDescription: 'Klicke auf eine freie Stelle, um einen neuen Knoten zu platzieren.',
 						edgeDescription: 'Klicke auf einen Knoten und ziehe die Verknüpfung zu einem anderen Knoten, um diese zu verbinden.',
 						editEdgeDescription: 'Klicke auf die Verbindungspunkte und ziehe diese auf einen Knoten, um sie zu verbinden.',
 						createEdgeError: 'Es ist nicht möglich, Verknüpfungen mit Clustern zu verbinden.',
@@ -959,10 +959,10 @@ function escapeHTML(myString) {
 				},
 				nodes: {
 					shape: 'icon',
-					color: {
-						border: '#000',
-						background: '#fff'
-					}
+					// color: {
+					// 	border: '#000',
+					// 	background: '#fff'
+					// }
 				},
 				edges: {
 					font: {
@@ -979,10 +979,7 @@ function escapeHTML(myString) {
 				},
 				groups: {
 					node: {
-						icon: {
-							code: '\uf192',
-							color: '#000000'
-						}
+						// individual icons via JSON
 					},
 					tag: {
 						shape: 'box',
