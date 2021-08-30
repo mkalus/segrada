@@ -15,7 +15,7 @@
 			<a href="#" class="btn btn-link" id="sg-graph-action-load" th:title="#{Load}" aria-label="Load"><i class="fa fa-folder-open"></i></a>
 			<a href="#" class="btn btn-link" id="sg-graph-action-save" th:title="#{Save}" aria-label="Save"><i class="fa fa-floppy-o"></i></a>
 			<a href="#" class="btn btn-link" id="sg-graph-action-restart" th:title="#{Clear}" aria-label="Clear"><i class="fa fa-bomb"></i></a>
-			<a href="#" class="btn btn-link" id="sg-graph-action-reload" th:title="#{Reload}" aria-label="Reload"><i class="fa fa-refresh"></i></a>
+			<a href="#" th:href="@{/node/graph}" class="btn btn-link" id="sg-graph-action-reload" th:title="#{Reload}" aria-label="Reload"><i class="fa fa-refresh"></i></a>
 			<a href="#" class="btn btn-link" id="sg-graph-action-fit" th:title="#{Fit}" aria-label="Fit View"><i class="fa fa-arrows-alt"></i></a>
 			<a href="#" class="btn btn-link" id="sg-graph-action-remove" th:title="#{RemoveSelected}" aria-label="Remove Selected Elements"><i class="fa fa-minus-circle"></i></a>
 		</div>
@@ -28,7 +28,7 @@
 </div>
 
 <div id="sg-graph-context-menu" style="display: none">
-	<a href="#" data-href="" class="sg-data-add" th:title="#{Show}"><i class="fa fa-eye"></i> <span th:text="#{Show}">Show</span></a>
+	<a href="#" class="sg-data-add" th:title="#{Show}"><i class="fa fa-eye"></i> <span th:text="#{Show}">Show</span></a>
 	<a href="#" th:attr="data-href=@{/node/graph/XXUIDXX?expand=true}" class="sg-graph-update" th:title="#{AddAllToGraph}"><i class="fa fa-share"></i> <span th:text="#{AddAllToGraphShort}">Add all</span></a>
 	<a href="#" class="sg-graph-node-fix" th:title="#{Fix}"><i class="fa fa-pause-circle"></i> <span th:text="#{Fix}">Fix</span></a>
 	<a href="#" class="sg-graph-node-unfix" th:title="#{Unfix}"><i class="fa fa-play-circle"></i> <span th:text="#{Unfix}">Unfix</span></a>

@@ -1150,17 +1150,6 @@ function escapeHTML(myString) {
 		graphShow();
 		graphShowLoading();
 
-		// prepare data
-		const nodeIds = [];
-		const edgeIds = [];
-
-		graphNodes.get({fields: ['id']}).map(node => {
-			nodeIds.push(node.id);
-		});
-		graphEdges.get({fields: ['id']}).map(edge => {
-			edgeIds.push(edge.id);
-		});
-
 		const csrf = $('#sg-graph-container').attr('data-csrf');
 
 		// post AJAX data
@@ -1172,7 +1161,7 @@ function escapeHTML(myString) {
 				'Content-Type': 'application/json',
 				'X-CSRF-Token': csrf
 			},
-			data: JSON.stringify({ "nodes": nodeIds, "edges": edgeIds }),
+			data: JSON.stringify({ "nodes": graphNodes.getIds(), "edges": graphEdges.getIds() }),
 			success: function(data, textStatus, jqXHR) {
 				graphHideLoading();
 				// error handling TODO: make this nicer!
@@ -1275,6 +1264,37 @@ function escapeHTML(myString) {
 			graphNetwork.destroy();
 			graphInitialized = false;
 			graphInitialize();
+
+			// post data to refresh endpoint
+			$.post($(this).attr('href'), {
+					'_csrf': $('#sg-graph-container').attr('data-csrf'),
+					'data': JSON.stringify({
+						nodes: graphNodes.getIds(),
+						edges: graphEdges.getIds()
+					})
+				},
+				function(data) {
+					// check fixed nodes and save positions
+					if (data && data.nodes && data.nodes.length) {
+						for (let i = 0; i < data.nodes.length; i++) {
+							const nodeInGraph = graphNodes.get(data.nodes[i].id);
+							if (nodeInGraph) {
+								if (nodeInGraph.fixed) data.nodes[i].fixed = true; // set fixed to true
+								data.nodes[i].x = nodeInGraph.x;
+								data.nodes[i].y = nodeInGraph.y;
+							}
+						}
+					}
+
+					graphNodes.clear();
+					graphEdges.clear();
+
+					graphNodes.update(data.nodes);
+					graphEdges.update(data.edges);
+				}).fail(function() {
+				alert("ERROR");
+			});
+
 			e.preventDefault();
 		});
 		$('#sg-graph-action-fit').click(function(e) {

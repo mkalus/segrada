@@ -341,4 +341,58 @@ public class NodeController extends AbstractColoredController<INode> {
 			return "{\"error\": \"" + JSONObject.quote(e.getMessage()) + "\"}";
 		}
 	}
+
+	/**
+	 * Update graph data - posted jsonData is updated with fresh data from db
+	 * used to refresh graph
+	 * @param data
+	 * @return
+	 */
+	@POST
+	@Path("/graph")
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+	@RolesAllowed("GRAPH")
+	public String updateGraph(@FormParam("data") final String data) {
+		try {
+			// get posted json data
+			JSONObject jsonData;
+			if (data != null && !data.isEmpty()) jsonData = new JSONObject(data);
+			else jsonData = null;
+
+			// create node and edge list
+			JSONArray nodes = new JSONArray(1);
+			JSONArray edges = new JSONArray(1);
+
+			// nodes from data
+			JSONArray nodeIds = jsonData.getJSONArray("nodes");
+			if (nodeIds != null && nodeIds.length() > 0) {
+				for (int i = 0; i < nodeIds.length(); i++) {
+					INode node = service.findById(nodeIds.getString(i));
+					if (node != null)
+						nodes.put(jsonConverter.convertNodeToJSON(node));
+				}
+			}
+
+			// edges from data
+			JSONArray edgeIds = jsonData.getJSONArray("edges");
+			if (edgeIds != null) {
+				for (int i = 0; i < edgeIds.length(); i++) {
+					IRelation relation = relationService.findById(edgeIds.getString(i));
+					if (relation != null)
+						edges.put(jsonConverter.convertRelationToJSON(relation));
+				}
+			}
+
+			// create response object
+			JSONObject response = new JSONObject();
+
+			response.put("nodes", nodes);
+			response.put("edges", edges);
+
+			return response.toString();
+		} catch (Exception e) {
+			return "{\"error\": \"" + JSONObject.quote(e.getMessage()) + "\"}";
+		}
+	}
 }
