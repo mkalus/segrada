@@ -57,13 +57,13 @@ function escapeHTML(myString) {
 	urlSegradaRelationAdd = cleanPathFromSessionId(urlSegradaRelationAdd);
 
 	// is graph initialized?
-	var graphInitialized = false;
+	let graphInitialized = false;
 	// global graph data
-	var graphNodes = new vis.DataSet([]);
-	var graphEdges = new vis.DataSet([]);
-	var graphNetwork = null; // reference to graph network
-	var graphName = null; // current name of graph
-	var graphUid = null; // uid of saved graph
+	const graphNodes = new vis.DataSet([]);
+	const graphEdges = new vis.DataSet([]);
+	let graphNetwork = null; // reference to graph network
+	let graphName = null; // current name of graph
+	let graphUid = null; // uid of saved graph
 
 	/**
 	 * on enter pressed event
@@ -78,7 +78,7 @@ function escapeHTML(myString) {
 	};
 
 	// will find first id of string (used in ajax)
-	var idRegex = new RegExp(/<([^\s]+).*?id="([^"]*?)".*?>/i);
+	const idRegex = new RegExp(/<([^\s]+).*?id="([^"]*?)".*?>/i);
 
 	/**
 	 * helper function to create pictogram chooser elements
@@ -89,18 +89,18 @@ function escapeHTML(myString) {
 	 * @param term to search for
 	 */
 	function segradaPictogramChooser(modal, modalContent, myId, part, term) {
-		var search = urlSegradaPictogramSearch + encodeURIComponent(term);
+		const search = urlSegradaPictogramSearch + encodeURIComponent(term);
 		$.getJSON(search, function (data) {
-			var items = [];
+			const items = [];
 			$.each(data, function (idx, element) {
-				var encodedTitle = $('<div/>').text(element.title).html();
+				const encodedTitle = $('<div/>').text(element.title).html();
 				items.push('<div class="col-xs-1 sg-no-padding-right"><a class="sg-pictogram-modal-link" href="#" data-id="' + element.id + '" data-uid="' + element.uid + '" title="' + encodedTitle + '"><img src="' + urlSegradaPictogramFile + element.uid + '" width="24" height="24" alt="' + encodedTitle + '" /></a></div>');
 			});
 			modalContent.html("<div class='row'>" + items.join("") + "</div>");
 			$('a', modalContent).click(function (e2) {
-				var picId = $(this).attr('data-id');
-				var picUid = $(this).attr('data-uid');
-				var picEncodedTitle = $('<div/>').text($(this).attr('title')).html();
+				const picId = $(this).attr('data-id');
+				const picUid = $(this).attr('data-uid');
+				const picEncodedTitle = $('<div/>').text($(this).attr('title')).html();
 				$("#value-" + myId, part).val(picId);
 				// add preview
 				$("#preview-" + myId, part).html('<img src="' + urlSegradaPictogramFile + picUid + '" width="24" height="24" alt="' + picEncodedTitle + '" /> ' + picEncodedTitle);
@@ -121,15 +121,15 @@ function escapeHTML(myString) {
 	function loadDataAddUrl(url) {
 		$.get(url, function (data) {
 			// find id and hide duplicate elements
-			var matches = data.match(idRegex);
+			const matches = data.match(idRegex);
 			if (matches!=null&&matches.length >= 2) {
 				$('#' + matches[2]).remove();
 			}
 
-			var container = $('#sg-data');
+			const container = $('#sg-data');
 			container.prepend(data);
 
-			var addedChild = container.children(":first");
+			const addedChild = container.children(":first");
 			// call after AJAX event
 			afterAjax(addedChild);
 			// scroll to element
@@ -171,14 +171,14 @@ function escapeHTML(myString) {
 		$('.sg-control-form', part).ajaxForm({
 			beforeSubmit: function(arr, $form, options) {
 				// dynamic target?
-				var target = $form.attr('data-target-id');
+				let target = $form.attr('data-target-id');
 				if (typeof target == "undefined" || target === null || target.length === 0) {
 					target = '#sg-control';
 
 					// hide graph
 					graphHide();
 				}
-				var container = $(target);
+				const container = $(target);
 				// disable container
 				container.wrapInner("<div class='sg-disabled'></div>")
 				container.prepend($('#sg-wait').html());
@@ -186,17 +186,17 @@ function escapeHTML(myString) {
 			},
 			success: function (responseText, statusText, xhr, $form) {
 				// dynamic target?
-				var target = $form.attr('data-target-id');
+				let target = $form.attr('data-target-id');
 				if (typeof target == "undefined" || target == null || target.length === 0) target = '#sg-control';
-				var container = $(target);
+				const container = $(target);
 				container.html(responseText);
 				afterAjax(container);
 			},
 			error: function (responseText, statusText, xhr, $form) {
 				// dynamic target?
-				var target = $form.attr('data-target-id');
+				let target = $form.attr('data-target-id');
 				if (typeof target == "undefined" || target == null || target.length === 0) target = '#sg-control';
-				var container = $(target);
+				const container = $(target);
 				container.html(responseText.statusText);
 				alert("Error " + responseText.status + "\n" + responseText.statusText);
 			}
@@ -211,9 +211,9 @@ function escapeHTML(myString) {
 		// *******************************************************
 		// add content to control area
 		$('.sg-control-set', part).click(function (e) {
-			var $this = $(this);
+			const $this = $(this);
 
-			var target = $this.attr('data-target-id');
+			let target = $this.attr('data-target-id');
 			if (typeof target == "undefined" || target == null || target.length == 0) {
 				target = '#sg-control';
 
@@ -222,7 +222,7 @@ function escapeHTML(myString) {
 			}
 
 			// define container and set waiting icon
-			var container = $(target);
+			const container = $(target);
 			container.wrapInner("<div class='sg-disabled'></div>")
 			container.prepend($('#sg-wait').html());
 
@@ -243,15 +243,15 @@ function escapeHTML(myString) {
 			// AJAX call
 			$.get($(this).attr('data-data-dblclick'), function (data) {
 				// find id and hide duplicate elements
-				var matches = data.match(idRegex);
+				const matches = data.match(idRegex);
 				if (matches!=null&&matches.length >= 2) {
 					$('#' + matches[2]).remove();
 				}
 
-				var container = $('#sg-data');
+				const container = $('#sg-data');
 				container.prepend(data);
 
-				var addedChild = container.children(":first");
+				const addedChild = container.children(":first");
 				// call after AJAX event
 				afterAjax(addedChild);
 				// scroll to element
@@ -266,11 +266,11 @@ function escapeHTML(myString) {
 		// *******************************************************
 		// delete confirmation
 		$('tr [data-confirm]', part).click(function (e) {
-			var $this = $(this);
+			const $this = $(this);
 
 			if (confirm($this.attr('data-confirm'))) {
 				// remove tr dynamically
-				var row = $this.closest('tr');
+				const row = $this.closest('tr');
 				row.addClass("sg-disabled");
 
 				// AJAX call
@@ -287,10 +287,10 @@ function escapeHTML(myString) {
 		});
 
 		$('.sg-control-confirm', part).click(function (e) {
-			var $this = $(this);
+			const $this = $(this);
 
 			if (confirm($this.attr('data-confirm'))) {
-				var target = $('#' + $this.attr('data-target'));
+				const target = $('#' + $this.attr('data-target'));
 				target.addClass("sg-disabled");
 
 				// AJAX call
@@ -308,8 +308,8 @@ function escapeHTML(myString) {
 		// *******************************************************
 		// load tab contents dynamically
 		$('.sg-replace-content', part).on('shown.bs.tab', function (e) {
-			var $content = $($(this).attr('href'));
-			var url = $(this).attr('data-url');
+			const $content = $($(this).attr('href'));
+			const url = $(this).attr('data-url');
 
 			// load via ajax
 			$.get(url, function(content) {
@@ -350,21 +350,21 @@ function escapeHTML(myString) {
 		// *******************************************************
 		// pictogram chooser
 		$(".sg-pictogram-modal", part).on('shown.bs.modal', function () {
-			var modal = $(this);
-			var myId = modal.attr('id');
-			var modalContent = $("#container-" + myId, modal);
-			var inputField = $("#filter-" + myId, modal);
+			const modal = $(this);
+			const myId = modal.attr('id');
+			const modalContent = $("#container-" + myId, modal);
+			const inputField = $("#filter-" + myId, modal);
 
 			// listener for chooser
 			inputField.on('input propertychange paste', function () {
 				segradaPictogramChooser(modal, modalContent, myId, part, $(this).val());
 			}).onEnter(function () { // pressed enter
 				// get first image
-				var firstImg = $(".sg-pictogram-modal-link", modalContent).first();
+				const firstImg = $(".sg-pictogram-modal-link", modalContent).first();
 				if (firstImg.length > 0) { // if defined, load first image
-					var picId = firstImg.attr('data-id');
-					var picUid = firstImg.attr('data-id');
-					var picEncodedTitle = $('<div/>').text(firstImg.attr('title')).html();
+					const picId = firstImg.attr('data-id');
+					const picUid = firstImg.attr('data-id');
+					const picEncodedTitle = $('<div/>').text(firstImg.attr('title')).html();
 					$("#value-" + myId, part).val(picId);
 					// add preview
 					$("#preview-" + myId, part).html('<img src="' + urlSegradaPictogramFile + picUid + '" width="24" height="24" alt="' + picEncodedTitle + '" /> ' + picEncodedTitle);
@@ -382,7 +382,7 @@ function escapeHTML(myString) {
 			e.preventDefault();
 		});
 		$(".sg-pictogram-clearer", part).click(function (e) {
-			var myId = $(this).attr('data-id');
+			const myId = $(this).attr('data-id');
 			$("#value-" + myId, part).val('');
 			$("#preview-" + myId, part).html('');
 			$(this).hide();
@@ -392,9 +392,8 @@ function escapeHTML(myString) {
 		// *******************************************************
 		// source ref editor modal
 		$(".sg-source-ref-modal", part).on('shown.bs.modal', function () {
-			var modal = $(this);
-			// var myId = modal.attr('id');
-			var modalContent = $(".modal-body", modal);
+			const modal = $(this);
+			const modalContent = $(".modal-body", modal);
 
 			$.get(modal.attr('data-href'), function (data) {
 				modalContent.html(data);
@@ -411,7 +410,7 @@ function escapeHTML(myString) {
 					},
 					success: function (responseText, statusText, xhr, $form) {
 						// replace target by response text
-						var target = $(modal.attr('data-target'));
+						const target = $(modal.attr('data-target'));
 						target.html(responseText);
 						afterAjax(target);
 						modal.modal('hide');
@@ -431,7 +430,7 @@ function escapeHTML(myString) {
 		});
 		// source ref editor
 		$(".sg-source-ref-editor", part).click(function (e) {
-			var myModal = $('#' + $(this).attr('data-id'));
+			const myModal = $('#' + $(this).attr('data-id'));
 			myModal.attr("data-href", $(this).attr('href'));
 			myModal.modal('show');
 			e.preventDefault();
@@ -440,7 +439,7 @@ function escapeHTML(myString) {
 		// *******************************************************
 		// contractable tag list
 		$('.sg-taglist-contract', part).each(function() {
-			var tags = $('span', $(this));
+			const tags = $('span', $(this));
 			if (tags.length > 1) {
 				tags.hide().filter(":first-child").show().after('<span class="sg-tag-show label label-default"><i class="fa fa-plus"></i></span>');
 				$('span.sg-tag-show', $(this)).click(function() {
@@ -459,7 +458,7 @@ function escapeHTML(myString) {
 		// *******************************************************
 		// Tags fields
 		$("select.sg-tags", part).each(function() {
-			var elem = $(this);
+			const elem = $(this);
 			elem.tagsinput({
 				trimValue: true,
 				confirmKeys: [13], //enter only
@@ -482,8 +481,8 @@ function escapeHTML(myString) {
 		// *******************************************************
 		// node selector for relation forms
 		$("input.sg-node-search", part).each(function() {
-			var $this = $(this);
-			var target = $('#' + $this.attr('data-id'));
+			const $this = $(this);
+			const target = $('#' + $this.attr('data-id'));
 
 			$this.typeahead({hint: true,
 				highlight: true,
@@ -507,8 +506,8 @@ function escapeHTML(myString) {
 		// *******************************************************
 		// node selector for relation forms
 		$("input.sg-file-search", part).each(function() {
-			var $this = $(this);
-			var target = $('#' + $this.attr('data-id'));
+			const $this = $(this);
+			const target = $('#' + $this.attr('data-id'));
 
 			$this.typeahead({hint: true,
 				highlight: true,
@@ -531,8 +530,8 @@ function escapeHTML(myString) {
 
 		// source selector for forms
 		$("input.sg-source-search", part).each(function() {
-			var $this = $(this);
-			var target = $('#' + $this.attr('data-id'));
+			const $this = $(this);
+			const target = $('#' + $this.attr('data-id'));
 
 			$this.typeahead({hint: true,
 				highlight: true,
@@ -555,8 +554,8 @@ function escapeHTML(myString) {
 
 		// bind external links
 		$(".sg-link-external", part).click(function(e) {
-			var url = $(this).attr('href');
-			var win = window.open(url, '_blank');
+			const url = $(this).attr('href');
+			const win = window.open(url, '_blank');
 			win.focus();
 			e.preventDefault();
 		});
@@ -574,14 +573,14 @@ function escapeHTML(myString) {
 			},
 			success: function (responseText, statusText, xhr, $form) {
 				// determine target to replace
-				var target = $form.attr('data-id');
+				let target = $form.attr('data-id');
 				if (typeof target !== 'undefined') target = $('#' + target);
 				target = target || $form;
 
 				target.replaceWith(responseText);
 
 				// find id and rerun bindings
-				var matches = responseText.match(idRegex);
+				const matches = responseText.match(idRegex);
 				if (matches!=null&&matches.length >= 2) {
 					afterAjax($('#' + matches[2]));
 				}
@@ -599,7 +598,7 @@ function escapeHTML(myString) {
 				$(":input", $form).attr("disabled", true);
 
 				// determine target to replace
-				var target = $form.attr('data-id');
+				let target = $form.attr('data-id');
 				if (typeof target !== 'undefined') target = $('#' + target);
 				target = target || $form;
 
@@ -609,7 +608,7 @@ function escapeHTML(myString) {
 			},
 			success: function (responseText, statusText, xhr, $form) {
 				// determine target to replace
-				var target = $form.attr('data-id');
+				let target = $form.attr('data-id');
 				if (typeof target !== 'undefined') target = $('#' + target);
 				target = target || $form;
 
@@ -626,15 +625,15 @@ function escapeHTML(myString) {
 		// *******************************************************
 		// period handler
 		$('.sg-periods').each(function() {
-			var container = $(this);
-			var id = container.attr('id');
+			const container = $(this);
+			const id = container.attr('id');
 
-			var form = $('.sg-period-form', container);
+			const form = $('.sg-period-form', container);
 
 			// show forms
 			$('.sg-period-add', container).click(function(e) {
 				$(this).hide();
-				var myForm = $('.sg-period-form-add', container);
+				const myForm = $('.sg-period-form-add', container);
 				myForm.show();
 
 				// show/hide period field
@@ -667,9 +666,9 @@ function escapeHTML(myString) {
 		// *******************************************************
 		// Generic AJAX modal activator
 		$('.sg-ajax-modal', part).click(function(e) {
-			var $modal = $('#sg-modal');
-			var $content = $('.modal-body-inner', $modal);
-			var $loading = $('.modal-loading', $modal);
+			const $modal = $('#sg-modal');
+			const $content = $('.modal-body-inner', $modal);
+			const $loading = $('.modal-loading', $modal);
 			// set title and body
 			$('h4', $modal).html($(this).attr('data-title'));
 			// clear content, set loading icon
@@ -692,18 +691,18 @@ function escapeHTML(myString) {
 		// modal ajax form submit
 		$('.sg-ajax-modal-form', part).ajaxForm({
 			beforeSubmit: function(arr, $form, options) {
-				var $modal = $('#sg-modal');
-				var $content = $('.modal-body-inner', $modal);
-				var $loading = $('.modal-loading', $modal);
+				const $modal = $('#sg-modal');
+				const $content = $('.modal-body-inner', $modal);
+				const $loading = $('.modal-loading', $modal);
 				// hide content, set loading icon
 				$content.hide();
 				$loading.show();
 				return true;
 			},
 			success: function (responseText, statusText, xhr, $form) {
-				var $modal = $('#sg-modal');
-				var $content = $('.modal-body-inner', $modal);
-				var $loading = $('.modal-loading', $modal);
+				let $modal = $('#sg-modal');
+				const $content = $('.modal-body-inner', $modal);
+				const $loading = $('.modal-loading', $modal);
 				$content.html(responseText);
 				$content.show();
 				$loading.hide();
@@ -712,19 +711,19 @@ function escapeHTML(myString) {
 				// called after modal shown: update period definitions
 				$modal = $('#sg-modal'); // reload html
 				$('.sg-update-period', $modal).each(function() {
-					var ref = $(this).attr('data-id');
-					var target = $(ref);
+					const ref = $(this).attr('data-id');
+					const target = $(ref);
 					if (target.length > 0) {
-						for (var i = 0; i < 3; i++) {
+						for (let i = 0; i < 3; i++) {
 							$('td:eq(' + i + ')', target).html($('div:eq(' + i + ')', $(this)).html());
 						}
 					}
 				});
 			},
 			error: function (responseText, statusText, xhr, $form) {
-				var $modal = $('#sg-modal');
-				var $content = $('.modal-body-inner', $modal);
-				var $loading = $('.modal-loading', $modal);
+				const $modal = $('#sg-modal');
+				const $content = $('.modal-body-inner', $modal);
+				const $loading = $('.modal-loading', $modal);
 				$content.html(responseText);
 				$content.show();
 				$loading.hide();
@@ -739,15 +738,15 @@ function escapeHTML(myString) {
 		});
 
 		$('.sg-html-editor', part).each(function() {
-			var locale = $('html').attr('lang');
+			let locale = $('html').attr('lang');
 			if (locale === 'en') locale = 'en-US';
 
-			var summernoteOptions = {
+			const summernoteOptions = {
 				lang: locale
 			};
 
-			var $this = $(this);
-			var editor = $($this.attr('data-editor'));
+			const $this = $(this);
+			const editor = $($this.attr('data-editor'));
 
 			// enable if checkbox has been checked
 			if ($this.attr('checked')) editor.summernote(summernoteOptions);
@@ -760,7 +759,7 @@ function escapeHTML(myString) {
 		// *******************************************************
 		// Image Viewer/Lightbox
 		$('.sg-lg-image', part).each(function() {
-			var id = $(this).attr('id');
+			const id = $(this).attr('id');
 
 			if (id) {
 				new Viewer(document.getElementById(id), {
@@ -799,37 +798,37 @@ function escapeHTML(myString) {
 			graphLoadRemote($(this).attr('href'));
 
 			// optionally load title and uid
-			var title = $(this).attr('data-title');
+			const title = $(this).attr('data-title');
 			if (title.length !== 0) graphName = title;
-			var uid = $(this).attr('data-uid');
+			const uid = $(this).attr('data-uid');
 			if (uid.length !== 0) graphUid = uid;
 			e.preventDefault();
 		});
 
 		// Tag hierarchy graph
 		$('div.sg-tag-hierarchy', part).each(function() {
-			var me = $(this);
-			var container = $('.sg-tag-hierarchy-graph', me);
+			const me = $(this);
+			const container = $('.sg-tag-hierarchy-graph', me);
 			// hide/show stuff
 			$('.sg-child-tags', me).hide();
 			container.addClass('sg-margin-top sg-margin-bottom');
 
 			// create new nodes/edges
-			var hierarchy = $('.sg-tag-hierarchy-data', me);
+			const hierarchy = $('.sg-tag-hierarchy-data', me);
 
 			// center node
-			var centerId = hierarchy.attr('data-center');
-			var countParents = 0;
-			var countChildren = 0;
+			const centerId = hierarchy.attr('data-center');
+			let countParents = 0;
+			let countChildren = 0;
 
 			// cycle through dub divs
-			var tagNodes = [];
-			var tagEdges = [];
+			let tagNodes = [];
+			let tagEdges = [];
 
 			$('div', hierarchy).each(function() {
-				var n = $(this);
-				var myId = n.attr('data-id');
-				var myLevel = n.attr('data-level');
+				const n = $(this);
+				const myId = n.attr('data-id');
+				const myLevel = n.attr('data-level');
 				tagNodes.push({id: myId, label: n.html(), level: myLevel, url: n.attr('data-url')});
 				if (myLevel === '0') {
 					tagEdges.push({from: myId, to: centerId });
@@ -841,17 +840,17 @@ function escapeHTML(myString) {
 			});
 
 			// dynamic height of container box
-			var countNodes = countParents>countChildren?(countParents===0?1:countParents):countChildren;
+			const countNodes = countParents>countChildren?(countParents===0?1:countParents):countChildren;
 			container.css({width: '100%', height: (countNodes*50) + 'px', border: '1px solid #ccc'});
 
 			// create a network
-			var data = {
+			const data = {
 				nodes: new vis.DataSet(tagNodes),
 				edges: new vis.DataSet(tagEdges)
 			};
 			tagNodes = null; tagEdges = null;
 
-			var options = {
+			const options = {
 				edges: {
 					smooth: {
 						type:'cubicBezier',
@@ -869,14 +868,14 @@ function escapeHTML(myString) {
 				}
 			};
 
-			var tagNetwork = new vis.Network(container.get(0), data, options);
+			const tagNetwork = new vis.Network(container.get(0), data, options);
 
 			// handle double click
 			tagNetwork.on("doubleClick", function(params) {
-				var url = null;
+				let url = null;
 				// node double clicked
 				if (params.nodes.length > 0) {
-					var tagNode = data.nodes.get(params.nodes[0]);
+					const tagNode = data.nodes.get(params.nodes[0]);
 					if (tagNode != null && tagNode.url != null) url = tagNode.url;
 				}
 
@@ -887,7 +886,7 @@ function escapeHTML(myString) {
 		});
 
 		// call afterAjaxHooks
-		for (var i = 0; i < afterAjaxHooks.length; i++) {
+		for (let i = 0; i < afterAjaxHooks.length; i++) {
 			afterAjaxHooks[i](part); // call function with part parameter
 		}
 	} // afterAJAX end
@@ -901,12 +900,12 @@ function escapeHTML(myString) {
 			graphInitialized = true;
 
 			// create a network
-			var container = document.getElementById('sg-graph');
-			var data = {
+			const container = document.getElementById('sg-graph');
+			const data = {
 				nodes: graphNodes,
 				edges: graphEdges
 			};
-			var options = {
+			const options = {
 				locale: $('html').attr('lang'),
 				locales: {
 					de: {
@@ -945,7 +944,7 @@ function escapeHTML(myString) {
 					addNode: false,
 					addEdge: function(data, callback) {
 						// get relation add url
-						var url = urlSegradaRelationAdd
+						const url = urlSegradaRelationAdd
 							.replace("XFROMX", data.from.replace(/#([0-9]+):([0-9]+)/, "$1-$2"))
 							.replace("XTOX", data.to.replace(/#([0-9]+):([0-9]+)/, "$1-$2"))
 							.replace("&amp;", "&");
@@ -1006,13 +1005,13 @@ function escapeHTML(myString) {
 
 			// handle double click
 			graphNetwork.on("doubleClick", function(params) {
-				var url = null;
+				let url = null;
 				// node double clicked
 				if (params.nodes.length > 0) {
-					var node = graphNodes.get(params.nodes[0]);
+					const node = graphNodes.get(params.nodes[0]);
 					if (node != null && node.url != null) url = node.url;
 				} else if (params.edges.length > 0) {
-					var edge = graphEdges.get(params.edges[0]);
+					const edge = graphEdges.get(params.edges[0]);
 					if (edge != null && edge.url != null) url = edge.url;
 				}
 
@@ -1028,24 +1027,22 @@ function escapeHTML(myString) {
 			// 	}
 			//
 			// 	// try to select node
-			// 	var nodeId = graphNetwork.getNodeAt(obj.pointer.DOM)
+			// 	const nodeId = graphNetwork.getNodeAt(obj.pointer.DOM)
 			// 	if (nodeId) {
 			// 		graphNetwork.selectNodes([nodeId]);
+			//
+			// 		// add context menu....
+			//
 			// 	} else {
 			// 		graphNetwork.unselectAll();
 			// 	}
 			// });
-			// see: https://visjs.github.io/vis-network/examples/network/other/popups.html
-
-			/*if (typeof console != "undefined") {
-				console.log("Graph Network was initialized.");
-			}*/
 		}
 	}
 
 	// Hide graph and show control
 	function graphHide() {
-		var link = $('#sg-toggle-graph');
+		const link = $('#sg-toggle-graph');
 		if (link.hasClass('active')) {
 			link.removeClass('active');
 			$('.fa-share-alt-square', link).addClass('fa-share-alt').removeClass('fa-share-alt-square');
@@ -1064,7 +1061,7 @@ function escapeHTML(myString) {
 
 	// Show graph and hide control
 	function graphShow() {
-		var link = $('#sg-toggle-graph');
+		const link = $('#sg-toggle-graph');
 		if (!link.hasClass('active')) {
 			link.addClass('active');
 			$('.fa-share-alt', link).addClass('fa-share-alt-square').removeClass('fa-share-alt');
@@ -1089,18 +1086,17 @@ function escapeHTML(myString) {
 		graphShowLoading();
 
 		// prepare data
-		var nodeIds = [];
-		var edgeIds = [];
+		const nodeIds = [];
+		const edgeIds = [];
 
-		var temp = graphNodes.get({fields: ['id']});
-		var i;
-		for (i = 0; i < temp.length; i++)
-			nodeIds.push(temp[i].id);
-		temp = graphEdges.get({fields: ['id']});
-		for (i = 0; i < temp.length; i++)
-			edgeIds.push(temp[i].id);
+		graphNodes.get({fields: ['id']}).map(node => {
+			nodeIds.push(node.id);
+		});
+		graphEdges.get({fields: ['id']}).map(edge => {
+			edgeIds.push(edge.id);
+		});
 
-		var csrf = $('#sg-graph-container').attr('data-csrf');
+		const csrf = $('#sg-graph-container').attr('data-csrf');
 
 		// post AJAX data
 		$.ajax({
@@ -1151,7 +1147,7 @@ function escapeHTML(myString) {
 	}
 
 	function graphShowLoading() {
-		var $sgGraph = $('#sg-graph');
+		const $sgGraph = $('#sg-graph');
 		$sgGraph.css('background', 'url("' + $sgGraph.attr('data-bg') + '") no-repeat center center');
 	}
 
@@ -1184,9 +1180,9 @@ function escapeHTML(myString) {
 		$('.sg-locale').click(function(e) {
 			// AJAX call
 			$.get($(this).attr('href'), function (data) {
-				var url = $('#sg-base').html();
+				const url = $('#sg-base').html();
 				// reload base url
-				if (data != '') window.location.href = url;
+				if (data !== '') window.location.href = url;
 			}).fail(function() {
 				alert("ERROR");
 			});
@@ -1201,7 +1197,7 @@ function escapeHTML(myString) {
 			e.preventDefault();
 		});
 		$('#sg-graph-action-remove').click(function(e) {
-			var selection = graphNetwork.getSelection();
+			const selection = graphNetwork.getSelection();
 			if (selection.edges.length > 0) graphEdges.remove(selection.edges);
 			if (selection.nodes.length > 0) graphNodes.remove(selection.nodes);
 			e.preventDefault();
@@ -1234,7 +1230,7 @@ function escapeHTML(myString) {
 			if (graphNodes.length > 0) {
 				// prefill form
 				$('#title-sg-graph-save').val(graphName !== null ? graphName : '');
-				var saveAsNew = $('#save-as-new-sg-graph-save').parent().parent().parent();
+				const saveAsNew = $('#save-as-new-sg-graph-save').parent().parent().parent();
 				if (graphUid !== null) saveAsNew.show();
 				else saveAsNew.hide();
 
@@ -1246,17 +1242,17 @@ function escapeHTML(myString) {
 		});
 
 		$("#sg-graph-modal-load").on('shown.bs.modal', function () {
-			var $modal = $(this);
-			var $content = $('.modal-body', $modal);
+			const $modal = $(this);
+			const $content = $('.modal-body', $modal);
 
 			// show loading icon
 			$content.html($('#sg-wait').html());
 
 			// load from graph
-			var url = $modal.attr('data-url');
+			const url = $modal.attr('data-url');
 			$.get(url, function (data) {
-				var getUrl = $modal.attr('data-get-url');
-				var content = "";
+				let getUrl = $modal.attr('data-get-url');
+				let content = "";
 
 				// get each saved graph entry
 				data.forEach(function(savedGraph) {
@@ -1290,8 +1286,8 @@ function escapeHTML(myString) {
 		$('#sg-graph-modal-save-frm').submit(function(e) {
 			e.preventDefault();
 
-			var title = $('#title-sg-graph-save').val();
-			var uid = graphUid;
+			const title = $('#title-sg-graph-save').val();
+			let uid = graphUid;
 			// save as new?
 			if (graphUid != null && $('#save-as-new-sg-graph-save').is(':checked')) uid = null;
 
@@ -1302,8 +1298,8 @@ function escapeHTML(myString) {
 			graphNetwork.storePositions();
 
 			// store all information in data object
-			var nodes = [];
-			var edges = [];
+			const nodes = [];
+			const edges = [];
 			graphNodes.forEach(function(n) {
 				nodes.push({
 					id: n.id,
@@ -1318,7 +1314,7 @@ function escapeHTML(myString) {
 					group: e.group
 				});
 			});
-			var data = { };
+			const data = { };
 
 			// save graph
 			$.post($(this).attr('action'), {
