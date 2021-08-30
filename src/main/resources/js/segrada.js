@@ -1370,7 +1370,8 @@ function escapeHTML(myString) {
 					id: n.id,
 					x: n.x,
 					y: n.y,
-					group: n.group
+					group: n.group,
+					fixed: n.fixed
 				});
 			});
 			graphEdges.forEach(function(e) {

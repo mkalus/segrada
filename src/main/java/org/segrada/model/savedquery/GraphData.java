@@ -15,24 +15,27 @@ package org.segrada.model.savedquery;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Trivial Graph coordinate model
+ * Trivial Graph data model
  */
-public class GraphCoordinate {
+public class GraphData {
 	public final int x;
 	public final int y;
+
+	public final boolean fixed;
 
 	/**
 	 * Constructor
 	 * @param x coordinate
 	 * @param y coordinate
 	 */
-	public GraphCoordinate(int x, int y) {
+	public GraphData(int x, int y, boolean fixed) {
 		this.x = x;
 		this.y = y;
+		this.fixed = fixed;
 	}
 
 	@Override
 	public String toString() {
-		return "Coordinate[" + x + ":" + y + "]";
+		return "GraphData[" + x + ":" + y + (fixed ? "; fixed": "") + "]";
 	}
 }
