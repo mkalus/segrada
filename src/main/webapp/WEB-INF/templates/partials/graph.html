@@ -25,6 +25,13 @@
 	<div id="sg-graph" th:attr="data-bg=@{/img/loading_large.gif}"><!--/*###segrada-graph###*/--></div>
 </div>
 
+<div id="sg-graph-context-menu" style="display: none">
+	<a href="#" data-href="" class="sg-data-add" th:title="#{Show}"><i class="fa fa-eye"></i> <span th:text="#{Show}">Show</span></a>
+	<a href="#" th:attr="data-href=@{/node/graph/XXUIDXX?expand=true}" class="sg-graph-update" th:title="#{AddAllToGraph}"><i class="fa fa-share"></i> <span th:text="#{AddAllToGraphShort}">Add all</span></a>
+	<a href="#" class="sg-graph-node-fix" th:title="#{Fix}"><i class="fa fa-pause-circle"></i> <span th:text="#{Fix}">Fix</span></a>
+	<a href="#" class="sg-graph-node-unfix" th:title="#{Unfix}"><i class="fa fa-play-circle"></i> <span th:text="#{Unfix}">Unfix</span></a>
+</div>
+
 <div id="sg-graph-modal-save" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="sg-graph-modal-save-title">
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">

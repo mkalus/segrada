@@ -1020,23 +1020,88 @@ function escapeHTML(myString) {
 					loadDataAddUrl(url);
 			});
 
-			// TODO: maybe we could create a context menu at some point?
-			// graphNetwork.on("oncontext", function(obj) {
-			// 	if (obj.event) {
-			// 		obj.event.preventDefault();
-			// 	}
-			//
-			// 	// try to select node
-			// 	const nodeId = graphNetwork.getNodeAt(obj.pointer.DOM)
-			// 	if (nodeId) {
-			// 		graphNetwork.selectNodes([nodeId]);
-			//
-			// 		// add context menu....
-			//
-			// 	} else {
-			// 		graphNetwork.unselectAll();
-			// 	}
-			// });
+			const contextMenu = $('#sg-graph-context-menu');
+
+			// Context menu for graph nodes
+			graphNetwork.on("oncontext", function(obj) {
+				if (obj.event) {
+					obj.event.preventDefault();
+				}
+
+				// try to select node
+				const nodeId = graphNetwork.getNodeAt(obj.pointer.DOM)
+				if (nodeId) {
+					graphNetwork.selectNodes([nodeId]);
+
+					const node = graphNodes.get(nodeId);
+
+					// add context menu....
+					contextMenu.css({left: obj.event.clientX + 'px', top: obj.event.clientY + 'px'});
+
+					// replace URLs
+					const nodeIdForLinks = nodeId.substr(1).replace(':', '-');
+
+					// set behaviour of context links
+					const contextMenuLinks = $('a', contextMenu);
+					contextMenuLinks.each(function() {
+						const $this = $(this);
+						if ($this.hasClass('sg-data-add'))
+							$this.attr('href', node.url);
+						else if ($this.hasClass('sg-graph-update'))
+							$this.attr('href', $this.attr('data-href').replaceAll('XXUIDXX', nodeIdForLinks));
+						else if ($this.hasClass('sg-graph-node-fix')) {
+							if (node.fixed) $this.hide();
+							else {
+								$this.show();
+								$this.attr('data-id', nodeId);
+							}
+						}
+						else if ($this.hasClass('sg-graph-node-unfix')) {
+							if (!node.fixed) $this.hide();
+							else {
+								$this.show();
+								$this.attr('data-id', nodeId);
+							}
+						}
+					});
+					contextMenuLinks.click(function() {
+						contextMenu.hide();
+					});
+
+					contextMenu.show();
+				} else {
+					graphNetwork.unselectAll();
+				}
+			});
+
+			// click outside context menu - hide it!
+			$(document).mousedown(function(e) {
+				if (contextMenu.is(":visible") && !contextMenu.is(e.target) && contextMenu.has(e.target).length === 0) {
+					contextMenu.hide();
+				}
+			});
+
+			// fix and unfix nodes
+			$('.sg-graph-node-fix').click(function(e) {
+				const nodeId = $(this).attr('data-id');
+				if (nodeId) {
+					const node = graphNodes.get(nodeId);
+					node.fixed = true;
+
+					graphNodes.update(node);
+				}
+				e.preventDefault();
+			});
+			$('.sg-graph-node-unfix').click(function(e) {
+				const nodeId = $(this).attr('data-id');
+				if (nodeId) {
+					const node = graphNodes.get(nodeId);
+					node.fixed = false;
+
+					graphNodes.update(node);
+				}
+				e.preventDefault();
+			});
 		}
 	}
 
