@@ -5,8 +5,10 @@ import com.orientechnologies.orient.core.db.ODatabaseRecordThreadLocal;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.orientechnologies.orient.core.sql.OCommandSQL;
 import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
+import org.apache.hadoop.yarn.webapp.hamlet.HamletSpec;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.queryparser.flexible.standard.QueryParserUtil;
+import org.apache.lucene.search.PhraseQuery;
 import org.apache.lucene.search.TermQuery;
 import org.segrada.model.Tag;
 import org.segrada.model.prototype.ITag;
@@ -63,6 +65,7 @@ public class OrientDbTagRepository extends AbstractSegradaOrientDbRepository<ITa
 		ITag tag = new Tag();
 
 		tag.setTitle(document.field("title", String.class));
+		tag.setSynonyms(document.field("synonyms", String.class));
 
 		// populate with data
 		populateEntityWithBaseData(document, tag);
@@ -85,6 +88,7 @@ public class OrientDbTagRepository extends AbstractSegradaOrientDbRepository<ITa
 
 		// populate with data
 		document.field("title", entity.getTitle())
+				.field("synonyms", entity.getSynonyms())
 				.field("titleasc", Sluggify.sluggify(entity.getTitle())); // sluggify correct!!
 
 		// populate with data
@@ -180,11 +184,11 @@ public class OrientDbTagRepository extends AbstractSegradaOrientDbRepository<ITa
 				TermQuery termQuery = new TermQuery(new Term("title", termPart + "*"));
 				if (first) first = false;
 				else sb.append(" AND ");
-				sb.append(termQuery.toString());
+				sb.append(termQuery.getTerm().text()); // ignore field, because we have two of them
 			}
 
 			// execute query
-			OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>("select * from Tag where title LUCENE ? LIMIT " + maximum);
+			OSQLSynchQuery<ODocument> query = new OSQLSynchQuery<>("select * from Tag where [title, synonyms] LUCENE ? LIMIT " + maximum);
 			result = db.command(query).execute(sb.toString());
 		} else { // no term, just find top X entries
 			// execute query
@@ -521,7 +525,8 @@ public class OrientDbTagRepository extends AbstractSegradaOrientDbRepository<ITa
 		List<String> constraints = new ArrayList<>();
 		// search term
 		if (filters.get("search") != null) {
-			constraints.add("title LIKE '%" + OrientStringEscape.escapeOrientSql((String)filters.get("search")) + "%'");
+			String searchTerm = OrientStringEscape.escapeOrientSql((String)filters.get("search"));
+			constraints.add("title LIKE '%" + searchTerm + "%' OR synonyms LIKE '%" + searchTerm + "%'");
 		}
 		// tags
 		if (filters.get("tags") != null) {

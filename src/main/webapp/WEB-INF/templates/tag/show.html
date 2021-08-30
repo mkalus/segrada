@@ -24,7 +24,11 @@
 		</ul>
 
 		<div class="tab-content">
-			<div role="tabpanel" class="tab-pane active" id="tab1" th:id="${'tab-1-' + entity.uid}" >
+			<div role="tabpanel" class="tab-pane active" id="tab1" th:id="${'tab-1-' + entity.uid}">
+				<div class="sg-description well well-sm" th:unless="${#strings.isEmpty(entity.synonyms)}">
+					<b th:text="#{field.synonyms} + ':'">Synonyms:</b> <span th:text="${entity.synonyms}"></span>
+				</div>
+
 				<div class="sg-tag-hierarchy">
 					<div class="sg-margin-bottom sg-stop-flow sg-child-tags" th:unless="${#lists.isEmpty(childTags)}">
 						<div class="sg-margin-top" th:text="#{field.childTags}">Child tags:</div>

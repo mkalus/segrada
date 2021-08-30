@@ -22,6 +22,7 @@
 			<input type="hidden" name="_csrf" th:value="${_csrf}" />
 
 			<div th:replace="partials/form :: formTextfield (name='title',field=${entity.title},label=#{field.title},id=${tempId},errors=${errors},required=true)"></div>
+			<div th:replace="partials/form :: formTextfield (name='synonyms',field=${entity.synonyms},label=#{field.synonyms},id=${tempId},errors=${errors},required=false)"></div>
 			<div th:replace="partials/form :: formTagsfield (name='tags',field=${entity.tags},label=#{field.parentTags},id=${tempId},errors=${errors},required=false)"></div>
 			<div th:replace="partials/form :: formTagsfield (name='childTags',field=${entity.childTags},label=#{field.childTags},id=${tempId},errors=${errors},required=false)"></div>
 

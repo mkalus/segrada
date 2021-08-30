@@ -20,6 +20,9 @@ package org.segrada.model.prototype;
 public interface ITag extends SegradaEntity, SegradaTaggable {
 	void setTitle(String title);
 
+	String getSynonyms();
+	void setSynonyms(String synonyms);
+
 	/**
 	 * transient child tag setter/getter
 	 * @return

@@ -45,7 +45,7 @@ public class OrientDbSchemaUpdater {
 	/**
 	 * current version of db
 	 */
-	private static final int CURRENT_VERSION = 6;
+	private static final int CURRENT_VERSION = 7;
 
 	/**
 	 * graph factory instance
@@ -193,7 +193,7 @@ public class OrientDbSchemaUpdater {
 		InputStream is = this.getClass().getResourceAsStream(resourceName);
 		// if no resouce exists do not run updater
 		try {
-			if (is.available() == 0) return;
+			if (is == null || is.available() == 0) return;
 		} catch (IOException e) {
 			return;
 		}
@@ -301,11 +301,15 @@ public class OrientDbSchemaUpdater {
 		// no database population here, just migration
 		if (versionLocal <= 1) {
 			versionLocal = 2;
+
+			logger.info("Schema data updated to version 2.");
 		}
 
 		// no database population here, just migration
 		if (versionLocal <= 2) {
 			versionLocal = 3;
+
+			logger.info("Schema data updated to version 3.");
 		}
 
 		// update group stuff
@@ -374,6 +378,8 @@ public class OrientDbSchemaUpdater {
 		// no database population here, just migration
 		if (versionLocal <= 4) {
 			versionLocal = 5;
+
+			logger.info("Schema data updated to version 5.");
 		}
 
 		// set empty min/max js entries for sources
@@ -382,6 +388,15 @@ public class OrientDbSchemaUpdater {
 			db.command(new OCommandSQL(query)).execute();
 
 			versionLocal = 6;
+
+			logger.info("Schema data updated to version 6.");
+		}
+
+		// no database population here, just migration
+		if (versionLocal <= 6) {
+			versionLocal = 7;
+
+			logger.info("Schema data updated to version 7.");
 		}
 
 		// upsert config defaults

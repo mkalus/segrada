@@ -37,6 +37,12 @@ public class Tag extends AbstractSegradaEntity implements ITag {
 	private String title;
 
 	/**
+	 * Synonyms
+	 */
+	@NotNull(message = "error.notNull")
+	private String synonyms = "";
+
+	/**
 	 * Tag list - parents
 	 */
 	private transient String[] tags;
@@ -55,6 +61,16 @@ public class Tag extends AbstractSegradaEntity implements ITag {
 	@Override
 	public void setTitle(String title) {
 		this.title = title;
+	}
+
+	@Override
+	public String getSynonyms() {
+		return synonyms;
+	}
+
+	@Override
+	public void setSynonyms(String synonyms) {
+		this.synonyms = synonyms;
 	}
 
 	@Override
