@@ -1035,6 +1035,7 @@ function escapeHTML(myString) {
 			// 		graphNetwork.unselectAll();
 			// 	}
 			// });
+			// see: https://visjs.github.io/vis-network/examples/network/other/popups.html
 
 			/*if (typeof console != "undefined") {
 				console.log("Graph Network was initialized.");
