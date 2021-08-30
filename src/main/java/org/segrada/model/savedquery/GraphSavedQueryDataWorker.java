@@ -167,13 +167,13 @@ public class GraphSavedQueryDataWorker implements SavedQueryDataWorker {
 	}
 
 	/**
-	 * get coordinates from JSON data
+	 * get graph data from JSON data
 	 * @param data JSON string
-	 * @return map of ids to coordinates
+	 * @return map of ids to graph data entries
 	 */
-	public Map<String, GraphCoordinate> retrieveCoordinatesFromData(String data) {
+	public Map<String, GraphData> retrieveGraphDataFromData(String data) {
 		try {
-			Map<String, GraphCoordinate> returnData = new HashMap<>();
+			Map<String, GraphData> returnData = new HashMap<>();
 
 			JSONObject o = new JSONObject(data);
 
@@ -183,13 +183,16 @@ public class GraphSavedQueryDataWorker implements SavedQueryDataWorker {
 
 				if (node.has("x") && node.has("y")) {
 					String id = node.has("id")?node.getString("id"):node.getString("uid");
-					returnData.put(id, new GraphCoordinate(node.getInt("x"), node.getInt("y")));
+
+					boolean fixed = node.has("fixed") && node.getBoolean("fixed");
+
+					returnData.put(id, new GraphData(node.getInt("x"), node.getInt("y"), fixed));
 				}
 			}
 
 			return returnData;
 		} catch (JSONException e) {
-			logger.error("Error converting data to JSON in retriveCoordinatesFromData " + data, e);
+			logger.error("Error converting data to JSON in retrieveGraphDataFromData " + data, e);
 			return null;
 		}
 	}

@@ -9,7 +9,7 @@ import org.codehaus.jettison.json.JSONObject;
 import org.segrada.controller.base.AbstractBaseController;
 import org.segrada.model.SavedQuery;
 import org.segrada.model.prototype.*;
-import org.segrada.model.savedquery.GraphCoordinate;
+import org.segrada.model.savedquery.GraphData;
 import org.segrada.model.savedquery.GraphSavedQueryDataWorker;
 import org.segrada.model.savedquery.SavedQueryDataWorker;
 import org.segrada.model.savedquery.factory.SavedQueryDataWorkerFactory;
@@ -30,7 +30,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -261,11 +260,11 @@ public class SavedQueryController extends AbstractBaseController<ISavedQuery> {
 
 		// extract data from representation
 		Map<String, Iterable<SegradaEntity>> extractedData = worker.savedQueryToEntities(savedQuery.getData());
-		Map<String, GraphCoordinate> coordinateMap;
+		Map<String, GraphData> dataMap;
 		if (savedQuery.getType().equals("graph")) {
 			// get coordinates
-			coordinateMap = ((GraphSavedQueryDataWorker) worker).retrieveCoordinatesFromData(savedQuery.getData());
-		} else coordinateMap = null;
+			dataMap = ((GraphSavedQueryDataWorker) worker).retrieveGraphDataFromData(savedQuery.getData());
+		} else dataMap = null;
 
 		// create nodes
 		Iterable<SegradaEntity> entities = extractedData.get("nodes");
@@ -279,12 +278,14 @@ public class SavedQueryController extends AbstractBaseController<ISavedQuery> {
 					o = jsonConverter.convertTagToJSON((ITag) entity);
 				else throw new JSONException("Unsupported node type " + entity.toString());
 
-				// add coordinate, if applicable
-				GraphCoordinate coordinate = coordinateMap.get(entity.getId());
-				if (coordinate == null) coordinate = coordinateMap.get(entity.getUid()); // try both variants to find coordinate
-				if (coordinate != null) {
-					o.put("x", coordinate.x);
-					o.put("y", coordinate.y);
+				// add dataMap stuff, if applicable
+				GraphData dataMapEntry = dataMap.get(entity.getId());
+				if (dataMapEntry == null) dataMapEntry = dataMap.get(entity.getUid()); // try both variants to find coordinate
+				if (dataMapEntry != null) {
+					o.put("x", dataMapEntry.x);
+					o.put("y", dataMapEntry.y);
+
+					if (dataMapEntry.fixed) o.put("fixed", true);
 				}
 
 				// o set, add to list
