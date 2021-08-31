@@ -894,6 +894,8 @@ function escapeHTML(myString) {
 	// *******************************************************
 	// Graph functions
 
+	let graphPhysics = true;
+
 	// Initialize graph
 	function graphInitialize() {
 		if (!graphInitialized) {
@@ -1312,6 +1314,19 @@ function escapeHTML(myString) {
 		});
 		$('#sg-graph-action-load').click(function(e) {
 			$('#sg-graph-modal-load').modal();
+
+			e.preventDefault();
+		});
+		$('#sg-graph-toggle-physics').click(function(e) {
+			graphPhysics = !graphPhysics;
+
+			$(this).html(graphPhysics ? '<i class="fa fa-snowflake-o"></i>' : '<i class="fa fa-magnet"></i>')
+
+			graphNodes.forEach(function(node) {
+				node.physics = graphPhysics;
+
+				graphNodes.update(node);
+			});
 
 			e.preventDefault();
 		});
