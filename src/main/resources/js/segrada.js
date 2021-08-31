@@ -1257,7 +1257,7 @@ function escapeHTML(myString) {
 			else graphShow();
 			e.preventDefault();
 		});
-		$('#sg-graph-action-remove').click(function(e) {
+		$('.sg-graph-action-remove').click(function(e) {
 			const selection = graphNetwork.getSelection();
 			if (selection.edges.length > 0) graphEdges.remove(selection.edges);
 			if (selection.nodes.length > 0) graphNodes.remove(selection.nodes);

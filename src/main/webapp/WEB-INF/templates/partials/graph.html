@@ -18,7 +18,7 @@
 			<a href="#" class="btn btn-link" id="sg-graph-action-restart" th:title="#{Clear}" aria-label="Clear"><i class="fa fa-bomb"></i></a>
 			<a href="#" th:href="@{/node/graph}" class="btn btn-link" id="sg-graph-action-reload" th:title="#{Reload}" aria-label="Reload"><i class="fa fa-refresh"></i></a>
 			<a href="#" class="btn btn-link" id="sg-graph-action-fit" th:title="#{Fit}" aria-label="Fit View"><i class="fa fa-arrows-alt"></i></a>
-			<a href="#" class="btn btn-link" id="sg-graph-action-remove" th:title="#{RemoveSelected}" aria-label="Remove Selected Elements"><i class="fa fa-minus-circle"></i></a>
+			<a href="#" class="btn btn-link sg-graph-action-remove" th:title="#{RemoveSelected}" aria-label="Remove Selected Elements"><i class="fa fa-minus-circle"></i></a>
 		</div>
 
 		<a href="#" class="btn btn-link" id="sg-graph-close" th:title="#{Close}" aria-label="Close"><i class="fa fa-times"></i></a>
@@ -33,6 +33,7 @@
 	<a href="#" th:attr="data-href=@{/node/graph/XXUIDXX?expand=true}" class="sg-graph-update" th:title="#{AddAllToGraph}"><i class="fa fa-share"></i> <span th:text="#{AddAllToGraphShort}">Add all</span></a>
 	<a href="#" class="sg-graph-node-fix" th:title="#{Fix}"><i class="fa fa-pause-circle"></i> <span th:text="#{Fix}">Fix</span></a>
 	<a href="#" class="sg-graph-node-unfix" th:title="#{Unfix}"><i class="fa fa-play-circle"></i> <span th:text="#{Unfix}">Unfix</span></a>
+	<a href="#" class="sg-graph-action-remove" th:title="#{Delete}"><i class="fa fa-times"></i> <span th:text="#{Delete}">Delete</span></a>
 </div>
 
 <div id="sg-graph-modal-save" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="sg-graph-modal-save-title">
