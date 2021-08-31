@@ -997,8 +997,13 @@ function escapeHTML(myString) {
 				},
 				physics: {
 					barnesHut: {
-						springLength: 120
+						springLength: 150,
+						damping: 0.4,
+						avoidOverlap: 0.5
 					}
+				},
+				layout: {
+					improvedLayout: true
 				}
 			};
 			graphNetwork = new vis.Network(container, data, options);
