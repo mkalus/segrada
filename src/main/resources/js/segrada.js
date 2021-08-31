@@ -958,10 +958,9 @@ function escapeHTML(myString) {
 				},
 				nodes: {
 					shape: 'icon',
-					// color: {
-					// 	border: '#000',
-					// 	background: '#fff'
-					// }
+					widthConstraint: {
+						maximum: 120
+					}
 				},
 				edges: {
 					font: {
@@ -969,7 +968,9 @@ function escapeHTML(myString) {
 					},
 					labelHighlightBold: false,
 					arrows: {
-						to: true
+						to: {
+							enabled: true
+						}
 					}
 					//smooth: {
 					//	type: 'cubicBezier'
@@ -1049,14 +1050,14 @@ function escapeHTML(myString) {
 						else if ($this.hasClass('sg-graph-update'))
 							$this.attr('href', $this.attr('data-href').replaceAll('XXUIDXX', nodeIdForLinks));
 						else if ($this.hasClass('sg-graph-node-fix')) {
-							if (node.fixed) $this.hide();
+							if (node.physics !== undefined && !node.physics) $this.hide();
 							else {
 								$this.show();
 								$this.attr('data-id', nodeId);
 							}
 						}
 						else if ($this.hasClass('sg-graph-node-unfix')) {
-							if (!node.fixed) $this.hide();
+							if (node.physics === undefined || node.physics) $this.hide();
 							else {
 								$this.show();
 								$this.attr('data-id', nodeId);
@@ -1085,7 +1086,7 @@ function escapeHTML(myString) {
 				const nodeId = $(this).attr('data-id');
 				if (nodeId) {
 					const node = graphNodes.get(nodeId);
-					node.fixed = true;
+					node.physics = false;
 
 					graphNodes.update(node);
 				}
@@ -1095,7 +1096,7 @@ function escapeHTML(myString) {
 				const nodeId = $(this).attr('data-id');
 				if (nodeId) {
 					const node = graphNodes.get(nodeId);
-					node.fixed = false;
+					node.physics = true;
 
 					graphNodes.update(node);
 				}
@@ -1273,12 +1274,12 @@ function escapeHTML(myString) {
 					})
 				},
 				function(data) {
-					// check fixed nodes and save positions
+					// check physics of nodes and save positions
 					if (data && data.nodes && data.nodes.length) {
 						for (let i = 0; i < data.nodes.length; i++) {
 							const nodeInGraph = graphNodes.get(data.nodes[i].id);
 							if (nodeInGraph) {
-								if (nodeInGraph.fixed) data.nodes[i].fixed = true; // set fixed to true
+								if (!nodeInGraph.physics) data.nodes[i].physics = false;
 								data.nodes[i].x = nodeInGraph.x;
 								data.nodes[i].y = nodeInGraph.y;
 							}
@@ -1390,7 +1391,7 @@ function escapeHTML(myString) {
 					x: n.x,
 					y: n.y,
 					group: n.group,
-					fixed: n.fixed
+					physics: n.physics
 				});
 			});
 			graphEdges.forEach(function(e) {

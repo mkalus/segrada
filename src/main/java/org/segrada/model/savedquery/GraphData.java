@@ -21,21 +21,22 @@ public class GraphData {
 	public final int x;
 	public final int y;
 
-	public final boolean fixed;
+	public final boolean physics;
 
 	/**
 	 * Constructor
 	 * @param x coordinate
 	 * @param y coordinate
+	 * @param physics physics of node works?
 	 */
-	public GraphData(int x, int y, boolean fixed) {
+	public GraphData(int x, int y, boolean physics) {
 		this.x = x;
 		this.y = y;
-		this.fixed = fixed;
+		this.physics = physics;
 	}
 
 	@Override
 	public String toString() {
-		return "GraphData[" + x + ":" + y + (fixed ? "; fixed": "") + "]";
+		return "GraphData[" + x + ":" + y + (physics ? "": ";no physics") + "]";
 	}
 }

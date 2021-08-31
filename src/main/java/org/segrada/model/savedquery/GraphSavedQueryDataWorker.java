@@ -184,9 +184,9 @@ public class GraphSavedQueryDataWorker implements SavedQueryDataWorker {
 				if (node.has("x") && node.has("y")) {
 					String id = node.has("id")?node.getString("id"):node.getString("uid");
 
-					boolean fixed = node.has("fixed") && node.getBoolean("fixed");
+					boolean physics = !node.has("physics") || node.getBoolean("physics");
 
-					returnData.put(id, new GraphData(node.getInt("x"), node.getInt("y"), fixed));
+					returnData.put(id, new GraphData(node.getInt("x"), node.getInt("y"), physics));
 				}
 			}
 

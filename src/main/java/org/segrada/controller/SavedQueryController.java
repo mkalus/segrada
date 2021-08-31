@@ -285,7 +285,7 @@ public class SavedQueryController extends AbstractBaseController<ISavedQuery> {
 					o.put("x", dataMapEntry.x);
 					o.put("y", dataMapEntry.y);
 
-					if (dataMapEntry.fixed) o.put("fixed", true);
+					if (!dataMapEntry.physics) o.put("physics", false);
 				}
 
 				// o set, add to list
