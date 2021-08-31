@@ -93,6 +93,7 @@ public class JSONConverter {
 		if (relation.getColor() != null) {
 			JSONObject color = new JSONObject();
 			color.put("color", relation.getColorCode());
+			color.put("highlight", relation.getColorCode());
 			o.put("color", color);
 		}
 

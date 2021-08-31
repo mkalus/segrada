@@ -968,13 +968,12 @@ function escapeHTML(myString) {
 						size: 10
 					},
 					labelHighlightBold: false,
-					selectionWidth: 0,
 					arrows: {
 						to: true
-					},
-					smooth: {
-						type: 'cubicBezier'
 					}
+					//smooth: {
+					//	type: 'cubicBezier'
+					//}
 				},
 				groups: {
 					node: {
