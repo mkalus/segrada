@@ -20,6 +20,8 @@
 				<tr>
 					<th class="text-center"><i class="fa fa-bookmark"></i></th>
 					<th th:with="sortHelper=${@org.segrada.rendering.thymeleaf.util.TableSortPreprocessor@createSortLink(myurl, 'source', 'referenceText', 'asc', filters)}"><a href="#" class="sg-control-set" th:href="${sortHelper.url}" th:utext="|#{field.source}${sortHelper.icon}|" th:attr="data-target-id=${targetId}">Source</a></th>
+					<th th:if="${identity.hasAccess('PERIOD')}" class="col-xs-1" th:with="sortHelper=${@org.segrada.rendering.thymeleaf.util.TableSortPreprocessor@createSortLink(myurl, 'minJD', 'referenceText', 'asc', filters)}"><a href="#" class="sg-control-set" th:href="${sortHelper.url}" th:utext="|#{field.fromEntryShort}${sortHelper.icon}|" th:attr="data-target-id=${targetId}">Start</a></th>
+					<th th:if="${identity.hasAccess('PERIOD')}" class="col-xs-1" th:with="sortHelper=${@org.segrada.rendering.thymeleaf.util.TableSortPreprocessor@createSortLink(myurl, 'maxJD', 'referenceText', 'asc', filters)}"><a href="#" class="sg-control-set" th:href="${sortHelper.url}" th:utext="|#{field.toEntry}${sortHelper.icon}|" th:attr="data-target-id=${targetId}">Stop</a></th>
 					<th th:with="sortHelper=${@org.segrada.rendering.thymeleaf.util.TableSortPreprocessor@createSortLink(myurl, 'referenceText', 'referenceText', 'asc', filters)}"><a href="#" class="sg-control-set" th:href="${sortHelper.url}" th:utext="|#{field.text}${sortHelper.icon}|" th:attr="data-target-id=${targetId}">Text</a></th>
 					<th th:with="sortHelper=${@org.segrada.rendering.thymeleaf.util.TableSortPreprocessor@createSortLink(myurl, 'roleOfNode', 'referenceText', 'asc', filters)}"><a href="#" class="sg-control-set" th:href="${sortHelper.url}" th:utext="|#{field.roleOfNode}${sortHelper.icon}|" th:attr="data-target-id=${targetId}">roleOfNode</a></th>
 					<th></th>
@@ -29,6 +31,8 @@
 						<span class="sg-color-icon" th:style="'background-color: ' + ${entity.colorCode}" th:if="${entity.color}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
 					</td>
 					<td><a class="sg-data-icon sg-data-add" href="#" th:title="#{Show}" th:href="@{/source/show/{uid}(uid=${entity.source.uid})}"><i class="fa fa-eye"></i></a> <span th:text="${entity.source.shortTitle}">Source</span></td>
+					<td th:if="${identity.hasAccess('PERIOD')}" th:utext="${@org.segrada.util.FuzzyDateRenderer@renderOrEmpty(entity.source.minJD,entity.source.minEntry,entity.source.minEntryCalendar,entity.source.fuzzyMinFlags, #messages.msg('period.fuzzyBefore'), #messages.msg('period.fuzzyAfter'))}">Start</td>
+					<td th:if="${identity.hasAccess('PERIOD')}" th:utext="${@org.segrada.util.FuzzyDateRenderer@renderOrEmpty(entity.source.maxJD,entity.source.maxEntry,entity.source.maxEntryCalendar,entity.source.fuzzyMaxFlags, #messages.msg('period.fuzzyBefore'), #messages.msg('period.fuzzyAfter'))}">Stop</td>
 					<td th:text="${entity.referenceText}">Text</td>
 					<td th:text="${entity.roleOfNode}">roleOfNode</td>
 					<td class="text-right">

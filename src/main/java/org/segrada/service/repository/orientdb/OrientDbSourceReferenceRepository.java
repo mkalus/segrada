@@ -195,6 +195,18 @@ public class OrientDbSourceReferenceRepository extends AbstractSegradaOrientDbRe
 					case "source":
 						order = "source.shortTitle ".concat(dir);
 						break;
+					case "minJD":
+						order = "source.minJD ".concat(dir);
+						break;
+					case "maxJD":
+						order = "source.maxJD ".concat(dir);
+						break;
+					case "minJDRef":
+						order = "reference.minJD ".concat(dir);
+						break;
+					case "maxJDRef":
+						order = "reference.maxJD ".concat(dir);
+						break;
 					default:
 						order = getDefaultOrder(false);
 				}
