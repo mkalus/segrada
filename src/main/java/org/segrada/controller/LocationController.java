@@ -8,10 +8,7 @@ import org.segrada.model.Location;
 import org.segrada.model.prototype.ILocation;
 import org.segrada.model.prototype.SegradaCoreEntity;
 import org.segrada.model.prototype.SegradaEntity;
-import org.segrada.service.ColorService;
-import org.segrada.service.LocationService;
-import org.segrada.service.NodeService;
-import org.segrada.service.RelationService;
+import org.segrada.service.*;
 import org.segrada.service.base.AbstractRepositoryService;
 import org.segrada.service.base.SegradaService;
 
@@ -49,6 +46,9 @@ public class LocationController extends AbstractBaseController<ILocation> {
 
 	@Inject
 	private RelationService relationService;
+
+	@Inject
+	private SourceService sourceService;
 
 	@Override
 	protected String getBasePath() {
@@ -99,6 +99,7 @@ public class LocationController extends AbstractBaseController<ILocation> {
 		if (parentModel == null || parentUid == null || parentModel.isEmpty() || parentUid.isEmpty()) error = true;
 		else if (parentModel.equals("Node")) parentService = this.nodeService;
 		else if (parentModel.equals("Relation")) parentService = this.relationService;
+		else if (parentModel.equals("Source")) parentService = this.sourceService;
 
 		// try to find parent model
 		SegradaCoreEntity parent = null;
