@@ -10,7 +10,7 @@ function escapeHTML(myString) {
 	 */
 	const genericMatcher = function(searchUrl) {
 		return function findMatches(q, _, cb) {
-			const response = $.ajax({
+			$.ajax({
 				url: searchUrl + encodeURIComponent(q)
 			}).done(function (data) {
 				cb(data);
@@ -464,7 +464,7 @@ function escapeHTML(myString) {
 				confirmKeys: [13], //enter only
 				typeaheadjs: {
 					name: 'tags',
-					limit: 25,
+					limit: 20,
 					displayKey: 'title',
 					valueKey: 'title',
 					source: genericMatcher(urlSegradaTagSearch),
