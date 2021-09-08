@@ -61,7 +61,7 @@
 
 		<div th:replace="partials/pagination :: pagination (paginationInfo=${paginationInfo},base=${myurl})"></div>
 
-		<div class="sg-stop-flow" th:if="${identity.hasAccess('SOURCE_REFERENCE_ADD')}">
+		<div class="clearfix" th:if="${identity.hasAccess('SOURCE_REFERENCE_ADD')}">
 			<h4 th:text="#{add.sourceReference}">Add source reference</h4>
 
 			<div th:if="${error}" th:text="#{${error}}" class="alert alert-danger">Error</div>

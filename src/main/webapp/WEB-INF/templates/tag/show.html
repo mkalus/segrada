@@ -30,7 +30,7 @@
 				</div>
 
 				<div class="sg-tag-hierarchy">
-					<div class="sg-margin-bottom sg-stop-flow sg-child-tags" th:unless="${#lists.isEmpty(childTags)}">
+					<div class="sg-margin-bottom clearfix sg-child-tags" th:unless="${#lists.isEmpty(childTags)}">
 						<div class="sg-margin-top" th:text="#{field.childTags}">Child tags:</div>
 
 						<div th:replace="partials/common :: taglist (tags=${childTags})"></div>
