@@ -107,6 +107,14 @@ public class SavedQueryController extends AbstractBaseController<ISavedQuery> {
 	}
 
 	@GET
+	@Path("/add")
+	@Produces(MediaType.TEXT_HTML)
+	@RolesAllowed("GRAPH")
+	public Viewable add() {
+		return handleForm(service.createNewInstance());
+	}
+
+	@GET
 	@Path("/edit/{uid}")
 	@Produces(MediaType.TEXT_HTML)
 	@RolesAllowed({"GRAPH"})
