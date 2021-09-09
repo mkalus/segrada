@@ -55,3 +55,16 @@ docker run --name segrada -p 8080:8080 ronix/segrada
 See https://hub.docker.com/r/ronix/segrada/ for more information.
 
 See deploy folder for more examples, e.g. running Segrada using Docker compose and on Kubernetes.
+
+
+## Financing the Project
+
+You can support this project by financing development! Just get in touch with me and state your wishes and ideas.
+
+I thank these institutions for supporting the project:
+
+* Chair of Economic History, University of Jena
+* [Research Center Finance & Information Management](https://www.fim-rc.de/en/), University of Augsburg/Project Group Business & Information Systems Engineering
+of the Fraunhofer FIT
+* [The Fugger Foundations](https://www.fugger.de/en/foundations)
+* [Chair of Medieval History](https://www.uni-erfurt.de/philosophische-fakultaet/seminare-professuren/historisches-seminar/professuren/mittelalterliche-geschichte), University of Erfurt
