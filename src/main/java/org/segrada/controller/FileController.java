@@ -459,7 +459,7 @@ public class FileController extends AbstractColoredController<IFile> {
 			final InputStream in = (entity == null)?
 					getClass().getResourceAsStream("/img/no_image.png"):
 					service.getBinaryDataAsStream(thumbnail?entity.getThumbFileIdentifier():entity.getFileIdentifier());
-			String mime = (thumbnail || entity == null)?
+			String mime = ((thumbnail && !entity.getMimeType().equals("image/svg+xml")) || entity == null)?
 					"image/png":entity.getMimeType();
 
 			// set streaming output
