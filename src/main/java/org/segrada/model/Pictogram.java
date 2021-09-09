@@ -30,11 +30,13 @@ public class Pictogram extends AbstractSegradaEntity implements IPictogram {
 
 	/**
 	 * list of allowed image mime types
+	 * note: list MUST be in alphabetic order because we use binary searches on it
 	 */
 	public static final String[] ALLOWED_IMAGE_TYPES = new String[]{
 			"image/gif",
 			"image/jpeg",
-			"image/png"
+			"image/png",
+			"image/svg+xml"
 	};
 
 	@NotNull(message = "error.notNull")

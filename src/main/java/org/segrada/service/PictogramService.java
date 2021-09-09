@@ -75,20 +75,28 @@ public class PictogramService extends AbstractRepositoryService<IPictogram, Pict
 		// nothing to save
 		if (pictogram.getData() == null) return;
 
-		// let image manipulator handle the image
-		ImageManipulator manipulator = new ImageManipulator(pictogram.getData(), pictogram.getMimeType());
+		// handle file saving
+		String identifier;
+		if (pictogram.getMimeType().equals("image/svg+xml")) { // svg? just save it like it is
+			// save and/or replace data
+			identifier = binaryDataService.saveNewReference(pictogram, "thumb_" + pictogram.getFileName(), pictogram.getMimeType(),
+					pictogram.getData(), entity.getFileIdentifier());
+		} else {
+			// let image manipulator handle the image
+			ImageManipulator manipulator = new ImageManipulator(pictogram.getData(), pictogram.getMimeType());
 
-		// crop image to square
-		manipulator.cropImageToSquare();
-		// create thumbnail
-		manipulator.createThumbnail(24, true);
-		// change file ending, if necessary
-		if (!pictogram.getFileName().endsWith(".png"))
-			pictogram.setFileName(pictogram.getFileName().substring(0, pictogram.getFileName().lastIndexOf(".")) + ".png");
+			// crop image to square
+			manipulator.cropImageToSquare();
+			// create thumbnail
+			manipulator.createThumbnail(48, true);
+			// change file ending, if necessary
+			if (!pictogram.getFileName().endsWith(".png"))
+				pictogram.setFileName(pictogram.getFileName().substring(0, pictogram.getFileName().lastIndexOf(".")) + ".png");
 
-		// save and/or replace data
-		String identifier = binaryDataService.saveNewReference(entity, pictogram.getFileName(), manipulator.getContentType(),
-				manipulator.getImageBytes(), entity.getFileIdentifier());
+			// save and/or replace data
+			identifier = binaryDataService.saveNewReference(entity, pictogram.getFileName(), manipulator.getContentType(),
+					manipulator.getImageBytes(), entity.getFileIdentifier());
+		}
 
 		// issue identifier, remove data
 		if (identifier != null) {
