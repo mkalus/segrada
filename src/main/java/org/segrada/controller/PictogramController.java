@@ -108,7 +108,7 @@ public class PictogramController extends AbstractBaseController<IPictogram> {
 				}
 			};
 
-			return Response.ok(output, "image/png").build();
+			return Response.ok(output, entity.getFileIdentifier().endsWith(".svg") ? "image/svg+xml" : "image/png").build();
 		} catch (Exception e) {
 			return Response.ok(new Viewable("error", e.getMessage())).build();
 		}

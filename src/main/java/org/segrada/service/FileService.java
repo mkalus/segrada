@@ -178,8 +178,15 @@ public class FileService extends AbstractFullTextService<IFile, FileRepository> 
 		if (identifier != null) {
 			file.setFileIdentifier(identifier);
 
-			// is this an image?
-			if (file.getMimeType().startsWith("image/")) {
+			// handle file saving
+			if (file.getMimeType().equals("image/svg+xml")) { // svg? just save it like it is
+				// save and/or replace data
+				String thumbIdentifier = binaryDataService.saveNewReference(file, "thumb_" + file.getFilename(), file.getMimeType(),
+						file.getData(), file.getThumbFileIdentifier());
+
+				if (thumbIdentifier != null)
+					file.setThumbFileIdentifier(thumbIdentifier);
+			} else if (file.getMimeType().startsWith("image/")) { // is this an image?
 				try {
 					// create thumbnail via image manipulator
 					ImageManipulator manipulator = new ImageManipulator(file.getData(), file.getMimeType());
