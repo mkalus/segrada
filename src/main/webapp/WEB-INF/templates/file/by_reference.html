@@ -11,7 +11,7 @@
 
 <div class="container">
 	<div class="sg-control-content sg-file">
-		<h4 class="sg-control-header"><i class="fa fa-files-o"></i> <span th:text="#{list.file_reference}">References to entity</span></h4>
+		<h4 class="sg-control-header"><i class="fa fa-copy"></i> <span th:text="#{list.file_reference}">References to entity</span></h4>
 
 		<p th:text="${#messages.msg('showEntities', entities.size())}">Size</p>
 
@@ -34,7 +34,7 @@
 				<td class="text-right">
 					<div class="sg-data-icon-bar" role="group" aria-label="Actions" sg:strip-whitespace>
 						<a class="sg-data-icon sg-data-add" href="#" th:title="#{Show}" th:href="@{/file/show/{uid}(uid=${entity.uid})}"><i class="fa fa-eye"></i></a>
-						<a th:if="${identity.hasEditAccess(entity, 'FILE')}" class="sg-data-icon sg-data-add" href="#" th:title="#{Edit}" th:href="@{/file/edit/{uid}(uid=${entity.uid})}"><i class="fa fa-pencil"></i></a>
+						<a th:if="${identity.hasEditAccess(entity, 'FILE')}" class="sg-data-icon sg-data-add" href="#" th:title="#{Edit}" th:href="@{/file/edit/{uid}(uid=${entity.uid})}"><i class="fa fa-pencil-alt"></i></a>
 						<a th:if="${identity.hasAccess('FILE_REFERENCE_DELETE')}" class="sg-data-icon" href="#" th:title="#{Unlink}" th:href="@{/file/remove_reference/{model}/{uid}/{source}(model=${model},uid=${uid},source=${entity.uid})}" th:attr="data-confirm=${#messages.msg('ReallyUnlink', entity.title, referenceEntity.title)}"><i class="fa fa-unlink"></i></a>
 					</div>
 				</td>

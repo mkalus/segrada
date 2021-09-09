@@ -32,12 +32,12 @@
 				<li class="dropdown">
 					<a href="#" th:title="#{nav.list}" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span class="fa fa-list" aria-hidden="true"></span> <span class="hidden-md hidden-lg hidden-sm" th:text="#{nav.list}"></span> <span class="caret"></span></a>
 					<ul class="dropdown-menu" role="menu">
-						<li th:if="${identity.hasAccess('NODE')}"><a class="sg-control-set" href="#" th:href="@{/node}" th:inline="text"><span class="fa fa-dot-circle-o"></span> [[#{Nodes}]]</a></li>
+						<li th:if="${identity.hasAccess('NODE')}"><a class="sg-control-set" href="#" th:href="@{/node}" th:inline="text"><span class="fa fa-dot-circle"></span> [[#{Nodes}]]</a></li>
 						<!--<li><a class="sg-data-add" href="#" th:href="@{/comment}" th:inline="text"><span class="fa fa-comment"></span> [[#{Comments}]]</a></li>-->
 						<li th:if="${identity.hasAccess('SOURCE')}"><a class="sg-control-set" href="#" th:href="@{/source}"  th:inline="text"><span class="fa fa-briefcase"></span> [[#{Sources}]]</a></li>
 						<li th:if="${identity.hasAccess('FILE')}"><a class="sg-control-set" href="#" th:href="@{/file}" th:inline="text"><span class="fa fa-file"></span> [[#{Files}]]</a></li>
 						<li class="divider" th:if="${identity.hasAccess('NODE,SOURCE,FILE')}"></li>
-						<li th:if="${identity.hasAccess('RELATION')}"><a class="sg-control-set" href="#" th:href="@{/relation}" th:inline="text"><span class="fa fa-chain"></span> [[#{Relations}]]</a></li>
+						<li th:if="${identity.hasAccess('RELATION')}"><a class="sg-control-set" href="#" th:href="@{/relation}" th:inline="text"><span class="fa fa-link"></span> [[#{Relations}]]</a></li>
 						<li th:if="${identity.hasAccess('RELATION_TYPE')}"><a class="sg-control-set" href="#" th:href="@{/relation_type}" th:inline="text"><span class="fa fa-paperclip"></span> [[#{Relation_Types}]]</a></li>
 						<li class="divider" th:if="${identity.hasAccess('RELATION,RELATION_TYPE')}"></li>
 						<li th:if="${identity.hasAccess('PICTOGRAM')}"><a class="sg-control-set" href="#" th:href="@{/pictogram}" th:inline="text"><span class="fa fa-university"></span> [[#{Pictograms}]]</a></li>
@@ -46,18 +46,18 @@
 						<li th:if="${showLogout and identity.hasAccess('PICTOGRAM,TAG,COLOR,GRAPH')}" class="divider"></li>
 						<li th:if="${showLogout and identity.hasAccess('USER')}"><a class="sg-control-set" href="#" th:href="@{/user}" th:inline="text"><span class="fa fa-user"></span> [[#{Users}]]</a></li>
 						<li th:if="${showLogout and identity.hasAccess('GROUP')}"><a class="sg-control-set" href="#" th:href="@{/user_group}" th:inline="text"><span class="fa fa-users"></span> [[#{UserGroups}]]</a></li>
-						<li th:if="${identity.hasAccess('GRAPH')}"><a class="sg-control-set" href="#" th:href="@{/saved_query}" th:inline="text"><span class="fa fa-thumb-tack"></span> [[#{SavedQueries}]]</a></li>
+						<li th:if="${identity.hasAccess('GRAPH')}"><a class="sg-control-set" href="#" th:href="@{/saved_query}" th:inline="text"><span class="fa fa-shapes"></span> [[#{SavedQueries}]]</a></li>
 					</ul>
 				</li>
 				<li class="dropdown">
 					<a href="#" th:title="#{nav.add}" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span class="fa fa-plus-square" aria-hidden="true"></span> <span class="hidden-md hidden-lg hidden-sm" th:text="#{nav.add}"></span> <span class="caret"></span></a>
 					<ul class="dropdown-menu" role="menu">
-						<li th:if="${identity.hasAccess('NODE_ADD')}"><a class="sg-data-add" href="#" th:href="@{/node/add}" th:inline="text"><span class="fa fa-dot-circle-o"></span> [[#{Node}]]</a></li>
+						<li th:if="${identity.hasAccess('NODE_ADD')}"><a class="sg-data-add" href="#" th:href="@{/node/add}" th:inline="text"><span class="fa fa-dot-circle"></span> [[#{Node}]]</a></li>
 						<!--<li><a class="sg-data-add" href="#" th:href="@{/comment/add}" th:inline="text"><span class="fa fa-comment"></span> [[#{Comment}]]</a></li>-->
 						<li th:if="${identity.hasAccess('SOURCE_ADD')}"><a class="sg-data-add" href="#" th:href="@{/source/add}"  th:inline="text"><span class="fa fa-briefcase"></span> [[#{Source}]]</a></li>
 						<li th:if="${identity.hasAccess('FILE_ADD')}"><a class="sg-data-add" href="#" th:href="@{/file/add}" th:inline="text"><span class="fa fa-file"></span> [[#{File}]]</a></li>
 						<li class="divider" th:if="${identity.hasAccess('NODE_ADD,SOURCE_ADD,FILE_ADD')}"></li>
-						<li th:if="${identity.hasAccess('RELATION_ADD')}"><a class="sg-data-add" href="#" th:href="@{/relation/add}" th:inline="text"><span class="fa fa-chain"></span> [[#{Relation}]]</a></li>
+						<li th:if="${identity.hasAccess('RELATION_ADD')}"><a class="sg-data-add" href="#" th:href="@{/relation/add}" th:inline="text"><span class="fa fa-link"></span> [[#{Relation}]]</a></li>
 						<li th:if="${identity.hasAccess('RELATION_TYPE_ADD')}"><a class="sg-data-add" href="#" th:href="@{/relation_type/add}" th:inline="text"><span class="fa fa-paperclip"></span> [[#{Relation_Type}]]</a></li>
 						<li class="divider" th:if="${identity.hasAccess('RELATION_ADD,RELATION_TYPE_ADD')}"></li>
 						<li th:if="${identity.hasAccess('PICTOGRAM_ADD')}"><a class="sg-data-add" href="#" th:href="@{/pictogram/add}" th:inline="text"><span class="fa fa-university"></span> [[#{Pictogram}]]</a></li>
@@ -68,7 +68,7 @@
 						<li th:if="${showLogout and identity.hasAccess('ADMIN')}"><a class="sg-data-add" href="#" th:href="@{/user_group/add}" th:inline="text"><span class="fa fa-users"></span> [[#{UserGroup}]]</a></li>
 					</ul>
 				</li>
-				<li th:if="${identity.hasAccess('GRAPH')}"><a href="#" id="sg-toggle-graph" type="button" th:title="#{nav.toggleGraph}"><span class="fa fa-share-alt" aria-hidden="true"></span> <span class="hidden-md hidden-lg hidden-sm" th:text="#{nav.toggleGraph}"></span></a></li>
+				<li th:if="${identity.hasAccess('GRAPH')}"><a href="#" id="sg-toggle-graph" type="button" th:title="#{nav.toggleGraph}"><span class="fa fa-project-diagram" aria-hidden="true"></span> <span class="hidden-md hidden-lg hidden-sm" th:text="#{nav.toggleGraph}"></span></a></li>
 			</ul>
 			<form th:if="${identity.hasAccess('SEARCH')}" class="navbar-form navbar-left sg-control-form" role="search" action="#" th:action="@{/search/}" method="get">
 				<div class="form-group">
@@ -93,7 +93,7 @@
 						<li th:if="${showLogout}"><a href="#" th:href="@{/login/logout}" th:inline="text"><span class="fa fa-power-off"></span> [[#{Logout}]]</a></li>
 						<li th:if="${showLogout and identity.hasAccess('CLEAR_CACHE')}" role="separator" class="divider"></li>
 						<li th:if="${identity.hasAccess('ADMIN')}"><a class="sg-control-set" href="#" th:href="@{/admin/reindex}" th:inline="text"><span class="fa fa-recycle"></span> [[#{menu.reindex}]]</a></li>
-						<li th:if="${identity.hasAccess('CLEAR_CACHE')}"><a class="sg-control-set" href="#" th:href="@{/admin/clear_cache}" th:inline="text"><span class="fa fa-refresh"></span> [[#{menu.clearCache}]]</a></li>
+						<li th:if="${identity.hasAccess('CLEAR_CACHE')}"><a class="sg-control-set" href="#" th:href="@{/admin/clear_cache}" th:inline="text"><span class="fa fa-sync"></span> [[#{menu.clearCache}]]</a></li>
 					</ul>
 				</li>
 			</ul>

@@ -11,7 +11,7 @@
 
 <div class="container">
 	<div class="sg-control-content sg-relation" th:with="myurl=@{${baseUrl}?${baseUrl}:'/relation'}">
-		<h4 class="sg-control-header"><i class="fa fa-chain"></i> <span th:text="#{Relation}">List</span></h4>
+		<h4 class="sg-control-header"><i class="fa fa-link"></i> <span th:text="#{Relation}">List</span></h4>
 
 		<form method="get" action="#" th:action="${myurl}" class="sg-control-form" th:attr="data-target-id=${targetId}">
 			<p class="pull-right">
@@ -23,7 +23,7 @@
 
 			<table class="table table-hover table-striped table-condensed">
 				<tr>
-					<th class="text-center"><i class="fa fa-chain"></i></th>
+					<th class="text-center"><i class="fa fa-link"></i></th>
 					<th th:text="#{field.title}">Title</th>
 					<th th:if="${identity.hasAccess('PERIOD')}" class="col-xs-1" th:with="sortHelper=${@org.segrada.rendering.thymeleaf.util.TableSortPreprocessor@createSortLink(myurl, 'minJD', 'title', 'asc', filters)}"><a href="#" class="sg-control-set" th:href="${sortHelper.url}" th:utext="|#{field.fromEntryShort}${sortHelper.icon}|">Start</a></th>
 					<th th:if="${identity.hasAccess('PERIOD')}" class="col-xs-1" th:with="sortHelper=${@org.segrada.rendering.thymeleaf.util.TableSortPreprocessor@createSortLink(myurl, 'maxJD', 'title', 'asc', filters)}"><a href="#" class="sg-control-set" th:href="${sortHelper.url}" th:utext="|#{field.toEntry}${sortHelper.icon}|">Stop</a></th>
@@ -54,8 +54,8 @@
 						<div class="sg-data-icon-bar" role="group" aria-label="Actions" sg:strip-whitespace>
 							<a th:if="${identity.hasAccess('GRAPH')}" href="#" th:href="@{/relation/graph/{uid}(uid=${entity.uid})}" type="button" class="sg-graph-update sg-data-icon" aria-label="Graph" th:title="#{AddToGraph}" th:attr="aria-label=#{AddToGraph}"><i class="fa fa-share"></i></a>
 							<a class="sg-data-icon sg-data-add" href="#" th:title="#{Show}" th:href="@{/relation/show/{uid}(uid=${entity.uid})}"><i class="fa fa-eye"></i></a>
-							<a th:if="${identity.hasEditAccess(entity, 'RELATION')}" class="sg-data-icon sg-data-add" href="#" th:title="#{Edit}" th:href="@{/relation/edit/{uid}(uid=${entity.uid})}"><i class="fa fa-pencil"></i></a>
-							<a th:if="${identity.hasDeleteAccess(entity, 'RELATION')}" class="sg-data-icon" href="#" th:title="#{Delete}" th:href="@{/relation/delete/{uid}/0(uid=${entity.uid})}" th:attr="data-confirm=${#messages.msg('ReallyDelete', entity.title)}"><i class="fa fa-times-circle-o"></i></a>
+							<a th:if="${identity.hasEditAccess(entity, 'RELATION')}" class="sg-data-icon sg-data-add" href="#" th:title="#{Edit}" th:href="@{/relation/edit/{uid}(uid=${entity.uid})}"><i class="fa fa-pencil-alt"></i></a>
+							<a th:if="${identity.hasDeleteAccess(entity, 'RELATION')}" class="sg-data-icon" href="#" th:title="#{Delete}" th:href="@{/relation/delete/{uid}/0(uid=${entity.uid})}" th:attr="data-confirm=${#messages.msg('ReallyDelete', entity.title)}"><i class="fa fa-times-circle"></i></a>
 						</div>
 					</td>
 				</tr>

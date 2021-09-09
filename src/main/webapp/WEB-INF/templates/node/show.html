@@ -14,7 +14,7 @@
 		<div th:replace="partials/common :: headerboxright (type=#{Node},base='node',entity=${entity},graphUrl=@{/node/graph/{uid}(uid=${entity.uid})},expandGraph=true,access='NODE')"></div>
 		<div th:replace="partials/common :: taglist (tags=${entity.tags})"></div>
 		<h4 class="sg-data-header">
-			<span class="fa fa-dot-circle-o" th:title="#{Node}"></span>
+			<span class="fa fa-dot-circle" th:title="#{Node}"></span>
 			<span class="sg-color-icon" th:style="'background-color: ' + ${entity.colorCode}" th:if="${entity.color}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
 			<img src="#" th:src="@{/pictogram/file/{uid}(uid=${entity.pictogram.uid})}" th:alt-title="${entity.pictogram.title}" alt="" width="24" height="24" th:if="${entity.pictogram}"/>
 			<span th:text="${entity.title}">Node</span>

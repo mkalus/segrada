@@ -1117,7 +1117,7 @@ function escapeHTML(myString) {
 		const link = $('#sg-toggle-graph');
 		if (link.hasClass('active')) {
 			link.removeClass('active');
-			$('.fa-share-alt-square', link).addClass('fa-share-alt').removeClass('fa-share-alt-square');
+			$('.fa-project-diagram', link).removeClass('text-danger');
 
 			// remember positions
 			graphNetwork.storePositions();
@@ -1136,7 +1136,7 @@ function escapeHTML(myString) {
 		const link = $('#sg-toggle-graph');
 		if (!link.hasClass('active')) {
 			link.addClass('active');
-			$('.fa-share-alt', link).addClass('fa-share-alt-square').removeClass('fa-share-alt');
+			$('.fa-project-diagram', link).addClass('text-danger');
 			$('#sg-control').hide();
 			$('#sg-graph-container').show();
 
@@ -1320,7 +1320,7 @@ function escapeHTML(myString) {
 		$('#sg-graph-toggle-physics').click(function(e) {
 			graphPhysics = !graphPhysics;
 
-			$(this).html(graphPhysics ? '<i class="fa fa-snowflake-o"></i>' : '<i class="fa fa-magnet"></i>')
+			$(this).html(graphPhysics ? '<i class="fa fa-snowflake"></i>' : '<i class="fa fa-magnet"></i>')
 
 			graphNodes.forEach(function(node) {
 				node.physics = graphPhysics;

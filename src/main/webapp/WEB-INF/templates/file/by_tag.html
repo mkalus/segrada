@@ -43,7 +43,7 @@
 					</td>
 					<td th:if="${entity.thumbFileIdentifier}"><img src="#" th:src="@{/file/thumbnail/{uid}(uid=${entity.uid})}" th:alt-title="${entity.title}" alt="" width="48" height="48" /></td>
 					<td th:unless="${entity.thumbFileIdentifier}" th:with="fileType=${entity.fileType}">
-						<span th:unless="${#strings.isEmpty(fileType)}" class="fa fa-file-o fa-2x" th:class="${'fa fa-file-' + entity.fileType + '-o fa-2x'}"></span><span th:if="${#strings.isEmpty(fileType)}" class="fa fa-file-o fa-2x"></span>
+						<span th:unless="${#strings.isEmpty(fileType)}" class="fa fa-file fa-2x" th:class="${'fa fa-file-' + entity.fileType + ' fa-2x'}"></span><span th:if="${#strings.isEmpty(fileType)}" class="fa fa-file fa-2x"></span>
 					</td>
 					<td th:text="${entity.title}">Title</td>
 					<td class="sg-taglist-contract">
@@ -52,8 +52,8 @@
 					<td class="text-right">
 						<div class="sg-data-icon-bar" role="group" aria-label="Actions" sg:strip-whitespace>
 							<a class="sg-data-icon sg-data-add" href="#" th:title="#{Show}" th:href="@{/file/show/{uid}(uid=${entity.uid})}"><i class="fa fa-eye"></i></a>
-							<a th:if="${identity.hasEditAccess(entity, 'FILE')}" class="sg-data-icon sg-data-add" href="#" th:title="#{Edit}" th:href="@{/file/edit/{uid}(uid=${entity.uid})}"><i class="fa fa-pencil"></i></a>
-							<a th:if="${identity.hasDeleteAccess(entity, 'FILE')}" class="sg-data-icon" href="#" th:title="#{Delete}" th:href="@{/file/delete/{uid}/0(uid=${entity.uid})}" th:attr="data-confirm=${#messages.msg('ReallyDelete', entity.title)}"><i class="fa fa-times-circle-o"></i></a>
+							<a th:if="${identity.hasEditAccess(entity, 'FILE')}" class="sg-data-icon sg-data-add" href="#" th:title="#{Edit}" th:href="@{/file/edit/{uid}(uid=${entity.uid})}"><i class="fa fa-pencil-alt"></i></a>
+							<a th:if="${identity.hasDeleteAccess(entity, 'FILE')}" class="sg-data-icon" href="#" th:title="#{Delete}" th:href="@{/file/delete/{uid}/0(uid=${entity.uid})}" th:attr="data-confirm=${#messages.msg('ReallyDelete', entity.title)}"><i class="fa fa-times-circle"></i></a>
 						</div>
 					</td>
 				</tr>

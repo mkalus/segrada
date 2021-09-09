@@ -11,7 +11,7 @@
 
 <div class="container">
 	<div class="sg-control-content sg-saved-query">
-		<h4 class="sg-control-header"><i class="fa fa-thumb-tack"></i> <span th:text="#{list.saved_query}">List</span></h4>
+		<h4 class="sg-control-header"><i class="fa fa-shapes"></i> <span th:text="#{list.saved_query}">List</span></h4>
 
 		<p th:text="${#messages.msg('showEntities', entities.size())}">Size</p>
 
@@ -27,8 +27,8 @@
 				<td class="text-right">
 					<div class="sg-data-icon-bar" role="group" aria-label="Actions" sg:strip-whitespace>
 						<a class="sg-data-icon sg-data-add" href="#" th:title="#{Show}" th:href="@{/saved_query/show/{uid}(uid=${entity.uid})}"><i class="fa fa-eye"></i></a>
-						<a th:if="${identity.hasEditAccess(entity, 'GRAPH')}" class="sg-data-icon sg-data-add" href="#" th:title="#{Edit}" th:href="@{/saved_query/edit/{uid}(uid=${entity.uid})}"><i class="fa fa-pencil"></i></a>
-						<a th:if="${identity.hasDeleteAccess(entity, 'GRAPH')}" class="sg-data-icon" href="#" th:title="#{Delete}" th:href="@{/saved_query/delete/{uid}/0(uid=${entity.uid})}" th:attr="data-confirm=${#messages.msg('ReallyDelete', entity.title)}"><i class="fa fa-times-circle-o"></i></a>
+						<a th:if="${identity.hasEditAccess(entity, 'GRAPH')}" class="sg-data-icon sg-data-add" href="#" th:title="#{Edit}" th:href="@{/saved_query/edit/{uid}(uid=${entity.uid})}"><i class="fa fa-pencil-alt"></i></a>
+						<a th:if="${identity.hasDeleteAccess(entity, 'GRAPH')}" class="sg-data-icon" href="#" th:title="#{Delete}" th:href="@{/saved_query/delete/{uid}/0(uid=${entity.uid})}" th:attr="data-confirm=${#messages.msg('ReallyDelete', entity.title)}"><i class="fa fa-times-circle"></i></a>
 					</div>
 				</td>
 			</tr>

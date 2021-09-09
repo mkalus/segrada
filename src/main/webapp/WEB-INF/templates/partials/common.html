@@ -30,8 +30,8 @@ Common fragments.
 
 <div th:fragment="headerboxright (type,base,entity,access)" class="sg-headbox-right">
 	<a href="#" type="button" class="close sg-data-close" aria-label="Close" th:title="#{Close}" th:attr="aria-label=#{Close}"><i class="fa fa-times"></i></a>
-	<a th:if="${identity.hasEditAccess(entity, access)}" href="#" th:href="@{/{base}/edit/{uid}(base=${base},uid=${entity.uid})}" type="button" class="sg-data-add sg-data-icon" aria-label="Edit" th:title="#{Edit}" th:attr="aria-label=#{Edit}"><i class="fa fa-pencil"></i></a>
-	<a th:if="${identity.hasDeleteAccess(entity, access)}" class="sg-data-icon sg-control-confirm" href="#" th:title="#{Delete}" th:href="@{/{base}/delete/{uid}/0(base=${base},uid=${entity.uid})}" th:attr="data-confirm=${#messages.msg('ReallyDelete', entity.title)}, data-target=${base + '-' + entity.uid}"><i class="fa fa-times-circle-o"></i></a>
+	<a th:if="${identity.hasEditAccess(entity, access)}" href="#" th:href="@{/{base}/edit/{uid}(base=${base},uid=${entity.uid})}" type="button" class="sg-data-add sg-data-icon" aria-label="Edit" th:title="#{Edit}" th:attr="aria-label=#{Edit}"><i class="fa fa-pencil-alt"></i></a>
+	<a th:if="${identity.hasDeleteAccess(entity, access)}" class="sg-data-icon sg-control-confirm" href="#" th:title="#{Delete}" th:href="@{/{base}/delete/{uid}/0(base=${base},uid=${entity.uid})}" th:attr="data-confirm=${#messages.msg('ReallyDelete', entity.title)}, data-target=${base + '-' + entity.uid}"><i class="fa fa-times-circle"></i></a>
 	<a th:if="${expandGraph and graphUrl and identity.hasAccess('GRAPH')}" href="#" th:href="${graphUrl + '?expand=true'}" type="button" class="sg-graph-update sg-data-icon" aria-label="Graph" th:title="#{AddAllToGraph}" th:attr="aria-label=#{AddAllToGraph}"><i class="fa fa-reply-all fa-flip-horizontal"></i></a>
 	<a th:if="${graphUrl and identity.hasAccess('GRAPH')}" href="#" th:href="${graphUrl}" type="button" class="sg-graph-update sg-data-icon" aria-label="Graph" th:title="#{AddToGraph}" th:attr="aria-label=#{AddToGraph}"><i class="fa fa-share"></i></a>
 	<span class="sg-headbox-info" th:text="${type}">Type</span>
@@ -77,8 +77,8 @@ Common fragments.
 			<td th:text="${myPeriod.comment}">Comment</td>
 			<td class="text-right">
 				<div class="sg-data-icon-bar" role="group" aria-label="Actions">
-					<a th:if="${identity.hasEditAccess(myPeriod, 'PERIOD')}" class="sg-data-icon sg-ajax-modal" href="#" th:title="#{Edit}" th:href="@{/period/edit/{uid}(uid=${myPeriod.uid})}" th:attr="data-title=#{modal.Period}"><i class="fa fa-pencil"></i></a>
-					<a th:if="${identity.hasDeleteAccess(myPeriod, 'PERIOD')}" class="sg-data-icon" href="#" th:title="#{Delete}" th:href="@{/period/delete/{uid}(uid=${myPeriod.uid})}" th:attr="data-confirm=${#messages.msg('ReallyDelete', myPeriod.title)}"><i class="fa fa-times-circle-o"></i></a>
+					<a th:if="${identity.hasEditAccess(myPeriod, 'PERIOD')}" class="sg-data-icon sg-ajax-modal" href="#" th:title="#{Edit}" th:href="@{/period/edit/{uid}(uid=${myPeriod.uid})}" th:attr="data-title=#{modal.Period}"><i class="fa fa-pencil-alt"></i></a>
+					<a th:if="${identity.hasDeleteAccess(myPeriod, 'PERIOD')}" class="sg-data-icon" href="#" th:title="#{Delete}" th:href="@{/period/delete/{uid}(uid=${myPeriod.uid})}" th:attr="data-confirm=${#messages.msg('ReallyDelete', myPeriod.title)}"><i class="fa fa-times-circle"></i></a>
 				</div>
 			</td>
 		</tr>
@@ -231,9 +231,9 @@ Common fragments.
 <span th:fragment="faIcon (modelName)" th:switch="${modelName}">
 	<i th:case="'Comment'" th:title="#{Comment}" class="fa fa-comment"></i>
 	<i th:case="'File'" th:title="#{File}" class="fa fa-file"></i>
-	<i th:case="'Node'" th:title="#{Node}" class="fa fa-dot-circle-o"></i>
+	<i th:case="'Node'" th:title="#{Node}" class="fa fa-dot-circle"></i>
 	<i th:case="'Source'" th:title="#{Source}" class="fa fa-briefcase"></i>
-	<i th:case="'Relation'" th:title="#{Relation}" class="fa fa-chain"></i>
+	<i th:case="'Relation'" th:title="#{Relation}" class="fa fa-link"></i>
 	<i th:case="*" th:text="${modelName}">X</i>
 </span>
 

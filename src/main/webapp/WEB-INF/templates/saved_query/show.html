@@ -12,11 +12,11 @@
 <div class="container">
 	<div class="sg-data sg-saved-query" th:id="${'saved-query-' + entity.uid}">
 		<div th:replace="partials/common :: headerboxright (type=#{SavedQuery},base='saved_query',entity=${entity},access='GRAPH')"></div>
-		<h4 class="sg-data-header"><span class="fa fa-thumb-tack" th:title="#{SavedQuery}"></span> <span th:text="${entity.title}">Saved Query</span></h4>
+		<h4 class="sg-data-header"><span class="fa fa-shapes" th:title="#{SavedQuery}"></span> <span th:text="${entity.title}">Saved Query</span></h4>
 
 		<div class="sg-description well well-sm" th:unless="${#strings.isEmpty(entity.description)}"><span sg:nl2br="${entity.description}">Description</span></div>
 
-		<p th:if="${entity.type == 'graph'}"><a href="#" th:href="@{/saved_query/graph/{uid}(uid=${entity.uid})}" class="btn btn-primary sg-graph-replace" th:attr="data-title=${entity.title},data-uid=${entity.uid}"><span class="fa fa-share-alt" aria-hidden="true"></span> <span th:text="#{LoadGraph}">Load Graph</span></a></p>
+		<p th:if="${entity.type == 'graph'}"><a href="#" th:href="@{/saved_query/graph/{uid}(uid=${entity.uid})}" class="btn btn-primary sg-graph-replace" th:attr="data-title=${entity.title},data-uid=${entity.uid}"><span class="fa fa-project-diagram" aria-hidden="true"></span> <span th:text="#{LoadGraph}">Load Graph</span></a></p>
 
 		<p><a href="#" th:href="@{/saved_query/export/{uid}(uid=${entity.uid})}" class="btn btn-primary"><span class="fa fa-download" aria-hidden="true"></span> <span th:text="#{ExportGraph}">Export Graph</span></a></p>
 

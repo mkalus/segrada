@@ -70,8 +70,8 @@
 
 				<div th:if="${entity.fileIdentifier}" class="text-center sg-margin-top sg-margin-bottom">
 					<a href="#" th:href="@{/file/download/{uid}(uid=${entity.uid})}" class="btn btn-primary btn-lg" th:title="#{Download}"><i class="fa fa-download"></i> <span th:text="#{Download}"></span></a>
-					<a th:if="${entity.mimeType} == 'application/pdf'" href="#" th:href="@{/js/pdfjs/web/viewer.html(file=@{/file/get/{uid}(uid=${entity.uid})})}" class="btn btn-default btn-lg sg-link-external" th:title="#{Open_Tab}"><i class="fa fa-external-link-square"></i> <span th:text="#{Open_Tab}"></span></a>
-					<a th:if="${@org.segrada.rendering.thymeleaf.util.MimeTypeIsRenderable@isRenderable(entity.mimeType)}" href="#" th:href="@{/file/get/{uid}(uid=${entity.uid})}" class="btn btn-default btn-lg sg-link-external" th:title="#{Open_Tab}"><i class="fa fa-external-link-square"></i> <span th:text="#{Open_Tab}"></span></a>
+					<a th:if="${entity.mimeType} == 'application/pdf'" href="#" th:href="@{/js/pdfjs/web/viewer.html(file=@{/file/get/{uid}(uid=${entity.uid})})}" class="btn btn-default btn-lg sg-link-external" th:title="#{Open_Tab}"><i class="fa fa-external-link-square-alt"></i> <span th:text="#{Open_Tab}"></span></a>
+					<a th:if="${@org.segrada.rendering.thymeleaf.util.MimeTypeIsRenderable@isRenderable(entity.mimeType)}" href="#" th:href="@{/file/get/{uid}(uid=${entity.uid})}" class="btn btn-default btn-lg sg-link-external" th:title="#{Open_Tab}"><i class="fa fa-external-link-square-alt"></i> <span th:text="#{Open_Tab}"></span></a>
 				</div>
 
 				<div th:replace="partials/common :: datafooter (entity=${entity})"></div>
