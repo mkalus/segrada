@@ -81,7 +81,7 @@ public class PictogramService extends AbstractRepositoryService<IPictogram, Pict
 		// crop image to square
 		manipulator.cropImageToSquare();
 		// create thumbnail
-		manipulator.createThumbnail(24, true);
+		manipulator.createThumbnail(48, true);
 		// change file ending, if necessary
 		if (!pictogram.getFileName().endsWith(".png"))
 			pictogram.setFileName(pictogram.getFileName().substring(0, pictogram.getFileName().lastIndexOf(".")) + ".png");
