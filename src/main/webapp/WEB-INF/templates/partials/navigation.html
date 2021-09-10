@@ -60,7 +60,7 @@
 						<li th:if="${identity.hasAccess('RELATION_ADD')}"><a class="sg-data-add" href="#" th:href="@{/relation/add}" th:inline="text"><span class="fa fa-link"></span> [[#{Relation}]]</a></li>
 						<li th:if="${identity.hasAccess('RELATION_TYPE_ADD')}"><a class="sg-data-add" href="#" th:href="@{/relation_type/add}" th:inline="text"><span class="fa fa-paperclip"></span> [[#{Relation_Type}]]</a></li>
 						<li class="divider" th:if="${identity.hasAccess('RELATION_ADD,RELATION_TYPE_ADD')}"></li>
-						<li th:if="${identity.hasAccess('GRAPH')}"><a class="sg-data-add" href="#" th:href="@{/saved_query/add}" th:inline="text"><span class="fa fa-shapes"></span> [[#{SavedQueries}]]</a></li>
+						<li th:if="${identity.hasAccess('GRAPH')}"><a class="sg-data-add" href="#" th:href="@{/saved_query/add}" th:inline="text"><span class="fa fa-shapes"></span> [[#{SavedQuery}]]</a></li>
 						<li th:if="${identity.hasAccess('PICTOGRAM_ADD')}"><a class="sg-data-add" href="#" th:href="@{/pictogram/add}" th:inline="text"><span class="fa fa-university"></span> [[#{Pictogram}]]</a></li>
 						<li th:if="${identity.hasAccess('TAG_ADD')}"><a class="sg-data-add" href="#" th:href="@{/tag/add}" th:inline="text"><span class="fa fa-tag"></span> [[#{Tag}]]</a></li>
 						<li th:if="${identity.hasAccess('COLOR_ADD')}"><a class="sg-data-add" href="#" th:href="@{/color/add}" th:inline="text"><span class="fa fa-tint"></span> [[#{Color}]]</a></li>
