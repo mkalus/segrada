@@ -14,6 +14,7 @@
 	<link rel="stylesheet" href="../../../css/jquery.simplepicker.css" th:href="@{/css/jquery.simplepicker.css}" />
 	<link rel="stylesheet" href="../../../css/summernote.css" th:href="@{/css/summernote.css}" />
 	<link rel="stylesheet" href="../../../css/viewer.min.css" th:href="@{/css/viewer.min.css}" />
+	<link rel="stylesheet" href="../../../segrada-query-builder/css/app.css" th:href="@{/segrada-query-builder/css/app.css}" />
 	<link rel="stylesheet" href="../../../css/segrada.css" th:href="@{/css/segrada.css}" />
 </head>
 
@@ -280,6 +281,8 @@ Common fragments.
 	<script src="../../../js/vendor/summernote-de.js" th:src="@{'/js/vendor/summernote-' + ${#locale.language} + '.js'}" th:unless="${#locale.language.equals('en')}"></script>
 	<!--/* Image Viewer */-->
 	<script src="../../../js/vendor/viewer.min.js" th:src="@{/js/vendor/viewer.min.js}"></script>
+	<!--/* Vue component: Segrada Query Builder */-->
+	<script src="../../../segrada-query-builder/js/app.js" th:src="@{/segrada-query-builder/js/app.js}"></script>
 	<script src="../../../js/segrada.min.js" th:src="@{/js/segrada.min.js}"></script>
 
 	<!-- /* Generic modal */-->

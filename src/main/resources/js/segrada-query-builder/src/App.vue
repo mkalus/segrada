@@ -1,6 +1,9 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div class="sg-query-builder-app">
+    <button type="button" class="btn btn-default" @click="count++">Add</button>
+
+    <HelloWorld v-for="n in count" :key="n"/>
+  </div>
 </template>
 
 <script>
@@ -10,17 +13,17 @@ export default {
   name: 'App',
   components: {
     HelloWorld
+  },
+  data () {
+    return ({
+      count: 1
+    })
   }
 }
 </script>
 
 <style lang="less">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+.sg-query-builder-app {
+  margin: 0.5em
 }
 </style>

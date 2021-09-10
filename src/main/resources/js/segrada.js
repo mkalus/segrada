@@ -785,6 +785,12 @@ function escapeHTML(myString) {
 		});
 
 		// *******************************************************
+		// Activator for query builder (Vue component)
+		$('.sg-query-builder', part).each(function() {
+			createSegradaQueryBuilder('#' + $(this).attr('id'));
+		});
+
+		// *******************************************************
 		// Graph: load remote data and update graph view
 		$('a.sg-graph-update', part).click(function(e) {
 			// update graph by remotely getting updated data
