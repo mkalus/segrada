@@ -9,7 +9,7 @@ function escapeHTML(myString) {
 	 * @param searchUrl
 	 */
 	const genericMatcher = function(searchUrl) {
-		return function findMatches(q, _, cb) {
+		return function findMatches(q, cb) {
 			$.ajax({
 				url: searchUrl + encodeURIComponent(q)
 			}).done(function (data) {
@@ -23,7 +23,7 @@ function escapeHTML(myString) {
 	 * Substring matcher for remote searches for nodes
 	 */
 	const nodeMatcher = function() {
-		return function findMatches(q, _, cb) {
+		return function findMatches(q, cb) {
 			let searchUrl = urlSegradaNodeSearch + encodeURIComponent(q);
 
 			// get current textField
@@ -35,12 +35,54 @@ function escapeHTML(myString) {
 				searchUrl += '&tags=' + encodeURIComponent(contraintIds);
 			}
 
-			const response = $.ajax({
+			$.ajax({
 				url: searchUrl
 			}).done(function (data) {
 				cb(data);
 			});
 		}
+	};
+
+	/**
+	 * Matcher for tags (tag input)
+	 */
+	const tagMatcher = genericMatcher(urlSegradaTagSearch);
+
+	/**
+	 * Matcher function for tags (tag input)
+	 * @param q
+	 */
+	const matchTags = function(q) {
+		return new Promise((resolve, reject) => {
+			tagMatcher(q, function(data) {
+				resolve(data.map(d => d.title));
+			});
+		});
+	}
+
+	/**
+	 * creates a typeahead instance on $this
+	 * @param $this
+	 * @param target
+	 * @param source
+	 * @returns {*}
+	 */
+	const createTypeAhead = function($this, target, source) {
+		return $this.typeahead({
+			source: source,
+			items: 'all',
+			matcher: () => true,
+			displayText: (item) => item.title,
+			autoSelect: false,
+			delay: 200,
+			afterSelect: function(item) {
+				target.val(item.id);
+			}
+		}).change(function() {
+			if ($this.val() === '') {
+				target.val(null);
+			}
+		});
 	};
 
 	// clean certain urls from jsessionid elements
@@ -458,25 +500,78 @@ function escapeHTML(myString) {
 		// *******************************************************
 		// Tags fields
 		$("select.sg-tags", part).each(function() {
-			const elem = $(this);
-			elem.tagsinput({
-				trimValue: true,
-				confirmKeys: [13], //enter only
-				typeaheadjs: {
-					name: 'tags',
-					limit: 20,
-					displayKey: 'title',
-					valueKey: 'title',
-					source: genericMatcher(urlSegradaTagSearch),
-					async: true
+			const $this = $(this);
+
+			// add input field before myself
+			const inputField = document.createElement('input');
+			inputField.setAttribute('type', 'text')
+			inputField.setAttribute('class', 'form-control')
+			$this.after(inputField);
+
+			// hide myself
+			$this.hide();
+
+			// initialize tagger
+			const myTagger = tagger(inputField, {
+				wrap: true,
+				completion: {
+					list: matchTags,
+					min_length: 1,
+					delay: 200
 				}
 			});
 
-			elem.on('itemRemoved', function(event) {
-				// really delete tag - fix bug in tagsinput
-				elem.find('option[value="' + event.item + '"]').remove();
+			// initialize with values
+			const existingValues = $this.val();
+			if (existingValues && existingValues.length) {
+				existingValues.map(v => myTagger.add_tag(v));
+			}
+
+			inputField.addEventListener('add_tag', function(e) {
+				$this.append($('<option>', {text: e.item, value: e.item, selected: true}));
+			});
+			inputField.addEventListener('remove_tag', function(e) {
+				$('option', $this).each(function() {
+					if ( $(this).val() === e.item) {
+						$(this).remove();
+					}
+				});
 			});
 		});
+
+		// $("select.sg-tags", part).each(function() {
+		// 	const elem = $(this);
+		// 	elem.tagsinput({
+		// 		confirmKeys: [13], //enter only
+		// 		itemValue: function(item) {
+		// 			return item.title;
+		// 		},
+		// 		itemText: function(item) {
+		// 			return item.title;
+		// 		},
+		// 		typeahead: {
+		// 			source: matchTags,
+		// 			afterSelect: function (item) {
+		// 				elem.tagsinput('add', {selected: true, title: item.title}); // workaround
+		// 				$(this.$element).val("");
+		// 			},
+		// 			items: 'all',
+		// 			delay: 200,
+		// 			autoSelect: false
+		// 		}
+		// 	});
+		// 	elem.on('beforeItemAdd', function(event) {
+		// 		// workaround for cursor keys
+		// 		if (!event.item || !event.item.selected) {
+		// 			event.cancel = true;
+		// 		}
+		// 	});
+		//
+		// 	/*elem.on('itemRemoved', function(event) {
+		// 		// really delete tag - fix bug in tagsinput
+		// 		elem.find('option[value="' + event.item + '"]').remove();
+		// 	});*/
+		// });
 
 		// *******************************************************
 		// node selector for relation forms
@@ -484,23 +579,7 @@ function escapeHTML(myString) {
 			const $this = $(this);
 			const target = $('#' + $this.attr('data-id'));
 
-			$this.typeahead({hint: true,
-				highlight: true,
-				minLength: 1
-			},{
-				async: true,
-				name: 'node',
-				limit: 25,
-				displayKey: 'title',
-				valueKey: 'id',
-				source: nodeMatcher()
-			}).bind('typeahead:selected', function(e, datum) {
-				target.val(datum.id);
-			}).bind('keyup', function() { // empty on textbox empty
-				if (!this.value) {
-					target.val('');
-				}
-			});
+			createTypeAhead($this, target, nodeMatcher());
 		});
 
 		// *******************************************************
@@ -509,23 +588,7 @@ function escapeHTML(myString) {
 			const $this = $(this);
 			const target = $('#' + $this.attr('data-id'));
 
-			$this.typeahead({hint: true,
-				highlight: true,
-				minLength: 1
-			},{
-				async: true,
-				name: 'file',
-				limit: 25,
-				displayKey: 'title',
-				valueKey: 'id',
-				source: genericMatcher(urlSegradaFileSearch)
-			}).bind('typeahead:selected', function(e, datum) {
-				target.val(datum.id);
-			}).bind('keyup', function() { // empty on textbox empty
-				if (!this.value) {
-					target.val('');
-				}
-			});
+			createTypeAhead($this, target, genericMatcher(urlSegradaFileSearch));
 		});
 
 		// source selector for forms
@@ -533,23 +596,7 @@ function escapeHTML(myString) {
 			const $this = $(this);
 			const target = $('#' + $this.attr('data-id'));
 
-			$this.typeahead({hint: true,
-				highlight: true,
-				minLength: 1
-			},{
-				async: true,
-				name: 'source',
-				limit: 25,
-				displayKey: 'title',
-				valueKey: 'id',
-				source: genericMatcher(urlSegradaSourceSearch)
-			}).bind('typeahead:selected', function(e, datum) {
-				target.val(datum.id);
-			}).bind('keyup', function() { // empty on textbox empty
-				if (!this.value) {
-					target.val('');
-				}
-			});
+			createTypeAhead($this, target, genericMatcher(urlSegradaSourceSearch));
 		});
 
 		// bind external links
