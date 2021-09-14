@@ -285,6 +285,13 @@
 			<version>1.7.21</version>
 		</dependency>
 
+		<!-- Slug generation -->
+		<dependency>
+			<groupId>com.github.slugify</groupId>
+			<artifactId>slugify</artifactId>
+			<version>2.5</version>
+		</dependency>
+
 		<!-- Hadoop File System Access -->
 		<dependency>
 			<groupId>org.apache.hadoop</groupId>
