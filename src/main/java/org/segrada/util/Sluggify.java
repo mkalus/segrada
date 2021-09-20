@@ -6,7 +6,6 @@ import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Ehcache;
 import net.sf.ehcache.Element;
 import net.sf.ehcache.config.CacheConfiguration;
-import net.sf.ehcache.config.PersistenceConfiguration;
 import net.sf.ehcache.store.MemoryStoreEvictionPolicy;
 
 import java.text.Normalizer;
