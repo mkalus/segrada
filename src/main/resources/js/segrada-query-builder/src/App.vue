@@ -1,6 +1,6 @@
 <template>
   <div class="sg-query-builder-app">
-    <button type="button" class="btn btn-default" @click="count++">Add</button>
+    <button type="button" class="btn btn-default" @click="increase">Add</button>
 
     <HelloWorld v-for="n in count" :key="n"/>
 
@@ -17,6 +17,11 @@ export default {
   components: {
     HelloWorld
   },
+  props: {
+    callback: {
+      type: Function
+    }
+  },
   setup () {
     const { t } = useI18n()
     return { t }
@@ -25,6 +30,12 @@ export default {
     return ({
       count: 1
     })
+  },
+  methods: {
+    increase () {
+      this.count++
+      this.callback(this.count)
+    }
   }
 }
 </script>
