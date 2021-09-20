@@ -18,11 +18,11 @@ export default {
     HelloWorld
   },
   props: {
-    callback: {
+    changeCallbackFunction: {
       type: Function
     }
   },
-  setup () {
+  setup (props) {
     const { t } = useI18n()
     return { t }
   },
@@ -34,7 +34,7 @@ export default {
   methods: {
     increase () {
       this.count++
-      this.callback(this.count)
+      this.changeCallbackFunction(this.count)
     }
   }
 }

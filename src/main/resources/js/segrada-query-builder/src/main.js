@@ -1,15 +1,13 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import store from './store'
-import i18n from './i18n'
+import createI18N from './i18n'
 
 // use function because we want to do this dynamically
-function createSegradaQueryBuilder (containerId) {
+function createSegradaQueryBuilder (containerId, locale = 'en', changeCallbackFunction = () => {}) {
   createApp(App, {
-    callback: function (data) {
-      console.log(data)
-    }
-  }).use(store).use(i18n).mount(containerId)
+    changeCallbackFunction
+  }).use(store).use(createI18N(locale)).mount(containerId)
 }
 
 // export globally

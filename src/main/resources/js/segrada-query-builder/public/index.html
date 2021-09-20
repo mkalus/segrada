@@ -15,7 +15,9 @@
     <div id="app"></div>
     <script>
         setTimeout(function() {
-            createSegradaQueryBuilder('#app')
+            createSegradaQueryBuilder('#app', 'de', function (data) {
+                console.log(data)
+            })
         }, 1000)
     </script>
     <!-- built files will be auto injected -->
