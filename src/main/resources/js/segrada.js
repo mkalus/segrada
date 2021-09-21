@@ -834,7 +834,27 @@ function escapeHTML(myString) {
 		// *******************************************************
 		// Activator for query builder (Vue component)
 		$('.sg-query-builder', part).each(function() {
-			createSegradaQueryBuilder('#' + $(this).attr('id'));
+			const dataInputElement = $('#' + $(this).attr('data-id'));
+			const data = $(this).attr('data');
+			let predefinedData
+			try {
+				predefinedData = JSON.parse(data);
+				if (!Array.isArray(predefinedData)) {
+					predefinedData = undefined
+				}
+			} catch (_) {
+				predefinedData = undefined
+			}
+
+			createSegradaQueryBuilder(
+				'#' + $(this).attr('id'),
+				$('html').attr('lang'),
+				window.location.protocol + "//" + window.location.host + '/',
+				predefinedData,
+				function (data) {
+					dataInputElement.val(JSON.stringify(data));
+				}
+			);
 		});
 
 		// *******************************************************
