@@ -59,6 +59,10 @@ export default {
   margin: 0.5em
 }
 
+.mt-2 {
+  margin-top: 10px;
+}
+
 /**
  * Oruga Autocompleter - see https://oruga.io/components/Autocomplete.html
  */

@@ -6,7 +6,8 @@ const messages = {
       node: 'Node',
       source: 'Source',
       file: 'File',
-      searchForTitle: 'Search title or term'
+      searchForTitle: 'Search title or term',
+      noResultsFound: 'No results found'
     }
   },
   de: {
@@ -14,7 +15,8 @@ const messages = {
       node: 'Knoten',
       source: 'Quelle',
       file: 'Datei',
-      searchForTitle: 'Titel oder Begriff eingeben'
+      searchForTitle: 'Titel oder Begriff eingeben',
+      noResultsFound: 'Keine Datensätze gefunden'
     }
   }
 }

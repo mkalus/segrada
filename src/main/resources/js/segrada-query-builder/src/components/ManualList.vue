@@ -5,20 +5,25 @@
     </select>
 
     <o-autocomplete
-      class="form-control" style="margin-top: 10px"
+      class="form-control mt-2"
       :data="autocompleteData"
       :placeholder="t('message.searchForTitle')"
-      :loading="isLoading"
       :debounce-typing="200"
       @typing="search"
       field="title"
       @select="addEntry"
       :clear-on-select="true"
       iconPack="fas"
-      icon="search"
-    />
+      :icon="isLoading ? 'hourglass' : 'search'"
+    >
+      <template v-slot:empty>
+        {{ t('message.noResultsFound') }}
+      </template>
+    </o-autocomplete>
 
-    {{ data }}
+    <ul v-if="data.ids && data.ids.length" class="list-group mt-2">
+      <NamedEntry v-for="(id, idx) in data.ids" :key="id" :id="id" :field="data.field" @delete="deleted(idx)" />
+    </ul>
   </div>
 </template>
 
@@ -26,9 +31,11 @@
 import { reactive } from 'vue'
 import { useStore } from 'vuex'
 import { useI18n } from 'vue-i18n'
+import NamedEntry from '@/components/NamedEntry'
 
 export default {
   name: 'ManualList',
+  components: { NamedEntry },
   props: {
     idx: {
       type: Number,
@@ -98,6 +105,11 @@ export default {
           this.change()
         }
       }
+    },
+    deleted (idx) {
+      this.data.ids.splice(idx, 1)
+
+      this.change()
     }
   }
 }
