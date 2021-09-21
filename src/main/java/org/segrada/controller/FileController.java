@@ -2,6 +2,7 @@ package org.segrada.controller;
 
 import com.google.inject.Inject;
 import com.google.inject.servlet.RequestScoped;
+import com.sun.jersey.api.NotFoundException;
 import com.sun.jersey.api.view.Viewable;
 import com.sun.jersey.core.header.FormDataContentDisposition;
 import com.sun.jersey.multipart.FormDataBodyPart;
@@ -393,6 +394,19 @@ public class FileController extends AbstractColoredController<IFile> {
 	@RolesAllowed("FILE")
 	public Viewable show(@PathParam("uid") String uid) {
 		return handleShow(uid, service);
+	}
+
+	@GET
+	@Path("/{uid}")
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+	@RolesAllowed("FILE")
+	public String get(@PathParam("uid") String uid) {
+		IFile file = service.findById(service.convertUidToId(uid));
+		if (file == null) {
+			throw new NotFoundException();
+		}
+
+		return file.toJSON().toString();
 	}
 
 	@GET

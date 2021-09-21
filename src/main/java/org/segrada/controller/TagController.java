@@ -2,6 +2,7 @@ package org.segrada.controller;
 
 import com.google.inject.Inject;
 import com.google.inject.servlet.RequestScoped;
+import com.sun.jersey.api.NotFoundException;
 import com.sun.jersey.api.view.Viewable;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
@@ -9,6 +10,7 @@ import org.codehaus.jettison.json.JSONObject;
 import org.segrada.controller.base.AbstractBaseController;
 import org.segrada.model.Tag;
 import org.segrada.model.prototype.INode;
+import org.segrada.model.prototype.ISource;
 import org.segrada.model.prototype.ITag;
 import org.segrada.model.prototype.SegradaTaggable;
 import org.segrada.rendering.json.JSONConverter;
@@ -109,6 +111,19 @@ public class TagController extends AbstractBaseController<ITag> {
 			@PathParam("uid") String uid
 	) {
 		return reallyShow(service.findById(service.convertUidToId(uid)));
+	}
+
+	@GET
+	@Path("/{uid}")
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+	@RolesAllowed("SOURCE")
+	public String get(@PathParam("uid") String uid) {
+		ITag tag = service.findById(service.convertUidToId(uid));
+		if (tag == null) {
+			throw new NotFoundException();
+		}
+
+		return tag.toJSON().toString();
 	}
 
 	@GET

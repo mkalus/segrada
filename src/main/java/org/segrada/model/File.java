@@ -1,5 +1,6 @@
 package org.segrada.model;
 
+import org.codehaus.jettison.json.JSONObject;
 import org.segrada.model.base.AbstractAnnotatedModel;
 import org.segrada.model.prototype.IFile;
 
@@ -281,5 +282,29 @@ public class File extends AbstractAnnotatedModel implements IFile {
 	@Override
 	public String toString() {
 		return "{File}" + (getId() == null ? "*" : getId()) + ", " + getFilename();
+	}
+
+	@Override
+	public JSONObject toJSON() {
+		JSONObject jsonObject = super.toJSON();
+
+		try {
+			jsonObject.put("title", title);
+			jsonObject.put("filename", filename);
+			jsonObject.put("copyright", copyright);
+			jsonObject.put("mimeType", mimeType);
+			jsonObject.put("location", location);
+			jsonObject.put("fileSize", fileSize);
+			jsonObject.put("indexFullText", indexFullText);
+			jsonObject.put("containFile", containFile);
+			jsonObject.put("fileIdentifier", fileIdentifier);
+			jsonObject.put("thumbFileIdentifier", thumbFileIdentifier);
+			jsonObject.put("description", description);
+			jsonObject.put("descriptionMarkup", descriptionMarkup);
+		} catch (Exception e) {
+			// ignore
+		}
+
+		return jsonObject;
 	}
 }

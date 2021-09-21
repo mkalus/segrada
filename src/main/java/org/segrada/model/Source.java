@@ -1,5 +1,6 @@
 package org.segrada.model;
 
+import org.codehaus.jettison.json.JSONObject;
 import org.segrada.model.base.AbstractAnnotatedModel;
 import org.segrada.model.base.AbstractCoreModel;
 import org.segrada.model.prototype.ISource;
@@ -174,5 +175,28 @@ public class Source extends AbstractCoreModel implements ISource {
 	@Override
 	public String toString() {
 		return "{Source}" + (getId() == null ? "*" : getId()) + " [" + getShortRef() + "]: " + getShortTitle();
+	}
+
+	@Override
+	public JSONObject toJSON() {
+		JSONObject jsonObject = super.toJSON();
+
+		try {
+			jsonObject.put("shortTitle", shortTitle);
+			jsonObject.put("longTitle", longTitle);
+			jsonObject.put("sourceType", sourceType);
+			jsonObject.put("shortRef", shortRef);
+			jsonObject.put("url", url);
+			jsonObject.put("productCode", productCode);
+			jsonObject.put("author", author);
+			jsonObject.put("citation", citation);
+			jsonObject.put("copyright", copyright);
+			jsonObject.put("description", description);
+			jsonObject.put("descriptionMarkup", descriptionMarkup);
+		} catch (Exception e) {
+			// ignore
+		}
+
+		return jsonObject;
 	}
 }
