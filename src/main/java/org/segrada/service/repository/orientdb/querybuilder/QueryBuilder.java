@@ -7,10 +7,7 @@ import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.codehaus.jettison.json.JSONTokener;
-import org.segrada.model.prototype.IFile;
-import org.segrada.model.prototype.INode;
-import org.segrada.model.prototype.ISavedQuery;
-import org.segrada.model.prototype.ISource;
+import org.segrada.model.prototype.*;
 import org.segrada.service.repository.orientdb.OrientDbFileRepository;
 import org.segrada.service.repository.orientdb.OrientDbNodeRepository;
 import org.segrada.service.repository.orientdb.OrientDbSourceRepository;
@@ -45,12 +42,12 @@ public class QueryBuilder extends AbstractOrientDbBaseRepository {
     }
 
     /**
-     * initial entry to actually run saved query
+     * run saved query and return JSON data
      * @param query to be run
      * @return JSON representation of results
      */
-    public JSONArray runSavedQuery(ISavedQuery query) {
-        List<ODocument> documents = runSavedQueryAndGetDocuments(query);
+    public JSONArray runSavedQueryAndGetJSONArray(ISavedQuery query) {
+        List<ODocument> documents = runSavedQuery(query);
 
         if (documents == null) {
             return null;
@@ -58,6 +55,7 @@ public class QueryBuilder extends AbstractOrientDbBaseRepository {
 
         JSONArray jsonArray = new JSONArray(documents.size());
 
+        // duplicated extraction because not all entities contain toJSON method
         for (ODocument document : documents) {
             switch (document.getClassName()) {
                 case "Node":
@@ -78,7 +76,43 @@ public class QueryBuilder extends AbstractOrientDbBaseRepository {
         return jsonArray;
     }
 
-    public List<ODocument> runSavedQueryAndGetDocuments(ISavedQuery query) {
+    /**
+     * rund saved query and get a list of entities
+     * @param query to be run
+     * @return list of entities
+     */
+    public List<SegradaEntity> runSavedQueryAndGetEntities(ISavedQuery query) {
+        List<ODocument> documents = runSavedQuery(query);
+
+        if (documents == null) {
+            return null;
+        }
+
+        List<SegradaEntity> list = new ArrayList<>(documents.size());
+
+        for (ODocument document : documents) {
+            switch (document.getClassName()) {
+                case "Node":
+                    list.add(nodeRepository.convertToEntity(document));
+                    break;
+                case "Source":
+                    list.add(sourceRepository.convertToEntity(document));
+                    break;
+                case "File":
+                    list.add(fileRepository.convertToEntity(document));
+                    break;
+            }
+        }
+
+        return list;
+    }
+
+    /**
+     * rund saved query and get a list of documents
+     * @param query to be run
+     * @return list of documents
+     */
+    public List<ODocument> runSavedQuery(ISavedQuery query) {
         try {
             String queryString = runQueryParts(query);
             logger.info("query = " + queryString);

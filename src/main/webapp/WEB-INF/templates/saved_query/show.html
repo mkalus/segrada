@@ -18,7 +18,16 @@
 
 		<p th:if="${entity.type == 'graph'}"><a href="#" th:href="@{/saved_query/graph/{uid}(uid=${entity.uid})}" class="btn btn-primary sg-graph-replace" th:attr="data-title=${entity.title},data-uid=${entity.uid}"><span class="fa fa-project-diagram" aria-hidden="true"></span> <span th:text="#{LoadGraph}">Load Graph</span></a></p>
 
-		<p th:if="${entity.type == 'query'}" th:text="${entity.data}"></p>
+		<div th:if="${entity.type == 'query'}">
+			<h4>Resultate</h4>
+
+			<p th:if="${results.containsKey('Node')}" th:text="${results.get('Node').size() + ' Knoten'}"></p>
+			TODO
+			<p th:if="${results.containsKey('Source')}" th:text="${results.get('Source').size() + ' Quellen'}"></p>
+			TODO
+			<p th:if="${results.containsKey('File')}" th:text="${results.get('File').size() + ' Dateien'}"></p>
+			TODO
+		</div>
 
 		<p><a href="#" th:href="@{/saved_query/export/{uid}(uid=${entity.uid})}" class="btn btn-primary"><span class="fa fa-download" aria-hidden="true"></span> <span th:text="#{ExportGraph}">Export Graph</span></a></p>
 

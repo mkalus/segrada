@@ -31,6 +31,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -104,7 +106,33 @@ public class SavedQueryController extends AbstractBaseController<ISavedQuery> {
 	@Produces(MediaType.TEXT_HTML)
 	@RolesAllowed("GRAPH")
 	public Viewable show(@PathParam("uid") String uid) {
-		return handleShow(uid, service);
+		// create model map
+		Map<String, Object> model = new HashMap<>();
+
+		ISavedQuery query = service.findById(service.convertUidToId(uid));
+
+		model.put("entity", query);
+
+		if (query != null && query.getType().equals("query")) {
+			// order by type
+			Map<String, List<SegradaEntity>> results = new HashMap<>();
+
+			List<SegradaEntity> entities = service.runSavedQueryAndEntities(query);
+
+			if (entities != null) {
+				for (SegradaEntity entity : entities) {
+					String modelName = entity.getModelName();
+					if (!results.containsKey(modelName)) {
+						results.put(modelName, new LinkedList<>());
+					}
+					results.get(modelName).add(entity);
+				}
+			}
+
+			model.put("results", results);
+		}
+
+		return new Viewable(getBasePath() + "show", model);
 	}
 
 	@GET
@@ -117,7 +145,7 @@ public class SavedQueryController extends AbstractBaseController<ISavedQuery> {
 			throw new NotFoundException();
 		}
 
-		return service.runSavedQuery(savedQuery).toString();
+		return service.runSavedQueryAndGetJSONArray(savedQuery).toString();
 	}
 
 	@GET

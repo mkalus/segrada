@@ -1,6 +1,5 @@
 package org.segrada.service.repository.orientdb;
 
-import com.google.inject.Inject;
 import com.orientechnologies.orient.core.id.ORecordId;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
@@ -8,16 +7,14 @@ import org.codehaus.jettison.json.JSONArray;
 import org.segrada.model.SavedQuery;
 import org.segrada.model.prototype.ISavedQuery;
 import org.segrada.model.prototype.IUser;
+import org.segrada.model.prototype.SegradaEntity;
 import org.segrada.service.repository.SavedQueryRepository;
-import org.segrada.service.repository.orientdb.base.AbstractOrientDbRepository;
 import org.segrada.service.repository.orientdb.base.AbstractSegradaOrientDbRepository;
 import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory;
 import org.segrada.service.repository.orientdb.querybuilder.QueryBuilder;
 import org.segrada.service.util.PaginationInfo;
 import org.segrada.util.OrientStringEscape;
 import org.segrada.util.Sluggify;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -171,7 +168,12 @@ public class OrientDbSavedQueryRepository extends AbstractSegradaOrientDbReposit
 	}
 
 	@Override
-	public JSONArray runSavedQuery(ISavedQuery query) {
-		return queryBuilder.runSavedQuery(query);
+	public List<SegradaEntity> runSavedQueryAndEntities(ISavedQuery query) {
+		return queryBuilder.runSavedQueryAndGetEntities(query);
+	}
+
+	@Override
+	public JSONArray runSavedQueryAndGetJSONArray(ISavedQuery query) {
+		return queryBuilder.runSavedQueryAndGetJSONArray(query);
 	}
 }
