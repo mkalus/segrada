@@ -2,6 +2,7 @@ package org.segrada.controller;
 
 import com.google.inject.Inject;
 import com.google.inject.servlet.RequestScoped;
+import com.sun.jersey.api.NotFoundException;
 import com.sun.jersey.api.view.Viewable;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
@@ -104,6 +105,19 @@ public class SavedQueryController extends AbstractBaseController<ISavedQuery> {
 	@RolesAllowed("GRAPH")
 	public Viewable show(@PathParam("uid") String uid) {
 		return handleShow(uid, service);
+	}
+
+	@GET
+	@Path("/{uid}")
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+	@RolesAllowed("GRAPH")
+	public String get(@PathParam("uid") String uid) {
+		ISavedQuery savedQuery = service.findById(service.convertUidToId(uid));
+		if (savedQuery == null) {
+			throw new NotFoundException();
+		}
+
+		return service.runSavedQuery(savedQuery).toString();
 	}
 
 	@GET

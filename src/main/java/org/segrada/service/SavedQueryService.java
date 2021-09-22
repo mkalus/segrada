@@ -1,6 +1,7 @@
 package org.segrada.service;
 
 import com.google.inject.Inject;
+import org.codehaus.jettison.json.JSONArray;
 import org.segrada.model.SavedQuery;
 import org.segrada.model.prototype.ISavedQuery;
 import org.segrada.model.prototype.IUser;
@@ -56,5 +57,14 @@ public class SavedQueryService extends AbstractRepositoryService<ISavedQuery, Sa
 	 */
 	public List<ISavedQuery> findAllBy(@Nullable IUser user, @Nullable String type, @Nullable String title) {
 		return repository.findAllBy(user, type, title);
+	}
+
+	/**
+	 * run the saved query
+	 * @param query saved query to run
+	 * @return JSON structure of entitites found
+	 */
+	public JSONArray runSavedQuery(ISavedQuery query) {
+		return repository.runSavedQuery(query);
 	}
 }

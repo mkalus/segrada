@@ -1,5 +1,6 @@
 package org.segrada.service.repository;
 
+import org.codehaus.jettison.json.JSONArray;
 import org.segrada.model.prototype.ISavedQuery;
 import org.segrada.model.prototype.IUser;
 import org.segrada.service.repository.prototype.CRUDRepository;
@@ -34,4 +35,11 @@ public interface SavedQueryRepository extends CRUDRepository<ISavedQuery>, Pagin
 	 * @return list of saved queries found (or empty list if none)
 	 */
 	List<ISavedQuery> findAllBy(@Nullable IUser user, @Nullable String type, @Nullable String title);
+
+	/**
+	 * run the saved query
+	 * @param query saved query to run
+	 * @return JSON structure of entitites found
+	 */
+	JSONArray runSavedQuery(ISavedQuery query);
 }

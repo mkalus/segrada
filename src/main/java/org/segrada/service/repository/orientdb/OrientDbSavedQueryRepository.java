@@ -1,17 +1,23 @@
 package org.segrada.service.repository.orientdb;
 
+import com.google.inject.Inject;
 import com.orientechnologies.orient.core.id.ORecordId;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
+import org.codehaus.jettison.json.JSONArray;
 import org.segrada.model.SavedQuery;
 import org.segrada.model.prototype.ISavedQuery;
 import org.segrada.model.prototype.IUser;
 import org.segrada.service.repository.SavedQueryRepository;
+import org.segrada.service.repository.orientdb.base.AbstractOrientDbRepository;
 import org.segrada.service.repository.orientdb.base.AbstractSegradaOrientDbRepository;
 import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory;
+import org.segrada.service.repository.orientdb.querybuilder.QueryBuilder;
 import org.segrada.service.util.PaginationInfo;
 import org.segrada.util.OrientStringEscape;
 import org.segrada.util.Sluggify;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -37,6 +43,8 @@ import java.util.Map;
  * OrientDb Saved Query Repository
  */
 public class OrientDbSavedQueryRepository extends AbstractSegradaOrientDbRepository<ISavedQuery> implements SavedQueryRepository {
+	protected final QueryBuilder queryBuilder;
+
 	/**
 	 * Constructor
 	 *
@@ -44,6 +52,9 @@ public class OrientDbSavedQueryRepository extends AbstractSegradaOrientDbReposit
 	 */
 	public OrientDbSavedQueryRepository(OrientDbRepositoryFactory repositoryFactory) {
 		super(repositoryFactory);
+
+		// create query builder instance
+		queryBuilder = new QueryBuilder(repositoryFactory);
 	}
 
 	@Override
@@ -157,5 +168,10 @@ public class OrientDbSavedQueryRepository extends AbstractSegradaOrientDbReposit
 	@Override
 	protected String getDefaultOrder(boolean addOrderBy) {
 		return (addOrderBy?" ORDER BY":"").concat(" titleasc");
+	}
+
+	@Override
+	public JSONArray runSavedQuery(ISavedQuery query) {
+		return queryBuilder.runSavedQuery(query);
 	}
 }
