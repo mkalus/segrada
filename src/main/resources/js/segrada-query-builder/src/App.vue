@@ -1,9 +1,14 @@
 <template>
   <div class="sg-query-builder-app">
-    <button type="button" class="btn btn-default" @click="addEntry('manualList')">Add</button>
+    <h4>{{ t('message.buildQueryHeader') }}</h4>
 
-    <template v-for="(dataEntry, idx) in dataEntries" :key="idx">
-      <ManualList v-if="dataEntry.type === 'manualList'" :idx="idx" @change="callCallback" />
+    <select v-model="currentSelection" style="color: #999" class="form-control" @change="addEntry(currentSelection)">
+      <option value="">{{ t('message.selectToAdd') }}</option>
+      <option v-for="queryType of possibleQueryTypes" :key="queryType" :value="queryType" style="color: #000">{{ t('message.' + queryType) }}</option>
+    </select>
+
+    <template v-for="(dataEntry, idx) in dataEntries" :key="dataEntry.id + idx">
+      <ManualList v-if="dataEntry.type === 'manualList'" :idx="idx" @change="callCallback" @delete="deleted(idx)" />
     </template>
   </div>
 </template>
@@ -37,9 +42,19 @@ export default {
 
     return { t }
   },
+  data () {
+    return ({
+      currentSelection: ''
+    })
+  },
   computed: {
     dataEntries () {
       return this.$store.state.data
+    },
+    possibleQueryTypes () {
+      return [
+        'manualList'
+      ]
     }
   },
   methods: {
@@ -47,7 +62,15 @@ export default {
       this.changeCallbackFunction(this.$store.state.data)
     },
     addEntry (type) {
-      this.$store.commit('addEntry', type)
+      if (type !== '') {
+        this.$store.commit('addEntry', type)
+        this.callCallback()
+      }
+
+      this.currentSelection = '' // reset
+    },
+    deleted (idx) {
+      this.$store.commit('removeEntry', idx)
       this.callCallback()
     }
   }
@@ -55,10 +78,27 @@ export default {
 </script>
 
 <style lang="less">
-.sg-query-builder-app {
-  margin: 0.5em
+/**
+ * Query builder styles
+ */
+.sg-query-builder-query-container {
+  border: 1px solid #ccc;
+  margin-top: 0.5em;
+
+  h5 {
+    margin-top: 0;
+    background: #ddd;
+    padding: 0.5em;
+  }
 }
 
+.sg-query-builder-query-elements {
+  margin: 0.5em;
+}
+
+/**
+ * Generic styles
+ */
 .mt-2 {
   margin-top: 10px;
 }
@@ -95,7 +135,7 @@ export default {
   background-color: #ffffff;
   border: 1px solid #e5e5e5;
   border-radius: 4px;
-  padding: 5px 24px 5px 5px;
+  padding: 10px;
 }
 
 .o-acp__item {
@@ -105,5 +145,9 @@ export default {
   overflow: hidden;
   text-overflow: ellipsis;
   cursor: pointer;
+
+  &:hover {
+    background-color: #ddd;
+  }
 }
 </style>

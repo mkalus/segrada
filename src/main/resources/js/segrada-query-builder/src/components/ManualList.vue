@@ -1,29 +1,37 @@
 <template>
-  <div>
-    <select v-model="data.field" class="form-control" @change="changeField">
-      <option v-for="field in fields" :value="field" :key="field">{{ t('message.' + field) }}</option>
-    </select>
+  <div class="sg-query-builder-query-container sg-query-builder-manualList">
+    <h5>
+      {{ t('message.manualList') }} ({{ t('message.' + data.field + 's') }})
 
-    <o-autocomplete
-      class="form-control mt-2"
-      :data="autocompleteData"
-      :placeholder="t('message.searchForTitle')"
-      :debounce-typing="200"
-      @typing="search"
-      field="title"
-      @select="addEntry"
-      :clear-on-select="true"
-      iconPack="fas"
-      :icon="isLoading ? 'hourglass' : 'search'"
-    >
-      <template v-slot:empty>
-        {{ t('message.noResultsFound') }}
-      </template>
-    </o-autocomplete>
+      <button type="button" class="close" aria-label="Close" @click="remove" :title="t('message.delete')" style="margin-top: -3px"><span aria-hidden="true">&times;</span></button>
+    </h5>
 
-    <ul v-if="data.ids && data.ids.length" class="list-group mt-2">
-      <NamedEntry v-for="(id, idx) in data.ids" :key="id" :id="id" :field="data.field" @delete="deleted(idx)" />
-    </ul>
+    <div class="sg-query-builder-query-elements">
+      <select v-model="data.field" class="form-control" @change="changeField">
+        <option v-for="field in fields" :value="field" :key="field">{{ t('message.' + field) }}</option>
+      </select>
+
+      <o-autocomplete
+        class="form-control mt-2"
+        :data="autocompleteData"
+        :placeholder="t('message.searchForTitle')"
+        :debounce-typing="200"
+        @typing="search"
+        field="title"
+        @select="addEntry"
+        :clear-on-select="true"
+        iconPack="fas"
+        :icon="isLoading ? 'hourglass' : 'search'"
+      >
+        <template v-slot:empty>
+          {{ t('message.noResultsFound') }}
+        </template>
+      </o-autocomplete>
+
+      <ul v-if="data.ids && data.ids.length" class="list-group mt-2">
+        <NamedEntry v-for="(id, idx) in data.ids" :key="id" :id="id" :field="data.field" @delete="deleted(idx)" />
+      </ul>
+    </div>
   </div>
 </template>
 
@@ -110,6 +118,9 @@ export default {
       this.data.ids.splice(idx, 1)
 
       this.change()
+    },
+    remove () {
+      this.$emit('delete')
     }
   }
 }

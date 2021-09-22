@@ -3,7 +3,7 @@
     <template v-if="entity && field === 'source'">{{ entity.shortTitle }}</template>
     <template v-if="entity && field !== 'source'">{{ entity.title }}</template>
 
-    <button type="button" class="close" aria-label="Close" @click="remove"><span aria-hidden="true">&times;</span></button>
+    <button type="button" class="close" aria-label="Close" @click="remove" :title="t('message.delete')"><span aria-hidden="true">&times;</span></button>
   </li>
 </template>
 
@@ -11,6 +11,7 @@
 import { ref, onMounted } from 'vue'
 import { useStore } from 'vuex'
 import idToUid from '@/lib/id-to-uid'
+import { useI18n } from 'vue-i18n'
 
 export default {
   name: 'NamedEntry',
@@ -26,6 +27,7 @@ export default {
   },
   setup (props) {
     const store = useStore()
+    const { t } = useI18n()
 
     const entity = ref(undefined)
 
@@ -36,7 +38,7 @@ export default {
 
     onMounted(getEntity)
 
-    return { entity, getEntity }
+    return { t, entity, getEntity }
   },
   methods: {
     remove () {
