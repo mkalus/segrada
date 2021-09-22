@@ -1,9 +1,15 @@
 <template>
-  <li class="list-group-item">
+  <span v-if="tag" class="label label-info sg-query-builder-label">
     <template v-if="entity && field === 'source'">{{ entity.shortTitle }}</template>
     <template v-if="entity && field !== 'source'">{{ entity.title }}</template>
 
-    <button type="button" class="close" aria-label="Close" @click="remove" :title="t('message.delete')"><span aria-hidden="true">&times;</span></button>
+    <button type="button" class="btn btn-link sg-query-builder-close-btn" @click="remove" :title="t('message.delete')"><span aria-hidden="true">&times;</span></button>
+  </span>
+  <li v-else class="list-group-item">
+    <template v-if="entity && field === 'source'">{{ entity.shortTitle }}</template>
+    <template v-if="entity && field !== 'source'">{{ entity.title }}</template>
+
+    <button type="button" class="close" @click="remove" :title="t('message.delete')"><span aria-hidden="true">&times;</span></button>
   </li>
 </template>
 
@@ -23,6 +29,10 @@ export default {
     field: {
       type: String,
       required: true
+    },
+    tag: {
+      type: Boolean,
+      default: false
     }
   },
   setup (props) {

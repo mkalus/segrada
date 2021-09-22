@@ -40,16 +40,12 @@ import { reactive } from 'vue'
 import { useStore } from 'vuex'
 import { useI18n } from 'vue-i18n'
 import NamedEntry from '@/components/NamedEntry'
+import QueryComponentMixin from '@/mixins/QueryComponentMixin'
 
 export default {
   name: 'ManualList',
   components: { NamedEntry },
-  props: {
-    idx: {
-      type: Number,
-      required: true
-    }
-  },
+  mixins: [QueryComponentMixin],
   setup (props) {
     const { t } = useI18n()
     const store = useStore()
@@ -80,16 +76,6 @@ export default {
       this.data.ids = []
       this.change()
     },
-    change () {
-      // commit to store
-      this.$store.commit('updateEntry', {
-        idx: this.idx,
-        data: this.data
-      })
-
-      // emit change event
-      this.$emit('change', this.data)
-    },
     search (term) {
       this.isLoading = true
 
@@ -118,9 +104,6 @@ export default {
       this.data.ids.splice(idx, 1)
 
       this.change()
-    },
-    remove () {
-      this.$emit('delete')
     }
   }
 }

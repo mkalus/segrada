@@ -117,6 +117,10 @@ public class QueryBuilder extends AbstractOrientDbBaseRepository {
             String queryString = runQueryParts(query);
             logger.info("query = " + queryString);
 
+            if (queryString == null || queryString.equals("")) {
+                return null;
+            }
+
             initDb();
 
             return db.command(new OCommandSQL(queryString)).execute();

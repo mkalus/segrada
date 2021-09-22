@@ -8,6 +8,7 @@
     </select>
 
     <template v-for="(dataEntry, idx) in dataEntries" :key="dataEntry.id + idx">
+      <DynamicQuery v-if="dataEntry.type === 'dynamicQuery'" :idx="idx" @change="callCallback" @delete="deleted(idx)" />
       <ManualList v-if="dataEntry.type === 'manualList'" :idx="idx" @change="callCallback" @delete="deleted(idx)" />
     </template>
   </div>
@@ -17,11 +18,12 @@
 import { useI18n } from 'vue-i18n'
 import { onMounted } from 'vue'
 import { useStore } from 'vuex'
+import DynamicQuery from '@/components/DynamicQuery'
 import ManualList from '@/components/ManualList'
 
 export default {
   name: 'App',
-  components: { ManualList },
+  components: { DynamicQuery, ManualList },
   props: {
     /**
      * callback function that is called after each change in the query created
@@ -53,6 +55,7 @@ export default {
     },
     possibleQueryTypes () {
       return [
+        'dynamicQuery',
         'manualList'
       ]
     }
@@ -90,10 +93,25 @@ export default {
     background: #ddd;
     padding: 0.5em;
   }
+
+  // overwrite Bootstrap style
+  .form-group {
+    margin-left: 0;
+    margin-right: 0;
+  }
 }
 
 .sg-query-builder-query-elements {
   margin: 0.5em;
+}
+
+.sg-query-builder-close-btn {
+  color: #fff;
+  padding: 0 0 0 0.3em;
+}
+
+.sg-query-builder-label {
+  margin-right: 0.5em;
 }
 
 /**
