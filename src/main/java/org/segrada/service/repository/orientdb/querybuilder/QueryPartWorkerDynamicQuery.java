@@ -111,9 +111,6 @@ public class QueryPartWorkerDynamicQuery implements QueryPartWorker {
                             constraints.add("@rid = #-1:0");
                         }
                     }
-                } else {
-                    // add dummy
-                    constraints.add("@rid = #-1:0");
                 }
             }
 
