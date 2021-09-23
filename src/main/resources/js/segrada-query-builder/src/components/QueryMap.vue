@@ -12,6 +12,25 @@ import { useStore } from 'vuex'
 import { onMounted, ref } from 'vue'
 import geomanShapeToData from '@/lib/geoman-shape-to-data'
 
+const allGeomanControls = {
+  position: 'topleft',
+  drawMarker: false,
+  drawCircleMarker: false,
+  drawPolyline: false,
+  drawPolygon: false, // TODO delete this line once polygons are supported by index
+  cutPolygon: false
+}
+const closeGeomanControls = {
+  drawRectangle: false,
+  // drawPolygon: false, // TODO re-enable once polygons are supported by index
+  drawCircle: false
+}
+const openGeomanControls = {
+  drawRectangle: true,
+  // drawPolygon: true, // TODO re-enable once polygons are supported by index
+  drawCircle: true
+}
+
 export default {
   name: 'QueryMap',
   emits: ['input'],
@@ -38,13 +57,7 @@ export default {
 
       // add Leaflet-Geoman controls with some options to the map
       map.pm.setLang(store.state.locale)
-      map.pm.addControls({
-        position: 'topleft',
-        drawMarker: false,
-        drawCircleMarker: false,
-        drawPolyline: false,
-        cutPolygon: false
-      })
+      map.pm.addControls(allGeomanControls)
 
       // populate with predefined data, if set
       if (props.predefinedData && props.predefinedData.shape) {
@@ -69,11 +82,7 @@ export default {
           map.fitBounds(layer.getBounds())
 
           // remove some controls
-          map.pm.addControls({
-            drawRectangle: false,
-            drawPolygon: false,
-            drawCircle: false
-          })
+          map.pm.addControls(closeGeomanControls)
         }
       }
 
@@ -87,22 +96,14 @@ export default {
         })
 
         // remove some controls
-        map.pm.addControls({
-          drawRectangle: false,
-          drawPolygon: false,
-          drawCircle: false
-        })
+        map.pm.addControls(closeGeomanControls)
       })
 
       map.on('pm:remove', (e) => { // ok
         shape.value = {}
 
         // re-enable all controls
-        map.pm.addControls({
-          drawRectangle: true,
-          drawPolygon: true,
-          drawCircle: true
-        })
+        map.pm.addControls(openGeomanControls)
       })
 
       map.on('pm:rotateend', (e) => { // ok

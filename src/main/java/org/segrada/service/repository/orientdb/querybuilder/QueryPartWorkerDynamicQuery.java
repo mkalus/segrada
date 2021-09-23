@@ -78,14 +78,13 @@ public class QueryPartWorkerDynamicQuery implements QueryPartWorker {
                                 geoQuery = "SELECT distinct(parent) FROM Location WHERE [latitude,longitude,$spatial] NEAR [" + lat + "," + lng + ",{\"maxDistance\": " + (radius / 1000) + "}]";
                                 break;
                             case "Rectangle":
-                                // TODO
+                                String coordinates = geo.getJSONArray("coordinates").toString();
+                                geoQuery = "SELECT distinct(parent) FROM Location WHERE [latitude,longitude] WITHIN " + coordinates;
                                 break;
                             case "Polygon":
                                 // TODO
+                                // this is not implemented in the current type of lucene indexes - we would need to update from legacy to 2.2
                                 break;
-                            default:
-                                // add dummy
-                                constraints.add("@rid = #-1:0");
                         }
 
                         if (!(geoQuery == null || geoQuery.equals(""))) {
@@ -107,6 +106,9 @@ public class QueryPartWorkerDynamicQuery implements QueryPartWorker {
                                 // add dummy
                                 constraints.add("@rid = #-1:0");
                             }
+                        } else {
+                            // add dummy
+                            constraints.add("@rid = #-1:0");
                         }
                     }
                 } else {
