@@ -4,7 +4,7 @@
      * Search string matcher for nominatim place name searches
      */
     const nominatimMatcher = function() {
-        return function findMatches(q, _, cb) {
+        return function findMatches(q, cb) {
             $.ajax({
                 url: 'http://nominatim.openstreetmap.org/search?format=json&q=' + encodeURIComponent(q)
             }).done(function (data) {
@@ -76,24 +76,20 @@
 
             // handle completer
             input.typeahead({
-                hint: true,
-                highlight: true,
-                minLength: 2
-            },{
-                name: 'address-suggest-' + id,
-                displayKey: 'title',
-                limit: 100,
-                valueKey: 'id',
                 source: nominatimMatcher(),
-                async: true
-            }).bind('typeahead:selected', function(e, datum) {
-                input.val(datum.title);
-                $('input[name=lat]', form).val(datum.lat);
-                $('input[name=lng]', form).val(datum.lng);
-                $('input[type=submit]', form).show();
-            }).bind('keyup', function() { // empty on textbox empty
-                if (!this.value) {
-                    input.val('');
+                items: 'all',
+                matcher: () => true,
+                displayText: (item) => item.title,
+                autoSelect: false,
+                delay: 200,
+                afterSelect: function(item) {
+                    input.val(item.title);
+                    $('input[name=lat]', form).val(item.lat);
+                    $('input[name=lng]', form).val(item.lng);
+                    $('input[type=submit]', form).show();
+                }
+            }).change(function() {
+                if (input.val() === '') {
                     $('input[name=lat]', form).val('');
                     $('input[name=lng]', form).val('');
                     $('input[type=submit]', form).hide();
