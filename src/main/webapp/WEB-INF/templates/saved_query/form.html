@@ -24,6 +24,12 @@
 			<div th:replace="partials/form :: formTextfield (name='title',field=${entity.title},label=#{field.title},id=${tempId},errors=${errors},required=true)"></div>
 			<div th:replace="partials/form :: formTextarea (name='description',field=${entity.description},label=#{field.description},id=${tempId},rows=3,errors=${errors},required=false)"></div>
 
+			<div th:id="${'query-builder-' + tempId}" class="sg-query-builder" th:attr="data-id=${'query-builder-data-' + tempId},data=${entity.data}" style="margin-bottom: 1em">
+				Query Builder
+			</div>
+
+			<input type="hidden" name="data" th:id="${'query-builder-data-' + tempId}" />
+
 			<input type="hidden" name="id" th:value="${entity.id}" th:if="${entity.id}" />
 
 			<div th:replace="partials/form :: submit (isNewEntity=${isNewEntity})"></div>

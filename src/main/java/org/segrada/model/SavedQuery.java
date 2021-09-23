@@ -34,7 +34,7 @@ public class SavedQuery extends AbstractSegradaEntity implements ISavedQuery {
 	 */
 	@NotNull(message = "error.notNull")
 	@Size(min=1, message = "error.notEmpty")
-	private String type = "";
+	private String type = "query";
 
 	/**
 	 * Main title
@@ -54,7 +54,7 @@ public class SavedQuery extends AbstractSegradaEntity implements ISavedQuery {
 	 */
 	@NotNull(message = "error.notNull")
 	@Size(min=1, message = "error.notEmpty")
-	private String data = "";
+	private String data = "{}";
 
 	/**
 	 * JSON representation of the data - mini cache for data retrieval

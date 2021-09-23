@@ -2,6 +2,8 @@ package org.segrada.model.base;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONObject;
 import org.segrada.model.prototype.ILocation;
 import org.segrada.model.prototype.IPeriod;
 import org.segrada.model.prototype.SegradaCoreEntity;
@@ -204,5 +206,42 @@ abstract public class AbstractCoreModel extends AbstractAnnotatedModel implement
 	@Override
 	public int hashCode() {
 		return HashCodeBuilder.reflectionHashCode(this, "created", "modified", "creator", "modifier", "tags", "comments", "files", "sourceReferences", "locations", "periods", "minFuzzyFlags", "maxFuzzyFlags");
+	}
+
+	public JSONObject toJSON() {
+		JSONObject jsonObject = super.toJSON();
+
+		try {
+			jsonObject.put("minEntry", minEntry);
+			jsonObject.put("maxEntry", maxEntry);
+			jsonObject.put("minEntryCalendar", minEntryCalendar);
+			jsonObject.put("maxEntryCalendar", maxEntryCalendar);
+			if (minJD != Long.MIN_VALUE) jsonObject.put("minJD", minJD);
+			if (maxJD != Long.MAX_VALUE) jsonObject.put("maxJD", maxJD);
+			if (minFuzzyFlags != null && minFuzzyFlags.size() > 0 ) jsonObject.put("minFuzzyFlags", minFuzzyFlags);
+			if (maxFuzzyFlags != null && maxFuzzyFlags.size() > 0 ) jsonObject.put("maxFuzzyFlags", maxFuzzyFlags);
+
+			// periods of time
+			if (periods != null && periods.size() > 0) {
+				JSONArray periodsList = new JSONArray(periods.size());
+				for (IPeriod period : periods) {
+					periodsList.put(period.toJSON());
+				}
+				jsonObject.put("periods", periodsList);
+			}
+
+			// locations
+			if (locations != null && locations.size() > 0) {
+				JSONArray locationsList = new JSONArray(locations.size());
+				for (ILocation location : locations) {
+					locationsList.put(location.toJSON());
+				}
+				jsonObject.put("locations", locationsList);
+			}
+		} catch (Exception e) {
+			// ignore
+		}
+
+		return jsonObject;
 	}
 }

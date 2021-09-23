@@ -2,6 +2,9 @@ package org.segrada.search.lucene;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.spatial4j.core.context.SpatialContext;
+import com.spatial4j.core.distance.DistanceUtils;
+import com.spatial4j.core.shape.Shape;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.document.*;
 import org.apache.lucene.index.*;
@@ -12,7 +15,10 @@ import org.apache.lucene.queryparser.xml.builders.BooleanFilterBuilder;
 import org.apache.lucene.search.*;
 import org.apache.lucene.search.vectorhighlight.FastVectorHighlighter;
 import org.apache.lucene.search.vectorhighlight.FieldQuery;
+import org.apache.lucene.spatial.query.SpatialArgs;
+import org.apache.lucene.spatial.query.SpatialOperation;
 import org.apache.lucene.store.Directory;
+import org.apache.lucene.util.GeoDistanceUtils;
 import org.segrada.search.SearchEngine;
 import org.segrada.search.SearchHit;
 import org.segrada.service.util.PaginationInfo;
@@ -96,6 +102,7 @@ public class LuceneSearchEngine implements SearchEngine {
 	}
 
 	@Override
+	// TODO: add shapes to index here
 	public synchronized boolean index(String id, String className, String title, String subTitles, String content, String[] tagIds, Integer color, String iconFileIdentifier, float weight) {
 		try {
 			// init index writer config

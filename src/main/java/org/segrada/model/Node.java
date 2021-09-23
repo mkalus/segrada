@@ -1,5 +1,6 @@
 package org.segrada.model;
 
+import org.codehaus.jettison.json.JSONObject;
 import org.segrada.model.base.AbstractCoreModel;
 import org.segrada.model.prototype.INode;
 
@@ -89,5 +90,21 @@ public class Node extends AbstractCoreModel implements INode {
 	@Override
 	public void setDescriptionMarkup(String descriptionMarkup) {
 		this.descriptionMarkup = descriptionMarkup;
+	}
+
+	@Override
+	public JSONObject toJSON() {
+		JSONObject jsonObject = super.toJSON();
+
+		try {
+			jsonObject.put("title", title);
+			if (alternativeTitles != null && !alternativeTitles.equals("")) jsonObject.put("alternativeTitles", alternativeTitles);
+			jsonObject.put("description", description);
+			jsonObject.put("descriptionMarkup", descriptionMarkup);
+		} catch (Exception e) {
+			// ignore
+		}
+
+		return jsonObject;
 	}
 }

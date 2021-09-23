@@ -832,6 +832,40 @@ function escapeHTML(myString) {
 		});
 
 		// *******************************************************
+		// Activator for query builder (Vue component)
+		$('.sg-query-builder', part).each(function() {
+			const dataInputElement = $('#' + $(this).attr('data-id'));
+			const data = $(this).attr('data');
+			let predefinedData
+			try {
+				predefinedData = JSON.parse(data);
+				if (!Array.isArray(predefinedData)) {
+					predefinedData = undefined
+				}
+			} catch (_) {
+				predefinedData = undefined
+			}
+
+			// get map settings
+			let mapSettings = undefined;
+			const mapSettingsStr = $('#sg-map-settings').html();
+			if (mapSettingsStr) {
+				mapSettings = JSON.parse(mapSettingsStr);
+			}
+
+			createSegradaQueryBuilder(
+				'#' + $(this).attr('id'),
+				$('html').attr('lang'),
+				window.location.protocol + "//" + window.location.host + '/',
+				predefinedData,
+				mapSettings,
+				function (data) {
+					dataInputElement.val(JSON.stringify(data));
+				}
+			);
+		});
+
+		// *******************************************************
 		// Graph: load remote data and update graph view
 		$('a.sg-graph-update', part).click(function(e) {
 			// update graph by remotely getting updated data

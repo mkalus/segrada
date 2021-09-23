@@ -2,6 +2,7 @@ package org.segrada.model;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.codehaus.jettison.json.JSONObject;
 import org.hibernate.validator.constraints.Range;
 import org.segrada.model.base.AbstractSegradaEntity;
 import org.segrada.model.prototype.ILocation;
@@ -122,5 +123,20 @@ public class Location extends AbstractSegradaEntity implements ILocation {
 	@Override
 	public String getTitle() {
 		return getLatitude() + "/" + getLongitude();
+	}
+
+	@Override
+	public JSONObject toJSON() {
+		JSONObject jsonObject = new JSONObject();
+
+		try {
+			jsonObject.put("latitude", latitude);
+			jsonObject.put("longitude", longitude);
+			if (comment != null && !comment.equals("")) jsonObject.put("comment", comment);
+		} catch (Exception e) {
+			// ignore
+		}
+
+		return jsonObject;
 	}
 }

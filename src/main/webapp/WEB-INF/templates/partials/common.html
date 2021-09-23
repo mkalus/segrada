@@ -8,12 +8,14 @@
 	<link rel="stylesheet" href="../../../css/theme.css" th:href="@{/css/theme.css}" />
 	<link rel="stylesheet" href="../../../css/font-awesome.css" th:href="@{/css/font-awesome.css}" />
 	<link rel="stylesheet" href="../../../css/leaflet.css" th:href="@{/css/leaflet.css}" />
+	<link rel="stylesheet" href="../../../css/leaflet-geoman.css" th:href="@{/css/leaflet-geoman.css}" />
 	<!--/*<link rel="stylesheet" href="../../../css/vis.min.css" th:href="@{/css/vis.min.css}" />*/-->
 	<link rel="stylesheet" href="../../../css/fileinput.min.css" th:href="@{/css/fileinput.min.css}" />
 	<link rel="stylesheet" href="../../../css/tagger.css" th:href="@{/css/tagger.css}" />
 	<link rel="stylesheet" href="../../../css/jquery.simplepicker.css" th:href="@{/css/jquery.simplepicker.css}" />
 	<link rel="stylesheet" href="../../../css/summernote.css" th:href="@{/css/summernote.css}" />
 	<link rel="stylesheet" href="../../../css/viewer.min.css" th:href="@{/css/viewer.min.css}" />
+	<link rel="stylesheet" href="../../../segrada-query-builder/css/app.css" th:href="@{/segrada-query-builder/css/app.css}" />
 	<link rel="stylesheet" href="../../../css/segrada.css" th:href="@{/css/segrada.css}" />
 </head>
 
@@ -269,6 +271,7 @@ Common fragments.
 	<!--/* Load Leaflet  */-->
 	<script src="../../../js/vendor/leaflet.js" th:src="@{/js/vendor/leaflet.js}"></script>
 	<script src="../../../js/vendor/leaflet-providers.min.js" th:src="@{/js/vendor/leaflet-providers.min.js}"></script>
+	<script src="../../../js/vendor/leaflet-geoman.min.js" th:src="@{/js/vendor/leaflet-geoman.min.js}"></script>
 	<script src="../../../js/segrada_leaflet.min.js" th:src="@{/js/segrada_leaflet.min.js}"></script>
 	<!--/* Google Geocode API */-->
 	<!--/* loaded dynamically using AJAX: <script src="https://maps.google.com/maps/api/js?sensor=false&amp;libraries=places&amp;language=de" th:src="${'https://maps.google.com/maps/api/js?sensor=false&amp;libraries=places&amp;language=' + #locale.language}"></script>*/-->
@@ -280,6 +283,8 @@ Common fragments.
 	<script src="../../../js/vendor/summernote-de.js" th:src="@{'/js/vendor/summernote-' + ${#locale.language} + '.js'}" th:unless="${#locale.language.equals('en')}"></script>
 	<!--/* Image Viewer */-->
 	<script src="../../../js/vendor/viewer.min.js" th:src="@{/js/vendor/viewer.min.js}"></script>
+	<!--/* Vue component: Segrada Query Builder */-->
+	<script src="../../../segrada-query-builder/js/app.js" th:src="@{/segrada-query-builder/js/app.js}"></script>
 	<script src="../../../js/segrada.min.js" th:src="@{/js/segrada.min.js}"></script>
 
 	<!-- /* Generic modal */-->

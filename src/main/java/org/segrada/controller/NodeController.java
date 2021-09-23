@@ -2,6 +2,7 @@ package org.segrada.controller;
 
 import com.google.inject.Inject;
 import com.google.inject.servlet.RequestScoped;
+import com.sun.jersey.api.NotFoundException;
 import com.sun.jersey.api.view.Viewable;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
@@ -176,6 +177,19 @@ public class NodeController extends AbstractColoredController<INode> {
 	@RolesAllowed("NODE")
 	public Viewable show(@PathParam("uid") String uid) {
 		return handleShow(uid, service);
+	}
+
+	@GET
+	@Path("/{uid}")
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+	@RolesAllowed("NODE")
+	public String get(@PathParam("uid") String uid) {
+		INode node = service.findById(service.convertUidToId(uid));
+		if (node == null) {
+			throw new NotFoundException();
+		}
+
+		return node.toJSON().toString();
 	}
 
 	@GET

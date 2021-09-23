@@ -6,7 +6,6 @@ import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Ehcache;
 import net.sf.ehcache.Element;
 import net.sf.ehcache.config.CacheConfiguration;
-import net.sf.ehcache.config.PersistenceConfiguration;
 import net.sf.ehcache.store.MemoryStoreEvictionPolicy;
 
 import java.text.Normalizer;
@@ -26,6 +25,9 @@ import java.util.HashMap;
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ * <p>
+ * Sluggify library - taken from https://github.com/otto-de/sluggify
+ * and adapted
  */
 public final class Sluggify {
     // slugify instances with custom replacements

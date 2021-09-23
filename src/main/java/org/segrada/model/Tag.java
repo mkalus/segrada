@@ -2,6 +2,8 @@ package org.segrada.model;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONObject;
 import org.segrada.model.base.AbstractSegradaEntity;
 import org.segrada.model.prototype.ITag;
 
@@ -99,5 +101,35 @@ public class Tag extends AbstractSegradaEntity implements ITag {
 	@Override
 	public int hashCode() {
 		return HashCodeBuilder.reflectionHashCode(this, "tags", "childTags", "created", "modified", "creator", "modifier");
+	}
+
+	@Override
+	public JSONObject toJSON() {
+		JSONObject jsonObject = super.toJSON();
+
+		try {
+			jsonObject.put("title", title);
+			if (synonyms != null && !synonyms.equals("")) jsonObject.put("synonyms", synonyms);
+
+			if (tags != null && tags.length > 0) {
+				JSONArray tagsList = new JSONArray(tags.length);
+				for (String tag : tags) {
+					tagsList.put(tag);
+				}
+				jsonObject.put("parentTags", tagsList);
+			}
+
+			if (childTags != null && childTags.length > 0) {
+				JSONArray tagsList = new JSONArray(childTags.length);
+				for (String tag : childTags) {
+					tagsList.put(tag);
+				}
+				jsonObject.put("childTags", tagsList);
+			}
+		} catch (Exception e) {
+			// ignore
+		}
+
+		return jsonObject;
 	}
 }

@@ -26,6 +26,7 @@ import org.segrada.service.repository.RememberMeRepository;
 import org.segrada.service.repository.factory.RepositoryFactory;
 import org.segrada.service.repository.orientdb.OrientRememberMeRepository;
 import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory;
+import org.segrada.service.repository.orientdb.querybuilder.QueryBuilder;
 import org.segrada.session.ApplicationSettings;
 import org.segrada.session.ApplicationSettingsProperties;
 import org.segrada.util.PBKDF2WithHmacSHA1PasswordEncoder;

@@ -1,5 +1,7 @@
 package org.segrada.model.prototype;
 
+import org.codehaus.jettison.json.JSONObject;
+
 /**
  * Copyright 2015-2021 Maximilian Kalus [segrada@auxnet.de]
  *
@@ -59,4 +61,6 @@ public interface IPeriod extends SegradaEntity {
 	void deleteFuzzyToFlag(char flag);
 	boolean hasFuzzyToFlag(char flag);
 	char[] getFuzzyToFlags();
+
+	JSONObject toJSON();
 }

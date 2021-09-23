@@ -1,5 +1,6 @@
 package org.segrada.model;
 
+import org.codehaus.jettison.json.JSONObject;
 import org.segrada.model.base.AbstractSegradaEntity;
 import org.segrada.model.prototype.IPeriod;
 import org.segrada.model.util.FuzzyFlag;
@@ -261,5 +262,26 @@ public class Period extends AbstractSegradaEntity implements IPeriod {
 				"---":
 				((getFromEntry()!=null?getFromEntry():"") + "-"
 						+ (getToEntry()!=null?getToEntry():""));
+	}
+
+	@Override
+	public JSONObject toJSON() {
+		JSONObject jsonObject = new JSONObject();
+
+		try {
+			jsonObject.put("fromEntry", fromEntry);
+			jsonObject.put("toEntry", toEntry);
+			jsonObject.put("fromEntryCalendar", fromEntryCalendar);
+			jsonObject.put("toEntryCalendar", toEntryCalendar);
+			if (comment != null && !comment.equals("")) jsonObject.put("comment", comment);
+			if (fromJD != Long.MIN_VALUE) jsonObject.put("fromJD", fromJD);
+			if (toJD != Long.MAX_VALUE) jsonObject.put("toJD", toJD);
+			if (fromFuzzyFlags != null && fromFuzzyFlags.size() > 0 ) jsonObject.put("fromFuzzyFlags", fromFuzzyFlags);
+			if (toFuzzyFlags != null && toFuzzyFlags.size() > 0 ) jsonObject.put("toFuzzyFlags", toFuzzyFlags);
+		} catch (Exception e) {
+			// ignore
+		}
+
+		return jsonObject;
 	}
 }

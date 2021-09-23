@@ -18,6 +18,73 @@
 
 		<p th:if="${entity.type == 'graph'}"><a href="#" th:href="@{/saved_query/graph/{uid}(uid=${entity.uid})}" class="btn btn-primary sg-graph-replace" th:attr="data-title=${entity.title},data-uid=${entity.uid}"><span class="fa fa-project-diagram" aria-hidden="true"></span> <span th:text="#{LoadGraph}">Load Graph</span></a></p>
 
+		<div th:if="${entity.type == 'query'}">
+			<h4 th:text="#{Results}">Results</h4>
+
+			<div class="panel-group" th:id="${'accordeon-' + entity.uid}" role="tablist">
+				<div th:if="${results.containsKey('Node')}" class="panel panel-default">
+					<div class="panel-heading">
+						<h4 class="panel-title">
+							<a role="button" data-toggle="collapse" th:attr="data-parent=${'accordeon-' + entity.uid}" th:href="${'#accordeon-nodes-' + entity.uid}" th:text="${#messages.msg('NodesX', results.get('Node').size())}">
+								Nodes
+							</a>
+						</h4>
+					</div>
+					<div th:id="${'accordeon-nodes-' + entity.uid}" class="panel-collapse collapse">
+						<div class="panel-body">
+							<ul class="list-group" style="margin-bottom: 0">
+								<li th:each="node : ${results.get('Node')}" class="list-group-item">
+									<a th:href="@{/node/show/{uid}(uid=${node.uid})}" th:text="${node.title}" class="sg-data-add">
+										title
+									</a>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<div th:if="${results.containsKey('Source')}" class="panel panel-default">
+					<div class="panel-heading">
+						<h4 class="panel-title">
+							<a role="button" data-toggle="collapse" th:attr="data-parent=${'accordeon-' + entity.uid}" th:href="${'#accordeon-sources-' + entity.uid}" th:text="${#messages.msg('SourcesX', results.get('Source').size())}">
+								Sources
+							</a>
+						</h4>
+					</div>
+					<div th:id="${'accordeon-sources-' + entity.uid}" class="panel-collapse collapse">
+						<div class="panel-body">
+							<ul class="list-group" style="margin-bottom: 0">
+								<li th:each="source : ${results.get('Source')}" class="list-group-item">
+									<a th:href="@{/source/show/{uid}(uid=${source.uid})}" th:text="${source.shortTitle}" class="sg-data-add">
+										title
+									</a>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<div th:if="${results.containsKey('File')}" class="panel panel-default">
+					<div class="panel-heading">
+						<h4 class="panel-title">
+							<a role="button" data-toggle="collapse" th:attr="data-parent=${'accordeon-' + entity.uid}" th:href="${'#accordeon-files-' + entity.uid}" th:text="${#messages.msg('FilesX', results.get('File').size())}">
+								Files
+							</a>
+						</h4>
+					</div>
+					<div th:id="${'accordeon-files-' + entity.uid}" class="panel-collapse collapse">
+						<div class="panel-body">
+							<ul class="list-group" style="margin-bottom: 0">
+								<li th:each="file : ${results.get('File')}" class="list-group-item">
+									<a th:href="@{/file/show/{uid}(uid=${file.uid})}" th:text="${file.title}" class="sg-data-add">
+										title
+									</a>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
 		<p><a href="#" th:href="@{/saved_query/export/{uid}(uid=${entity.uid})}" class="btn btn-primary"><span class="fa fa-download" aria-hidden="true"></span> <span th:text="#{ExportGraph}">Export Graph</span></a></p>
 
 		<div th:replace="partials/common :: datafooter (entity=${entity})"></div>

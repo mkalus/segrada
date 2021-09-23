@@ -1,6 +1,7 @@
 package org.segrada.model.base;
 
 import org.apache.commons.lang3.StringUtils;
+import org.codehaus.jettison.json.JSONObject;
 import org.segrada.model.prototype.IPictogram;
 import org.segrada.model.prototype.SegradaColoredEntity;
 
@@ -74,5 +75,22 @@ abstract public class AbstractColoredModel extends AbstractSegradaEntity impleme
 				// fail silently
 			}
 		}
+	}
+
+	public JSONObject toJSON() {
+		JSONObject jsonObject = super.toJSON();
+
+		try {
+			if (color != null && color != 0) {
+				jsonObject.put("color", getColorCode());
+			}
+			if (pictogram != null) {
+				jsonObject.put("pictogram", pictogram.getId());
+			}
+		} catch (Exception e) {
+			// ignore
+		}
+
+		return jsonObject;
 	}
 }

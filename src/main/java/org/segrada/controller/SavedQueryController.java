@@ -2,6 +2,7 @@ package org.segrada.controller;
 
 import com.google.inject.Inject;
 import com.google.inject.servlet.RequestScoped;
+import com.sun.jersey.api.NotFoundException;
 import com.sun.jersey.api.view.Viewable;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
@@ -30,6 +31,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -103,7 +106,54 @@ public class SavedQueryController extends AbstractBaseController<ISavedQuery> {
 	@Produces(MediaType.TEXT_HTML)
 	@RolesAllowed("GRAPH")
 	public Viewable show(@PathParam("uid") String uid) {
-		return handleShow(uid, service);
+		// create model map
+		Map<String, Object> model = new HashMap<>();
+
+		ISavedQuery query = service.findById(service.convertUidToId(uid));
+
+		model.put("entity", query);
+
+		if (query != null && query.getType().equals("query")) {
+			// order by type
+			Map<String, List<SegradaEntity>> results = new HashMap<>();
+
+			List<SegradaEntity> entities = service.runSavedQueryAndEntities(query);
+
+			if (entities != null) {
+				for (SegradaEntity entity : entities) {
+					String modelName = entity.getModelName();
+					if (!results.containsKey(modelName)) {
+						results.put(modelName, new LinkedList<>());
+					}
+					results.get(modelName).add(entity);
+				}
+			}
+
+			model.put("results", results);
+		}
+
+		return new Viewable(getBasePath() + "show", model);
+	}
+
+	@GET
+	@Path("/{uid}")
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+	@RolesAllowed("GRAPH")
+	public String get(@PathParam("uid") String uid) {
+		ISavedQuery savedQuery = service.findById(service.convertUidToId(uid));
+		if (savedQuery == null) {
+			throw new NotFoundException();
+		}
+
+		return service.runSavedQueryAndGetJSONArray(savedQuery).toString();
+	}
+
+	@GET
+	@Path("/add")
+	@Produces(MediaType.TEXT_HTML)
+	@RolesAllowed("GRAPH")
+	public Viewable add() {
+		return handleForm(service.createNewInstance());
 	}
 
 	@GET

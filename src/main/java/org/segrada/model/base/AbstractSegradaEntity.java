@@ -2,6 +2,7 @@ package org.segrada.model.base;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.codehaus.jettison.json.JSONObject;
 import org.segrada.model.prototype.IUser;
 import org.segrada.model.prototype.SegradaEntity;
 
@@ -155,5 +156,27 @@ abstract public class AbstractSegradaEntity implements SegradaEntity {
 	@Override
 	public String toString() {
 		return "{" + getModelName() + "}" + (getId() == null ? "*" : getId()) + ", " + getTitle();
+	}
+
+	public JSONObject toJSON() {
+		JSONObject jsonObject = new JSONObject();
+
+		try {
+			jsonObject.put("id", id);
+			jsonObject.put("uid", getUid());
+			jsonObject.put("created", created);
+			jsonObject.put("modified", modified);
+			if (creator != null) {
+				jsonObject.put("creator", creator.getId());
+			}
+			if (modifier != null) {
+				jsonObject.put("modifier", modifier.getId());
+			}
+			jsonObject.put("version", version);
+		} catch (Exception e) {
+			// ignore
+		}
+
+		return jsonObject;
 	}
 }

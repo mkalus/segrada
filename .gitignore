@@ -2,3 +2,5 @@
 *.iml
 target
 segrada_data
+
+/src/main/webapp/segrada-query-builder/leaflet-providers.js

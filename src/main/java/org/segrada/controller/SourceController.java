@@ -2,6 +2,7 @@ package org.segrada.controller;
 
 import com.google.inject.Inject;
 import com.google.inject.servlet.RequestScoped;
+import com.sun.jersey.api.NotFoundException;
 import com.sun.jersey.api.view.Viewable;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
@@ -193,6 +194,19 @@ public class SourceController extends AbstractColoredController<ISource> {
 		model.put("pdfFile", pdfFile);
 
 		return new Viewable(getBasePath() + "show", model);
+	}
+
+	@GET
+	@Path("/{uid}")
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+	@RolesAllowed("SOURCE")
+	public String get(@PathParam("uid") String uid) {
+		ISource source = service.findById(service.convertUidToId(uid));
+		if (source == null) {
+			throw new NotFoundException();
+		}
+
+		return source.toJSON().toString();
 	}
 
 	@GET

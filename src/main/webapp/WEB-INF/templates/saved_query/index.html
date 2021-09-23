@@ -11,6 +11,10 @@
 
 <div class="container">
 	<div class="sg-control-content sg-saved-query">
+		<div class="pull-right" th:if="${identity.hasAccess('NODE_ADD')}">
+			<a href="#" th:href="@{/saved_query/add}" th:title="#{add.saved_query}" class="btn btn-success btn-sm sg-data-add"><i class="fa fa-plus"></i></a>
+		</div>
+
 		<h4 class="sg-control-header"><i class="fa fa-shapes"></i> <span th:text="#{list.saved_query}">List</span></h4>
 
 		<p th:text="${#messages.msg('showEntities', entities.size())}">Size</p>

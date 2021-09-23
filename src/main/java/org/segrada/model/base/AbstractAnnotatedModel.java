@@ -2,6 +2,8 @@ package org.segrada.model.base;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONObject;
 import org.segrada.model.prototype.IComment;
 import org.segrada.model.prototype.IFile;
 import org.segrada.model.prototype.ISourceReference;
@@ -97,5 +99,26 @@ abstract public class AbstractAnnotatedModel extends AbstractColoredModel implem
 	@Override
 	public int hashCode() {
 		return HashCodeBuilder.reflectionHashCode(this, "created", "modified", "creator", "modifier", "tags", "comments", "files", "sourceReferences");
+	}
+
+	public JSONObject toJSON() {
+		JSONObject jsonObject = super.toJSON();
+
+		try {
+			if (tags != null && tags.length > 0) {
+				JSONArray tagsList = new JSONArray(tags.length);
+				for (String tag : tags) {
+					tagsList.put(tag);
+				}
+				jsonObject.put("tags", tagsList);
+			}
+			// TODO: comments?
+			// TODO: files?
+			// TODO: sourceReferences?
+		} catch (Exception e) {
+			// ignore
+		}
+
+		return jsonObject;
 	}
 }
