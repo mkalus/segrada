@@ -1,0 +1,7 @@
+.idea
+*.iml
+target
+segrada_data
+
+/src/main/resources/js/segrada-query-builder
+/src/main/webapp/segrada-query-builder/leaflet-providers.js
