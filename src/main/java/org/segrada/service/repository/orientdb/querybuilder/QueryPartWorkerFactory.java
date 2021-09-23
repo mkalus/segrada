@@ -10,7 +10,7 @@ import java.lang.reflect.Constructor;
 public class QueryPartWorkerFactory {
     private static final Logger logger = LoggerFactory.getLogger(QueryPartWorkerFactory.class);
 
-    public @Nullable QueryPartWorker produceQueryPartWorker(String name) {
+    public @Nullable QueryPartWorker produceQueryPartWorker(String name, QueryBuilder queryBuilder) {
         if (name == null) return null;
 
         try { // create class for this entity
@@ -18,7 +18,9 @@ public class QueryPartWorkerFactory {
 
             // instantiate new class
             Constructor constructor = clazz.getConstructor();
-            return (QueryPartWorker) constructor.newInstance();
+            QueryPartWorker worker = (QueryPartWorker) constructor.newInstance();
+            worker.setQueryBuilderReference(queryBuilder);
+            return worker;
         } catch (Exception e) {
             logger.error("Error while producing query part worker from " + name, e);
             return null;

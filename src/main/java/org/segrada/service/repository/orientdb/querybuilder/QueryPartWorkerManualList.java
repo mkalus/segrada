@@ -37,4 +37,9 @@ public class QueryPartWorkerManualList implements QueryPartWorker {
 
         return null;
     }
+
+    @Override
+    public void setQueryBuilderReference(QueryBuilder queryBuilder) {
+        // dummy
+    }
 }

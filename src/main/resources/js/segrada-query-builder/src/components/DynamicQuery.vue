@@ -32,7 +32,7 @@
           <input v-model="data.hasGeo" type="checkbox"> {{ t('message.addGeo') }}
         </label>
       </div>
-      <query-map v-if="data.hasGeo && data.field !== 'file'" @input="changeGeoShape" />
+      <query-map v-if="data.hasGeo && data.field !== 'file'" :predefined-data="data.geo" @input="changeGeoShape" />
 
       <div class="form-group mt-2">
         <label>{{ t('message.tags') }}</label>

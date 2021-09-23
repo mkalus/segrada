@@ -1,5 +1,7 @@
 package org.segrada.service.repository.orientdb.querybuilder;
 
+import com.orientechnologies.orient.core.id.ORecordId;
+import com.orientechnologies.orient.core.record.impl.ODocument;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
 import org.segrada.service.repository.orientdb.OrientDbFileRepository;
@@ -14,6 +16,8 @@ import java.util.List;
 
 public class QueryPartWorkerDynamicQuery implements QueryPartWorker {
     private static final Logger logger = LoggerFactory.getLogger(QueryPartWorkerManualList.class);
+
+    private QueryBuilder queryBuilder;
 
     @Override
     public String createQuery(JSONObject data) {
@@ -43,21 +47,73 @@ public class QueryPartWorkerDynamicQuery implements QueryPartWorker {
             }
 
             // start/stop dates
-            String start = data.optString("start");
-            if (!(start == null || start.equals(""))) {
-                FlexibleDateParser parser = new FlexibleDateParser();
-                Long minJD = parser.inputToJd(start, "G", false);
-                if (minJD > Long.MIN_VALUE) constraints.add("minJD >= " + minJD);
-            }
-            String stop = data.optString("stop");
-            if (!(stop == null || stop.equals(""))) {
-                FlexibleDateParser parser = new FlexibleDateParser();
-                Long maxJD = parser.inputToJd(stop, "G", true);
-                if (maxJD < Long.MAX_VALUE) constraints.add("maxJD <= " + maxJD);
+            if (!field.equals("file")) {
+                String start = data.optString("start");
+                if (!(start == null || start.equals(""))) {
+                    FlexibleDateParser parser = new FlexibleDateParser();
+                    Long minJD = parser.inputToJd(start, "G", false);
+                    if (minJD > Long.MIN_VALUE) constraints.add("minJD >= " + minJD);
+                }
+                String stop = data.optString("stop");
+                if (!(stop == null || stop.equals(""))) {
+                    FlexibleDateParser parser = new FlexibleDateParser();
+                    Long maxJD = parser.inputToJd(stop, "G", true);
+                    if (maxJD < Long.MAX_VALUE) constraints.add("maxJD <= " + maxJD);
+                }
             }
 
             // geo
-            // TODO
+            // for more information, look here: http://orientdb.com/docs/2.2.x/Spatial-Index.html
+            // and here: https://shazwazza.com/post/spatial-search-with-examine-and-lucene/
+            if (!field.equals("file")) {
+                if (data.optBoolean("hasGeo")) {
+                    JSONObject geo = data.optJSONObject("geo");
+                    if (geo != null) {
+                        String geoQuery = null;
+                        switch (geo.optString("shape")) {
+                            case "Circle":
+                                double lat = geo.getDouble("lat");
+                                double lng = geo.getDouble("lng");
+                                double radius = geo.getDouble("radius");
+                                geoQuery = "SELECT distinct(parent) FROM Location WHERE [latitude,longitude,$spatial] NEAR [" + lat + "," + lng + ",{\"maxDistance\": " + (radius / 1000) + "}]";
+                                break;
+                            case "Rectangle":
+                                // TODO
+                                break;
+                            case "Polygon":
+                                // TODO
+                                break;
+                            default:
+                                // add dummy
+                                constraints.add("@rid = #-1:0");
+                        }
+
+                        if (!(geoQuery == null || geoQuery.equals(""))) {
+                            // System.out.println("geoQuery = " + geoQuery);
+                            List<ODocument> locations = queryBuilder.runOrientDBQuery(geoQuery);
+                            if (locations != null && locations.size() > 0) {
+                                StringBuilder locSb = new StringBuilder("@rid IN [");
+                                boolean first = true;
+
+                                for (ODocument location : locations) {
+                                    if (first) first = false;
+                                    else locSb.append(", ");
+                                    locSb.append((ORecordId) location.field("distinct", ORecordId.class));
+                                }
+                                locSb.append(']');
+
+                                constraints.add(locSb.toString());
+                            } else {
+                                // add dummy
+                                constraints.add("@rid = #-1:0");
+                            }
+                        }
+                    }
+                } else {
+                    // add dummy
+                    constraints.add("@rid = #-1:0");
+                }
+            }
 
             // tags
             JSONArray tags = data.optJSONArray("tags");
@@ -100,5 +156,10 @@ public class QueryPartWorkerDynamicQuery implements QueryPartWorker {
         }
 
         return null;
+    }
+
+    @Override
+    public void setQueryBuilderReference(QueryBuilder queryBuilder) {
+        this.queryBuilder = queryBuilder;
     }
 }

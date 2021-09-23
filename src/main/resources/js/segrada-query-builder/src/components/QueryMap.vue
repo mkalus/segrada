@@ -15,7 +15,12 @@ import geomanShapeToData from '@/lib/geoman-shape-to-data'
 export default {
   name: 'QueryMap',
   emits: ['input'],
-  setup () {
+  props: {
+    predefinedData: {
+      type: Object
+    }
+  },
+  setup (props) {
     const { t } = useI18n()
     const store = useStore()
 
@@ -41,6 +46,37 @@ export default {
         cutPolygon: false
       })
 
+      // populate with predefined data, if set
+      if (props.predefinedData && props.predefinedData.shape) {
+        let layer
+        switch (props.predefinedData.shape) {
+          case 'Circle':
+            layer = L.circle([props.predefinedData.lat, props.predefinedData.lng], props.predefinedData.radius, { pmIgnore: false }) // eslint-disable-line
+            break
+          case 'Rectangle':
+            layer = L.rectangle(props.predefinedData.coordinates) // eslint-disable-line
+            break
+          case 'Polygon':
+            layer = L.polygon(props.predefinedData.coordinates) // eslint-disable-line
+            break
+        }
+
+        if (layer) {
+          layer.on('pm:edit', (e) => {
+            shape.value = geomanShapeToData(e)
+          })
+          layer.addTo(map)
+          map.fitBounds(layer.getBounds())
+
+          // remove some controls
+          map.pm.addControls({
+            drawRectangle: false,
+            drawPolygon: false,
+            drawCircle: false
+          })
+        }
+      }
+
       // listen on events
       map.on('pm:create', (e) => { // ok
         shape.value = geomanShapeToData(e)
@@ -59,7 +95,7 @@ export default {
       })
 
       map.on('pm:remove', (e) => { // ok
-        shape.value = undefined
+        shape.value = {}
 
         // re-enable all controls
         map.pm.addControls({

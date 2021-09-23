@@ -237,20 +237,6 @@ public class LuceneSearchEngine implements SearchEngine {
 				searchFilters.add(new QueryWrapperFilter(booleanQuery));
 			}
 
-			// geo filter?
-			{
-				double distance = DistanceUtils.dist2Degrees(200, DistanceUtils.EARTH_MEAN_RADIUS_KM);
-				Shape shape = SpatialContext.GEO.makeCircle(50.088611111111, 14.421388888889, distance);
-				SpatialArgs spatialArgs = new SpatialArgs(SpatialOperation.Contains, shape);
-
-				// TODO:  https://shazwazza.com/post/spatial-search-with-examine-and-lucene/
-//				// Create the Geo Spatial lucene objects
-//				SpatialContext ctx = SpatialContext.GEO;
-//				int maxLevels = 11; //results in sub-meter precision for geohash
-//				SpatialPrefixTree grid = new GeohashPrefixTree(ctx, maxLevels);
-//				RecursivePrefixTreeStrategy strategy = new RecursivePrefixTreeStrategy(grid, GeoLocationFieldName);
-			}
-
 			// create filter - if multiple filters applied, add chained filter
 			Filter filter = null;
 			if (searchFilters.size() == 1)

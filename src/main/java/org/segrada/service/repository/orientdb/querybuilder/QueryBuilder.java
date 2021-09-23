@@ -121,14 +121,23 @@ public class QueryBuilder extends AbstractOrientDbBaseRepository {
                 return null;
             }
 
-            initDb();
-
-            return db.command(new OCommandSQL(queryString)).execute();
+            return runOrientDBQuery(queryString);
         } catch (Exception e) {
             logger.error("Error while running runSavedQueryAndGetDocuments on " + query.getId(), e);
         }
 
         return null;
+    }
+
+    /**
+     * package local method to run query
+     * @param query
+     * @return
+     */
+    List<ODocument> runOrientDBQuery(String query) {
+        initDb();
+
+        return db.command(new OCommandSQL(query)).execute();
     }
 
     /**
@@ -160,7 +169,7 @@ public class QueryBuilder extends AbstractOrientDbBaseRepository {
             }
 
             // let factory create class
-            QueryPartWorker worker = factory.produceQueryPartWorker(queryPart.getString("type"));
+            QueryPartWorker worker = factory.produceQueryPartWorker(queryPart.getString("type"), this);
             if (worker == null) {
                 logger.error("Index " + i + " could not be created to worker in query " + query.getId());
                 continue;

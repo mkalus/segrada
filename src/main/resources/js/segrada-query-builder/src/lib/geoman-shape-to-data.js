@@ -12,7 +12,10 @@ export default (e) => {
       shape.lng = e.layer.getLatLng().lng
       break
     case 'Rectangle':
-      shape.coordinates = simplifyLatLngs(e.layer.getLatLngs()[0])
+      shape.coordinates = simplifyLatLngs([
+        e.layer.getBounds().getSouthWest(),
+        e.layer.getBounds().getNorthEast()
+      ])
       break
     case 'Polygon':
       shape.coordinates = simplifyLatLngs(e.layer.getLatLngs()[0])

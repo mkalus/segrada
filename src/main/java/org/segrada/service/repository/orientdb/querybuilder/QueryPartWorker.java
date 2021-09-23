@@ -9,4 +9,7 @@ public interface QueryPartWorker {
      * @return query string
      */
     String createQuery(JSONObject data);
+
+    // pass the query builder reference to the worker
+    void setQueryBuilderReference(QueryBuilder queryBuilder);
 }
