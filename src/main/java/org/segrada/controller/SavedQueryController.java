@@ -26,7 +26,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.security.RolesAllowed;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
@@ -139,10 +141,14 @@ public class SavedQueryController extends AbstractBaseController<ISavedQuery> {
 	@Path("/{uid}")
 	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
 	@RolesAllowed("GRAPH")
-	public String get(@PathParam("uid") String uid) {
+	public String get(@PathParam("uid") String uid, @QueryParam("dl") String download, @Context HttpServletResponse servletResponse) {
 		ISavedQuery savedQuery = service.findById(service.convertUidToId(uid));
 		if (savedQuery == null) {
 			throw new NotFoundException();
+		}
+
+		if (download != null && !download.equals("")) {
+			servletResponse.addHeader("Content-Disposition", "attachment; filename=" + uid + ".json");
 		}
 
 		return service.runSavedQueryAndGetJSONArray(savedQuery).toString();

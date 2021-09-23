@@ -16,7 +16,11 @@
 
 		<div class="sg-description well well-sm" th:unless="${#strings.isEmpty(entity.description)}"><span sg:nl2br="${entity.description}">Description</span></div>
 
-		<p th:if="${entity.type == 'graph'}"><a href="#" th:href="@{/saved_query/graph/{uid}(uid=${entity.uid})}" class="btn btn-primary sg-graph-replace" th:attr="data-title=${entity.title},data-uid=${entity.uid}"><span class="fa fa-project-diagram" aria-hidden="true"></span> <span th:text="#{LoadGraph}">Load Graph</span></a></p>
+		<div th:if="${entity.type == 'graph'}">
+			<p><a href="#" th:href="@{/saved_query/graph/{uid}(uid=${entity.uid})}" class="btn btn-primary sg-graph-replace" th:attr="data-title=${entity.title},data-uid=${entity.uid}"><span class="fa fa-project-diagram" aria-hidden="true"></span> <span th:text="#{LoadGraph}">Load Graph</span></a></p>
+
+			<p><a href="#" th:href="@{/saved_query/export/{uid}(uid=${entity.uid})}" class="btn btn-primary"><span class="fa fa-download" aria-hidden="true"></span> <span th:text="#{ExportGraph}">Export Graph</span></a></p>
+		</div>
 
 		<div th:if="${entity.type == 'query'}">
 			<h4 th:text="#{Results}">Results</h4>
@@ -83,9 +87,9 @@
 					</div>
 				</div>
 			</div>
-		</div>
 
-		<p><a href="#" th:href="@{/saved_query/export/{uid}(uid=${entity.uid})}" class="btn btn-primary"><span class="fa fa-download" aria-hidden="true"></span> <span th:text="#{ExportGraph}">Export Graph</span></a></p>
+			<p><a href="#" th:href="@{/saved_query/{uid}?dl=1(uid=${entity.uid})}" class="btn btn-primary"><span class="fa fa-download" aria-hidden="true"></span> JSON</a></p>
+		</div>
 
 		<div th:replace="partials/common :: datafooter (entity=${entity})"></div>
 	</div>
