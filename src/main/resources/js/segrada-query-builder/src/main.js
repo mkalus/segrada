@@ -6,11 +6,11 @@ import { Autocomplete } from '@oruga-ui/oruga-next'
 // import '@oruga-ui/oruga-next/dist/oruga.css'
 
 // use function because we want to do this dynamically
-function createSegradaQueryBuilder (containerId, locale = 'en', apiEndPoint = 'http://localhost:8080/', predefinedData = undefined, changeCallbackFunction = () => {}) {
+function createSegradaQueryBuilder (containerId, locale = 'en', apiEndPoint = 'http://localhost:8080/', predefinedData = undefined, mapSettings = undefined, changeCallbackFunction = () => {}) {
   createApp(App, {
     changeCallbackFunction
   })
-    .use(initStore(apiEndPoint, predefinedData))
+    .use(initStore(apiEndPoint, locale, predefinedData, mapSettings))
     .use(createI18N(locale))
     .use(Autocomplete)
     .mount(containerId)

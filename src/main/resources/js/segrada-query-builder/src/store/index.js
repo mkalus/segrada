@@ -1,6 +1,13 @@
 import { createStore } from 'vuex'
 
-export default function initStore (apiEndPoint, data) {
+export default function initStore (apiEndPoint, locale, data, mapSettings) {
+  const realMapSettings = {}
+  realMapSettings.provider = (mapSettings && mapSettings.provider) || 'Stamen.TerrainBackground'
+  realMapSettings.zoom = (mapSettings && mapSettings.zoom) || 1
+  realMapSettings.lat = (mapSettings && mapSettings.lat) || 0
+  realMapSettings.lng = (mapSettings && mapSettings.lng) || 0
+  realMapSettings.options = (mapSettings && mapSettings.options) || {}
+
   return createStore({
     state: {
       /**
@@ -10,7 +17,15 @@ export default function initStore (apiEndPoint, data) {
       /**
        * array of objects representing query
        */
-      data: (Array.isArray(data) && data) || []
+      data: (Array.isArray(data) && data) || [],
+      /**
+       * map settings
+       */
+      mapSettings: realMapSettings,
+      /**
+       * locale
+       */
+      locale
     },
     mutations: {
       addEntry: function (state, type) {

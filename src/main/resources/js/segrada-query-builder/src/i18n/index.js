@@ -21,7 +21,8 @@ const messages = {
       tags: 'Tags',
       searchTags: 'Enter tag name',
       start: 'Start',
-      stop: 'Stop'
+      stop: 'Stop',
+      addGeo: 'Add geographic query'
     }
   },
   de: {
@@ -44,7 +45,8 @@ const messages = {
       tags: 'Tags',
       searchTags: 'Tag eingeben',
       start: 'Anfang',
-      stop: 'Ende'
+      stop: 'Ende',
+      addGeo: 'Geoabfrage hinzuzufügen'
     }
   }
 }

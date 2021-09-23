@@ -846,11 +846,19 @@ function escapeHTML(myString) {
 				predefinedData = undefined
 			}
 
+			// get map settings
+			let mapSettings = undefined;
+			const mapSettingsStr = $('#sg-map-settings').html();
+			if (mapSettingsStr) {
+				mapSettings = JSON.parse(mapSettingsStr);
+			}
+
 			createSegradaQueryBuilder(
 				'#' + $(this).attr('id'),
 				$('html').attr('lang'),
 				window.location.protocol + "//" + window.location.host + '/',
 				predefinedData,
+				mapSettings,
 				function (data) {
 					dataInputElement.val(JSON.stringify(data));
 				}

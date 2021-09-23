@@ -27,7 +27,12 @@
         </div>
       </div>
 
-      <div v-if="data.field !== 'file'">TODO: Ort</div>
+      <div class="checkbox" v-if="data.field !== 'file'">
+        <label>
+          <input v-model="data.hasGeo" type="checkbox"> {{ t('message.addGeo') }}
+        </label>
+      </div>
+      <query-map v-if="data.hasGeo && data.field !== 'file'" @input="changeGeoShape" />
 
       <div class="form-group mt-2">
         <label>{{ t('message.tags') }}</label>
@@ -61,11 +66,12 @@ import { reactive } from 'vue'
 import { useStore } from 'vuex'
 import { useI18n } from 'vue-i18n'
 import NamedEntry from '@/components/NamedEntry'
+import QueryMap from '@/components/QueryMap'
 import QueryComponentMixin from '@/mixins/QueryComponentMixin'
 
 export default {
   name: 'DynamicQuery',
-  components: { NamedEntry },
+  components: { NamedEntry, QueryMap },
   mixins: [QueryComponentMixin],
   props: {
     idx: {
@@ -86,7 +92,9 @@ export default {
     if (!('stop' in data)) data.stop = ''
     if (!('search' in data)) data.search = ''
     if (!('tags' in data)) data.tags = []
+    if (!('hasGeo' in data)) data.hasGeo = false
     // geo is skipped by default
+    // data.geo = undefined
 
     return { t, data }
   },
@@ -129,6 +137,11 @@ export default {
     },
     deletedTag (idx) {
       this.data.tags.splice(idx, 1)
+
+      this.change()
+    },
+    changeGeoShape (shape) {
+      this.data.geo = shape
 
       this.change()
     }
