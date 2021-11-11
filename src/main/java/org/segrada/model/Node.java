@@ -97,6 +97,7 @@ public class Node extends AbstractCoreModel implements INode {
 		JSONObject jsonObject = super.toJSON();
 
 		try {
+			jsonObject.put("type", "node");
 			jsonObject.put("title", title);
 			if (alternativeTitles != null && !alternativeTitles.equals("")) jsonObject.put("alternativeTitles", alternativeTitles);
 			jsonObject.put("description", description);

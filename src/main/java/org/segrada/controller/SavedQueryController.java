@@ -155,6 +155,50 @@ public class SavedQueryController extends AbstractBaseController<ISavedQuery> {
 	}
 
 	@GET
+	@Path("/xml/{uid}")
+	@Produces(MediaType.APPLICATION_XML)
+	@RolesAllowed("GRAPH")
+	public Response getXML(@PathParam("uid") String uid, @QueryParam("dl") String download) {
+		ISavedQuery savedQuery = service.findById(service.convertUidToId(uid));
+		if (savedQuery == null) {
+			throw new NotFoundException();
+		}
+
+		// stream output
+		StreamingOutput stream = outputStream -> service.runSavedQueryAndGetXML(outputStream, savedQuery);
+
+		Response.ResponseBuilder rb = Response.ok(stream).type(MediaType.APPLICATION_XML);
+
+		if (download != null && !download.equals("")) {
+			rb.header("Content-Disposition", "attachment; filename=\"" + uid + ".xml\"");
+		}
+
+		return rb.build();
+	}
+
+	@GET
+	@Path("/csv/{uid}")
+	@Produces("text/csv")
+	@RolesAllowed("GRAPH")
+	public Response getCSV(@PathParam("uid") String uid, @QueryParam("dl") String download) {
+		ISavedQuery savedQuery = service.findById(service.convertUidToId(uid));
+		if (savedQuery == null) {
+			throw new NotFoundException();
+		}
+
+		// stream output
+		StreamingOutput stream = outputStream -> service.runSavedQueryAndGetCSV(outputStream, savedQuery);
+
+		Response.ResponseBuilder rb = Response.ok(stream).type("text/plain;charset=utf-8");
+
+		if (download != null && !download.equals("")) {
+			rb.header("Content-Disposition", "attachment; filename=\"" + uid + ".csv\"");
+		}
+
+		return rb.build();
+	}
+
+	@GET
 	@Path("/add")
 	@Produces(MediaType.TEXT_HTML)
 	@RolesAllowed("GRAPH")

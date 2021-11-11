@@ -19,7 +19,7 @@
 		<div th:if="${entity.type == 'graph'}">
 			<p><a href="#" th:href="@{/saved_query/graph/{uid}(uid=${entity.uid})}" class="btn btn-primary sg-graph-replace" th:attr="data-title=${entity.title},data-uid=${entity.uid}"><span class="fa fa-project-diagram" aria-hidden="true"></span> <span th:text="#{LoadGraph}">Load Graph</span></a></p>
 
-			<p><a href="#" th:href="@{/saved_query/export/{uid}(uid=${entity.uid})}" class="btn btn-primary"><span class="fa fa-download" aria-hidden="true"></span> <span th:text="#{ExportGraph}">Export Graph</span></a></p>
+			<p><a href="#" th:href="@{/saved_query/export/{uid}(uid=${entity.uid})}" class="btn btn-primary"><span class="fa fa-download" aria-hidden="true"></span> <span th:text="#{ExportGraph}">Export Graph (GEXF)</span></a></p>
 		</div>
 
 		<div th:if="${entity.type == 'query'}">
@@ -88,7 +88,11 @@
 				</div>
 			</div>
 
-			<p><a href="#" th:href="@{/saved_query/{uid}?dl=1(uid=${entity.uid})}" class="btn btn-primary"><span class="fa fa-download" aria-hidden="true"></span> JSON</a></p>
+			<p>
+				<a href="#" th:href="@{/saved_query/{uid}?dl=1(uid=${entity.uid})}" class="btn btn-primary"><span class="fa fa-download" aria-hidden="true"></span> JSON</a>
+				<a href="#" th:href="@{/saved_query/xml/{uid}?dl=1(uid=${entity.uid})}" class="btn btn-primary"><span class="fa fa-download" aria-hidden="true"></span> GEXF</a>
+				<a href="#" th:href="@{/saved_query/csv/{uid}?dl=1(uid=${entity.uid})}" class="btn btn-primary"><span class="fa fa-download" aria-hidden="true"></span> CSV</a>
+			</p>
 		</div>
 
 		<div th:replace="partials/common :: datafooter (entity=${entity})"></div>

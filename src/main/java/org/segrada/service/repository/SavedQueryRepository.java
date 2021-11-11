@@ -8,6 +8,7 @@ import org.segrada.service.repository.prototype.CRUDRepository;
 import org.segrada.service.repository.prototype.PaginatingRepositoryOrService;
 
 import javax.annotation.Nullable;
+import java.io.OutputStream;
 import java.util.List;
 
 /**
@@ -50,4 +51,18 @@ public interface SavedQueryRepository extends CRUDRepository<ISavedQuery>, Pagin
 	 * @return JSON structure of documents found
 	 */
 	JSONArray runSavedQueryAndGetJSONArray(ISavedQuery query);
+
+	/**
+	 * run the saved query
+	 * @param os stream to save XML to
+	 * @param query saved query to run
+	 */
+	void runSavedQueryAndGetXML(OutputStream os, ISavedQuery query);
+
+	/**
+	 * run the saved query
+	 * @param os stream to save CSV to
+	 * @param query saved query to run
+	 */
+	void runSavedQueryAndGetCSV(OutputStream os, ISavedQuery query);
 }

@@ -289,6 +289,7 @@ public class File extends AbstractAnnotatedModel implements IFile {
 		JSONObject jsonObject = super.toJSON();
 
 		try {
+			jsonObject.put("type", "file");
 			jsonObject.put("title", title);
 			jsonObject.put("filename", filename);
 			jsonObject.put("copyright", copyright);

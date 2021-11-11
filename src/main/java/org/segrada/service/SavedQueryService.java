@@ -11,6 +11,7 @@ import org.segrada.service.repository.SavedQueryRepository;
 import org.segrada.service.repository.factory.RepositoryFactory;
 
 import javax.annotation.Nullable;
+import java.io.OutputStream;
 import java.util.List;
 
 /**
@@ -70,11 +71,30 @@ public class SavedQueryService extends AbstractRepositoryService<ISavedQuery, Sa
 	}
 
 	/**
-	 * run the saved query
+	 * run the saved query and return JSON
 	 * @param query saved query to run
 	 * @return JSON structure of entitites found
 	 */
 	public JSONArray runSavedQueryAndGetJSONArray(ISavedQuery query) {
 		return repository.runSavedQueryAndGetJSONArray(query);
+	}
+
+	/**
+	 * run the saved query and return XML (GEXF)
+	 * @param os stream to save XML to
+	 * @param query saved query to run
+	 */
+	public void runSavedQueryAndGetXML(OutputStream os, ISavedQuery query) {
+		repository.runSavedQueryAndGetXML(os, query);
+	}
+
+	/**
+	 * run the saved query and return CSV
+	 * @param os stream to save CSV to
+	 * @param query saved query to run
+	 * @return CSV string
+	 */
+	public void runSavedQueryAndGetCSV(OutputStream os, ISavedQuery query) {
+		repository.runSavedQueryAndGetCSV(os, query);
 	}
 }

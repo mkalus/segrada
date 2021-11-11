@@ -55,7 +55,7 @@ public class GEXFExporter implements Exporter {
             // Attribute definitions
             writer.write("<attributes class=\"node\">" +
                     "<attribute id=\"0\" title=\"type\" type=\"string\"/>" +
-                    "<attribute id=\"1\" title=\"id\" type=\"string\"/>" +
+                    "<attribute id=\"1\" title=\"uid\" type=\"string\"/>" +
                     "<attribute id=\"2\" title=\"created\" type=\"integer\"/>" +
                     "<attribute id=\"3\" title=\"modified\" type=\"integer\"/>" +
                     "<attribute id=\"4\" title=\"creator\" type=\"string\"/>" +
@@ -64,7 +64,7 @@ public class GEXFExporter implements Exporter {
                     "</attributes>" +
                     "<attributes class=\"edge\">" +
                     "<attribute id=\"0\" title=\"type\" type=\"string\"/>" +
-                    "<attribute id=\"1\" title=\"id\" type=\"string\"/>" +
+                    "<attribute id=\"1\" title=\"uid\" type=\"string\"/>" +
                     "<attribute id=\"2\" title=\"created\" type=\"integer\"/>" +
                     "<attribute id=\"3\" title=\"modified\" type=\"integer\"/>" +
                     "<attribute id=\"4\" title=\"creator\" type=\"string\"/>" +
@@ -78,10 +78,10 @@ public class GEXFExporter implements Exporter {
             Iterable<SegradaEntity> entities = extractedData.get("nodes");
             if (entities != null) {
                 for (SegradaEntity entity : entities) {
-                    writer.write("<node id=\"" + entity.getUid() + "\" label=\""
+                    writer.write("<node id=\"" + entity.getId() + "\" label=\""
                             + escapeXml(entity.getTitle()) + "\"><attvalues>" +
                             "<attvalue for=\"0\" value=\"" + entity.getModelName() + "\"/>" +
-                            "<attvalue for=\"1\" value=\"" + entity.getId() + "\"/>" +
+                            "<attvalue for=\"1\" value=\"" + entity.getUid() + "\"/>" +
                             "<attvalue for=\"2\" value=\"" + entity.getCreated() + "\"/>" +
                             "<attvalue for=\"3\" value=\"" + entity.getModified() + "\"/>" +
                             "<attvalue for=\"4\" value=\"" + entity.getCreator().getId() + "\"/>" +
@@ -105,12 +105,12 @@ public class GEXFExporter implements Exporter {
                 for (SegradaEntity entity : relations) {
                     IRelation relation = (IRelation) entity;
 
-                    writer.write("<edge id=\"" + entity.getUid() + "\" label=\""
+                    writer.write("<edge id=\"" + entity.getId() + "\" label=\""
                             + escapeXml(relation.getRelationType().getFromTitle()) + "\" source=\""
-                            + relation.getFromEntity().getUid() + "\" target=\""
-                            + relation.getToEntity().getUid() + "\"><attvalues>" +
+                            + relation.getFromEntity().getId() + "\" target=\""
+                            + relation.getToEntity().getId() + "\"><attvalues>" +
                             "<attvalue for=\"0\" value=\"" + entity.getModelName() + "\"/>" +
-                            "<attvalue for=\"1\" value=\"" + entity.getId() + "\"/>" +
+                            "<attvalue for=\"1\" value=\"" + entity.getUid() + "\"/>" +
                             "<attvalue for=\"2\" value=\"" + entity.getCreated() + "\"/>" +
                             "<attvalue for=\"3\" value=\"" + entity.getModified() + "\"/>" +
                             "<attvalue for=\"4\" value=\"" + entity.getCreator().getId() + "\"/>" +

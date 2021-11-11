@@ -182,6 +182,7 @@ public class Source extends AbstractCoreModel implements ISource {
 		JSONObject jsonObject = super.toJSON();
 
 		try {
+			jsonObject.put("type", "source");
 			jsonObject.put("shortTitle", shortTitle);
 			jsonObject.put("longTitle", longTitle);
 			jsonObject.put("sourceType", sourceType);
