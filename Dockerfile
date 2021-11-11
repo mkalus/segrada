@@ -54,7 +54,7 @@ ADD target/Segrada.tar.gz .
 
 RUN set -xe \
 	&& chown -R segrada:segrada Segrada \
-	&& mv Segrada/* . \
+	&& rm Segrada/*.exe && mv Segrada/* . \
 	&& rmdir Segrada
 
 # Variables of Segrada can be set as defined in environmental variables doc.

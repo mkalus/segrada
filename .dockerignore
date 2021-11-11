@@ -1,6 +1,7 @@
 .idea
 *.iml
 target
+!target/Segrada.tar.gz
 segrada_data
 
 /src/main/resources/js/segrada-query-builder
