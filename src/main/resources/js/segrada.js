@@ -1392,13 +1392,8 @@ function escapeHTML(myString) {
         });
     }
 
-    function addMarkers(markers, geoEntries, from = 0, to = 10000000) {
-        markers.clearLayers();
-
+    function addMarkers(markers, geoEntries) {
         for (const mapItem of geoEntries) {
-            // within the time frame of from/to
-            if (mapItem.jdMin > to || mapItem.jdMax < from) continue;
-
             for (const coordinate of mapItem.coordinates) {
                 const popupContent = document.createElement("DIV");
 
@@ -1443,7 +1438,11 @@ function escapeHTML(myString) {
                 }
 
                 // add marker itself
-                const marker = L.marker([coordinate.lat, coordinate.lng]).addTo(markers);
+                const marker = L.marker([coordinate.lat, coordinate.lng], {
+                    title: mapItem.title,
+                    from: mapItem.jdMin,
+                    to: mapItem.jdMax,
+                }).addTo(markers);
 
                 marker.bindPopup(popupContent);
             }
@@ -1556,7 +1555,19 @@ function escapeHTML(myString) {
             });
 
             timeSlider[0].noUiSlider.on('slide', function (values) {
-                addMarkers(markers, geoEntries, parseInt(values[0]), parseInt(values[1]));
+                const from = parseInt(values[0]);
+                const to = parseInt(values[1]);
+
+                markers.eachLayer(function(layer) {
+                    // within the time frame of from/to
+                    if (layer.options.from > to || layer.options.to < from) {
+                        layer.getElement().style.display = 'none';
+                        layer.closePopup();
+                    } else {
+                        layer.getElement().style.display = 'block';
+                    }
+                });
+                // addMarkers(markers, geoEntries, parseInt(values[0]), parseInt(values[1]));
             });
         }
     }
