@@ -1307,6 +1307,162 @@ function escapeHTML(myString) {
 		}
 	};
 
+	// *******************************************************
+	// Query map functions
+
+	// keeps map settings
+	let mapSettings = {};
+
+	/**
+	 * called after ajax calls to update a specific part of the document
+	 * @param part
+	 */
+	function afterQueryMapAjax(part) {
+		// default
+		part = part || $('body');
+
+		// *******************************************************
+		// dynamic map loader
+		$('.sg-geo-result', part).each(function () {
+			const $container = $(this);
+
+			// find geo entries
+			const geoEntries = [];
+
+			// find coordinates - only with these, do we parse the geo item
+			$('.sg-geo-item', $container).each(function () {
+				const $item = $(this);
+				const coordinates = [];
+
+				$('.sg-geo-point', $item).each(function () {
+					const $coord = $(this);
+					const lat = parseFloat($coord.attr('data-lat'));
+					const lng = parseFloat($coord.attr('data-lng'));
+
+					if (!(isNaN(lat) || isNaN(lng))) {
+						coordinates.push({
+							lat,
+							lng,
+							comment: $coord.html()
+						});
+					}
+				});
+
+				// any coordinates?
+				if (coordinates.length) {
+					const titleElement = $('.sg-geo-title', $item);
+
+					geoEntries.push({
+						title: titleElement.html(),
+						url: titleElement.attr('href'),
+						min: $item.attr('data-min'),
+						max: $item.attr('data-max'),
+						jdMin: parseInt($item.attr('data-min-jd')),
+						jdMax: parseInt($item.attr('data-max-jd')),
+						coordinates,
+					});
+				}
+			});
+
+			// do we have any geo entries at all?
+			if (geoEntries.length) {
+				// get map reference
+				const mapContainer = $('.sg-geo-map', $container);
+
+				// toggle buttons and stuff
+				const btn = $('.sg-show-query-map', $container);
+				btn.removeClass('hidden');
+				btn.on('click', function () {
+					// load map
+					displayMap(mapContainer, geoEntries);
+
+					$(this).remove(); // remove button
+				});
+			}
+		});
+	}
+
+	/**
+	 * actually load result map
+	 * @param mapContainer container to load map into
+	 * @param geoEntries list of geo entries to display
+	 */
+	function displayMap(mapContainer, geoEntries) {
+		mapContainer.removeClass('hidden');
+
+		//create map - disable double click zooming
+		const map = L.map(mapContainer[0], {doubleClickZoom: false}).setView([mapSettings.lat || 0, mapSettings.lng || 0], mapSettings.zoom || 1);
+
+		// add map from settings
+		const mapLayer = L.tileLayer.provider(mapSettings.provider || "Stamen.TerrainBackground", mapSettings.options || {});
+		mapLayer.addTo(map);
+
+		// markers
+		const markers = L.featureGroup().addTo(map);
+
+		for (const mapItem of geoEntries) {
+			for (const coordinate of mapItem.coordinates) {
+				const popupContent = document.createElement("DIV");
+
+				// add title
+				const titleContent = document.createElement("DIV");
+				const titleInnerContent = document.createElement("STRONG");
+				const titleLink = document.createElement("A");
+				titleLink.setAttribute("href", mapItem.url);
+				titleLink.innerText = mapItem.title;
+				titleInnerContent.appendChild(titleLink);
+				titleContent.appendChild(titleInnerContent);
+				popupContent.appendChild(titleContent);
+
+				titleLink.addEventListener('click', function(e) {
+					loadDataAddUrl(mapItem.url);
+					e.preventDefault();
+				})
+
+				// add dates
+				if ((mapItem.min && mapItem.min !== '---') || (mapItem.max && mapItem.max !== '---')) {
+					let dateString = '';
+					if (mapItem.min === mapItem.max) {
+						dateString = mapItem.min;
+					} else if (mapItem.min !== '---' && mapItem.max !== '---') {
+						dateString = mapItem.min + ' – ' + mapItem.max;
+					} else if (mapItem.min !== '---') {
+						dateString = mapItem.min + ' – ';
+					} else  {
+						dateString = ' – '+ mapItem.max;
+					}
+
+					const datesContent = document.createElement("DIV");
+					datesContent.innerText = dateString;
+					popupContent.appendChild(datesContent);
+				}
+
+				// add comment
+				if (coordinate.comment) {
+					const commentContent = document.createElement("DIV");
+					commentContent.innerText = coordinate.comment;
+					popupContent.appendChild(commentContent);
+				}
+
+				// add marker itself
+				const marker = L.marker([coordinate.lat, coordinate.lng]).addTo(markers);
+				marker.bindPopup(popupContent);
+			}
+		}
+
+		// set bounds
+		const bb = markers.getBounds();
+
+		if (bb.isValid()) {
+			map.fitBounds(bb.pad(0.05));
+
+			// do not zoom too much!
+			if (map.getZoom() > 13) {
+				map.setZoom(13);
+			}
+		}
+	}
+
 	// called after document is ready
 	$(document).ready(function () {
 		// *******************************************************
@@ -1525,6 +1681,16 @@ function escapeHTML(myString) {
 			// hide modal
 			$('#sg-graph-modal-save').modal('hide');
 		});
+
+		// get map settings from html
+		const mapSettingsStr = $('#sg-map-settings').html();
+		if (mapSettingsStr) {
+			mapSettings = JSON.parse(mapSettingsStr);
+			if (mapSettings) {
+				// add method to hook -> query results mapping
+				afterAjaxHooks.push(afterQueryMapAjax);
+			}
+		}
 
 		// init defaults
 		afterAjax($('body'));
