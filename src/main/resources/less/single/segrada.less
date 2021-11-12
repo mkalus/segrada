@@ -328,3 +328,45 @@ span.sg-color-icon {
     background: #fff !important;
   }
 }
+
+.sg-geo-slider {
+  border-radius: 0;
+  margin-top: 42px;
+
+  .noUi-connect {
+    background: #eee;
+  }
+
+  .noUi-handle {
+    box-shadow: none;
+    border-radius: 0;
+    background: #337ab7;
+    height: 18px;
+    width: 18px;
+    top: -1px;
+    right: -9px;
+
+    .noUi-touch-area {
+      border: 1px solid transparent;
+      position: absolute;
+      top: -10px;
+      left: -10px;
+      right: -10px;
+      bottom: -10px;
+      width: auto;
+      height: auto;
+    }
+  }
+
+  .noUi-handle::before,
+  .noUi-handle::after {
+    display: none;
+  }
+
+  //.noUi-tooltip {
+  //  display: none;
+  //}
+  //.noUi-active .noUi-tooltip {
+  //  display: block;
+  //}
+}

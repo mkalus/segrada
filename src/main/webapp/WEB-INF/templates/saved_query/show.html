@@ -37,7 +37,7 @@
 					<div th:id="${'accordeon-nodes-' + entity.uid}" class="panel-collapse collapse">
 						<div class="panel-body">
 							<ul class="list-group" style="margin-bottom: 0">
-								<li th:each="node : ${results.get('Node')}" class="list-group-item sg-geo-item" th:attr="data-min=${@org.segrada.util.FuzzyDateRenderer@renderOrEmpty(node.minJD,node.minEntry,node.minEntryCalendar,node.fuzzyMinFlags, #messages.msg('period.fuzzyBefore'), #messages.msg('period.fuzzyAfter'))}, data-max=${@org.segrada.util.FuzzyDateRenderer@renderOrEmpty(node.maxJD,node.maxEntry,node.maxEntryCalendar,node.fuzzyMaxFlags, #messages.msg('period.fuzzyBefore'), #messages.msg('period.fuzzyAfter'))}, data-min-jd=${node.minJD}, data-max-jd=${node.maxJD}">
+								<li th:each="node : ${results.get('Node')}" class="list-group-item sg-geo-item" th:attr="data-min=${@org.segrada.util.FuzzyDateRenderer@renderOrEmpty(node.minJD,node.minEntry,node.minEntryCalendar,node.fuzzyMinFlags, #messages.msg('period.fuzzyBefore'), #messages.msg('period.fuzzyAfter'))}, data-max=${@org.segrada.util.FuzzyDateRenderer@renderOrEmpty(node.maxJD,node.maxEntry,node.maxEntryCalendar,node.fuzzyMaxFlags, #messages.msg('period.fuzzyBefore'), #messages.msg('period.fuzzyAfter'))}, data-min-jd=${@org.segrada.util.JDMinMaxRenderer@min(node.minJD)}, data-max-jd=${@org.segrada.util.JDMinMaxRenderer@max(node.maxJD)}">
 									<a th:href="@{/node/show/{uid}(uid=${node.uid})}" th:text="${node.title}" class="sg-data-add sg-geo-title">
 										title
 									</a>
@@ -58,7 +58,7 @@
 					<div th:id="${'accordeon-sources-' + entity.uid}" class="panel-collapse collapse">
 						<div class="panel-body">
 							<ul class="list-group" style="margin-bottom: 0">
-								<li th:each="source : ${results.get('Source')}" class="list-group-item sg-geo-item" th:attr="data-min=${@org.segrada.util.FuzzyDateRenderer@renderOrEmpty(source.minJD,source.minEntry,source.minEntryCalendar,source.fuzzyMinFlags, #messages.msg('period.fuzzyBefore'), #messages.msg('period.fuzzyAfter'))}, data-max=${@org.segrada.util.FuzzyDateRenderer@renderOrEmpty(source.maxJD,source.maxEntry,source.maxEntryCalendar,source.fuzzyMaxFlags, #messages.msg('period.fuzzyBefore'), #messages.msg('period.fuzzyAfter'))}, data-min-jd=${source.minJD}, data-max-jd=${source.maxJD}">
+								<li th:each="source : ${results.get('Source')}" class="list-group-item sg-geo-item" th:attr="data-min=${@org.segrada.util.FuzzyDateRenderer@renderOrEmpty(source.minJD,source.minEntry,source.minEntryCalendar,source.fuzzyMinFlags, #messages.msg('period.fuzzyBefore'), #messages.msg('period.fuzzyAfter'))}, data-max=${@org.segrada.util.FuzzyDateRenderer@renderOrEmpty(source.maxJD,source.maxEntry,source.maxEntryCalendar,source.fuzzyMaxFlags, #messages.msg('period.fuzzyBefore'), #messages.msg('period.fuzzyAfter'))}, data-min-jd=${@org.segrada.util.JDMinMaxRenderer@min(source.minJD)}, data-max-jd=${@org.segrada.util.JDMinMaxRenderer@max(source.maxJD)}">
 									<a th:href="@{/source/show/{uid}(uid=${source.uid})}" th:text="${source.shortTitle}" class="sg-data-add sg-geo-title">
 										title
 									</a>
@@ -91,6 +91,7 @@
 			</div>
 
 			<div class="sg-geo-map sg-map sg-margin-bottom sg-margin-top hidden"></div>
+			<div class="sg-geo-slider sg-margin-bottom sg-margin-top hidden"></div>
 
 			<p>
 				<button class="btn btn-primary sg-show-query-map hidden"><span class="fa fa-map" aria-hidden="true"></span> <span th:text="#{Map}">Map</span></button>

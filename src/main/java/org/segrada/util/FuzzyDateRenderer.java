@@ -1,7 +1,7 @@
 package org.segrada.util;
 
 /**
- * Copyright 2015 Otto.de - https://github.com/otto-de/sluggify
+ * Copyright 2015-2021 Maximilian Kalus [segrada@auxnet.de]
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ public final class FuzzyDateRenderer {
 	 * @param fuzzyFlags char[] array of fuzzy flags to render with
 	 * @return
 	 */
-	public static String render(int julianDate, String dateString, String calendar, char[] fuzzyFlags, String before, String after) {
+	public static String render(long julianDate, String dateString, String calendar, char[] fuzzyFlags, String before, String after) {
 		// no further work wirg empty values
 		if (dateString == null || dateString.isEmpty()) return "";
 
