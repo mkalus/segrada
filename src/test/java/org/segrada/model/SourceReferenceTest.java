@@ -1,7 +1,7 @@
 package org.segrada.model;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
@@ -9,14 +9,14 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.segrada.test.PropertyAsserter.assertBasicGetterSetterBehavior;
 
 public class SourceReferenceTest {
 	private static Validator validator;
 
-	@BeforeClass
+	@BeforeAll
 	public static void setUp() throws Exception {
 		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
 		validator = factory.getValidator();
@@ -40,18 +40,18 @@ public class SourceReferenceTest {
 		sourceReference.setSource(new Source());
 		sourceReference.setReference(new Node());
 		Set<ConstraintViolation<SourceReference>> constraintViolations = validator.validate(sourceReference);
-		assertTrue("Source reference not valid", constraintViolations.size() == 0);
+		assertTrue(constraintViolations.size() == 0, "Source reference not valid");
 	}
 
 	@Test
 	public void testSourceEmpty() throws Exception {
 		Set<ConstraintViolation<SourceReference>> constraintViolations = validator.validateValue(SourceReference.class, "source", null);
-		assertTrue("Source empty", constraintViolations.size() == 1);
+		assertTrue(constraintViolations.size() == 1, "Source empty");
 	}
 
 	@Test
 	public void testReferenceEmpty() throws Exception {
 		Set<ConstraintViolation<SourceReference>> constraintViolations = validator.validateValue(SourceReference.class, "reference", null);
-		assertTrue("Reference empty", constraintViolations.size() == 1);
+		assertTrue(constraintViolations.size() == 1, "Reference empty");
 	}
 }

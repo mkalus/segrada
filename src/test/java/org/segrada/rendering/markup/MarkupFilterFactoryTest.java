@@ -1,12 +1,12 @@
 package org.segrada.rendering.markup;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.segrada.rendering.markup.DefaultMarkupFilter;
 import org.segrada.rendering.markup.MarkupFilter;
 import org.segrada.rendering.markup.MarkupFilterFactory;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class MarkupFilterFactoryTest {
 

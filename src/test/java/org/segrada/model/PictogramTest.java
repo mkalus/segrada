@@ -1,7 +1,7 @@
 package org.segrada.model;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
@@ -9,8 +9,8 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.segrada.test.PropertyAsserter.assertBasicGetterSetterBehavior;
 
 public class PictogramTest {
@@ -18,7 +18,7 @@ public class PictogramTest {
 
 	private static Validator validator;
 
-	@BeforeClass
+	@BeforeAll
 	public static void setUp() throws Exception {
 		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
 		validator = factory.getValidator();
@@ -42,18 +42,18 @@ public class PictogramTest {
 		pictogram.setTitle("Example Titel");
 		pictogram.setData(pictureData);
 		Set<ConstraintViolation<Pictogram>> constraintViolations = validator.validate(pictogram);
-		assertTrue("Pictogram not valid", constraintViolations.size() == 0);
+		assertTrue(constraintViolations.size() == 0, "Pictogram not valid");
 	}
 
 	@Test
 	public void testTitleEmpty() throws Exception {
 		Set<ConstraintViolation<Pictogram>> constraintViolations = validator.validateValue(Pictogram.class, "title", null);
-		assertTrue("Title empty", constraintViolations.size() == 1);
+		assertTrue(constraintViolations.size() == 1, "Title empty");
 	}
 
 	@Test
 	public void testTitleTooShort() throws Exception {
 		Set<ConstraintViolation<Pictogram>> constraintViolations = validator.validateValue(Pictogram.class, "title", "T");
-		assertTrue("Title too short", constraintViolations.size() == 1);
+		assertTrue(constraintViolations.size() == 1, "Title too short");
 	}
 }

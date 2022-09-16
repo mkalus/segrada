@@ -1,7 +1,7 @@
 package org.segrada.model;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
@@ -9,7 +9,7 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import java.util.Set;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.segrada.test.PropertyAsserter.assertBasicGetterSetterBehavior;
 
 public class FileTest {
@@ -17,7 +17,7 @@ public class FileTest {
 
 	private static Validator validator;
 
-	@BeforeClass
+	@BeforeAll
 	public static void setUp() throws Exception {
 		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
 		validator = factory.getValidator();
@@ -52,49 +52,49 @@ public class FileTest {
 		file.setData(fileData);
 		file.setDescriptionMarkup("default");
 		Set<ConstraintViolation<File>> constraintViolations = validator.validate(file);
-		assertTrue("File not valid", constraintViolations.size() == 0);
+		assertTrue(constraintViolations.size() == 0, "File not valid");
 	}
 
 	@Test
 	public void testFilenameEmpty() throws Exception {
 		Set<ConstraintViolation<File>> constraintViolations = validator.validateValue(File.class, "filename", null);
-		assertTrue("Filename empty", constraintViolations.size() == 1);
+		assertTrue(constraintViolations.size() == 1, "Filename empty");
 	}
 
 	@Test
 	public void testFilenameTooShort() throws Exception {
 		Set<ConstraintViolation<File>> constraintViolations = validator.validateValue(File.class, "filename", "");
-		assertTrue("Filename too short", constraintViolations.size() == 1);
+		assertTrue(constraintViolations.size() == 1, "Filename too short");
 	}
 
 	@Test
 	public void testMimeTypeEmpty() throws Exception {
 		Set<ConstraintViolation<File>> constraintViolations = validator.validateValue(File.class, "mimeType", null);
-		assertTrue("MimeType empty", constraintViolations.size() == 1);
+		assertTrue(constraintViolations.size() == 1, "MimeType empty");
 	}
 
 	@Test
 	public void testMimeTypeTooShort() throws Exception {
 		Set<ConstraintViolation<File>> constraintViolations = validator.validateValue(File.class, "mimeType", "");
-		assertTrue("MimeType too short", constraintViolations.size() == 1);
+		assertTrue(constraintViolations.size() == 1, "MimeType too short");
 	}
 
 	@Test
 	public void testIndexFullTextEmpty() throws Exception {
 		Set<ConstraintViolation<File>> constraintViolations = validator.validateValue(File.class, "indexFullText", null);
-		assertTrue("indexFullText empty", constraintViolations.size() == 1);
+		assertTrue(constraintViolations.size() == 1, "indexFullText empty");
 	}
 
 	@Test
 	public void testContainFileEmpty() throws Exception {
 		Set<ConstraintViolation<File>> constraintViolations = validator.validateValue(File.class, "containFile", null);
-		assertTrue("containFile empty", constraintViolations.size() == 1);
+		assertTrue(constraintViolations.size() == 1, "containFile empty");
 	}
 
 	@Test
 	public void testDescriptionMarkupEmpty() throws Exception {
 		Set<ConstraintViolation<File>> constraintViolations = validator.validateValue(File.class, "descriptionMarkup", null);
-		assertTrue("Description markup empty", constraintViolations.size() == 1);
+		assertTrue(constraintViolations.size() == 1, "Description markup empty");
 	}
 
 	@Test

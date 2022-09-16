@@ -4,9 +4,9 @@ import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 import com.orientechnologies.orient.core.id.ORecordId;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.orientechnologies.orient.core.sql.OCommandSQL;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.segrada.model.Location;
 import org.segrada.model.Node;
 import org.segrada.model.Period;
@@ -29,7 +29,7 @@ import org.segrada.test.OrientDbTestApplicationSettings;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class AbstractCoreOrientDbRepositoryTest {
 	/**
@@ -47,7 +47,7 @@ public class AbstractCoreOrientDbRepositoryTest {
 	 */
 	private MockOrientDbRepository mockOrientDbRepository;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		// set up schema if needed
 		orientDBTestInstance.setUpSchemaIfNeeded();
@@ -64,7 +64,7 @@ public class AbstractCoreOrientDbRepositoryTest {
 		mockOrientDbRepository = new MockOrientDbRepository(factory);
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() throws Exception {
 		// close db
 		try {

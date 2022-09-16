@@ -1,10 +1,10 @@
 package org.segrada.service.binarydata;
 
 import com.google.common.io.Files;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.segrada.model.Node;
 import org.segrada.model.base.AbstractSegradaEntity;
 import org.segrada.model.prototype.SegradaEntity;
@@ -18,7 +18,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class BinaryDataServiceFileTest {
 	private static String savePath;
@@ -27,7 +27,7 @@ public class BinaryDataServiceFileTest {
 
 	private static File tempPath;
 
-	@BeforeClass
+	@BeforeAll
 	public static void setUpClass() throws Exception {
 		savePath = System.getProperty("java.io.tmpdir") + File.separator + "segradatest";
 
@@ -39,7 +39,7 @@ public class BinaryDataServiceFileTest {
 		tempPath.mkdirs();
 	}
 
-	@AfterClass
+	@AfterAll
 	public static void tearDownClass() throws Exception {
 		// delete all
 		deleteDirectory(tempPath);
@@ -71,7 +71,7 @@ public class BinaryDataServiceFileTest {
 	 */
 	private BinaryDataServiceFile binaryDataServiceFile;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		binaryDataServiceFile = new BinaryDataServiceFile(new ApplicationSettings() {
 			@Override

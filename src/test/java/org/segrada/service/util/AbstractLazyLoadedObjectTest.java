@@ -1,17 +1,17 @@
 package org.segrada.service.util;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Method;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class AbstractLazyLoadedObjectTest {
 	private MockObject mockObject;
 	private MockAbstractLazyLoadedObject mockAbstractLazyLoadedObject;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		mockObject = new MockObject();
 		mockAbstractLazyLoadedObject = new MockAbstractLazyLoadedObject(mockObject);

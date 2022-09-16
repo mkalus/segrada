@@ -1,6 +1,6 @@
 package org.segrada.search;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.segrada.test.PropertyAsserter.assertBasicGetterSetterBehavior;
 

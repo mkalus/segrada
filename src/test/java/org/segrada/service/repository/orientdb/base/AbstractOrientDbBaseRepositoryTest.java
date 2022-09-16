@@ -4,9 +4,9 @@ import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.orientechnologies.orient.core.sql.OCommandSQL;
 import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.segrada.model.base.AbstractSegradaEntity;
 import org.segrada.model.prototype.SegradaEntity;
 import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory;
@@ -14,7 +14,7 @@ import org.segrada.session.Identity;
 import org.segrada.test.OrientDBTestInstance;
 import org.segrada.test.OrientDbTestApplicationSettings;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class AbstractOrientDbBaseRepositoryTest {
 	/**
@@ -27,7 +27,7 @@ public class AbstractOrientDbBaseRepositoryTest {
 	 */
 	private OrientDbRepositoryFactory factory;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		// open database
 		ODatabaseDocumentTx db = orientDBTestInstance.getDatabase();

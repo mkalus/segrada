@@ -1,15 +1,15 @@
 package org.segrada.search.lucene;
 
 import org.apache.lucene.store.RAMDirectory;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.segrada.search.SearchHit;
 import org.segrada.service.util.PaginationInfo;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class LuceneSearchEngineTest {
 	/**
@@ -17,7 +17,7 @@ public class LuceneSearchEngineTest {
 	 */
 	private LuceneSearchEngine searchEngine;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		searchEngine = new LuceneSearchEngine(new RAMDirectory(), new LuceneSegradaAnalyzer());
 	}
@@ -34,7 +34,7 @@ public class LuceneSearchEngineTest {
 						"eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata " +
 						"sanctus est Lorem ipsum dolor sit amet.", new String[]{}, null, null,1.0f);
 
-		assertTrue("Could not save document to index", check);
+		assertTrue(check, "Could not save document to index");
 
 		// search
 		PaginationInfo<SearchHit> searchResult = searchEngine.search("consetetur hello", null);

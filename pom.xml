@@ -319,9 +319,9 @@
 
 		<!-- Testing -->
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.13.1</version>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter</artifactId>
+			<version>5.9.1</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -347,6 +347,11 @@
 					</compilerArguments>
 				</configuration>
 			</plugin>
+			<!-- unit tests -->
+			<plugin>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.22.2</version>
+			</plugin>
 			<!-- create JAR and dependencies -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -364,7 +369,7 @@
 							<overWriteReleases>false</overWriteReleases>
 							<overWriteSnapshots>false</overWriteSnapshots>
 							<overWriteIfNewer>true</overWriteIfNewer>
-							<excludeArtifactIds>junit</excludeArtifactIds>
+							<excludeArtifactIds>junit-jupiter</excludeArtifactIds>
 						</configuration>
 					</execution>
 				</executions>

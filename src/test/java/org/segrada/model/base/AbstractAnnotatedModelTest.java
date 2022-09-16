@@ -1,6 +1,6 @@
 package org.segrada.model.base;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.segrada.model.Comment;
 import org.segrada.model.File;
 import org.segrada.model.SourceReference;
@@ -12,7 +12,7 @@ import org.segrada.model.prototype.ISourceReference;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class AbstractAnnotatedModelTest {
 

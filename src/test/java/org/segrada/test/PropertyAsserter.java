@@ -14,7 +14,7 @@ import java.lang.reflect.Method;
 import java.sql.Timestamp;
 import java.util.*;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Test utility class that makes easy work of testing default behavior of getters and setters.
@@ -201,9 +201,9 @@ public enum PropertyAsserter {
 	 */
 	static void assertPropertyResult(String property, Object arg, Class type, Object propertyValue) {
 		if (type.isPrimitive() || type == String.class) {
-			assertEquals(property + " getter/setter failed test", arg, propertyValue);
+			assertEquals(arg, propertyValue, property + " getter/setter failed test");
 		}else {
-			assertSame(property + " getter/setter failed test", arg, propertyValue);
+			assertSame(arg, propertyValue, property + " getter/setter failed test");
 		}
 	}
 

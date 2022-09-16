@@ -2,8 +2,8 @@ package org.segrada.model;
 
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
@@ -11,13 +11,13 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import java.util.Set;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.segrada.test.PropertyAsserter.assertBasicGetterSetterBehavior;
 
 public class SavedQueryTest {
 	private static Validator validator;
 
-	@BeforeClass
+	@BeforeAll
 	public static void setUp() throws Exception {
 		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
 		validator = factory.getValidator();
@@ -36,31 +36,31 @@ public class SavedQueryTest {
 		savedQuery.setDescription("Description");
 		savedQuery.setData("Data");
 		Set<ConstraintViolation<SavedQuery>> constraintViolations = validator.validate(savedQuery);
-		assertTrue("Node not valid", constraintViolations.size() == 0);
+		assertTrue(constraintViolations.size() == 0, "Node not valid");
 	}
 
 	@Test
 	public void testTypeEmpty() throws Exception {
 		Set<ConstraintViolation<SavedQuery>> constraintViolations = validator.validateValue(SavedQuery.class, "type", null);
-		assertTrue("Type empty", constraintViolations.size() == 1);
+		assertTrue(constraintViolations.size() == 1, "Type empty");
 	}
 
 	@Test
 	public void testTitleEmpty() throws Exception {
 		Set<ConstraintViolation<SavedQuery>> constraintViolations = validator.validateValue(SavedQuery.class, "title", null);
-		assertTrue("Title empty", constraintViolations.size() == 1);
+		assertTrue(constraintViolations.size() == 1, "Title empty");
 	}
 
 	@Test
 	public void testDescriptionEmpty() throws Exception {
 		Set<ConstraintViolation<SavedQuery>> constraintViolations = validator.validateValue(SavedQuery.class, "description", null);
-		assertTrue("Description empty", constraintViolations.size() == 1);
+		assertTrue(constraintViolations.size() == 1, "Description empty");
 	}
 
 	@Test
 	public void testDataEmpty() throws Exception {
 		Set<ConstraintViolation<SavedQuery>> constraintViolations = validator.validateValue(SavedQuery.class, "data", null);
-		assertTrue("Data empty", constraintViolations.size() == 1);
+		assertTrue(constraintViolations.size() == 1, "Data empty");
 	}
 
 	@Test

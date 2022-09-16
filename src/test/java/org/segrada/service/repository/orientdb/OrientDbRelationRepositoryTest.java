@@ -7,9 +7,9 @@ import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.orientechnologies.orient.core.sql.OCommandSQL;
 import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
 import org.apache.commons.lang.NotImplementedException;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.segrada.model.Node;
 import org.segrada.model.Relation;
 import org.segrada.model.RelationType;
@@ -25,7 +25,7 @@ import org.segrada.test.OrientDbTestApplicationSettings;
 
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class OrientDbRelationRepositoryTest {
 	/**
@@ -43,7 +43,7 @@ public class OrientDbRelationRepositoryTest {
 	 */
 	private OrientDbRelationRepository repository;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		// set up schema if needed
 		orientDBTestInstance.setUpSchemaIfNeeded();
@@ -57,7 +57,7 @@ public class OrientDbRelationRepositoryTest {
 		repository =  factory.produceRepository(OrientDbRelationRepository.class);
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() throws Exception {
 		// truncate db
 		factory.getDb().command(new OCommandSQL("delete vertex V")).execute();
@@ -146,9 +146,9 @@ public class OrientDbRelationRepositoryTest {
 		assertEquals(node2.getIdentity().toString(), relation.getToEntity().getId());
 	}
 
-	@Test(expected = NotImplementedException.class)
+	@Test
 	public void testConvertToDocument() throws Exception {
-		repository.convertToDocument(new Relation());
+		assertThrows(NotImplementedException.class, () -> repository.convertToDocument(new Relation()));
 	}
 
 	@Test

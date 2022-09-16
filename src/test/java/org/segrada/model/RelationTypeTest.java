@@ -1,7 +1,7 @@
 package org.segrada.model;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
@@ -9,15 +9,15 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.segrada.test.PropertyAsserter.assertBasicGetterSetterBehavior;
 
 public class RelationTypeTest {
 	private static Validator validator;
 
-	@BeforeClass
+	@BeforeAll
 	public static void setUp() throws Exception {
 		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
 		validator = factory.getValidator();
@@ -46,37 +46,37 @@ public class RelationTypeTest {
 		relationType.setDescription("Description");
 		relationType.setDescriptionMarkup("default");
 		Set<ConstraintViolation<RelationType>> constraintViolations = validator.validate(relationType);
-		assertTrue("Relation Type not valid", constraintViolations.size() == 0);
+		assertTrue(constraintViolations.size() == 0, "Relation Type not valid");
 	}
 
 	@Test
 	public void testFromTitleEmpty() throws Exception {
 		Set<ConstraintViolation<RelationType>> constraintViolations = validator.validateValue(RelationType.class, "fromTitle", null);
-		assertTrue("fromTitle empty", constraintViolations.size() == 1);
+		assertTrue(constraintViolations.size() == 1, "fromTitle empty");
 	}
 
 	@Test
 	public void testFromTitleTooShort() throws Exception {
 		Set<ConstraintViolation<RelationType>> constraintViolations = validator.validateValue(RelationType.class, "fromTitle", "");
-		assertTrue("fromTitle too short", constraintViolations.size() == 1);
+		assertTrue(constraintViolations.size() == 1, "fromTitle too short");
 	}
 
 	@Test
 	public void testToTitleEmpty() throws Exception {
 		Set<ConstraintViolation<RelationType>> constraintViolations = validator.validateValue(RelationType.class, "toTitle", null);
-		assertTrue("toTitle empty", constraintViolations.size() == 1);
+		assertTrue(constraintViolations.size() == 1, "toTitle empty");
 	}
 
 	@Test
 	public void testToTitleTooShort() throws Exception {
 		Set<ConstraintViolation<RelationType>> constraintViolations = validator.validateValue(RelationType.class, "toTitle", "");
-		assertTrue("toTitle too short", constraintViolations.size() == 1);
+		assertTrue(constraintViolations.size() == 1, "toTitle too short");
 	}
 
 	@Test
 	public void testDescriptionEmpty() throws Exception {
 		Set<ConstraintViolation<RelationType>> constraintViolations = validator.validateValue(RelationType.class, "description", null);
-		assertTrue("Description empty", constraintViolations.size() == 1);
+		assertTrue(constraintViolations.size() == 1, "Description empty");
 	}
 
 	/*@Test
@@ -88,6 +88,6 @@ public class RelationTypeTest {
 	@Test
 	public void testDescriptionMarkupEmpty() throws Exception {
 		Set<ConstraintViolation<RelationType>> constraintViolations = validator.validateValue(RelationType.class, "descriptionMarkup", null);
-		assertTrue("Description markup empty", constraintViolations.size() == 1);
+		assertTrue(constraintViolations.size() == 1, "Description markup empty");
 	}
 }

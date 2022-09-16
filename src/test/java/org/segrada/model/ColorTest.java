@@ -1,7 +1,7 @@
 package org.segrada.model;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
@@ -9,13 +9,13 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import java.util.Set;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.segrada.test.PropertyAsserter.assertBasicGetterSetterBehavior;
 
 public class ColorTest {
 	private static Validator validator;
 
-	@BeforeClass
+	@BeforeAll
 	public static void setUp() throws Exception {
 		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
 		validator = factory.getValidator();
@@ -32,28 +32,28 @@ public class ColorTest {
 		color.setTitle("Example title");
 		color.setColor(123456);
 		Set<ConstraintViolation<Color>> constraintViolations = validator.validate(color);
-		assertTrue("Color not valid", constraintViolations.size() == 0);
+		assertTrue(constraintViolations.size() == 0, "Color not valid");
 	}
 
 	@Test
 	public void testTitleEmpty() throws Exception {
 		Set<ConstraintViolation<Color>> constraintViolations = validator.validateValue(Color.class, "title", null);
-		assertTrue("Title empty", constraintViolations.size() == 1);
+		assertTrue(constraintViolations.size() == 1, "Title empty");
 	}
 
 	@Test
 	public void testTitleTooShort() throws Exception {
 		Set<ConstraintViolation<Color>> constraintViolations = validator.validateValue(Color.class, "title", "");
-		assertTrue("Title too short", constraintViolations.size() == 1);
+		assertTrue(constraintViolations.size() == 1, "Title too short");
 	}
 
 	@Test
 	public void testColorEmpty() throws Exception {
 		Set<ConstraintViolation<Color>> constraintViolations = validator.validateValue(Color.class, "color", null);
-		assertTrue("Color empty", constraintViolations.size() == 1);
+		assertTrue(constraintViolations.size() == 1, "Color empty");
 
 		constraintViolations = validator.validateValue(Color.class, "color", 0);
-		assertTrue("Color can be 0!", constraintViolations.size() == 0);
+		assertTrue(constraintViolations.size() == 0, "Color can be 0!");
 	}
 
 	@Test

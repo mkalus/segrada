@@ -5,9 +5,9 @@ import com.orientechnologies.orient.core.id.ORecordId;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.orientechnologies.orient.core.sql.OCommandSQL;
 import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.segrada.model.base.AbstractSegradaEntity;
 import org.segrada.model.prototype.IMock;
 import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory;
@@ -17,7 +17,7 @@ import org.segrada.test.OrientDbTestApplicationSettings;
 
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class AbstractOrientDbRepositoryTest {
 	/**
@@ -30,7 +30,7 @@ public class AbstractOrientDbRepositoryTest {
 	 */
 	private MockOrientDbRepository mockOrientDbRepository;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		// open database
 		ODatabaseDocumentTx db = orientDBTestInstance.getDatabase();
@@ -44,7 +44,7 @@ public class AbstractOrientDbRepositoryTest {
 		mockOrientDbRepository = new MockOrientDbRepository(factory);
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() throws Exception {
 		// close db
 		try {
@@ -310,7 +310,7 @@ public class AbstractOrientDbRepositoryTest {
 	public void testConvertUidToId() throws Exception {
 		assertNull(mockOrientDbRepository.convertUidToId(null));
 		assertNull(mockOrientDbRepository.convertUidToId(""));
-		assertEquals("Id to Uid conversion failed", "#12345:45678", mockOrientDbRepository.convertUidToId("12345-45678"));
+		assertEquals("#12345:45678", mockOrientDbRepository.convertUidToId("12345-45678"), "Id to Uid conversion failed");
 	}
 
 	/**
