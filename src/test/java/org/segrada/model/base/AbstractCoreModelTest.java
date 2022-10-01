@@ -1,13 +1,13 @@
 package org.segrada.model.base;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.segrada.model.*;
 import org.segrada.model.prototype.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class AbstractCoreModelTest {
 

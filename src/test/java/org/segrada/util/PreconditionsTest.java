@@ -1,9 +1,9 @@
 package org.segrada.util;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class PreconditionsTest {
 
@@ -15,9 +15,9 @@ public class PreconditionsTest {
 		// no exception should be thrown
 	}
 
-	@Test(expected = NullPointerException.class)
+	@Test
 	public void testCheckNotNullFail() throws Exception {
-		assertNull(Preconditions.checkNotNull(null, "test"));
+		assertThrows(NullPointerException.class, () -> Preconditions.checkNotNull(null, "test"));
 		// exception should be thrown
 	}
 }

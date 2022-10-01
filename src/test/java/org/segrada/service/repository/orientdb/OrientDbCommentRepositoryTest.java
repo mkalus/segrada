@@ -4,9 +4,9 @@ import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.orientechnologies.orient.core.sql.OCommandSQL;
 import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.segrada.model.Comment;
 import org.segrada.model.prototype.IComment;
 import org.segrada.model.prototype.SegradaEntity;
@@ -17,7 +17,7 @@ import org.segrada.test.OrientDbTestApplicationSettings;
 
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class OrientDbCommentRepositoryTest {
 	/**
@@ -35,7 +35,7 @@ public class OrientDbCommentRepositoryTest {
 	 */
 	private OrientDbCommentRepository repository;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		// set up schema if needed
 		orientDBTestInstance.setUpSchemaIfNeeded();
@@ -49,7 +49,7 @@ public class OrientDbCommentRepositoryTest {
 		repository =  factory.produceRepository(OrientDbCommentRepository.class);
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() throws Exception {
 		// truncate db
 		factory.getDb().command(new OCommandSQL("delete edge IsCommentOf")).execute();

@@ -1,11 +1,11 @@
 package org.segrada.session;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Collection;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ApplicationSettingsPropertiesTest {
 	/**
@@ -13,7 +13,7 @@ public class ApplicationSettingsPropertiesTest {
 	 */
 	private ApplicationSettingsProperties applicationSettings;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		// environmental variables cannot be tested but should be ok
 		applicationSettings = new ApplicationSettingsProperties();

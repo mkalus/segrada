@@ -1,7 +1,7 @@
 package org.segrada.model;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
@@ -9,13 +9,13 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import java.util.Set;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.segrada.test.PropertyAsserter.assertBasicGetterSetterBehavior;
 
 public class PeriodTest {
 	private static Validator validator;
 
-	@BeforeClass
+	@BeforeAll
 	public static void setUp() throws Exception {
 		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
 		validator = factory.getValidator();
@@ -34,7 +34,7 @@ public class PeriodTest {
 		period.setFromEntry("21.05.2000");
 		period.setToEntry("22.05.2009");
 		Set<ConstraintViolation<Period>> constraintViolations = validator.validate(period);
-		assertTrue("Period not valid", constraintViolations.size() == 0);
+		assertTrue(constraintViolations.size() == 0, "Period not valid");
 
 		assertEquals("period", period.getType());
 		assertEquals(new Long(2451686L), period.getFromJD());
@@ -50,7 +50,7 @@ public class PeriodTest {
 		period.setFromEntry("21.05.2009");
 		period.setToEntry("22.05.2000");
 		Set<ConstraintViolation<Period>> constraintViolations = validator.validate(period);
-		assertTrue("Invalid Period is valid", constraintViolations.size() > 0);
+		assertTrue(constraintViolations.size() > 0, "Invalid Period is valid");
 	}
 
 	@Test
@@ -62,12 +62,12 @@ public class PeriodTest {
 		period.setFromEntry("");
 		period.setToEntry("");
 		Set<ConstraintViolation<Period>> constraintViolations = validator.validate(period);
-		assertTrue("Invalid Period is valid", constraintViolations.size() > 0);
+		assertTrue(constraintViolations.size() > 0, "Invalid Period is valid");
 
 		period.setFromEntry(null);
 		period.setToEntry(null);
 		constraintViolations = validator.validate(period);
-		assertTrue("Invalid Period is valid", constraintViolations.size() > 0);
+		assertTrue(constraintViolations.size() > 0, "Invalid Period is valid");
 	}
 
 	@Test
@@ -134,58 +134,58 @@ public class PeriodTest {
 	@Test
 	public void testParentEmpty() throws Exception {
 		Set<ConstraintViolation<Period>> constraintViolations = validator.validateValue(Period.class, "parentId", null);
-		assertTrue("Parent Id empty", constraintViolations.size() == 1);
+		assertTrue(constraintViolations.size() == 1, "Parent Id empty");
 
 		constraintViolations = validator.validateValue(Period.class, "parentModel", null);
-		assertTrue("Parent model empty", constraintViolations.size() == 1);
+		assertTrue(constraintViolations.size() == 1, "Parent model empty");
 	}
 
 	@Test
 	public void testFromEmpty() throws Exception {
 		Set<ConstraintViolation<Period>> constraintViolations = validator.validateValue(Period.class, "fromJD", null);
-		assertTrue("from empty", constraintViolations.size() == 1);
+		assertTrue(constraintViolations.size() == 1, "from empty");
 	}
 
 	@Test
 	public void testToEmpty() throws Exception {
 		Set<ConstraintViolation<Period>> constraintViolations = validator.validateValue(Period.class, "toJD", null);
-		assertTrue("to empty", constraintViolations.size() == 1);
+		assertTrue(constraintViolations.size() == 1, "to empty");
 	}
 
 	@Test
 	public void testFromEntryCalendarEmpty() throws Exception {
 		Set<ConstraintViolation<Period>> constraintViolations = validator.validateValue(Period.class, "fromEntryCalendar", null);
-		assertTrue("fromEntryCalendar empty", constraintViolations.size() == 1);
+		assertTrue(constraintViolations.size() == 1, "fromEntryCalendar empty");
 	}
 
 	@Test
 	public void testToEntryCalendarEmpty() throws Exception {
 		Set<ConstraintViolation<Period>> constraintViolations = validator.validateValue(Period.class, "toEntryCalendar", null);
-		assertTrue("toEntryCalendar empty", constraintViolations.size() == 1);
+		assertTrue(constraintViolations.size() == 1, "toEntryCalendar empty");
 	}
 
 	@Test
 	public void testFromEntryCalendarValidSettings() throws Exception {
 		Set<ConstraintViolation<Period>> constraintViolations = validator.validateValue(Period.class, "fromEntryCalendar", "G");
-		assertTrue("fromEntryCalendar settings", constraintViolations.size() == 0);
+		assertTrue(constraintViolations.size() == 0, "fromEntryCalendar settings");
 
 		constraintViolations = validator.validateValue(Period.class, "fromEntryCalendar", "J");
-		assertTrue("fromEntryCalendar settings", constraintViolations.size() == 0);
+		assertTrue(constraintViolations.size() == 0, "fromEntryCalendar settings");
 
 		constraintViolations = validator.validateValue(Period.class, "fromEntryCalendar", "");
-		assertTrue("fromEntryCalendar settings", constraintViolations.size() == 1);
+		assertTrue(constraintViolations.size() == 1, "fromEntryCalendar settings");
 	}
 
 	@Test
 	public void testToEntryCalendarValidSettings() throws Exception {
 		Set<ConstraintViolation<Period>> constraintViolations = validator.validateValue(Period.class, "toEntryCalendar", "G");
-		assertTrue("toEntryCalendar settings", constraintViolations.size() == 0);
+		assertTrue(constraintViolations.size() == 0, "toEntryCalendar settings");
 
 		constraintViolations = validator.validateValue(Period.class, "toEntryCalendar", "J");
-		assertTrue("toEntryCalendar settings", constraintViolations.size() == 0);
+		assertTrue(constraintViolations.size() == 0, "toEntryCalendar settings");
 
 		constraintViolations = validator.validateValue(Period.class, "toEntryCalendar", "");
-		assertTrue("toEntryCalendar settings", constraintViolations.size() == 1);
+		assertTrue(constraintViolations.size() == 1, "toEntryCalendar settings");
 	}
 
 	@Test

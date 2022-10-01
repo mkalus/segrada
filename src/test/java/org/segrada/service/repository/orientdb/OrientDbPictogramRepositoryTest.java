@@ -3,9 +3,9 @@ package org.segrada.service.repository.orientdb;
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.orientechnologies.orient.core.sql.OCommandSQL;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.segrada.model.Pictogram;
 import org.segrada.model.prototype.IPictogram;
 import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory;
@@ -15,7 +15,7 @@ import org.segrada.test.OrientDbTestApplicationSettings;
 
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class OrientDbPictogramRepositoryTest {
 	/**
@@ -33,7 +33,7 @@ public class OrientDbPictogramRepositoryTest {
 	 */
 	private OrientDbPictogramRepository repository;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		// set up schema if needed
 		orientDBTestInstance.setUpSchemaIfNeeded();
@@ -47,7 +47,7 @@ public class OrientDbPictogramRepositoryTest {
 		repository =  factory.produceRepository(OrientDbPictogramRepository.class);
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() throws Exception {
 		// truncate db
 		factory.getDb().command(new OCommandSQL("truncate class Pictogram")).execute();

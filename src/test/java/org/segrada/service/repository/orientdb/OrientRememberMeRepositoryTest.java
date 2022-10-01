@@ -6,16 +6,16 @@ import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.orientechnologies.orient.core.sql.OCommandSQL;
 import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
 import org.apache.commons.codec.binary.Hex;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.segrada.test.OrientDBTestInstance;
 
 import java.security.MessageDigest;
 import java.util.HashMap;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class OrientRememberMeRepositoryTest {
 	/**
@@ -33,7 +33,7 @@ public class OrientRememberMeRepositoryTest {
 	 */
 	private OrientRememberMeRepository repository;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		// set up schema if needed
 		orientDBTestInstance.setUpSchemaIfNeeded();
@@ -45,7 +45,7 @@ public class OrientRememberMeRepositoryTest {
 		repository = new OrientRememberMeRepository(db);
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() throws Exception {
 		// truncate db
 		db.command(new OCommandSQL("truncate class User")).execute();

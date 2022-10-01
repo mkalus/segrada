@@ -5,9 +5,9 @@ import com.orientechnologies.orient.core.id.ORecordId;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.orientechnologies.orient.core.sql.OCommandSQL;
 import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.segrada.model.Location;
 import org.segrada.model.Node;
 import org.segrada.model.Period;
@@ -29,7 +29,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class OrientDbNodeRepositoryTest {
 	/**
@@ -47,7 +47,7 @@ public class OrientDbNodeRepositoryTest {
 	 */
 	private OrientDbNodeRepository repository;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		// set up schema if needed
 		orientDBTestInstance.setUpSchemaIfNeeded();
@@ -61,7 +61,7 @@ public class OrientDbNodeRepositoryTest {
 		repository =  factory.produceRepository(OrientDbNodeRepository.class);
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() throws Exception {
 		// truncate db
 		factory.getDb().command(new OCommandSQL("delete vertex V")).execute();

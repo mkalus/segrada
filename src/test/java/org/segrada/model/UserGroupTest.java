@@ -1,7 +1,7 @@
 package org.segrada.model;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
@@ -9,13 +9,13 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import java.util.Set;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.segrada.test.PropertyAsserter.assertBasicGetterSetterBehavior;
 
 public class UserGroupTest {
 	private static Validator validator;
 
-	@BeforeClass
+	@BeforeAll
 	public static void setUp() throws Exception {
 		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
 		validator = factory.getValidator();
@@ -41,19 +41,19 @@ public class UserGroupTest {
 		userGroup.setDescription("description");
 		userGroup.setSpecial("ADMIN");
 		Set<ConstraintViolation<UserGroup>> constraintViolations = validator.validate(userGroup);
-		assertTrue("UserGroup not valid", constraintViolations.size() == 0);
+		assertTrue(constraintViolations.size() == 0, "UserGroup not valid");
 	}
 
 	@Test
 	public void testTitleEmpty() throws Exception {
 		Set<ConstraintViolation<UserGroup>> constraintViolations = validator.validateValue(UserGroup.class, "title", null);
-		assertTrue("Title empty", constraintViolations.size() == 1);
+		assertTrue(constraintViolations.size() == 1, "Title empty");
 	}
 
 	@Test
 	public void testTitleTooShort() throws Exception {
 		Set<ConstraintViolation<UserGroup>> constraintViolations = validator.validateValue(UserGroup.class, "title", "");
-		assertTrue("Title too short", constraintViolations.size() == 1);
+		assertTrue(constraintViolations.size() == 1, "Title too short");
 	}
 
 

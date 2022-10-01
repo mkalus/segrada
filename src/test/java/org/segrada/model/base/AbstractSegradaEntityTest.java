@@ -1,9 +1,9 @@
 package org.segrada.model.base;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.segrada.model.User;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class AbstractSegradaEntityTest {
 	@Test
@@ -100,14 +100,14 @@ public class AbstractSegradaEntityTest {
 
 		entity.setId("#12345:45678");
 
-		assertEquals("Id to Uid conversion failed", "12345-45678", entity.getUid());
+		assertEquals("12345-45678", entity.getUid(), "Id to Uid conversion failed");
 	}
 
 	@Test
 	public void testConvertOrientIdToUid() throws Exception {
 		assertNull(AbstractSegradaEntity.convertOrientIdToUid(null));
 		assertNull(AbstractSegradaEntity.convertOrientIdToUid(""));
-		assertEquals("Id to Uid conversion failed", "12345-45678", AbstractSegradaEntity.convertOrientIdToUid("#12345:45678"));
+		assertEquals("12345-45678", AbstractSegradaEntity.convertOrientIdToUid("#12345:45678"), "Id to Uid conversion failed");
 		assertNull(AbstractSegradaEntity.convertOrientIdToUid("xxx"));
 		assertNull(AbstractSegradaEntity.convertOrientIdToUid("123-123"));
 	}
@@ -116,7 +116,7 @@ public class AbstractSegradaEntityTest {
 	public void testConvertUidToOrientId() throws Exception {
 		assertNull(AbstractSegradaEntity.convertUidToOrientId(null));
 		assertNull(AbstractSegradaEntity.convertUidToOrientId(""));
-		assertEquals("Uid to id conversion failed", "#12345:45678", AbstractSegradaEntity.convertUidToOrientId("12345-45678"));
+		assertEquals("#12345:45678", AbstractSegradaEntity.convertUidToOrientId("12345-45678"), "Uid to id conversion failed");
 		assertNull(AbstractSegradaEntity.convertUidToOrientId("xxx"));
 		assertNull(AbstractSegradaEntity.convertUidToOrientId("#123:123"));
 	}

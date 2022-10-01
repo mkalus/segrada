@@ -4,9 +4,9 @@ import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.orientechnologies.orient.core.sql.OCommandSQL;
 import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.segrada.model.Node;
 import org.segrada.model.Tag;
 import org.segrada.model.prototype.INode;
@@ -20,7 +20,7 @@ import org.segrada.util.Sluggify;
 
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class OrientDbTagRepositoryTest {
 	/**
@@ -38,7 +38,7 @@ public class OrientDbTagRepositoryTest {
 	 */
 	private OrientDbTagRepository repository;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		orientDBTestInstance.setUpSchemaIfNeeded();
 
@@ -52,7 +52,7 @@ public class OrientDbTagRepositoryTest {
 		repository =  factory.produceRepository(OrientDbTagRepository.class);
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() throws Exception {
 		// truncate db
 		factory.getDb().command(new OCommandSQL("delete vertex V")).execute();
@@ -172,7 +172,7 @@ public class OrientDbTagRepositoryTest {
 	@Test
 	public void testCreateNewTagsByTitles() throws Exception {
 		// make sure we have not created any tags yet
-		assertTrue("Repository not empty", repository.count() == 0);
+		assertTrue(repository.count() == 0, "Repository not empty");
 
 		// some tags
 		String[] tags = new String[]{"Tag1", "Tag2", "Tag3"};
@@ -201,7 +201,7 @@ public class OrientDbTagRepositoryTest {
 	@Test
 	public void testFindTagsByTitles() throws Exception {
 		// make sure we have not created any tags yet
-		assertTrue("Repository not empty", repository.count() == 0);
+		assertTrue(repository.count() == 0, "Repository not empty");
 
 		// create some tags
 		for (int i = 1; i <= 10; i++) {
@@ -233,7 +233,7 @@ public class OrientDbTagRepositoryTest {
 	@Test
 	public void testFindTagIdsByTitles() throws Exception {
 		// make sure we have not created any tags yet
-		assertTrue("Repository not empty", repository.count() == 0);
+		assertTrue(repository.count() == 0, "Repository not empty");
 
 		// create some tags
 		String[] ids = new String[10];
@@ -269,7 +269,7 @@ public class OrientDbTagRepositoryTest {
 	@Test
 	public void testFindTagTitlesByIds() throws Exception {
 		// make sure we have not created any tags yet
-		assertTrue("Repository not empty", repository.count() == 0);
+		assertTrue(repository.count() == 0, "Repository not empty");
 
 		// create some tags
 		String[] ids = new String[10];

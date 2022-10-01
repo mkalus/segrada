@@ -6,9 +6,9 @@ import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.orientechnologies.orient.core.sql.OCommandSQL;
 import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
 import org.apache.lucene.store.RAMDirectory;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.segrada.model.Source;
 import org.segrada.model.prototype.ISource;
 import org.segrada.search.SearchEngine;
@@ -26,7 +26,7 @@ import org.segrada.test.OrientDbTestApplicationSettings;
 import javax.annotation.Nullable;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class AbstractFullTextServiceTest {
 	/**
@@ -54,7 +54,7 @@ public class AbstractFullTextServiceTest {
 	 */
 	private boolean methodCalled;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		searchEngine = new LuceneSearchEngine(new RAMDirectory(), new LuceneSegradaAnalyzer());
 
@@ -70,7 +70,7 @@ public class AbstractFullTextServiceTest {
 		service = new MockService(factory, searchEngine);
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() throws Exception {
 		// clear search indexes
 		searchEngine.clearAllIndexes();

@@ -1,12 +1,12 @@
 package org.segrada.session;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.segrada.model.User;
 import org.segrada.model.UserGroup;
 import org.segrada.model.prototype.IUser;
 import org.segrada.model.prototype.IUserGroup;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class IdentityTest {
 

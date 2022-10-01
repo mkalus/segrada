@@ -3,9 +3,9 @@ package org.segrada.service.repository.orientdb;
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.orientechnologies.orient.core.sql.OCommandSQL;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.segrada.model.Color;
 import org.segrada.model.prototype.IColor;
 import org.segrada.service.repository.orientdb.factory.OrientDbRepositoryFactory;
@@ -13,7 +13,7 @@ import org.segrada.session.Identity;
 import org.segrada.test.OrientDBTestInstance;
 import org.segrada.test.OrientDbTestApplicationSettings;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class OrientDbColorRepositoryTest {
 	/**
@@ -31,7 +31,7 @@ public class OrientDbColorRepositoryTest {
 	 */
 	private OrientDbColorRepository repository;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		// set up schema if needed
 		orientDBTestInstance.setUpSchemaIfNeeded();
@@ -45,7 +45,7 @@ public class OrientDbColorRepositoryTest {
 		repository =  factory.produceRepository(OrientDbColorRepository.class);
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() throws Exception {
 		// truncate db
 		factory.getDb().command(new OCommandSQL("truncate class Color")).execute();

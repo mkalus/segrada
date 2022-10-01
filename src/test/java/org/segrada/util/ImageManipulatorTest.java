@@ -1,7 +1,7 @@
 package org.segrada.util;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -10,7 +10,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ImageManipulatorTest {
 	/**
@@ -27,7 +27,7 @@ public class ImageManipulatorTest {
 	private static final String mimeJPG = "image/jpeg";
 	private static final String mimeGIF = "image/gif";
 
-	@BeforeClass
+	@BeforeAll
 	public static void setUpClass() throws Exception {
 		// load bytes
 		icon_png = resourceToBytes("/img/test_icon.png");

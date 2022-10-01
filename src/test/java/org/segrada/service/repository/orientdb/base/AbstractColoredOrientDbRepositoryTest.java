@@ -4,9 +4,9 @@ import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 import com.orientechnologies.orient.core.id.ORecordId;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.orientechnologies.orient.core.sql.OCommandSQL;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.segrada.model.base.AbstractColoredModel;
 import org.segrada.model.prototype.IPictogram;
 import org.segrada.model.prototype.SegradaColoredEntity;
@@ -15,8 +15,8 @@ import org.segrada.session.Identity;
 import org.segrada.test.OrientDBTestInstance;
 import org.segrada.test.OrientDbTestApplicationSettings;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class AbstractColoredOrientDbRepositoryTest {
 	/**
@@ -29,7 +29,7 @@ public class AbstractColoredOrientDbRepositoryTest {
 	 */
 	private MockOrientDbRepository mockOrientDbRepository;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		// set up schema if needed
 		orientDBTestInstance.setUpSchemaIfNeeded();
@@ -46,7 +46,7 @@ public class AbstractColoredOrientDbRepositoryTest {
 		mockOrientDbRepository = new MockOrientDbRepository(factory);
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() throws Exception {
 		// close db
 		try {

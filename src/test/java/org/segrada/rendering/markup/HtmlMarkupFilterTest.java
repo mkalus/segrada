@@ -1,9 +1,9 @@
 package org.segrada.rendering.markup;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.segrada.rendering.markup.HtmlMarkupFilter;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class HtmlMarkupFilterTest {
 	@Test
@@ -11,10 +11,10 @@ public class HtmlMarkupFilterTest {
 		HtmlMarkupFilter filter = new HtmlMarkupFilter();
 
 		String test1 = "This is a text string";
-		assertEquals("Test 1 failed", test1, filter.toHTML(test1));
+		assertEquals(test1, filter.toHTML(test1), "Test 1 failed");
 
 		String test2 = "<h1>This is a text string</h1>";
-		assertEquals("Test 1 failed", test2, filter.toHTML(test2));
+		assertEquals(test2, filter.toHTML(test2), "Test 1 failed");
 
 		//trivial...
 	}

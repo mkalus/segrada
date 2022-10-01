@@ -1,7 +1,7 @@
 package org.segrada.model;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.segrada.model.prototype.INode;
 import org.segrada.model.prototype.IRelation;
 import org.segrada.model.prototype.IRelationType;
@@ -12,13 +12,13 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import java.util.Set;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.segrada.test.PropertyAsserter.assertBasicGetterSetterBehavior;
 
 public class RelationTest {
 	private static Validator validator;
 
-	@BeforeClass
+	@BeforeAll
 	public static void setUp() throws Exception {
 		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
 		validator = factory.getValidator();
@@ -48,31 +48,31 @@ public class RelationTest {
 		relation.setFromEntity(fromNode);
 		relation.setToEntity(toNode);
 		Set<ConstraintViolation<Relation>> constraintViolations = validator.validate(relation);
-		assertTrue("Relation not valid", constraintViolations.size() == 0);
+		assertTrue(constraintViolations.size() == 0, "Relation not valid");
 	}
 
 	@Test
 	public void testRelationTypeEmpty() throws Exception {
 		Set<ConstraintViolation<Relation>> constraintViolations = validator.validateValue(Relation.class, "relationType", null);
-		assertTrue("RelationType empty", constraintViolations.size() == 1);
+		assertTrue(constraintViolations.size() == 1, "RelationType empty");
 	}
 
 	@Test
 	public void testFromEntityEmpty() throws Exception {
 		Set<ConstraintViolation<Relation>> constraintViolations = validator.validateValue(Relation.class, "fromEntity", null);
-		assertTrue("FromEntity empty", constraintViolations.size() == 1);
+		assertTrue(constraintViolations.size() == 1, "FromEntity empty");
 	}
 
 	@Test
 	public void testToEntityEmpty() throws Exception {
 		Set<ConstraintViolation<Relation>> constraintViolations = validator.validateValue(Relation.class, "toEntity", null);
-		assertTrue("ToEntity empty", constraintViolations.size() == 1);
+		assertTrue(constraintViolations.size() == 1, "ToEntity empty");
 	}
 
 	@Test
 	public void testDescriptionEmpty() throws Exception {
 		Set<ConstraintViolation<Relation>> constraintViolations = validator.validateValue(Relation.class, "description", null);
-		assertTrue("Description empty", constraintViolations.size() == 1);
+		assertTrue(constraintViolations.size() == 1, "Description empty");
 	}
 
 	/*@Test can be "" for now
@@ -84,7 +84,7 @@ public class RelationTest {
 	@Test
 	public void testDescriptionMarkupEmpty() throws Exception {
 		Set<ConstraintViolation<Relation>> constraintViolations = validator.validateValue(Relation.class, "descriptionMarkup", null);
-		assertTrue("Description markup empty", constraintViolations.size() == 1);
+		assertTrue(constraintViolations.size() == 1, "Description markup empty");
 	}
 
 	@Test
