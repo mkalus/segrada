@@ -410,6 +410,21 @@ public class FileController extends AbstractColoredController<IFile> {
 	}
 
 	@GET
+	@Path("/list")
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+	@RolesAllowed("NODE")
+	public String list() {
+		// json array to hold hits
+		JSONArray jsonArray = new JSONArray();
+
+		for (IFile file : service.findAll()) {
+			jsonArray.put(file.toJSON());
+		}
+
+		return jsonArray.toString();
+	}
+
+	@GET
 	@Path("/search")
 	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
 	@PermitAll //TODO: ACL

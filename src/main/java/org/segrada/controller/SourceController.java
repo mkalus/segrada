@@ -210,6 +210,21 @@ public class SourceController extends AbstractColoredController<ISource> {
 	}
 
 	@GET
+	@Path("/list")
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+	@RolesAllowed("NODE")
+	public String list() {
+		// json array to hold hits
+		JSONArray jsonArray = new JSONArray();
+
+		for (ISource source : service.findAll()) {
+			jsonArray.put(source.toJSON());
+		}
+
+		return jsonArray.toString();
+	}
+
+	@GET
 	@Path("/add")
 	@Produces(MediaType.TEXT_HTML)
 	@RolesAllowed("SOURCE_ADD")

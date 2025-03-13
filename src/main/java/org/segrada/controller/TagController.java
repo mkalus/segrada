@@ -10,11 +10,9 @@ import org.codehaus.jettison.json.JSONObject;
 import org.segrada.controller.base.AbstractBaseController;
 import org.segrada.model.Tag;
 import org.segrada.model.prototype.INode;
-import org.segrada.model.prototype.ISource;
 import org.segrada.model.prototype.ITag;
 import org.segrada.model.prototype.SegradaTaggable;
 import org.segrada.rendering.json.JSONConverter;
-import org.segrada.service.NodeService;
 import org.segrada.service.TagService;
 import org.segrada.service.base.AbstractRepositoryService;
 import org.segrada.service.base.SegradaService;
@@ -111,19 +109,6 @@ public class TagController extends AbstractBaseController<ITag> {
 			@PathParam("uid") String uid
 	) {
 		return reallyShow(service.findById(service.convertUidToId(uid)));
-	}
-
-	@GET
-	@Path("/{uid}")
-	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-	@RolesAllowed("SOURCE")
-	public String get(@PathParam("uid") String uid) {
-		ITag tag = service.findById(service.convertUidToId(uid));
-		if (tag == null) {
-			throw new NotFoundException();
-		}
-
-		return tag.toJSON().toString();
 	}
 
 	@GET
@@ -276,6 +261,35 @@ public class TagController extends AbstractBaseController<ITag> {
 	@RolesAllowed({"TAG_DELETE_MINE", "TAG_DELETE"})
 	public Response delete(@PathParam("uid") String uid, @PathParam("empty") String empty) {
 		return handleDelete(empty, service.findById(service.convertUidToId(uid)), service);
+	}
+
+	@GET
+	@Path("/{uid}")
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+	@RolesAllowed("FILE")
+	public String get(@PathParam("uid") String uid) {
+		ITag tag = service.findById(service.convertUidToId(uid));
+		if (tag == null) {
+			throw new NotFoundException();
+		}
+
+		return tag.toJSON().toString();
+	}
+
+
+	@GET
+	@Path("/list")
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+	@RolesAllowed("NODE")
+	public String list() {
+		// json array to hold hits
+		JSONArray jsonArray = new JSONArray();
+
+		for (ITag tag : service.findAll()) {
+			jsonArray.put(tag.toJSON());
+		}
+
+		return jsonArray.toString();
 	}
 
 	@GET
