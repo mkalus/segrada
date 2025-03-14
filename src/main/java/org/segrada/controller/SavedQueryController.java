@@ -155,6 +155,21 @@ public class SavedQueryController extends AbstractBaseController<ISavedQuery> {
 	}
 
 	@GET
+	@Path("/list")
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+	@RolesAllowed("GRAPH")
+	public String list() {
+		// json array to hold hits
+		JSONArray jsonArray = new JSONArray();
+
+		for (ISavedQuery savedQuery : service.findAll()) {
+			jsonArray.put(savedQuery.toJSON());
+		}
+
+		return jsonArray.toString();
+	}
+
+	@GET
 	@Path("/xml/{uid}")
 	@Produces(MediaType.APPLICATION_XML)
 	@RolesAllowed("GRAPH")

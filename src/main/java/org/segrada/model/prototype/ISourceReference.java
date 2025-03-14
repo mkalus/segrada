@@ -1,5 +1,7 @@
 package org.segrada.model.prototype;
 
+import org.codehaus.jettison.json.JSONObject;
+
 import java.util.List;
 
 /**
@@ -41,4 +43,6 @@ public interface ISourceReference extends SegradaEntity {
 	 */
 	String getColorCode();
 	void setColorCode(String colorCode);
+
+	JSONObject toJSON();
 }

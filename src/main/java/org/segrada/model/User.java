@@ -2,6 +2,8 @@ package org.segrada.model;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONObject;
 import org.segrada.model.base.AbstractSegradaEntity;
 import org.segrada.model.prototype.IUser;
 import org.segrada.model.prototype.IUserGroup;
@@ -153,5 +155,23 @@ public class User extends AbstractSegradaEntity implements IUser {
 	@Override
 	public String toString() {
 		return "{User}" + (getId() == null ? "*" : getId()) + ", " + getName() + ", " + getLogin() + (!getActive()?" [inactive]":"");
+	}
+
+	@Override
+	public JSONObject toJSON() {
+		JSONObject jsonObject = super.toJSON();
+
+		try {
+			jsonObject.put("login", login);
+			jsonObject.put("password", password);
+			jsonObject.put("name", name);
+			jsonObject.put("group", group.getId());
+			if (lastLogin != null) jsonObject.put("lastLogin", lastLogin);
+			if (active != null) jsonObject.put("active", active);
+		} catch (Exception e) {
+			// ignore
+		}
+
+		return jsonObject;
 	}
 }

@@ -2,9 +2,12 @@ package org.segrada.controller;
 
 import com.google.inject.Inject;
 import com.google.inject.servlet.RequestScoped;
+import com.sun.jersey.api.NotFoundException;
 import com.sun.jersey.api.view.Viewable;
+import org.codehaus.jettison.json.JSONArray;
 import org.segrada.controller.base.AbstractBaseController;
 import org.segrada.model.User;
+import org.segrada.model.prototype.ITag;
 import org.segrada.model.prototype.IUser;
 import org.segrada.service.UserGroupService;
 import org.segrada.service.UserService;
@@ -157,6 +160,35 @@ public class UserController extends AbstractBaseController<IUser> {
 	@RolesAllowed("ADMIN")
 	public Response delete(@PathParam("uid") String uid, @PathParam("empty") String empty) {
 		return handleDelete(empty, service.findById(service.convertUidToId(uid)), service);
+	}
+
+	@GET
+	@Path("/{uid}")
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+	@RolesAllowed("ADMIN")
+	public String get(@PathParam("uid") String uid) {
+		IUser user = service.findById(service.convertUidToId(uid));
+		if (user == null) {
+			throw new NotFoundException();
+		}
+
+		return user.toJSON().toString();
+	}
+
+
+	@GET
+	@Path("/list")
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+	@RolesAllowed("ADMIN")
+	public String list() {
+		// json array to hold hits
+		JSONArray jsonArray = new JSONArray();
+
+		for (IUser user : service.findAll()) {
+			jsonArray.put(user.toJSON());
+		}
+
+		return jsonArray.toString();
 	}
 
 	@Override

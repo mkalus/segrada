@@ -260,4 +260,33 @@ public class PictogramController extends AbstractBaseController<IPictogram> {
 	public Response delete(@PathParam("uid") String uid, @PathParam("empty") String empty) {
 		return handleDelete(empty, service.findById(service.convertUidToId(uid)), service);
 	}
+
+	@GET
+	@Path("/{uid}")
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+	@PermitAll
+	public String get(@PathParam("uid") String uid) {
+		IPictogram pictogram = service.findById(service.convertUidToId(uid));
+		if (pictogram == null) {
+			throw new NotFoundException();
+		}
+
+		return pictogram.toJSON().toString();
+	}
+
+
+	@GET
+	@Path("/list")
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+	@PermitAll
+	public String list() {
+		// json array to hold hits
+		JSONArray jsonArray = new JSONArray();
+
+		for (IPictogram pictogram : service.findAll()) {
+			jsonArray.put(pictogram.toJSON());
+		}
+
+		return jsonArray.toString();
+	}
 }

@@ -335,4 +335,33 @@ public class RelationController extends AbstractColoredController<IRelation> {
 			return "{\"error\": \"" + JSONObject.quote(e.getMessage()) + "\"}";
 		}
 	}
+
+	@GET
+	@Path("/{uid}")
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+	@RolesAllowed("RELATION")
+	public String get(@PathParam("uid") String uid) {
+		IRelation relation = service.findById(service.convertUidToId(uid));
+		if (relation == null) {
+			throw new NotFoundException();
+		}
+
+		return relation.toJSON().toString();
+	}
+
+
+	@GET
+	@Path("/list")
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+	@RolesAllowed("RELATION")
+	public String list() {
+		// json array to hold hits
+		JSONArray jsonArray = new JSONArray();
+
+		for (IRelation relation : service.findAll()) {
+			jsonArray.put(relation.toJSON());
+		}
+
+		return jsonArray.toString();
+	}
 }

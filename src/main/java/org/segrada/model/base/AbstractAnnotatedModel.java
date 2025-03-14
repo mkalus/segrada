@@ -112,9 +112,20 @@ abstract public class AbstractAnnotatedModel extends AbstractColoredModel implem
 				}
 				jsonObject.put("tags", tagsList);
 			}
-			// TODO: comments?
-			// TODO: files?
-			// TODO: sourceReferences?
+			if (files != null && files.size() > 0) {
+				JSONArray fileRefList = new JSONArray(files.size());
+				for (IFile file : files) {
+					fileRefList.put(file.getId());
+				}
+				jsonObject.put("file_references", fileRefList);
+			}
+			if (sourceReferences != null && sourceReferences.size() > 0) {
+				JSONArray sourceRefList = new JSONArray(sourceReferences.size());
+				for (ISourceReference ref : sourceReferences) {
+					sourceRefList.put(ref.toJSON());
+				}
+				jsonObject.put("source_references", sourceRefList);
+			}
 		} catch (Exception e) {
 			// ignore
 		}

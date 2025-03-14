@@ -1,5 +1,7 @@
 package org.segrada.model.prototype;
 
+import org.codehaus.jettison.json.JSONObject;
+
 import java.util.Map;
 
 /**
@@ -70,4 +72,6 @@ public interface IUserGroup extends SegradaEntity {
 	 */
 	String getSpecial();
 	void setSpecial(String special);
+
+	JSONObject toJSON();
 }

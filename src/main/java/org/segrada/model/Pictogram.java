@@ -2,6 +2,7 @@ package org.segrada.model;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.codehaus.jettison.json.JSONObject;
 import org.segrada.model.base.AbstractSegradaEntity;
 import org.segrada.model.prototype.IPictogram;
 
@@ -115,5 +116,21 @@ public class Pictogram extends AbstractSegradaEntity implements IPictogram {
 	@Override
 	public int hashCode() {
 		return HashCodeBuilder.reflectionHashCode(this, "data", "mimeType", "fileName", "created", "modified", "creator", "modifier");
+	}
+
+	@Override
+	public JSONObject toJSON() {
+		JSONObject jsonObject = super.toJSON();
+
+		try {
+			jsonObject.put("title", title);
+			jsonObject.put("mimeType", mimeType);
+			jsonObject.put("fileName", fileName);
+			jsonObject.put("fileIdentifier", fileIdentifier);
+		} catch (Exception e) {
+			// ignore
+		}
+
+		return jsonObject;
 	}
 }

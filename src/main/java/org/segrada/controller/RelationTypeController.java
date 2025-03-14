@@ -3,6 +3,7 @@ package org.segrada.controller;
 import com.google.inject.Inject;
 import com.google.inject.servlet.RequestScoped;
 import com.sun.jersey.api.view.Viewable;
+import org.codehaus.jettison.json.JSONArray;
 import org.segrada.controller.base.AbstractColoredController;
 import org.segrada.model.RelationType;
 import org.segrada.model.prototype.IRelationType;
@@ -123,5 +124,34 @@ public class RelationTypeController extends AbstractColoredController<IRelationT
 	@RolesAllowed({"RELATION_TYPE_DELETE", "RELATION_TYPE_DELETE_MINE"})
 	public Response delete(@PathParam("uid") String uid, @PathParam("empty") String empty) {
 		return handleDelete(empty, service.findById(service.convertUidToId(uid)), service);
+	}
+
+	@GET
+	@Path("/{uid}")
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+	@RolesAllowed("RELATION_TYPE")
+	public String get(@PathParam("uid") String uid) {
+		IRelationType relationType = service.findById(service.convertUidToId(uid));
+		if (relationType == null) {
+			throw new NotFoundException();
+		}
+
+		return relationType.toJSON().toString();
+	}
+
+
+	@GET
+	@Path("/list")
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+	@RolesAllowed("RELATION_TYPE")
+	public String list() {
+		// json array to hold hits
+		JSONArray jsonArray = new JSONArray();
+
+		for (IRelationType relationType : service.findAll()) {
+			jsonArray.put(relationType.toJSON());
+		}
+
+		return jsonArray.toString();
 	}
 }

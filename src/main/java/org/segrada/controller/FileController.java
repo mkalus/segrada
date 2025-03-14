@@ -412,7 +412,7 @@ public class FileController extends AbstractColoredController<IFile> {
 	@GET
 	@Path("/list")
 	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-	@RolesAllowed("NODE")
+	@RolesAllowed("COLOR")
 	public String list() {
 		// json array to hold hits
 		JSONArray jsonArray = new JSONArray();

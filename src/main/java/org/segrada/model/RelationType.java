@@ -2,6 +2,8 @@ package org.segrada.model;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONObject;
 import org.segrada.model.base.AbstractColoredModel;
 import org.segrada.model.prototype.IRelationType;
 
@@ -161,5 +163,46 @@ public class RelationType extends AbstractColoredModel implements IRelationType 
 	@Override
 	public String getTitle() {
 		return getFromTitle() + "⇒" + getToTitle();
+	}
+
+	@Override
+	public JSONObject toJSON() {
+		JSONObject jsonObject = super.toJSON();
+
+		try {
+			jsonObject.put("fromTitle", fromTitle);
+			jsonObject.put("toTitle", toTitle);
+
+			if (tags != null && tags.length > 0) {
+				JSONArray tagsList = new JSONArray(tags.length);
+				for (String tag : tags) {
+					tagsList.put(tag);
+				}
+				jsonObject.put("tags", tagsList);
+			}
+
+			if (fromTags != null && fromTags.length > 0) {
+				JSONArray tagsList = new JSONArray(fromTags.length);
+				for (String tag : fromTags) {
+					tagsList.put(tag);
+				}
+				jsonObject.put("fromTags", tagsList);
+			}
+
+			if (toTags != null && toTags.length > 0) {
+				JSONArray tagsList = new JSONArray(toTags.length);
+				for (String tag : toTags) {
+					tagsList.put(tag);
+				}
+				jsonObject.put("toTags", tagsList);
+			}
+
+			jsonObject.put("description", description);
+			jsonObject.put("descriptionMarkup", descriptionMarkup);
+		} catch (Exception e) {
+			// ignore
+		}
+
+		return jsonObject;
 	}
 }

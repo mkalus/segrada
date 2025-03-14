@@ -1,5 +1,6 @@
 package org.segrada.model;
 
+import org.codehaus.jettison.json.JSONObject;
 import org.segrada.model.base.AbstractSegradaEntity;
 import org.segrada.model.prototype.IUserGroup;
 
@@ -116,5 +117,28 @@ public class UserGroup extends AbstractSegradaEntity implements IUserGroup {
 	@Override
 	public void setSpecial(String special) {
 		this.special = special;
+	}
+
+	@Override
+	public JSONObject toJSON() {
+		JSONObject jsonObject = super.toJSON();
+
+		try {
+			jsonObject.put("title", title);
+			jsonObject.put("description", description);
+			jsonObject.put("special", special);
+
+			if (roles != null) {
+				JSONObject rolesObject = new JSONObject();
+				for (Map.Entry<String, Integer> entry : roles.entrySet()) {
+					rolesObject.put(entry.getKey(), entry.getValue());
+				}
+				jsonObject.put("roles", rolesObject);
+			}
+		} catch (Exception e) {
+			// ignore
+		}
+
+		return jsonObject;
 	}
 }

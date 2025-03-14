@@ -36,4 +36,6 @@ public interface ISavedQuery extends SegradaEntity {
 
 	IUser getUser();
 	void setUser(IUser user);
+
+	JSONObject toJSON();
 }

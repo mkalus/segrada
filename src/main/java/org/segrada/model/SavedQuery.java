@@ -1,5 +1,6 @@
 package org.segrada.model;
 
+import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.segrada.model.base.AbstractSegradaEntity;
@@ -107,10 +108,20 @@ public class SavedQuery extends AbstractSegradaEntity implements ISavedQuery {
 	public JSONObject getJSONData() {
 		if (rawData == null) {
 			if (data != null && data.length() != 0) {
-				try {
-					rawData = new JSONObject(data);
-				} catch (JSONException e) {
-					rawData = new JSONObject(); // set empty on error
+				if (data.charAt(0) == '{') {
+					try {
+						rawData = new JSONObject(data);
+					} catch (JSONException e) {
+						rawData = new JSONObject(); // set empty on error
+					}
+				} else if (data.charAt(0) == '[') {
+					rawData = new JSONObject();
+					try {
+						JSONArray a = new JSONArray(data);
+						rawData.put("queryParts", a);
+					} catch (JSONException e) {
+						// ignore
+					}
 				}
 			} else
 				this.rawData = new JSONObject();
@@ -127,5 +138,21 @@ public class SavedQuery extends AbstractSegradaEntity implements ISavedQuery {
 	@Override
 	public void setUser(IUser user) {
 		setCreator(user);
+	}
+
+	@Override
+	public JSONObject toJSON() {
+		JSONObject jsonObject = super.toJSON();
+
+		try {
+			jsonObject.put("type", type);
+			jsonObject.put("title", title);
+			jsonObject.put("description", description);
+			jsonObject.put("data", getJSONData());
+		} catch (Exception e) {
+			// ignore
+		}
+
+		return jsonObject;
 	}
 }

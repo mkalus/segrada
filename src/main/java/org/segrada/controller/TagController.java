@@ -266,7 +266,7 @@ public class TagController extends AbstractBaseController<ITag> {
 	@GET
 	@Path("/{uid}")
 	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-	@RolesAllowed("FILE")
+	@RolesAllowed("TAG")
 	public String get(@PathParam("uid") String uid) {
 		ITag tag = service.findById(service.convertUidToId(uid));
 		if (tag == null) {
@@ -280,7 +280,7 @@ public class TagController extends AbstractBaseController<ITag> {
 	@GET
 	@Path("/list")
 	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-	@RolesAllowed("NODE")
+	@RolesAllowed("TAG")
 	public String list() {
 		// json array to hold hits
 		JSONArray jsonArray = new JSONArray();

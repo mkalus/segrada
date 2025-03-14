@@ -1,5 +1,7 @@
 package org.segrada.model;
 
+import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONObject;
 import org.segrada.model.base.AbstractColoredModel;
 import org.segrada.model.prototype.ISource;
 import org.segrada.model.prototype.ISourceReference;
@@ -82,5 +84,21 @@ public class SourceReference extends AbstractColoredModel implements ISourceRefe
 	@Override
 	public String getTitle() {
 		return getSource().getShortTitle() + (getReferenceText()==null||getReferenceText().isEmpty()?"":", " + getReferenceText());
+	}
+
+	@Override
+	public JSONObject toJSON() {
+		JSONObject jsonObject = super.toJSON();
+
+		try {
+			jsonObject.put("source", source.getId());
+			jsonObject.put("reference", reference.getId());
+			jsonObject.put("referenceText", referenceText);
+			jsonObject.put("roleOfNode", roleOfNode);
+		} catch (Exception e) {
+			// ignore
+		}
+
+		return jsonObject;
 	}
 }

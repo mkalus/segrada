@@ -1,5 +1,6 @@
 package org.segrada.model;
 
+import org.codehaus.jettison.json.JSONObject;
 import org.segrada.model.base.AbstractCoreModel;
 import org.segrada.model.prototype.INode;
 import org.segrada.model.prototype.IRelation;
@@ -127,5 +128,23 @@ public class Relation extends AbstractCoreModel implements IRelation {
 				+ (getFromEntity()==null?"?":getFromEntity().toString())
 				+ "⇒" + (getRelationType()==null?"?":getRelationType().getFromTitle())
 				+ "⇒" + (getToEntity()==null?"?":getToEntity().toString());
+	}
+
+	@Override
+	public JSONObject toJSON() {
+		JSONObject jsonObject = super.toJSON();
+
+		try {
+			jsonObject.put("relationType", relationType.getId());
+			jsonObject.put("fromEntity", fromEntity.getId());
+			jsonObject.put("toEntity", toEntity.getId());
+			jsonObject.put("description", description);
+			jsonObject.put("descriptionMarkup", descriptionMarkup);
+			// TODO
+		} catch (Exception e) {
+			// ignore
+		}
+
+		return jsonObject;
 	}
 }

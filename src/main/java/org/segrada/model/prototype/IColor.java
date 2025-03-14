@@ -1,5 +1,7 @@
 package org.segrada.model.prototype;
 
+import org.codehaus.jettison.json.JSONObject;
+
 /**
  * Copyright 2015-2021 Maximilian Kalus [segrada@auxnet.de]
  *
@@ -46,4 +48,9 @@ public interface IColor extends SegradaEntity {
 	 * @return blue part or 0, if color not set
 	 */
 	int getB();
+
+	/**
+	 * @return JSON representation of object
+	 */
+	JSONObject toJSON();
 }

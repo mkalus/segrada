@@ -2,10 +2,13 @@ package org.segrada.controller;
 
 import com.google.inject.Inject;
 import com.google.inject.servlet.RequestScoped;
+import com.sun.jersey.api.NotFoundException;
 import com.sun.jersey.api.view.Viewable;
+import org.codehaus.jettison.json.JSONArray;
 import org.segrada.controller.base.AbstractBaseController;
 import org.segrada.model.Color;
 import org.segrada.model.prototype.IColor;
+import org.segrada.model.prototype.IFile;
 import org.segrada.service.ColorService;
 import org.segrada.service.base.SegradaService;
 
@@ -93,5 +96,34 @@ public class ColorController extends AbstractBaseController<IColor> {
 	@RolesAllowed({"COLOR_DELETE", "COLOR_DELETE_MINE"})
 	public Response delete(@PathParam("uid") String uid, @PathParam("empty") String empty) {
 		return handleDelete(empty, service.findById(service.convertUidToId(uid)), service);
+	}
+
+	@GET
+	@Path("/{uid}")
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+	@RolesAllowed("COLOR")
+	public String get(@PathParam("uid") String uid) {
+		IColor color = service.findById(service.convertUidToId(uid));
+		if (color == null) {
+			throw new NotFoundException();
+		}
+
+		return color.toJSON().toString();
+	}
+
+
+	@GET
+	@Path("/list")
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+	@RolesAllowed("COLOR")
+	public String list() {
+		// json array to hold hits
+		JSONArray jsonArray = new JSONArray();
+
+		for (IColor color : service.findAll()) {
+			jsonArray.put(color.toJSON());
+		}
+
+		return jsonArray.toString();
 	}
 }

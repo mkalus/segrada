@@ -1,5 +1,7 @@
 package org.segrada.model.prototype;
 
+import org.codehaus.jettison.json.JSONObject;
+
 /**
  * Copyright 2015-2021 Maximilian Kalus [segrada@auxnet.de]
  *
@@ -41,4 +43,9 @@ public interface IRelationType extends SegradaColoredEntity, SegradaTaggable {
 
 	String getDescriptionMarkup();
 	void setDescriptionMarkup(String descriptionMarkup);
+
+	/**
+	 * @return JSON representation of object
+	 */
+	JSONObject toJSON();
 }

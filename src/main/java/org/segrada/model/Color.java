@@ -1,6 +1,8 @@
 package org.segrada.model;
 
 import org.apache.commons.lang3.StringUtils;
+import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONObject;
 import org.segrada.model.base.AbstractSegradaEntity;
 import org.segrada.model.prototype.IColor;
 
@@ -93,5 +95,19 @@ public class Color extends AbstractSegradaEntity implements IColor {
 	@Override
 	public int getB() {
 		return color==null?0:(color & 0x000000FF);
+	}
+
+	@Override
+	public JSONObject toJSON() {
+		JSONObject jsonObject = super.toJSON();
+
+		try {
+			jsonObject.put("title", title);
+			jsonObject.put("color", getColorCode());
+		} catch (Exception e) {
+			// ignore
+		}
+
+		return jsonObject;
 	}
 }
