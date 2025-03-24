@@ -1,5 +1,6 @@
 package org.segrada.model;
 
+import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
 import org.segrada.model.base.AbstractSegradaEntity;
 import org.segrada.model.prototype.IPeriod;
@@ -276,12 +277,22 @@ public class Period extends AbstractSegradaEntity implements IPeriod {
 			if (comment != null && !comment.equals("")) jsonObject.put("comment", comment);
 			if (fromJD != Long.MIN_VALUE) jsonObject.put("fromJD", fromJD);
 			if (toJD != Long.MAX_VALUE) jsonObject.put("toJD", toJD);
-			if (fromFuzzyFlags != null && fromFuzzyFlags.size() > 0 ) jsonObject.put("fromFuzzyFlags", fromFuzzyFlags);
-			if (toFuzzyFlags != null && toFuzzyFlags.size() > 0 ) jsonObject.put("toFuzzyFlags", toFuzzyFlags);
+			if (fromFuzzyFlags != null && fromFuzzyFlags.size() > 0 ) jsonObject.put("fromFuzzyFlags", getFuzzyFlagsAsJSON(fromFuzzyFlags));
+			if (toFuzzyFlags != null && toFuzzyFlags.size() > 0 ) jsonObject.put("toFuzzyFlags", getFuzzyFlagsAsJSON(toFuzzyFlags));
 		} catch (Exception e) {
 			// ignore
 		}
 
 		return jsonObject;
+	}
+
+	private static JSONArray getFuzzyFlagsAsJSON(Set<FuzzyFlag> fuzzyFlags) {
+		JSONArray jsonArray = new JSONArray(fuzzyFlags.size());
+
+		for (FuzzyFlag fuzzyFlag : fuzzyFlags) {
+			jsonArray.put(String.valueOf(fuzzyFlag.getFuzzyValue()));
+		}
+
+		return jsonArray;
 	}
 }

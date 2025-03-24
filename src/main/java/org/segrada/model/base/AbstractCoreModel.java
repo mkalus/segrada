@@ -218,8 +218,8 @@ abstract public class AbstractCoreModel extends AbstractAnnotatedModel implement
 			jsonObject.put("maxEntryCalendar", maxEntryCalendar);
 			if (minJD != Long.MIN_VALUE) jsonObject.put("minJD", minJD);
 			if (maxJD != Long.MAX_VALUE) jsonObject.put("maxJD", maxJD);
-			if (minFuzzyFlags != null && minFuzzyFlags.size() > 0 ) jsonObject.put("minFuzzyFlags", minFuzzyFlags);
-			if (maxFuzzyFlags != null && maxFuzzyFlags.size() > 0 ) jsonObject.put("maxFuzzyFlags", maxFuzzyFlags);
+			if (minFuzzyFlags != null && minFuzzyFlags.size() > 0) jsonObject.put("minFuzzyFlags", getFuzzyFlagsAsJSON(minFuzzyFlags));
+			if (maxFuzzyFlags != null && maxFuzzyFlags.size() > 0) jsonObject.put("maxFuzzyFlags", getFuzzyFlagsAsJSON(maxFuzzyFlags));
 
 			// periods of time
 			if (periods != null && periods.size() > 0) {
@@ -243,5 +243,15 @@ abstract public class AbstractCoreModel extends AbstractAnnotatedModel implement
 		}
 
 		return jsonObject;
+	}
+
+	private static JSONArray getFuzzyFlagsAsJSON(Set<FuzzyFlag> fuzzyFlags) {
+		JSONArray jsonArray = new JSONArray(fuzzyFlags.size());
+
+		for (FuzzyFlag fuzzyFlag : fuzzyFlags) {
+			jsonArray.put(String.valueOf(fuzzyFlag.getFuzzyValue()));
+		}
+
+		return jsonArray;
 	}
 }
