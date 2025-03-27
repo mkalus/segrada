@@ -24,7 +24,7 @@
 		<lucene.version>5.3.2</lucene.version>
 		<!-- upgradeable? -->
 		<orientdb.version>2.2.37</orientdb.version>
-		<tika.version>1.17</tika.version>
+		<tika.version>1.18</tika.version>
 	</properties>
 
 	<dependencies>
